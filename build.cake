@@ -12,8 +12,12 @@ var config = Argument("config", "Debug");
 // Paths
 var project = "./VPEAR.sln";
 var htmlDocs = "./html";
+var docfxSettings = "./docs/docfx.json";
 var testResults = "./tests/**/TestResults";
 var testSettings = "./tests/Coverlet.runsettings";
+var reportFiles = "./tests/**/coverage.opencover.xml";
+var reportDir = "./html/report";
+var historyDir = "./docs/history";
 
 // Tasks
 Task("Clean")
@@ -68,9 +72,21 @@ Task("Run")
     });
 
 Task("Docs")
+    .IsDependentOn("Clean")
+    .IsDependentOn("Test")
     .Does(() =>
     {
-        // TODO: generate docs
+        var settings = new ReportGeneratorSettings()
+        {
+            AssemblyFilters = new[] { "+VPEAR.*" },
+            HistoryDirectory = Directory(historyDir),
+            ReportTypes = new[] { ReportGeneratorReportType.Html, ReportGeneratorReportType.Badges },
+            Verbosity = ReportGeneratorVerbosity.Error,
+        };
+
+        ReportGenerator(reportFiles, Directory(reportDir), settings);
+        DocFxMetadata(File(docfxSettings));
+        DocFxBuild(File(docfxSettings));
     });
 
 Task("DB")
