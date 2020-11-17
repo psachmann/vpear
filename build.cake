@@ -15,75 +15,68 @@ var htmlDocs = "./html";
 var testResults = "./tests/**/TestResults";
 var testSettings = "./tests/Coverlet.runsettings";
 
-// Setup/Teardown
-Setup(context =>
-{
-    Information(Figlet($"Starting  {target}"));
-});
-
-Teardown(context =>
-{
-    Information(Figlet($"Finished  {target}"));
-});
-
 // Tasks
 Task("Clean")
     .Does(() =>
-{
-    CleanDirectories(GetDirectories(htmlDocs));
-    CleanDirectories(GetDirectories(testResults));
-});
+    {
+        CleanDirectories(GetDirectories(htmlDocs));
+        CleanDirectories(GetDirectories(testResults));
+    });
 
 Task("Build")
     .Does(() =>
-{
-    var settings = new DotNetCoreBuildSettings()
     {
-        Configuration = config,
-        Verbosity = DotNetCoreVerbosity.Minimal,
-    };
+        var settings = new DotNetCoreBuildSettings()
+        {
+            Configuration = config,
+            Verbosity = DotNetCoreVerbosity.Minimal,
+        };
 
-    DotNetCoreBuild(project, settings);
-});
+        DotNetCoreBuild(project, settings);
+    })
+    .OnError(() =>
+    {
+        Information(Figlet("Build  failed"));
+    });
 
 Task("Test")
     .IsDependentOn("Build")
     .Does(() =>
-{
-    var settings = new DotNetCoreTestSettings()
     {
-        Configuration = config,
-        NoBuild = true,
-        NoRestore = true,
-        Settings = File(testSettings),
-        Verbosity = DotNetCoreVerbosity.Minimal,
-    };
+        var settings = new DotNetCoreTestSettings()
+        {
+            Configuration = config,
+            NoBuild = true,
+            NoRestore = true,
+            Settings = File(testSettings),
+            Verbosity = DotNetCoreVerbosity.Minimal,
+        };
 
-    DotNetCoreTest(project, settings);
-})
-.OnError(() =>
-{
-    Information(Figlet("Test failed"));
-});
+        DotNetCoreTest(project, settings);
+    })
+    .OnError(() =>
+    {
+        Information(Figlet("Test failed"));
+    });
 
 Task("Run")
     // TODO: some more dependencies
     .IsDependentOn("Build")
     .Does(() =>
-{
-    // TODO: run the server
-});
+    {
+        // TODO: run the server
+    });
 
 Task("Docs")
     .Does(() =>
-{
-    // TODO: generate docs
-});
+    {
+        // TODO: generate docs
+    });
 
 Task("DB")
     .Does(() =>
-{
-    // TODO: prepare db for the server
-});
+    {
+        // TODO: prepare db for the server
+    });
 
 RunTarget(target);
