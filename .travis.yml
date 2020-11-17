@@ -3,7 +3,7 @@ language: csharp
 dotnet: 5.0.100
 mono: none
 os: linux
-dist: focal
+dist: bionic
 
 branches:
   only:
