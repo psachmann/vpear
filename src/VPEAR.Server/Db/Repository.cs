@@ -32,6 +32,7 @@ namespace VPEAR.Server.Db
         {
             this.context = context;
 #if DEBUG
+            // TODO: is populating still needed?
             // populates the seed data into the in memory db
             this.context.Database.EnsureCreated();
 #endif
