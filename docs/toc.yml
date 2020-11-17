@@ -1,5 +1,9 @@
 - name: Articles
   href: articles/
-- name: Api Documentation
+- name: Web Api
+  href: swagger/index.html
+- name: Api
   href: api/
   homepage: api/index.md
+- name: Report
+  href: report/index.html

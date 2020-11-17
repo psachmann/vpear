@@ -52,7 +52,7 @@
         ]
       }
     ],
-    "dest": "html",
+    "dest": "../html",
     "globalMetadataFiles": [],
     "fileMetadataFiles": [],
     "template": [
