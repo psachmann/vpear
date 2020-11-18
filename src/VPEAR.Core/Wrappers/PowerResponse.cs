@@ -7,11 +7,22 @@ using System.Text.Json.Serialization;
 
 namespace VPEAR.Core.Wrappers
 {
+    /// <summary>
+    /// A json wrapper class with json naming conventions.
+    /// </summary>
     public class PowerResponse
     {
+        /// <summary>
+        /// Gets or sets the state.
+        /// </summary>
+        /// <value>The power state.</value>
         [JsonPropertyName("state")]
         public string State { get; set; } = string.Empty;
 
+        /// <summary>
+        /// Gets or sets the level.
+        /// </summary>
+        /// <value>The power level.</value>
         [JsonPropertyName("level")]
         public uint Level { get; set; }
     }

@@ -8,32 +8,71 @@ using System.Text.Json.Serialization;
 
 namespace VPEAR.Core.Wrappers
 {
+    /// <summary>
+    /// A json wrapper class with json naming conventions.
+    /// </summary>
     public class ApiResponse
     {
+        /// <summary>
+        /// Gets or sets the device object.
+        /// </summary>
+        /// <value>The device details.</value>
         [JsonPropertyName("device")]
         public DeviceResponse Device { get; set; } = new DeviceResponse();
 
+        /// <summary>
+        /// Gets or sets the sensors object.
+        /// </summary>
+        /// <value>The sensor details.</value>
         [JsonPropertyName("sensors")]
         public IList<SensorResponse> Sensors { get; set; } = new List<SensorResponse>();
 
+        /// <summary>
+        /// Gets or sets the frames object.
+        /// </summary>
+        /// <value>A list of frames.</value>
         [JsonPropertyName("frames")]
         public IList<FrameResponse> Frames { get; set; } = new List<FrameResponse>();
 
+        /// <summary>
+        /// Gets or sets the frequency.
+        /// </summary>
+        /// <value>The sample frequency.</value>
         [JsonPropertyName("frequency")]
         public uint Frequency { get; set; }
 
+        /// <summary>
+        /// Gets or sets the sensors required.
+        /// </summary>
+        /// <value>The number of required sensors.</value>
         [JsonPropertyName("sensorsRequired")]
         public uint SensorsRequired { get; set; }
 
+        /// <summary>
+        /// Gets or sets the filters object.
+        /// </summary>
+        /// <value>The filter details.</value>
         [JsonPropertyName("filters")]
         public FiltersResponse Filters { get; set; } = new FiltersResponse();
 
+        /// <summary>
+        /// Gets or sets the power object.
+        /// </summary>
+        /// <value>The power details.</value>
         [JsonPropertyName("power")]
         public PowerResponse Power { get; set; } = new PowerResponse();
 
+        /// <summary>
+        /// Gets or sets the wifi object.
+        /// </summary>
+        /// <value>The wifi details.</value>
         [JsonPropertyName("wifi")]
         public WifiResponse Wifi { get; set; } = new WifiResponse();
 
+        /// <summary>
+        /// Gets or sets the firmware object.
+        /// </summary>
+        /// <value>The firmware details.</value>
         [JsonPropertyName("firmware")]
         public FirmwareResponse Firmware { get; set; } = new FirmwareResponse();
     }
