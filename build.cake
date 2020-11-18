@@ -64,7 +64,6 @@ Task("Test")
     });
 
 Task("Run")
-    // TODO: some more dependencies
     .IsDependentOn("Build")
     .Does(() =>
     {
@@ -73,7 +72,7 @@ Task("Run")
 
 Task("Docs")
     .IsDependentOn("Clean")
-    .IsDependentOn("Test")
+    .IsDependentOn("Build")
     .Does(() =>
     {
         var settings = new ReportGeneratorSettings()

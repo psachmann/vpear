@@ -7,7 +7,7 @@
       "documentationCulture": "en-US",
       "documentExposedElements": true,
       "documentInterfaces": true,
-      "documentInternalElements": true,
+      "documentInternalElements": false,
       "documentPrivateElements": false,
       "documentPrivateFields": false,
       "fileNamingConvention": "stylecop",

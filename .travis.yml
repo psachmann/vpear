@@ -1,6 +1,6 @@
 # travis build and test config
 language: csharp
-dotnet: 5.0.100
+dotnet: 5.0
 mono: none
 os: linux
 dist: bionic
