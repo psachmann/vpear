@@ -19,7 +19,10 @@ namespace VPEAR.Server.Db
         where TEntity : EntityBase<TKey>
         where TKey : struct, IEquatable<TKey>
     {
-        /// <inheritdoc/>
+        /// <summary>
+        /// Configures the entity of type TEntity.
+        /// </summary>
+        /// <param name="builder">The builder to be used to configure the entity type.</param>
         public virtual void Configure(EntityTypeBuilder<TEntity> builder)
         {
             builder.HasKey(e => e.Id);

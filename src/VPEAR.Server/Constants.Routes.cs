@@ -5,15 +5,66 @@
 
 namespace VPEAR.Server
 {
-    internal partial class Constants
+    /// <summary>
+    /// This class contains all constants for the server.
+    /// </summary>
+    public partial class Constants
     {
-        internal static class Routes
+        /// <summary>
+        /// This class contains all routs for the server.
+        /// </summary>
+        public static class Routes
         {
-            internal const string ApiPrefix = "/api";
+            /// <summary>
+            /// The prefix for the webapi.
+            /// </summary>
+            public const string ApiPrefix = "/api";
 
-            internal const string ApiVersion = "/v1";
+            /// <summary>
+            /// The version for the webapi.
+            /// </summary>
+            public const string ApiVersion = "/v1";
 
-            internal const string BaseRoute = ApiPrefix + ApiVersion;
+            /// <summary>
+            /// The base route for all endpoints is the combination
+            /// of prefix and version.
+            /// </summary>
+            public const string BaseRoute = ApiPrefix + ApiVersion;
+
+            /// <summary>
+            /// The device endpoint route.
+            /// </summary>
+            public const string DeviceRoute = BaseRoute + "/device";
+
+            /// <summary>
+            /// The sensors endpoint route.
+            /// </summary>>
+            public const string SensorsRoute = BaseRoute + "/device/sensors";
+
+            /// <summary>
+            /// The frames endpoint route.
+            /// </summary>
+            public const string FramesRoute = BaseRoute + "/device/frames";
+
+            /// <summary>
+            /// The filters endpoint route.
+            /// </summary>
+            public const string FiltersRoute = BaseRoute + "/device/filters";
+
+            /// <summary>
+            /// The power endpoint route.
+            /// </summary>
+            public const string PowerRoute = BaseRoute + "/device/power";
+
+            /// <summary>
+            /// The wifi endpoint route.
+            /// </summary>
+            public const string WifiRoute = BaseRoute + "/device/wifi";
+
+            /// <summary>
+            /// The firmware endpoint route.
+            /// </summary>
+            public const string FirmwareRoute = BaseRoute + "/device/firmware";
         }
     }
 }

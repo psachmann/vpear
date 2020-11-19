@@ -3,8 +3,6 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 
 namespace VPEAR.Server.Db
@@ -14,7 +12,7 @@ namespace VPEAR.Server.Db
     /// NOTE: All db entities should derive from this class.
     /// </summary>
     /// <typeparam name="TKey">Type of the db id.</typeparam>
-    public abstract class EntityBase<TKey> : IEntityTypeConfiguration<EntityBase<TKey>>
+    public abstract class EntityBase<TKey>
         where TKey : struct, IEquatable<TKey>
     {
         /// <summary>
@@ -37,25 +35,5 @@ namespace VPEAR.Server.Db
         /// </summary>
         /// <value>The concurrency token for the specific item.</value>
         public DateTimeOffset ModifiedAt { get; set; }
-
-        /// <inheritdoc/>
-        public void Configure(EntityTypeBuilder<EntityBase<TKey>> builder)
-        {
-            builder.HasKey(e => e.Id);
-
-            builder.Property(e => e.CreatedAt)
-                .IsRequired()
-                .ValueGeneratedOnAdd();
-
-            builder.Property(e => e.Id)
-                .IsRequired()
-                .ValueGeneratedOnAdd();
-
-            builder.Property(e => e.ModifiedAt)
-                .IsConcurrencyToken()
-                .IsRequired()
-                .IsRowVersion()
-                .ValueGeneratedOnAddOrUpdate();
-        }
     }
 }
