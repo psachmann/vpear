@@ -72,7 +72,7 @@ Task("Run")
 
 Task("Docs")
     .IsDependentOn("Clean")
-    .IsDependentOn("Build")
+    .IsDependentOn("Test")
     .Does(() =>
     {
         var settings = new ReportGeneratorSettings()
