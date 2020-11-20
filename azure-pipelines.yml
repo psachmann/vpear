@@ -8,7 +8,7 @@ pool:
   vmImage: Ubuntu-18.04
 
 stages:
-  - stage: Install Dependencies
+  - stage: Install_Dependencies
     jobs:
       - job: SDK
         steps:
@@ -19,7 +19,7 @@ stages:
       - job: Cake
         steps:
           - script: dotnet tool install Cake.Tool --tool-path ./tools
-  - stage: Build and Test
+  - stage: Build_Test
     jobs:
       - job: Cake
         steps:
