@@ -2,7 +2,12 @@
 
 ## Status
 
-TODO: build, test, dependencies
+| Branches | Master | Develop |
+| - | - | - |
+| Build | ![Build Status][1] | ![Build Status][2] |
+
+[1]: https://dev.azure.com/psachmann/vpear/_apis/build/status/psachmann.vpear?branchName=master
+[2]: https://dev.azure.com/psachmann/vpear/_build/latest?definitionId=2&branchName=develop
 
 ## Introduction
 
