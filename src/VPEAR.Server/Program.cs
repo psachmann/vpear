@@ -19,7 +19,9 @@ namespace VPEAR.Server
         /// <param name="args">The command line arguments for the program.</param>
         public static void Main(string[] args)
         {
-            CreateHost(args).Run();
+            CreateHostBuilder(args)
+                .Build()
+                .Run();
         }
 
         /// <summary>
@@ -27,7 +29,7 @@ namespace VPEAR.Server
         /// </summary>
         /// <param name="args">The command line arguments for the host.</param>
         /// <returns>The host to run the server.</returns>
-        public static IHost CreateHost(string[] args)
+        public static IHostBuilder CreateHostBuilder(string[] args)
         {
             var builder = Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(builder =>
@@ -35,7 +37,7 @@ namespace VPEAR.Server
                     builder.UseStartup<Startup>();
                 });
 
-            return builder.Build();
+            return builder;
         }
     }
 }
