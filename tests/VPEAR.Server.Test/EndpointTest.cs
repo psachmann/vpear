@@ -15,7 +15,7 @@ namespace VPEAR.Server.Test
         private const string Put = "PUT";
         private const string Post = "POST";
         private const string Delete = "DELETE";
-        private WebApplicationFactory<Startup> factory;
+        private readonly WebApplicationFactory<Startup> factory;
 
         public EndpointTest(WebApplicationFactory<Startup> factory)
         {

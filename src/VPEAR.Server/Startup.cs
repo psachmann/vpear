@@ -52,15 +52,13 @@ namespace VPEAR.Server
         /// <param name="env">The environment to configure.</param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "VPEAR.Server v1"));
-            }
-
+#if DEBUG
+            app.UseDeveloperExceptionPage();
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "VPEAR.Server v1"));
+#else
             app.UseHttpsRedirection();
-
+#endif
             app.UseRouting();
 
             app.UseAuthorization();

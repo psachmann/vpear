@@ -18,6 +18,7 @@ var testSettings = "./tests/Coverlet.runsettings";
 var reportFiles = "./tests/**/coverage.opencover.xml";
 var reportDir = "./html/report";
 var historyDir = "./docs/history";
+var server = "./src/VPEAR.Server/VPEAR.Server.csproj";
 
 // Tasks
 Task("Clean")
@@ -67,7 +68,15 @@ Task("Run")
     .IsDependentOn("Build")
     .Does(() =>
     {
-        // TODO: run the server
+        var settings = new DotNetCoreRunSettings()
+        {
+            Configuration = config,
+            NoBuild = true,
+            NoRestore = true,
+            Verbosity = DotNetCoreVerbosity.Minimal,
+        };
+
+        DotNetCoreRun(server, null, settings);
     });
 
 Task("Docs")
