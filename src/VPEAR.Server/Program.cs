@@ -3,8 +3,12 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using Serilog;
+using System;
+using VPEAR.Server.Internals;
 
 namespace VPEAR.Server
 {
@@ -19,9 +23,22 @@ namespace VPEAR.Server
         /// <param name="args">The command line arguments for the program.</param>
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args)
-                .Build()
-                .Run();
+            try
+            {
+                CreateHostBuilder(args)
+                    .Build()
+                    .Run();
+            }
+            catch (Exception exception)
+            {
+                Log.Error("Message \"{@Error}\"", exception.Message);
+                Log.Fatal("Terminated due an error");
+                Environment.Exit(-1);
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
 
         /// <summary>
@@ -31,9 +48,21 @@ namespace VPEAR.Server
         /// <returns>The host to run the server.</returns>
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
+            var config = ConfigurationHelpers.LoadConfiguration(args);
+
+            // TODO: replace configuration in startup
+
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .Enrich.FromLogContext()
+                .WriteTo.Console(config.LogLevel)
+                .CreateLogger();
+
             var builder = Host.CreateDefaultBuilder(args)
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureWebHostDefaults(builder =>
                 {
+                    builder.UseSerilog();
                     builder.UseStartup<Startup>();
                 });
 

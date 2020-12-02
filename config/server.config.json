@@ -1,0 +1,6 @@
+{
+  "database_connection": "",
+  "log_level": "Information",
+  "http_port": 80,
+  "https_port": 443
+}

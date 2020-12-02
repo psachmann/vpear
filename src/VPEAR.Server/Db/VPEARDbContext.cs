@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using VPEAR.Server.Models;
 
@@ -11,7 +12,7 @@ namespace VPEAR.Server.Db
     /// <summary>
     /// The db context for the server.
     /// </summary>
-    public class VPEARDbContext : DbContext
+    public class VPEARDbContext : IdentityDbContext<User>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VPEARDbContext"/> class.
@@ -71,13 +72,13 @@ namespace VPEAR.Server.Db
         /// <param name="builder">The ef core model builder.</param>
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.ApplyConfiguration<Device>(new DeviceConfiguration());
-            builder.ApplyConfiguration<Filters>(new FiltersConfiguration());
-            builder.ApplyConfiguration<Firmware>(new FirmwareConfiguration());
-            builder.ApplyConfiguration<Frame>(new FrameConfiguration());
-            builder.ApplyConfiguration<Power>(new PowerConfiguration());
-            builder.ApplyConfiguration<Sensor>(new SensorConfiguration());
-            builder.ApplyConfiguration<Wifi>(new WifiConfiguration());
+            builder.ApplyConfiguration(new DeviceConfiguration());
+            builder.ApplyConfiguration(new FiltersConfiguration());
+            builder.ApplyConfiguration(new FirmwareConfiguration());
+            builder.ApplyConfiguration(new FrameConfiguration());
+            builder.ApplyConfiguration(new PowerConfiguration());
+            builder.ApplyConfiguration(new SensorConfiguration());
+            builder.ApplyConfiguration(new WifiConfiguration());
         }
     }
 }

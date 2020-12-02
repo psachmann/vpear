@@ -7,13 +7,19 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Swashbuckle.AspNetCore.Annotations;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using VPEAR.Core.Abstractions;
+using VPEAR.Core.Wrappers;
 using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Controllers
 {
+    /// <summary>
+    /// The endpoint handels power management information for a specific device.
+    /// </summary>
     [ApiController]
     [Route(Routes.PowerRoute)]
     public class PowerController : Controller
@@ -27,19 +33,25 @@ namespace VPEAR.Server.Controllers
             this.service = service;
         }
 
+        /// <summary>
+        /// Gets the current power information for the specific device.
+        /// </summary>
+        /// <param name="id">The device id.</param>
+        /// <returns>The current device power information.</returns>
         [HttpGet]
         [Authorize]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status202Accepted)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> OnGetAsync([FromQuery] string id)
+        [Produces("application/json")]
+        [SwaggerResponse(StatusCodes.Status200OK, "The current power information for the device.", typeof(PowerResponse))]
+        [SwaggerResponse(StatusCodes.Status202Accepted, "The device is not reachable.", typeof(ErrorResponse))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "The request has the wrong format.", typeof(ErrorResponse))]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "The request is not authorized.", typeof(ErrorResponse))]
+        public async Task<IActionResult> OnGetAsync([FromQuery, Required] string id)
         {
             var response = await this.service.GetAsync(new Guid(id));
 
             this.Response.StatusCode = response.StatusCode;
 
-            return this.Json(response.Payload);
+            return response.Payload;
         }
     }
 }

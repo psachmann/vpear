@@ -3,12 +3,21 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using Autofac;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Annotations;
+using Serilog;
+using System;
+using System.IO;
+using System.Reflection;
+using VPEAR.Server.Db;
+using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server
 {
@@ -33,19 +42,6 @@ namespace VPEAR.Server
         public IConfiguration Configuration { get; }
 
         /// <summary>
-        /// This method gets called by the runtime. Use this method to add services to the container.
-        /// </summary>
-        /// <param name="services">Service collection to register the services.</param>
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "VPEAR.Server", Version = "v1" });
-            });
-        }
-
-        /// <summary>
         /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         /// </summary>
         /// <param name="app">The application to configure.</param>
@@ -66,6 +62,62 @@ namespace VPEAR.Server
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+        }
+
+        /// <summary>
+        /// Register all services for dependency injection.
+        /// </summary>
+        /// <param name="builder">Autofac container builder.</param>
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder.RegisterModule(new RepositoryModule());
+            builder.RegisterModule(new ServiceModule());
+            builder.RegisterModule(new ValidatorModule());
+        }
+
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to add services to the container.
+        /// </summary>
+        /// <param name="services">Service collection to register the services.</param>
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddControllers();
+            this.ConfigureDatabase(services);
+            this.ConfigureSwagger(services);
+        }
+
+        private void ConfigureDatabase(IServiceCollection services)
+        {
+#if DEBUG
+            services.AddDbContext<VPEARDbContext>(options =>
+            {
+                options.UseInMemoryDatabase(Constants.Db.DefaultSchema);
+            });
+#else
+            // TODO: configure for real database
+#endif
+        }
+
+        private void ConfigureSwagger(IServiceCollection services)
+        {
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo()
+                {
+                    Title = "VPEAR API",
+                    Version = "v1",
+                    License = new OpenApiLicense()
+                    {
+                        Name = "MIT",
+                        Url = new Uri("https://github.com/psachmann/vpear/blob/master/LICENSE.md"),
+                    },
+                });
+
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+                c.EnableAnnotations();
             });
         }
     }

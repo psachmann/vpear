@@ -1,7 +1,11 @@
-// <copyright file="Constants.Routes.cs" company="Patrick Sachmann">
+// <copyright file="Constants.cs" company="Patrick Sachmann">
 // Copyright (c) Patrick Sachmann. All rights reserved.
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
+
+using Serilog.Events;
+using System.Collections.Generic;
+
 
 namespace VPEAR.Server
 {
@@ -10,6 +14,53 @@ namespace VPEAR.Server
     /// </summary>
     public partial class Constants
     {
+        public static class Defaults
+        {
+            public const string DefaultConfigurationPath = "../../config/server.config.json";
+
+            public const LogEventLevel DefaultLogLevel = LogEventLevel.Information;
+
+            public const uint DefaultHttpPort = 80;
+
+            public const uint DefaultHttpsPort = 443;
+
+            public static readonly IList<string> DefaultUrls = new List<string>()
+            {
+                $"http://localhost:{DefaultHttpPort}",
+                $"https://localhost:{DefaultHttpsPort}",
+            };
+        }
+
+        public static class Db
+        {
+            public const string DefaultSchema = "VPEARDbContext";
+        }
+
+        /// <summary>
+        /// This class contains specific constrains to prevent magic numbers.
+        /// </summary>
+        public static class Limits
+        {
+            /// <summary>
+            /// Maximum length for a db string.
+            /// </summary>
+            public const int MaxStringLength = 1024;
+
+            /// <summary>
+            /// Minimum length for a db string.
+            /// </summary>
+            public const int MinStringLength = 1;
+        }
+
+        public static class Roles
+        {
+            public const string Admin = "admin";
+
+            public const string User = "user";
+
+            public const string Tester = "tester";
+        }
+
         /// <summary>
         /// This class contains all routs for the server.
         /// </summary>
