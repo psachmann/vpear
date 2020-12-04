@@ -52,7 +52,7 @@
         ]
       }
     ],
-    "dest": "../html",
+    "dest": "./vpear-docs",
     "globalMetadataFiles": [],
     "fileMetadataFiles": [],
     "template": [
