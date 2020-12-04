@@ -1,3 +1,6 @@
 [submodule "docs/vpear-docs"]
 	path = docs/vpear-docs
 	url = https://github.com/psachmann/vpear-docs.git
+[submodule ".\\docs\\vpear-docs"]
+	path = .\\docs\\vpear-docs
+	url = https://github.com/psachmann/vpear-docs.git
