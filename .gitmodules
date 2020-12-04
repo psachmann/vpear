@@ -1,0 +1,3 @@
+[submodule "docs/--force"]
+	path = docs/--force
+	url = https://github.com/psachmann/vpear-docs.git
