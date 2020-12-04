@@ -20,12 +20,12 @@ namespace VPEAR.Server.Internals
         public LogEventLevel LogLevel { get; set; } = Defaults.DefaultLogLevel;
 
         [JsonPropertyName("http_port")]
-        public uint HttpPort { get; set; } = Defaults.DefaultHttpPort;
+        public int HttpPort { get; set; } = Defaults.DefaultHttpPort;
 
         [JsonPropertyName("https_port")]
-        public uint HttpsPort { get; set; } = Defaults.DefaultHttpsPort;
+        public int HttpsPort { get; set; } = Defaults.DefaultHttpsPort;
 
         [JsonPropertyName("urls")]
-        public IList<string> Urls { get; set; } = Defaults.DefaultUrls;
+        public List<string> Urls { get; set; } = Defaults.DefaultUrls;
     }
 }

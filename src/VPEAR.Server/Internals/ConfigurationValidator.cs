@@ -4,6 +4,7 @@
 // </copyright>
 
 using FluentValidation;
+using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Internals
 {
@@ -11,7 +12,23 @@ namespace VPEAR.Server.Internals
     {
         public ConfigurationValidator()
         {
-            throw new System.NotImplementedException();
+            RuleFor(c => c.DatabaseConnection)
+                .NotNull()
+                .NotEmpty();
+
+            When(c => c.HttpPort != Defaults.DefaultHttpPort, () =>
+            {
+                RuleFor(c => c.HttpPort)
+                    .GreaterThanOrEqualTo(1024)
+                    .LessThan(65536);
+            });
+
+            When(c => c.HttpsPort != Defaults.DefaultHttpsPort, () =>
+            {
+                RuleFor(c => c.HttpsPort)
+                    .GreaterThanOrEqualTo(1024)
+                    .LessThan(65536);
+            });
         }
     }
 }

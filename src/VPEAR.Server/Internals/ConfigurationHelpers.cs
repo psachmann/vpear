@@ -6,6 +6,7 @@
 using FluentValidation;
 using Serilog;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.Json;
@@ -24,6 +25,11 @@ namespace VPEAR.Server.Internals
                 var path = ExtractPath(in args);
                 var json = File.ReadAllText(path, Encoding.UTF8);
                 var config = JsonSerializer.Deserialize<Configuration>(json)!;
+                config.Urls = new List<string>()
+                {
+                    $"http://localhost:{config.HttpPort}",
+                    $"https://localhost:{config.HttpsPort}",
+                };
 
                 ValidateConfiguration(config);
 

@@ -17,6 +17,8 @@ namespace VPEAR.Server
     /// </summary>
     public class Program
     {
+        internal static Configuration Configuration { get; private set; } = new Configuration();
+
         /// <summary>
         /// The entrypoint for the progeam.
         /// </summary>
@@ -48,14 +50,11 @@ namespace VPEAR.Server
         /// <returns>The host to run the server.</returns>
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
-            var config = ConfigurationHelpers.LoadConfiguration(args);
-
-            // TODO: replace configuration in startup
-
+            Configuration = ConfigurationHelpers.LoadConfiguration(args);
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .Enrich.FromLogContext()
-                .WriteTo.Console(config.LogLevel)
+                .WriteTo.Console(Configuration.LogLevel)
                 .CreateLogger();
 
             var builder = Host.CreateDefaultBuilder(args)
@@ -64,6 +63,7 @@ namespace VPEAR.Server
                 {
                     builder.UseSerilog();
                     builder.UseStartup<Startup>();
+                    builder.UseUrls(Configuration.Urls.ToArray());
                 });
 
             return builder;

@@ -20,11 +20,11 @@ namespace VPEAR.Server
 
             public const LogEventLevel DefaultLogLevel = LogEventLevel.Information;
 
-            public const uint DefaultHttpPort = 80;
+            public const int DefaultHttpPort = 80;
 
-            public const uint DefaultHttpsPort = 443;
+            public const int DefaultHttpsPort = 443;
 
-            public static readonly IList<string> DefaultUrls = new List<string>()
+            public static readonly List<string> DefaultUrls = new List<string>()
             {
                 $"http://localhost:{DefaultHttpPort}",
                 $"https://localhost:{DefaultHttpsPort}",
