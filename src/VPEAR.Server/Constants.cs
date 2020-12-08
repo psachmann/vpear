@@ -16,7 +16,7 @@ namespace VPEAR.Server
     {
         public static class Defaults
         {
-            public const string DefaultConfigurationPath = "../../config/server.config.json";
+            public const string DefaultConfigurationPath = "./appsettings.json";
 
             public const LogEventLevel DefaultLogLevel = LogEventLevel.Information;
 
@@ -54,11 +54,11 @@ namespace VPEAR.Server
 
         public static class Roles
         {
-            public const string Admin = "admin";
+            public const string AdminRole = "admin";
 
-            public const string User = "user";
+            public const string UserRole = "user";
 
-            public const string Tester = "tester";
+            public const string TestRole = "test";
         }
 
         /// <summary>
@@ -116,6 +116,12 @@ namespace VPEAR.Server
             /// The firmware endpoint route.
             /// </summary>
             public const string FirmwareRoute = BaseRoute + "/device/firmware";
+
+            public const string UsersRoute = BaseRoute + "/users";
+
+            public const string RegisterRoute = BaseRoute + "/users/register";
+
+            public const string LoginRoute = BaseRoute + "/users/login";
         }
     }
 }

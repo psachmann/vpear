@@ -35,7 +35,6 @@ namespace VPEAR.Server
             {
                 Log.Error("Message \"{@Error}\"", exception.Message);
                 Log.Fatal("Terminated due an error");
-                Environment.Exit(-1);
             }
             finally
             {

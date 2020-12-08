@@ -37,6 +37,11 @@ namespace VPEAR.Server.Test
         [InlineData(Routes.WifiRoute, Put)]
         [InlineData(Routes.FirmwareRoute, Get)]
         [InlineData(Routes.FirmwareRoute, Put)]
+        [InlineData(Routes.UsersRoute, Get)]
+        [InlineData(Routes.UsersRoute, Put)]
+        [InlineData(Routes.UsersRoute, Delete)]
+        [InlineData(Routes.RegisterRoute, Post)]
+        [InlineData(Routes.LoginRoute, Put)]
         public async Task EndpointExistenceTest(string url, string method)
         {
             var client = this.factory.CreateClient();
