@@ -26,9 +26,11 @@ namespace VPEAR.Server
 
             public static readonly List<string> DefaultUrls = new List<string>()
             {
-                $"http://localhost:{DefaultHttpPort}",
-                $"https://localhost:{DefaultHttpsPort}",
+                $"http://localhost:{DefaultHttpPort}/",
+                $"https://localhost:{DefaultHttpsPort}/",
             };
+
+            public const string DefaultResponseType = "application/Json";
         }
 
         public static class Db
@@ -69,12 +71,12 @@ namespace VPEAR.Server
             /// <summary>
             /// The prefix for the webapi.
             /// </summary>
-            public const string ApiPrefix = "/api";
+            public const string ApiPrefix = "api/";
 
             /// <summary>
             /// The version for the webapi.
             /// </summary>
-            public const string ApiVersion = "/v1";
+            public const string ApiVersion = "v1/";
 
             /// <summary>
             /// The base route for all endpoints is the combination
@@ -85,43 +87,43 @@ namespace VPEAR.Server
             /// <summary>
             /// The device endpoint route.
             /// </summary>
-            public const string DeviceRoute = BaseRoute + "/device";
+            public const string DeviceRoute = BaseRoute + "device";
 
             /// <summary>
             /// The sensors endpoint route.
             /// </summary>>
-            public const string SensorsRoute = BaseRoute + "/device/sensors";
+            public const string SensorsRoute = BaseRoute + "device/sensors";
 
             /// <summary>
             /// The frames endpoint route.
             /// </summary>
-            public const string FramesRoute = BaseRoute + "/device/frames";
+            public const string FramesRoute = BaseRoute + "device/frames";
 
             /// <summary>
             /// The filters endpoint route.
             /// </summary>
-            public const string FiltersRoute = BaseRoute + "/device/filters";
+            public const string FiltersRoute = BaseRoute + "device/filters";
 
             /// <summary>
             /// The power endpoint route.
             /// </summary>
-            public const string PowerRoute = BaseRoute + "/device/power";
+            public const string PowerRoute = BaseRoute + "device/power";
 
             /// <summary>
             /// The wifi endpoint route.
             /// </summary>
-            public const string WifiRoute = BaseRoute + "/device/wifi";
+            public const string WifiRoute = BaseRoute + "device/wifi";
 
             /// <summary>
             /// The firmware endpoint route.
             /// </summary>
-            public const string FirmwareRoute = BaseRoute + "/device/firmware";
+            public const string FirmwareRoute = BaseRoute + "device/firmware";
 
-            public const string UsersRoute = BaseRoute + "/users";
+            public const string UsersRoute = BaseRoute + "users";
 
-            public const string RegisterRoute = BaseRoute + "/users/register";
+            public const string RegisterRoute = BaseRoute + "users/register";
 
-            public const string LoginRoute = BaseRoute + "/users/login";
+            public const string LoginRoute = BaseRoute + "users/login";
         }
     }
 }
