@@ -40,14 +40,14 @@ namespace VPEAR.Server.Controllers
         /// <returns>The current device power information.</returns>
         [HttpGet]
         [Authorize]
-        [Produces("application/json")]
+        [Produces(Defaults.DefaultResponseType)]
         [SwaggerResponse(StatusCodes.Status200OK, "The current power information for the device.", typeof(PowerResponse))]
         [SwaggerResponse(StatusCodes.Status202Accepted, "The device is not reachable.", typeof(ErrorResponse))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, "The request has the wrong format.", typeof(ErrorResponse))]
         [SwaggerResponse(StatusCodes.Status401Unauthorized, "The request is not authorized.", typeof(ErrorResponse))]
-        public async Task<IActionResult> OnGetAsync([FromQuery, Required] string id)
+        public async Task<IActionResult> OnGetAsync([FromQuery, Required] Guid id)
         {
-            var response = await this.service.GetAsync(new Guid(id));
+            var response = await this.service.GetAsync(id);
 
             this.Response.StatusCode = response.StatusCode;
 
