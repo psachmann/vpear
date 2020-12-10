@@ -7,20 +7,12 @@ trigger:
 pool:
   vmImage: Ubuntu-18.04
 
-stages:
-  - stage: Install Dependencies
-    jobs:
-      - job: SDK
-        steps:
-          - task: UseDotNet@2
-            inputs:
-              packageType: sdk
-              version: 5.x
-      - job: Cake
-        steps:
-          - script: dotnet tool install Cake.Tool --tool-path ./tools
-  - stage: Build and Test
-    jobs:
-      - job: Cake
-        steps:
-          - script: ./tools/dotnet-cake -target=test -config=debug
+name: Build_and_Test
+
+steps:
+  - task: UseDotNet@2
+    inputs:
+      packageType: sdk
+      version: 5.x
+  - script: dotnet tool install Cake.Tool --tool-path ./tools
+  - script: ./tools/dotnet-cake -target=test -config=debug

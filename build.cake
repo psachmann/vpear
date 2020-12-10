@@ -11,12 +11,12 @@ var config = Argument("config", "Debug");
 
 // Paths
 var project = "./VPEAR.sln";
-var htmlDocs = "./html";
+var htmlDocs = "./docs/vpear-docs";
 var docfxSettings = "./docs/docfx.json";
 var testResults = "./tests/**/TestResults";
 var testSettings = "./tests/Coverlet.runsettings";
 var reportFiles = "./tests/**/coverage.opencover.xml";
-var reportDir = "./html/report";
+var reportDir = "./docs/vpear-docs/report";
 var historyDir = "./docs/history";
 var server = "./src/VPEAR.Server/VPEAR.Server.csproj";
 
@@ -24,7 +24,6 @@ var server = "./src/VPEAR.Server/VPEAR.Server.csproj";
 Task("Clean")
     .Does(() =>
     {
-        CleanDirectories(GetDirectories(htmlDocs));
         CleanDirectories(GetDirectories(testResults));
     });
 

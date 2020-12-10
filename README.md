@@ -2,7 +2,12 @@
 
 ## Status
 
-TODO: build, test, dependencies
+| Branches | Master | Develop |
+| - | - | - |
+| Build | ![Build Status][1] | ![Build Status][2] |
+
+[1]: https://dev.azure.com/psachmann/vpear/_apis/build/status/psachmann.vpear?branchName=master
+[2]: https://dev.azure.com/psachmann/vpear/_apis/build/status/psachmann.vpear?branchName=develop
 
 ## Introduction
 
@@ -22,13 +27,10 @@ TODO: reference to the documentation
 | /api/v1/device | POST | creates a new device |
 | /api/v1/device?id={id} | PUT | sets the device details |
 | /api/v1/device/sensors?id={id} | GET | gets the device sensors |
-| /api/v1/device/frames |||
-| /api/v1/device/frequency |||
-| /api/v1/device/sensorsRequired |||
+| /api/v1/device/frames?id={id},start={start},stop={stop} | GET | gets the device frames |
 | /api/v1/device/filters?id={id} | GET | gets the device filters |
 | /api/v1/device/filters?id={id} | PUT | sets the device filters |
 | /api/v1/device/power?id={id} | GET | gets the device power details |
-| /api/v1/device/time?id={id} |||
 | /api/v1/device/wifi?id={id} | GET | gets the device wifi details |
 | /api/v1/device/wifi?id={id} | PUT | sets the device wifi details |
 | /api/v1/device/firmware?id={id} | GET | gets the device firmware details |
