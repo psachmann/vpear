@@ -10,6 +10,10 @@ using VPEAR.Core.Wrappers;
 
 namespace VPEAR.Core.Abstractions
 {
+    /// <summary>
+    /// Service definition and abstraction for dependency
+    /// injection and webapi controllers.
+    /// </summary>
     public interface IDeviceClient
     {
         delegate IDeviceClient Factory(string baseAddress);

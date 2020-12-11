@@ -9,8 +9,17 @@ using VPEAR.Core.Wrappers;
 
 namespace VPEAR.Core.Abstractions
 {
+    /// <summary>
+    /// Service definition and abstraction for dependency
+    /// injection and webapi controllers.
+    /// </summary>
     public interface IFirmwareService
     {
+        /// <summary>
+        /// Gets the device firmware information.
+        /// </summary>
+        /// <param name="id">The device id.</param>
+        /// <returns>Http status code and device firmware information.</returns>
         Task<Response> GetAsync(Guid id);
 
         Task<Response> PutAsync(Guid id, PutFirmwareRequest request);

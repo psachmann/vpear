@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 
 namespace VPEAR.Core.Abstractions
 {
+    /// <summary>
+    /// Service definition and abstraction for dependency
+    /// injection and webapi controllers.
+    /// </summary>
     public interface IMeasuresService
     {
         Task<Response> GetSensorsAsync(Guid id);

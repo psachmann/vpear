@@ -8,8 +8,17 @@ using System.Threading.Tasks;
 
 namespace VPEAR.Core.Abstractions
 {
+    /// <summary>
+    /// Service definition and abstraction for dependency
+    /// injection and webapi controllers.
+    /// </summary>
     public interface IPowerService
     {
+        /// <summary>
+        /// Gets the device power information.
+        /// </summary>
+        /// <param name="id">The device id.</param>
+        /// <returns>Http status code and device power information.</returns>
         Task<Response> GetAsync(Guid id);
     }
 }

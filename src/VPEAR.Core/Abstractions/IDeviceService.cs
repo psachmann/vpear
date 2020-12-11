@@ -9,6 +9,10 @@ using VPEAR.Core.Wrappers;
 
 namespace VPEAR.Core.Abstractions
 {
+    /// <summary>
+    /// Service definition and abstraction for dependency
+    /// injection and webapi controllers.
+    /// </summary>
     public interface IDeviceService
     {
         Task<Response> GetAsync(Guid id);

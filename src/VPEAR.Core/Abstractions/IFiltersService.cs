@@ -9,10 +9,25 @@ using VPEAR.Core.Wrappers;
 
 namespace VPEAR.Core.Abstractions
 {
+    /// <summary>
+    /// Service definition and abstraction for dependency
+    /// injection and webapi controllers.
+    /// </summary>
     public interface IFiltersService
     {
+        /// <summary>
+        /// Gets the device filters.
+        /// </summary>
+        /// <param name="id">The device id.</param>
+        /// <returns>Https status code and device filters.</returns>
         Task<Response> GetAsync(Guid id);
 
+        /// <summary>
+        /// Updates the device filters.
+        /// </summary>
+        /// <param name="id">The device id.</param>
+        /// <param name="request">The request data.</param>
+        /// <returns>Http status code.</returns>
         Task<Response> PutAsync(Guid id, PutFiltersRequest request);
     }
 }
