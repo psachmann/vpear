@@ -47,11 +47,9 @@ namespace VPEAR.Server.Controllers
         [Authorize]
         [Produces(Defaults.DefaultResponseType)]
         [SwaggerResponse(StatusCodes.Status200OK, "The current filters for the device.", typeof(GetFiltersResponse))]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, "The request has the wrong format.")]
-        [SwaggerResponse(StatusCodes.Status401Unauthorized, "The request is not authorized.")]
-        [SwaggerResponse(StatusCodes.Status404NotFound, "The id was not found.")]
-        [SwaggerResponse(StatusCodes.Status410Gone, "The device is archived.")]
-        [SwaggerResponse(StatusCodes.Status424FailedDependency, "The device is not reachable.")]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(StatusCodes))]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "The request is not authorized.", typeof(StatusCodes))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "The id was not found.", typeof(StatusCodes))]
         public async Task<IActionResult> OnGetAsync([FromQuery, Required] Guid id)
         {
             this.logger.LogDebug("{@Request}", id);
@@ -67,11 +65,18 @@ namespace VPEAR.Server.Controllers
         /// Sets the filters for the specific device.
         /// </summary>
         /// <param name="id">The device id as hex string. Format: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX</param>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <param name="request">Request data as json string.</param>
+        /// <returns>Http status code, which indicates the operation result.</returns>
         [HttpPut]
         [Authorize]
         [Produces(Defaults.DefaultResponseType)]
+        [SwaggerResponse(StatusCodes.Status200OK, "Saved filters to device and database.", typeof(StatusCodes))]
+        [SwaggerResponse(StatusCodes.Status202Accepted, "Saved filters to device and database, but recording is stopped.", typeof(StatusCodes))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(StatusCodes))]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "The request is not authorized.", typeof(StatusCodes))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "The id was not found.", typeof(StatusCodes))]
+        [SwaggerResponse(StatusCodes.Status410Gone, "The device is archived.", typeof(StatusCodes))]
+        [SwaggerResponse(StatusCodes.Status424FailedDependency, "The device is not reachable.", typeof(StatusCodes))]
         public async Task<IActionResult> OnPutAsync([FromQuery, Required] Guid id, [FromBody] PutFiltersRequest request)
         {
             this.logger.LogDebug("{@Request}", request);

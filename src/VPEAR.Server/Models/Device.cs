@@ -85,6 +85,6 @@ namespace VPEAR.Server.Models
         /// Gets or sets the status.
         /// </summary>
         /// <value>The device status.</value>
-        public DeviceStatus Status { get; set; } = DeviceStatus.None;
+        public DeviceStatus Status { get; set; } = DeviceStatus.Stopped;
     }
 }

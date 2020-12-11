@@ -14,41 +14,41 @@ namespace VPEAR.Core.Abstractions
     /// Implementation of the repository pattern.
     /// </summary>
     /// <typeparam name="TEntity">Type of the entity.</typeparam>
-    /// <typeparam name="TKey">Type of the db key.</typeparam>
+    /// <typeparam name="TKey">Type of the database key.</typeparam>
     public interface IRepository<TEntity, in TKey>
         where TEntity : class
         where TKey : struct, IEquatable<TKey>
     {
         /// <summary>
-        /// Creates a new db entry.
+        /// Creates a new database entry.
         /// </summary>
-        /// <param name="entity">The entity to save in the db.</param>
+        /// <param name="entity">The entity to save in the database.</param>
         /// <returns>The success of the operation.</returns>
         Task<bool> CreateAsync(TEntity entity);
 
         /// <summary>
-        /// Deletes an entry from the db with the given id.
+        /// Deletes an entry from the database with the given id.
         /// </summary>
         /// <param name="id">The id from the entry to delete.</param>
         /// <returns>The success of the operation.</returns>
         Task<bool> DeleteAsync(TKey id);
 
         /// <summary>
-        /// Gets all entries from the db table.
+        /// Gets all entries from the database table.
         /// NOTE: Use this to make selects on the table.
         /// </summary>
-        /// <returns>Queryable object for db queries.</returns>
+        /// <returns>Queryable object for database queries.</returns>
         IQueryable<TEntity> Get();
 
         /// <summary>
-        /// Gets an entry from the db.
+        /// Gets an entry from the database.
         /// </summary>
-        /// <param name="id">The id from the db entry.</param>
+        /// <param name="id">The id from the database entry.</param>
         /// <returns>The complete entity or null, if the id not exists.</returns>
-        Task<TEntity> GetAsync(TKey id);
+        Task<TEntity?> GetAsync(TKey id);
 
         /// <summary>
-        /// Updates an entry in the db.
+        /// Updates an entry in the database.
         /// </summary>
         /// <param name="entity">The entity to update.</param>
         /// <returns>The success of the operation.</returns>

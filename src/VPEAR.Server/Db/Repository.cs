@@ -51,10 +51,18 @@ namespace VPEAR.Server.Db
         public async Task<bool> DeleteAsync(TKey id)
         {
             var entity = await this.GetAsync(id);
-            this.context.Set<TEntity>().Remove(entity);
-            await this.context.SaveChangesAsync();
 
-            return true;
+            if (entity != null)
+            {
+                this.context.Set<TEntity>().Remove(entity);
+                await this.context.SaveChangesAsync();
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         /// <inheritdoc/>
@@ -64,7 +72,7 @@ namespace VPEAR.Server.Db
         }
 
         /// <inheritdoc/>
-        public async Task<TEntity> GetAsync(TKey id)
+        public async Task<TEntity?> GetAsync(TKey id)
         {
             return await this.context.Set<TEntity>()
                 .AsNoTracking()
