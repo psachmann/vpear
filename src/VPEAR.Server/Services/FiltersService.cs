@@ -73,9 +73,12 @@ namespace VPEAR.Server.Services
             if (device.Status == DeviceStatus.Active)
             {
                 // TODO: synchro service to publish updates to the device
-                device.Filters.Noise = request.Noise ?? device.Filters.Noise;
-                device.Filters.Smooth = request.Smooth ?? device.Filters.Smooth;
-                device.Filters.Spot = request.Spot ?? device.Filters.Spot;
+                device.Filters = new Filters()
+                {
+                    Noise = request.Noise ?? device.Filters.Noise,
+                    Smooth = request.Smooth ?? device.Filters.Smooth,
+                    Spot = request.Spot ?? device.Filters.Spot,
+                };
 
                 await this.repository.UpdateAsync(device);
 
@@ -95,9 +98,12 @@ namespace VPEAR.Server.Services
             if (device.Status == DeviceStatus.Stopped)
             {
                 // TODO: synchro service to publish updates to the device
-                device.Filters.Noise = request.Noise ?? device.Filters.Noise;
-                device.Filters.Smooth = request.Smooth ?? device.Filters.Smooth;
-                device.Filters.Spot = request.Spot ?? device.Filters.Spot;
+                device.Filters = new Filters()
+                {
+                    Noise = request.Noise ?? device.Filters.Noise,
+                    Smooth = request.Smooth ?? device.Filters.Smooth,
+                    Spot = request.Spot ?? device.Filters.Spot,
+                };
 
                 await this.repository.UpdateAsync(device);
 

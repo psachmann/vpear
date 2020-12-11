@@ -18,7 +18,7 @@ using static VPEAR.Server.Constants;
 namespace VPEAR.Server.Controllers
 {
     /// <summary>
-    /// Power management information for a specific device.
+    /// Power information for a specific device.
     /// </summary>
     [ApiController]
     [Route(Routes.PowerRoute)]
@@ -54,7 +54,7 @@ namespace VPEAR.Server.Controllers
         [SwaggerResponse(StatusCodes.Status424FailedDependency, "The device is not reachable.", typeof(StatusCodes))]
         public async Task<IActionResult> OnGetAsync([FromQuery, Required] Guid id)
         {
-            this.logger.LogDebug("{@Request}", id);
+            this.logger.LogDebug("{@Device}", id);
 
             var response = await this.service.GetAsync(id);
 

@@ -67,7 +67,7 @@ namespace VPEAR.Core.Wrappers
         /// </summary>
         /// <value>The wifi details.</value>
         [JsonPropertyName("wifi")]
-        public WifiResponse Wifi { get; set; } = new WifiResponse();
+        public GetWifiResponse Wifi { get; set; } = new GetWifiResponse();
 
         /// <summary>
         /// Gets or sets the firmware object.

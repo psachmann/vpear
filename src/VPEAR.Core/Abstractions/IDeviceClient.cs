@@ -45,7 +45,7 @@ namespace VPEAR.Core.Abstractions
 
         Task<DateTimeOffset?> GetTimeAsync();
 
-        Task<WifiResponse?> GetWifiAsync();
+        Task<GetWifiResponse?> GetWifiAsync();
 
         Task PutWifiAsync(string ssid, string password, string? mode = null);
 

@@ -18,7 +18,7 @@ using static VPEAR.Server.Constants;
 namespace VPEAR.Server.Controllers
 {
     /// <summary>
-    /// Filter management for a specific device.
+    /// Filter management and information for a specific device.
     /// </summary>
     [ApiController]
     [Route(Routes.FiltersRoute)]
@@ -52,7 +52,7 @@ namespace VPEAR.Server.Controllers
         [SwaggerResponse(StatusCodes.Status404NotFound, "The id was not found.", typeof(StatusCodes))]
         public async Task<IActionResult> OnGetAsync([FromQuery, Required] Guid id)
         {
-            this.logger.LogDebug("{@Request}", id);
+            this.logger.LogDebug("{@Device}", id);
 
             var response = await this.service.GetAsync(id);
 
@@ -65,7 +65,7 @@ namespace VPEAR.Server.Controllers
         /// Sets the filters for the specific device.
         /// </summary>
         /// <param name="id">The device id as hex string (XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX).</param>
-        /// <param name="request">Request data as json string.</param>
+        /// <param name="request">The request data.</param>
         /// <returns>Http status code, which indicates the operation result.</returns>
         [HttpPut]
         [Authorize]
@@ -77,9 +77,9 @@ namespace VPEAR.Server.Controllers
         [SwaggerResponse(StatusCodes.Status404NotFound, "The id was not found.", typeof(StatusCodes))]
         [SwaggerResponse(StatusCodes.Status410Gone, "The device is archived.", typeof(StatusCodes))]
         [SwaggerResponse(StatusCodes.Status424FailedDependency, "The device is not reachable.", typeof(StatusCodes))]
-        public async Task<IActionResult> OnPutAsync([FromQuery, Required] Guid id, [FromBody] PutFiltersRequest request)
+        public async Task<IActionResult> OnPutAsync([FromQuery, Required] Guid id, [FromBody, Required] PutFiltersRequest request)
         {
-            this.logger.LogDebug("{@Request}", request);
+            this.logger.LogDebug("{@Device}: {@Request}", id, request);
 
             var response = await this.service.PutAsync(id, request);
 

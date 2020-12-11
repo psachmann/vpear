@@ -44,26 +44,30 @@ namespace VPEAR.Server.Services
         {
             var device = await this.repository.GetAsync(id);
 
-            if (device != null && (device.Status == DeviceStatus.Active || device.Status == DeviceStatus.Stopped))
+            if (device == null)
+            {
+                return new Response(HttpStatusCode.NotFound);
+            }
+
+            if (device.Status == DeviceStatus.Active || device.Status == DeviceStatus.Stopped)
             {
                 var client = this.factory.Invoke(device.Address);
                 var payload = await client.GetPowerAsync();
 
                 return new Response(HttpStatusCode.OK, payload);
             }
-            else if (device == null)
+
+            if (device.Status == DeviceStatus.Archived)
             {
-                return new Response(HttpStatusCode.NotFound);
+                return new Response(HttpStatusCode.Gone);
             }
-            else
+
+            if (device.Status == DeviceStatus.NotReachable)
             {
-                return device.Status switch
-                {
-                    DeviceStatus.Archived => new Response(HttpStatusCode.Gone),
-                    DeviceStatus.NotReachable => new Response(HttpStatusCode.FailedDependency),
-                    _ => new Response(HttpStatusCode.InternalServerError),
-                };
+                return new Response(HttpStatusCode.FailedDependency);
             }
+
+            return new Response(HttpStatusCode.InternalServerError);
         }
     }
 }

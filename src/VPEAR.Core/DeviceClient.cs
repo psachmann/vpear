@@ -199,14 +199,14 @@ namespace VPEAR.Core
         }
 
         /// <inheritdoc/>
-        public async Task<WifiResponse?> GetWifiAsync()
+        public async Task<GetWifiResponse?> GetWifiAsync()
         {
             var response = await this.client.GetAsync("api/wifi");
             var json = await response.Content.ReadAsStringAsync();
 
             this.status = response.StatusCode;
 
-            return JsonSerializer.Deserialize<WifiResponse>(json);
+            return JsonSerializer.Deserialize<GetWifiResponse>(json);
         }
 
         /// <inheritdoc/>
