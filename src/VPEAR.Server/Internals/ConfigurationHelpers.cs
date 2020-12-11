@@ -49,7 +49,7 @@ namespace VPEAR.Server.Internals
 
             validator.ValidateAndThrow(config);
 
-            Log.Information("Using configuration \"{config}\"", config);
+            Log.Debug("Using configuration \"{@Configuration}\"", config);
         }
 
         private static string ExtractPath(in string[] args)

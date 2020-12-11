@@ -37,6 +37,9 @@ namespace VPEAR.Core
         }
 
         /// <inheritdoc/>
+        public delegate DeviceClient Factory(string baseAddess);
+
+        /// <inheritdoc/>
         public string BaseAddress
         {
             get { return this.baseAddess; }
@@ -66,14 +69,14 @@ namespace VPEAR.Core
         }
 
         /// <inheritdoc/>
-        public async Task<FiltersResponse?> GetFiltersAsync()
+        public async Task<GetFiltersResponse?> GetFiltersAsync()
         {
             var response = await this.client.GetAsync("api/filters");
             var json = await response.Content.ReadAsStringAsync();
 
             this.status = response.StatusCode;
 
-            return JsonSerializer.Deserialize<FiltersResponse>(json);
+            return JsonSerializer.Deserialize<GetFiltersResponse>(json);
         }
 
         /// <inheritdoc/>
@@ -130,14 +133,14 @@ namespace VPEAR.Core
         }
 
         /// <inheritdoc/>
-        public async Task<PowerResponse?> GetPowerAsync()
+        public async Task<GetPowerResponse?> GetPowerAsync()
         {
             var response = await this.client.GetAsync("api/power");
             var json = await response.Content.ReadAsStringAsync();
 
             this.status = response.StatusCode;
 
-            return JsonSerializer.Deserialize<PowerResponse>(json);
+            return JsonSerializer.Deserialize<GetPowerResponse>(json);
         }
 
         /// <inheritdoc/>

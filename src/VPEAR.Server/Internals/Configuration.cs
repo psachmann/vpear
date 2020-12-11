@@ -15,10 +15,6 @@ namespace VPEAR.Server.Internals
         [JsonPropertyName("database_connection")]
         public string DatabaseConnection { get; set; } = string.Empty;
 
-        [JsonPropertyName("log_level")]
-        [JsonConverter(typeof(JsonStringEnumConverter))]
-        public LogEventLevel LogLevel { get; set; } = Defaults.DefaultLogLevel;
-
         [JsonPropertyName("http_port")]
         public int HttpPort { get; set; } = Defaults.DefaultHttpPort;
 

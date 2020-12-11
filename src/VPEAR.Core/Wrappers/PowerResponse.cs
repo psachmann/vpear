@@ -10,7 +10,7 @@ namespace VPEAR.Core.Wrappers
     /// <summary>
     /// A json wrapper class with json naming conventions.
     /// </summary>
-    public class PowerResponse
+    public class GetPowerResponse
     {
         /// <summary>
         /// Gets or sets the state.

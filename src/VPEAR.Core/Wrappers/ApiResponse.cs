@@ -53,14 +53,14 @@ namespace VPEAR.Core.Wrappers
         /// </summary>
         /// <value>The filter details.</value>
         [JsonPropertyName("filters")]
-        public FiltersResponse Filters { get; set; } = new FiltersResponse();
+        public GetFiltersResponse Filters { get; set; } = new GetFiltersResponse();
 
         /// <summary>
         /// Gets or sets the power object.
         /// </summary>
         /// <value>The power details.</value>
         [JsonPropertyName("power")]
-        public PowerResponse Power { get; set; } = new PowerResponse();
+        public GetPowerResponse Power { get; set; } = new GetPowerResponse();
 
         /// <summary>
         /// Gets or sets the wifi object.

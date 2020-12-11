@@ -10,7 +10,7 @@ namespace VPEAR.Core.Wrappers
     /// <summary>
     /// A json wrapper class with json naming conventions.
     /// </summary>
-    public class FiltersResponse
+    public class GetFiltersResponse
     {
         /// <summary>
         /// Gets or sets a value indicating whether spot is used.

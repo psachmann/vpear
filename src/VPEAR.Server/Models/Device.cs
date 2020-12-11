@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using VPEAR.Core;
 using VPEAR.Server.Db;
 
 namespace VPEAR.Server.Models
@@ -79,5 +80,11 @@ namespace VPEAR.Server.Models
         /// </summary>
         /// <value>The firmware details.</value>
         public Firmware Firmware { get; set; } = new Firmware();
+
+        /// <summary>
+        /// Gets or sets the status.
+        /// </summary>
+        /// <value>The device status.</value>
+        public DeviceStatus Status { get; set; } = DeviceStatus.None;
     }
 }
