@@ -1,4 +1,4 @@
-// <copyright file="PowerResponse.cs" company="Patrick Sachmann">
+// <copyright file="GetPowerResponse.cs" company="Patrick Sachmann">
 // Copyright (c) Patrick Sachmann. All rights reserved.
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>

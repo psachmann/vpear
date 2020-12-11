@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using VPEAR.Core.Wrappers;
 
@@ -16,9 +17,11 @@ namespace VPEAR.Core.Abstractions
     /// </summary>
     public interface IDeviceClient
     {
-        delegate IDeviceClient Factory(string baseAddress);
+        public delegate IDeviceClient Factory(string baseAddress);
 
         string BaseAddress { get; }
+
+        HttpStatusCode ResponseStatusCode { get; }
 
         Task<DeviceResponse?> GetDeviceAsync();
 

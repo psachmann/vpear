@@ -41,7 +41,7 @@ namespace VPEAR.Server.Controllers
         /// <summary>
         /// Gets the current power information for the specific device.
         /// </summary>
-        /// <param name="id">The device id as hex string. Format: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX</param>
+        /// <param name="id">The device id as hex string (XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX).</param>
         /// <returns>The current device power information.</returns>
         [HttpGet]
         [Authorize]

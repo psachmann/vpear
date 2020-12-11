@@ -41,7 +41,7 @@ namespace VPEAR.Server.Controllers
         /// <summary>
         /// Gets the filters for the specific device.
         /// </summary>
-        /// <param name="id">The device id as hex string. Format: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX</param>
+        /// <param name="id">The device id as hex string (XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX).</param>
         /// <returns>The current filters for the device.</returns>
         [HttpGet]
         [Authorize]
@@ -64,7 +64,7 @@ namespace VPEAR.Server.Controllers
         /// <summary>
         /// Sets the filters for the specific device.
         /// </summary>
-        /// <param name="id">The device id as hex string. Format: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX</param>
+        /// <param name="id">The device id as hex string (XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX).</param>
         /// <param name="request">Request data as json string.</param>
         /// <returns>Http status code, which indicates the operation result.</returns>
         [HttpPut]

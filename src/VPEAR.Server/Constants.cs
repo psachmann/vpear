@@ -6,7 +6,6 @@
 using Serilog.Events;
 using System.Collections.Generic;
 
-
 namespace VPEAR.Server
 {
     /// <summary>
@@ -18,7 +17,7 @@ namespace VPEAR.Server
         {
             public const string DefaultConfigurationPath = "./appsettings.json";
 
-            public const LogEventLevel DefaultLogLevel = LogEventLevel.Information;
+            public const string DefaultResponseType = "application/json";
 
             public const int DefaultHttpPort = 80;
 
@@ -29,8 +28,6 @@ namespace VPEAR.Server
                 $"http://localhost:{DefaultHttpPort}/",
                 $"https://localhost:{DefaultHttpsPort}/",
             };
-
-            public const string DefaultResponseType = "application/json";
         }
 
         public static class Db

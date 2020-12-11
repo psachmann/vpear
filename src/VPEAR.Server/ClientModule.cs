@@ -11,7 +11,7 @@ namespace VPEAR.Server
 {
     /// <summary>
     /// Encapsulates the Autofac client registration in a single module.
-    /// /// </summary>
+    /// </summary>
     public class ClientModule : Module
     {
         /// <summary>

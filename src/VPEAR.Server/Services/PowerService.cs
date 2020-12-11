@@ -46,7 +46,7 @@ namespace VPEAR.Server.Services
 
             if (device != null && (device.Status == DeviceStatus.Active || device.Status == DeviceStatus.Stopped))
             {
-                var client = factory.Invoke(device.Address);
+                var client = this.factory.Invoke(device.Address);
                 var payload = await client.GetPowerAsync();
 
                 return new Response(HttpStatusCode.OK, payload);

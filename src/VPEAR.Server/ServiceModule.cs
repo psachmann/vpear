@@ -11,7 +11,7 @@ namespace VPEAR.Server
 {
     /// <summary>
     /// Encapsulates the Autofac service registration in a single module.
-    /// /// </summary>
+    /// </summary>
     public class ServiceModule : Module
     {
         /// <summary>

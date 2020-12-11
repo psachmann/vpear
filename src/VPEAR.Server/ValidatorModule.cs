@@ -9,7 +9,7 @@ namespace VPEAR.Server
 {
     /// <summary>
     /// Encapsulates the Autofac validator registration in a single module.
-    /// /// </summary>
+    /// </summary>
     public class ValidatorModule : Module
     {
         /// <summary>

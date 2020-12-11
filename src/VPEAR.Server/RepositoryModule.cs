@@ -13,7 +13,7 @@ namespace VPEAR.Server
 {
     /// <summary>
     /// Encapsulates the Autofac repository registration in a single module.
-    /// /// </summary>
+    /// </summary>
     public class RepositoryModule : Module
     {
         /// <summary>

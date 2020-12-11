@@ -20,9 +20,9 @@ namespace VPEAR.Core
     /// </summary>
     public sealed class DeviceClient : IDeviceClient, IDisposable
     {
-        private HttpStatusCode status;
         private readonly string baseAddess;
         private readonly HttpClient client;
+        private HttpStatusCode status;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceClient"/> class.
@@ -36,7 +36,6 @@ namespace VPEAR.Core
             this.client.BaseAddress = new Uri(baseAddess);
         }
 
-        /// <inheritdoc/>
         public delegate DeviceClient Factory(string baseAddess);
 
         /// <inheritdoc/>
@@ -104,8 +103,8 @@ namespace VPEAR.Core
         {
             var response = after switch
             {
-                null => await client.GetAsync("api/frames"),
-                _ => await client.GetAsync($"api/frames?after={after}"),
+                null => await this.client.GetAsync("api/frames"),
+                _ => await this.client.GetAsync($"api/frames?after={after}"),
             };
             var json = await response.Content.ReadAsStringAsync();
 
@@ -122,7 +121,7 @@ namespace VPEAR.Core
 
             this.status = response.StatusCode;
 
-            if (Int32.TryParse(text, out var frequency))
+            if (int.TryParse(text, out var frequency))
             {
                 return frequency;
             }
@@ -151,7 +150,7 @@ namespace VPEAR.Core
 
             this.status = response.StatusCode;
 
-            if (Int32.TryParse(text, out var requiredSensors))
+            if (int.TryParse(text, out var requiredSensors))
             {
                 return requiredSensors;
             }

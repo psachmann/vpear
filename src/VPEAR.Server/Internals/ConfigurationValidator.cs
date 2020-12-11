@@ -12,20 +12,20 @@ namespace VPEAR.Server.Internals
     {
         public ConfigurationValidator()
         {
-            RuleFor(c => c.DatabaseConnection)
+            this.RuleFor(c => c.DatabaseConnection)
                 .NotNull()
                 .NotEmpty();
 
-            When(c => c.HttpPort != Defaults.DefaultHttpPort, () =>
+            this.When(c => c.HttpPort != Defaults.DefaultHttpPort, () =>
             {
-                RuleFor(c => c.HttpPort)
+                this.RuleFor(c => c.HttpPort)
                     .GreaterThanOrEqualTo(1024)
                     .LessThan(65536);
             });
 
-            When(c => c.HttpsPort != Defaults.DefaultHttpsPort, () =>
+            this.When(c => c.HttpsPort != Defaults.DefaultHttpsPort, () =>
             {
-                RuleFor(c => c.HttpsPort)
+                this.RuleFor(c => c.HttpsPort)
                     .GreaterThanOrEqualTo(1024)
                     .LessThan(65536);
             });
