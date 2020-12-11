@@ -12,6 +12,8 @@ namespace VPEAR.Core.Abstractions
 {
     public interface IDeviceClient
     {
+        delegate IDeviceClient Factory(string baseAddress);
+
         string BaseAddress { get; }
 
         Task<DeviceResponse?> GetDeviceAsync();
@@ -28,11 +30,11 @@ namespace VPEAR.Core.Abstractions
 
         Task PutRequiredSensorsAsync(int requiredSensors);
 
-        Task<FiltersResponse?> GetFiltersAsync();
+        Task<GetFiltersResponse?> GetFiltersAsync();
 
         Task PutFiltersAsync(bool spot, bool smooth, bool noise);
 
-        Task<PowerResponse?> GetPowerAsync();
+        Task<GetPowerResponse?> GetPowerAsync();
 
         Task<DateTimeOffset?> GetTimeAsync();
 

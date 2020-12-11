@@ -30,7 +30,7 @@ namespace VPEAR.Server
                 $"https://localhost:{DefaultHttpsPort}/",
             };
 
-            public const string DefaultResponseType = "application/Json";
+            public const string DefaultResponseType = "application/json";
         }
 
         public static class Db

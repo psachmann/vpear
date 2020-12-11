@@ -23,19 +23,13 @@ namespace VPEAR.Server
     public class Startup
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Startup"/> class.
-        /// </summary>
-        public Startup()
-        {
-        }
-
-        /// <summary>
         /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         /// </summary>
         /// <param name="app">The application to configure.</param>
         /// <param name="env">The environment to configure.</param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // TODO: hosting environment is wrong
 #if DEBUG
             env.EnvironmentName = "Debug";
             app.UseDeveloperExceptionPage();
@@ -61,6 +55,7 @@ namespace VPEAR.Server
         /// <param name="builder">Autofac container builder.</param>
         public void ConfigureContainer(ContainerBuilder builder)
         {
+            builder.RegisterModule(new ClientModule());
             builder.RegisterModule(new RepositoryModule());
             builder.RegisterModule(new ServiceModule());
             builder.RegisterModule(new ValidatorModule());

@@ -7,6 +7,7 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using Serilog.Events;
 using System;
 using VPEAR.Server.Internals;
 
@@ -34,7 +35,7 @@ namespace VPEAR.Server
             catch (Exception exception)
             {
                 Log.Error("Message \"{@Error}\"", exception.Message);
-                Log.Fatal("Terminated due an error");
+                Log.Fatal("Terminated host due an error");
             }
             finally
             {
@@ -49,12 +50,14 @@ namespace VPEAR.Server
         /// <returns>The host to run the server.</returns>
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
-            Configuration = ConfigurationHelpers.LoadConfiguration(args);
+            // TODO: choose the right loglevel
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
+                .MinimumLevel.Is(LogEventLevel.Debug)
                 .Enrich.FromLogContext()
-                .WriteTo.Console(Configuration.LogLevel)
+                .WriteTo.Console()
                 .CreateLogger();
+
+            Configuration = ConfigurationHelpers.LoadConfiguration(args);
 
             var builder = Host.CreateDefaultBuilder(args)
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())

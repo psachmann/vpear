@@ -9,7 +9,7 @@ namespace VPEAR.Core
 {
     public class Response
     {
-        public Response(HttpStatusCode statusCode, dynamic payload)
+        public Response(HttpStatusCode statusCode, dynamic? payload = null)
         {
             this.StatusCode = (int)statusCode;
             this.Payload = payload;
@@ -17,6 +17,6 @@ namespace VPEAR.Core
 
         public int StatusCode { get; }
 
-        public dynamic Payload { get; }
+        public dynamic? Payload { get; }
     }
 }
