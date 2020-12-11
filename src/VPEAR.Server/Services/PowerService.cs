@@ -9,8 +9,8 @@ using System.Net;
 using System.Threading.Tasks;
 using VPEAR.Core;
 using VPEAR.Core.Abstractions;
+using VPEAR.Core.Models;
 using VPEAR.Server.Controllers;
-using VPEAR.Server.Models;
 
 namespace VPEAR.Server.Services
 {

@@ -5,7 +5,7 @@
 
 using System;
 
-namespace VPEAR.Server.Db
+namespace VPEAR.Core.Abstractions
 {
     /// <summary>
     /// Base class for all db entities.

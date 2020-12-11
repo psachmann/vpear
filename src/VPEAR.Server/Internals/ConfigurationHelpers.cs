@@ -20,27 +20,18 @@ namespace VPEAR.Server.Internals
         {
             Log.Information("Loading configuration...");
 
-            try
+            var path = ExtractPath(in args);
+            var json = File.ReadAllText(path, Encoding.UTF8);
+            var config = JsonSerializer.Deserialize<Configuration>(json)!;
+            config.Urls = new List<string>()
             {
-                var path = ExtractPath(in args);
-                var json = File.ReadAllText(path, Encoding.UTF8);
-                var config = JsonSerializer.Deserialize<Configuration>(json)!;
-                config.Urls = new List<string>()
-                {
-                    $"http://localhost:{config.HttpPort}",
-                    $"https://localhost:{config.HttpsPort}",
-                };
+                $"http://localhost:{config.HttpPort}",
+                $"https://localhost:{config.HttpsPort}",
+            };
 
-                ValidateConfiguration(config);
+            ValidateConfiguration(config);
 
-                return config;
-            }
-            catch (Exception exception)
-            {
-                Log.Fatal("Configuration couldn't be loaded");
-
-                throw exception;
-            }
+            return config;
         }
 
         private static void ValidateConfiguration(Configuration config)

@@ -5,9 +5,9 @@
 
 using System;
 using System.Collections.Generic;
-using VPEAR.Server.Db;
+using VPEAR.Core.Abstractions;
 
-namespace VPEAR.Server.Models
+namespace VPEAR.Core.Models
 {
     /// <summary>
     /// Db data model for entity framework.

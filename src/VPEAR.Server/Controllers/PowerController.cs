@@ -47,11 +47,11 @@ namespace VPEAR.Server.Controllers
         [Authorize]
         [Produces(Defaults.DefaultResponseType)]
         [SwaggerResponse(StatusCodes.Status200OK, "The current power information for the device.", typeof(GetPowerResponse))]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, "The request has the wrong format.")]
-        [SwaggerResponse(StatusCodes.Status401Unauthorized, "The request is not authorized.")]
-        [SwaggerResponse(StatusCodes.Status404NotFound, "The id was not found.")]
-        [SwaggerResponse(StatusCodes.Status410Gone, "The device is archived.")]
-        [SwaggerResponse(StatusCodes.Status424FailedDependency, "The device is not reachable.")]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "The request has the wrong format.", typeof(StatusCodes))]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "The request is not authorized.", typeof(StatusCodes))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "The id was not found.", typeof(StatusCodes))]
+        [SwaggerResponse(StatusCodes.Status410Gone, "The device is archived.", typeof(StatusCodes))]
+        [SwaggerResponse(StatusCodes.Status424FailedDependency, "The device is not reachable.", typeof(StatusCodes))]
         public async Task<IActionResult> OnGetAsync([FromQuery, Required] Guid id)
         {
             this.logger.LogDebug("{@Request}", id);

@@ -3,16 +3,17 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using VPEAR.Server.Models;
+using VPEAR.Core.Models;
 
 namespace VPEAR.Server.Db
 {
     /// <summary>
     /// The db context for the server.
     /// </summary>
-    public class VPEARDbContext : IdentityDbContext<User>
+    public class VPEARDbContext : IdentityDbContext<IdentityUser>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VPEARDbContext"/> class.

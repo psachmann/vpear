@@ -28,6 +28,15 @@ namespace VPEAR.Server
         {
             try
             {
+                // TODO: choose the right loglevel
+                Log.Logger = new LoggerConfiguration()
+                    .MinimumLevel.Is(LogEventLevel.Debug)
+                    .Enrich.FromLogContext()
+                    .WriteTo.Console()
+                    .CreateLogger();
+
+                Configuration = ConfigurationHelpers.LoadConfiguration(args);
+
                 CreateHostBuilder(args)
                     .Build()
                     .Run();
@@ -50,15 +59,6 @@ namespace VPEAR.Server
         /// <returns>The host to run the server.</returns>
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
-            // TODO: choose the right loglevel
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Is(LogEventLevel.Debug)
-                .Enrich.FromLogContext()
-                .WriteTo.Console()
-                .CreateLogger();
-
-            Configuration = ConfigurationHelpers.LoadConfiguration(args);
-
             var builder = Host.CreateDefaultBuilder(args)
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureWebHostDefaults(builder =>

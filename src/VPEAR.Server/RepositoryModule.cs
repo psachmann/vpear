@@ -6,8 +6,8 @@
 using Autofac;
 using System;
 using VPEAR.Core.Abstractions;
+using VPEAR.Core.Models;
 using VPEAR.Server.Db;
-using VPEAR.Server.Models;
 
 namespace VPEAR.Server
 {

@@ -6,6 +6,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
+using VPEAR.Core.Abstractions;
 
 namespace VPEAR.Server.Db
 {
