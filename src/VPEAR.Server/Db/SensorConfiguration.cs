@@ -36,6 +36,9 @@ namespace VPEAR.Server.Db
                 .HasMaxLength(Limits.MaxStringLength)
                 .IsRequired()
                 .IsUnicode();
+#if DEBUG
+            builder.HasData(DbSeed.Sensors);
+#endif
         }
     }
 }

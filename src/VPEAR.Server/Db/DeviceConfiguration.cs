@@ -53,7 +53,7 @@ namespace VPEAR.Server.Db
             builder.HasOne(d => d.Wifi)
                 .WithOne();
 #if DEBUG
-            // builder.HasData(DbSeed.Devices);
+            builder.HasData(DbSeed.Devices);
 #endif
         }
     }

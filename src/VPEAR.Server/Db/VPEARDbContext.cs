@@ -72,7 +72,7 @@ namespace VPEAR.Server.Db
             builder.ApplyConfiguration(new DeviceConfiguration());
             builder.ApplyConfiguration(new FiltersConfiguration());
             builder.ApplyConfiguration(new FirmwareConfiguration());
-            // builder.ApplyConfiguration(new FrameConfiguration());
+            builder.ApplyConfiguration(new FrameConfiguration());
             builder.ApplyConfiguration(new SensorConfiguration());
             builder.ApplyConfiguration(new WifiConfiguration());
         }

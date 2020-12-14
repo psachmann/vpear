@@ -7,9 +7,9 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Serilog;
-using Serilog.Events;
 using System;
 using VPEAR.Server.Internals;
+using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server
 {
@@ -28,9 +28,8 @@ namespace VPEAR.Server
         {
             try
             {
-                // TODO: choose the right loglevel
                 Log.Logger = new LoggerConfiguration()
-                    .MinimumLevel.Is(LogEventLevel.Debug)
+                    .MinimumLevel.Is(Defaults.DefaultLogLevel)
                     .Enrich.FromLogContext()
                     .WriteTo.Console()
                     .CreateLogger();
@@ -43,7 +42,7 @@ namespace VPEAR.Server
             }
             catch (Exception exception)
             {
-                Log.Error("Message \"{@Error}\"", exception.Message);
+                Log.Error("Message: \"{@Error}\"", exception.Message);
                 Log.Fatal("Terminated host due an error");
             }
             finally

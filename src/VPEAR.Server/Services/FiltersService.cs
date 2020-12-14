@@ -46,10 +46,9 @@ namespace VPEAR.Server.Services
 
             var payload = new GetFiltersResponse()
             {
-                // TODO: undo comments
-                // Noise = device.Filters.Noise,
-                // Smooth = device.Filters.Smooth,
-                // Spot = device.Filters.Noise,
+                Noise = device.Filters.Noise,
+                Smooth = device.Filters.Smooth,
+                Spot = device.Filters.Noise,
             };
 
             return new Response(HttpStatusCode.OK, payload);
@@ -68,13 +67,12 @@ namespace VPEAR.Server.Services
             if (device.Status == DeviceStatus.Active)
             {
                 // TODO: synchro service to publish updates to the device
-                // TODO: undo comments
-                // device.Filters = new Filters()
-                // {
-                //     Noise = request.Noise ?? device.Filters.Noise,
-                //     Smooth = request.Smooth ?? device.Filters.Smooth,
-                //     Spot = request.Spot ?? device.Filters.Spot,
-                // };
+                device.Filters = new Filters()
+                {
+                    Noise = request.Noise ?? device.Filters.Noise,
+                    Smooth = request.Smooth ?? device.Filters.Smooth,
+                    Spot = request.Spot ?? device.Filters.Spot,
+                };
 
                 await this.repository.UpdateAsync(device);
 
@@ -94,13 +92,12 @@ namespace VPEAR.Server.Services
             if (device.Status == DeviceStatus.Stopped)
             {
                 // TODO: synchro service to publish updates to the device
-                // TODO: undo comments
-                // device.Filters = new Filters()
-                // {
-                //     Noise = request.Noise ?? device.Filters.Noise,
-                //     Smooth = request.Smooth ?? device.Filters.Smooth,
-                //     Spot = request.Spot ?? device.Filters.Spot,
-                // };
+                device.Filters = new Filters()
+                {
+                    Noise = request.Noise ?? device.Filters.Noise,
+                    Smooth = request.Smooth ?? device.Filters.Smooth,
+                    Spot = request.Spot ?? device.Filters.Spot,
+                };
 
                 await this.repository.UpdateAsync(device);
 

@@ -24,7 +24,7 @@ namespace VPEAR.Server.Db
             builder.ToTable(Schemas.WifiSchema);
 
             builder.HasOne(w => w.Device)
-                .WithOne(d => d!.Wifi)
+                .WithOne(d => d.Wifi)
                 .HasForeignKey<Wifi>(w => w.DeviceForeignKey);
 
             builder.Property(w => w.Mode)
@@ -41,6 +41,9 @@ namespace VPEAR.Server.Db
                 .HasMaxLength(Limits.MaxStringLength)
                 .IsRequired()
                 .IsUnicode();
+#if DEBUG
+            builder.HasData(DbSeed.Wifis);
+#endif
         }
     }
 }

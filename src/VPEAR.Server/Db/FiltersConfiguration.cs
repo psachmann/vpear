@@ -26,8 +26,9 @@ namespace VPEAR.Server.Db
             builder.HasOne(f => f.Device)
                 .WithOne(d => d!.Filters)
                 .HasForeignKey<Filters>(f => f.DeviceForeignKey);
-
-            // builder.HasData(DbSeed.Filters);
+#if DEBUG
+            builder.HasData(DbSeed.Filters);
+#endif
         }
     }
 }

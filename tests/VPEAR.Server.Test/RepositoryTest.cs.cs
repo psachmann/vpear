@@ -19,7 +19,8 @@ namespace VPEAR.Server.Test
 
         public RepositoryTest()
         {
-            this.repository = new Repository<VPEARDbContext, Device, Guid>(Mocks.CreateDbContext());
+            this.repository = new Repository<VPEARDbContext, Device, Guid>(Mocks.CreateDbContext(),
+                Mocks.CreateLogger<IRepository<Device, Guid>>());
         }
 
         [Fact]
@@ -56,7 +57,7 @@ namespace VPEAR.Server.Test
 
             Assert.NotNull(device);
 
-            var result = await this.repository.DeleteAsync(device!.Id);
+            var result = await this.repository.DeleteAsync(device!);
 
             Assert.True(result);
 

@@ -46,10 +46,9 @@ namespace VPEAR.Server.Services
 
             var payload = new GetWifiResponse()
             {
-                // TODO: undo comments
-                // Mode = device.Wifi.Mode,
-                // Neighbors = device.Wifi.Neighbors,
-                // Ssid = device.Wifi.Ssid,
+                Mode = device.Wifi.Mode,
+                Neighbors = device.Wifi.Neighbors,
+                Ssid = device.Wifi.Ssid,
             };
 
             return new Response(HttpStatusCode.OK, payload);
@@ -69,14 +68,13 @@ namespace VPEAR.Server.Services
             {
                 // TODO: how to store the password?
                 // TODO: synchro service to publish updates to the device
-                // TODO: undo comments
-                // device.Wifi = new Wifi()
-                // {
-                //     Mode = request.Mode,
-                //     Neighbors = device.Wifi.Neighbors,
-                //     Password = request.Password,
-                //     Ssid = request.Ssid,
-                // };
+                device.Wifi = new Wifi()
+                {
+                    Mode = request.Mode,
+                    Neighbors = device.Wifi.Neighbors,
+                    Password = request.Password,
+                    Ssid = request.Ssid,
+                };
 
                 await this.repository.UpdateAsync(device);
 

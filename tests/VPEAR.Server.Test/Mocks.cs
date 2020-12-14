@@ -29,7 +29,8 @@ namespace VPEAR.Server.Test
             where TEntity : EntityBase<TKey>
             where TKey : struct, IEquatable<TKey>
         {
-            return new Repository<VPEARDbContext, TEntity, TKey>(CreateDbContext());
+            return new Repository<VPEARDbContext, TEntity, TKey>(CreateDbContext(),
+                CreateLogger<IRepository<TEntity, TKey>>());
         }
     }
 }

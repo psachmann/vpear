@@ -29,9 +29,9 @@ namespace VPEAR.Core.Abstractions
         /// <summary>
         /// Deletes an entry from the database with the given id.
         /// </summary>
-        /// <param name="id">The id from the entry to delete.</param>
+        /// <param name="entity">The entry to delete.</param>
         /// <returns>The success of the operation.</returns>
-        Task<bool> DeleteAsync(TKey id);
+        Task<bool> DeleteAsync(TEntity entity);
 
         /// <summary>
         /// Gets all entries from the database table.
@@ -44,7 +44,7 @@ namespace VPEAR.Core.Abstractions
         /// Gets an entry from the database.
         /// </summary>
         /// <param name="id">The id from the database entry.</param>
-        /// <returns>The complete entity or null, if the id not exists.</returns>
+        /// <returns>The complete entity or null, if id not exists.</returns>
         Task<TEntity?> GetAsync(TKey id);
 
         /// <summary>

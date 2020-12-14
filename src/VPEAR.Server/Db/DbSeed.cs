@@ -38,6 +38,7 @@ namespace VPEAR.Server.Db
                 var filters = new Filters()
                 {
                     DeviceForeignKey = device.Id,
+                    Id = device.Id,
                 };
 
                 var firmware = new Firmware()
@@ -74,12 +75,6 @@ namespace VPEAR.Server.Db
                     Password = $"password_{i}",
                     Ssid = $"ssid_{i}",
                 };
-
-                device.Filters = filters;
-                device.Firmware = firmware;
-                device.Wifi = wifi;
-                device.Frames.Add(frame);
-                device.Sensors.Add(sensor);
 
                 Devices.Add(device);
                 Filters.Add(filters);
