@@ -27,6 +27,8 @@ namespace VPEAR.Server.Controllers
     {
         private readonly ILogger<WifiController> logger;
         private readonly IWifiService service;
+
+        // TODO: implement validator
         private readonly IValidator<PutWifiRequest> validator;
 
         /// <summary>
