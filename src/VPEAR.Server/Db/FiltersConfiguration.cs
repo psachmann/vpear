@@ -18,6 +18,12 @@ namespace VPEAR.Server.Db
         public override void Configure(EntityTypeBuilder<Filters> builder)
         {
             base.Configure(builder);
+
+            builder.HasOne(f => f.Device)
+                .WithOne(d => d!.Filters)
+                .HasForeignKey<Filters>(f => f.DeviceForeignKey);
+
+            // builder.HasData(DbSeed.Filters);
         }
     }
 }

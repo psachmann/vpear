@@ -20,6 +20,10 @@ namespace VPEAR.Server.Db
         {
             base.Configure(builder);
 
+            builder.HasOne(f => f.Device)
+                .WithOne(d => d!.Firmware)
+                .HasForeignKey<Firmware>(f => f.DeviceForeignKey);
+
             builder.Property(f => f.Source)
                 .HasMaxLength(Limits.MaxStringLength)
                 .IsRequired()

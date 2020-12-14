@@ -30,5 +30,17 @@ namespace VPEAR.Core.Models
         /// </summary>
         /// <value>The firmaver source channel e.g. stable or unstable.</value>
         public string Source { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the foreign key.
+        /// </summary>
+        /// <value>The foreign key.</value>
+        public Guid DeviceForeignKey { get; set; }
+
+        /// <summary>
+        /// Gets or sets the device.
+        /// </summary>
+        /// <value>The navigation property.</value>
+        public Device? Device { get; set; }
     }
 }
