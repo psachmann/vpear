@@ -49,12 +49,6 @@ namespace VPEAR.Server.Db
         public DbSet<Frame>? Frames { get; set; }
 
         /// <summary>
-        /// Gets or sets powers.
-        /// </summary>
-        /// <value>All powers in the db.</value>
-        public DbSet<Power>? Powers { get; set; }
-
-        /// <summary>
         /// Gets or sets sensors.
         /// </summary>
         /// <value>All sensors in the db.</value>
@@ -73,11 +67,12 @@ namespace VPEAR.Server.Db
         /// <param name="builder">The ef core model builder.</param>
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            base.OnModelCreating(builder);
+
             builder.ApplyConfiguration(new DeviceConfiguration());
             builder.ApplyConfiguration(new FiltersConfiguration());
             builder.ApplyConfiguration(new FirmwareConfiguration());
-            builder.ApplyConfiguration(new FrameConfiguration());
-            builder.ApplyConfiguration(new PowerConfiguration());
+            // builder.ApplyConfiguration(new FrameConfiguration());
             builder.ApplyConfiguration(new SensorConfiguration());
             builder.ApplyConfiguration(new WifiConfiguration());
         }

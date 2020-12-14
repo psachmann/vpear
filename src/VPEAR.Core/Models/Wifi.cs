@@ -38,5 +38,17 @@ namespace VPEAR.Core.Models
         /// </summary>
         /// <value>A list of neighboring wifi networks.</value>
         public IList<string> Neighbors { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Gets or sets the foreign key.
+        /// </summary>
+        /// <value>The foreign key.</value>
+        public Guid DeviceForeignKey { get; set; }
+
+        /// <summary>
+        /// Gets or sets the device.
+        /// </summary>
+        /// <value>The navigation property.</value>
+        public Device? Device { get; set; }
     }
 }

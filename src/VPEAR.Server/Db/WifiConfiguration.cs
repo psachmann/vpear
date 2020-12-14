@@ -20,13 +20,19 @@ namespace VPEAR.Server.Db
         {
             base.Configure(builder);
 
+            builder.HasOne(w => w.Device)
+                .WithOne(d => d!.Wifi)
+                .HasForeignKey<Wifi>(w => w.DeviceForeignKey);
+
             builder.Property(w => w.Mode)
                 .HasMaxLength(Limits.MaxStringLength)
                 .IsRequired()
                 .IsUnicode();
 
-            builder.HasMany(w => w.Neighbors)
-                .WithOne();
+            builder.Property(w => w.Neighbors)
+                .HasConversion(
+                    v => string.Join(';', v),
+                    v => v.Split(new[] { ';' }));
 
             builder.Property(w => w.Ssid)
                 .HasMaxLength(Limits.MaxStringLength)

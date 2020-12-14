@@ -20,6 +20,10 @@ namespace VPEAR.Server.Db
         {
             base.Configure(builder);
 
+            builder.HasOne(s => s.Device)
+                .WithMany(d => d!.Sensors)
+                .HasForeignKey(s => s.DeviceForeignKey);
+
             builder.Property(s => s.Name)
                 .HasMaxLength(Limits.MaxStringLength)
                 .IsRequired()

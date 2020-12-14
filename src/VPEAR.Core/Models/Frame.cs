@@ -4,6 +4,7 @@
 // </copyright>
 
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using VPEAR.Core.Abstractions;
 
 namespace VPEAR.Core.Models
@@ -29,6 +30,20 @@ namespace VPEAR.Core.Models
         /// Gets or sets the readings.
         /// </summary>
         /// <value>The frame sensor values.</value>
+        /// TODO: translate into a valid database type
+        [NotMapped]
         public int[,]? Readings { get; set; }
+
+        /// <summary>
+        /// Gets or sets the foreign key.
+        /// </summary>
+        /// <value>The foreign key.</value>
+        public Guid DeviceForeignKey { get; set; }
+
+        /// <summary>
+        /// Gets or sets the device.
+        /// </summary>
+        /// <value>The navigation property.</value>
+        public Device? Device { get; set; }
     }
 }

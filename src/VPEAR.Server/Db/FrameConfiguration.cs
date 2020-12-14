@@ -20,8 +20,9 @@ namespace VPEAR.Server.Db
         {
             base.Configure(builder);
 
-            builder.Property(f => f.Readings)
-                .IsRequired();
+            builder.HasOne(f => f.Device)
+                .WithMany(d => d!.Frames)
+                .HasForeignKey(f => f.DeviceForeignKey);
 
             builder.Property(f => f.Time)
                 .HasMaxLength(Limits.MaxStringLength)

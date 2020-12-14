@@ -30,5 +30,17 @@ namespace VPEAR.Core.Models
         /// </summary>
         /// <value>Indicates, if the noise filter is used.</value>
         public bool Noise { get; set; }
+
+        /// <summary>
+        /// Gets or sets the foreign key.
+        /// </summary>
+        /// <value>The foreign key.</value>
+        public Guid DeviceForeignKey { get; set; }
+
+        /// <summary>
+        /// Gets or sets the device.
+        /// </summary>
+        /// <value>The navigation property.</value>
+        public Device? Device { get; set; }
     }
 }

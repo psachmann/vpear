@@ -64,12 +64,6 @@ namespace VPEAR.Core.Models
         public Filters Filters { get; set; } = new Filters();
 
         /// <summary>
-        /// Gets or sets the power object.
-        /// </summary>
-        /// <value>The power details.</value>
-        public Power Power { get; set; } = new Power();
-
-        /// <summary>
         /// Gets or sets the wifi object.
         /// </summary>
         /// <value>The wifi details.</value>

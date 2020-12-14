@@ -44,14 +44,14 @@ namespace VPEAR.Server.Db
                 .IsRequired()
                 .IsUnicode();
 
-            builder.HasOne(d => d.Power)
-                .WithOne();
-
             builder.HasMany(d => d.Sensors)
                 .WithOne();
 
             builder.HasOne(d => d.Wifi)
                 .WithOne();
+#if DEBUG
+            // builder.HasData(DbSeed.Devices);
+#endif
         }
     }
 }
