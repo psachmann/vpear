@@ -18,7 +18,7 @@ namespace VPEAR.Core.Models
         /// Gets or sets the index.
         /// </summary>
         /// <value>The frame index.</value>
-        public uint Index { get; set; }
+        public int Index { get; set; }
 
         /// <summary>
         /// Gets or sets the time.

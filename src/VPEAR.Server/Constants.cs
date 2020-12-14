@@ -22,17 +22,39 @@ namespace VPEAR.Server
             public const int DefaultHttpPort = 80;
 
             public const int DefaultHttpsPort = 443;
+#if DEBUG
+            public const LogEventLevel DefaultLogLevel = LogEventLevel.Debug;
+
+            public static readonly List<string> DefaultUrls = new List<string>()
+            {
+                $"http://localhost:{DefaultHttpPort}/",
+            };
+#else
+            public const LogEventLevel DefaultLogLevel = LogEventLevel.Information;
 
             public static readonly List<string> DefaultUrls = new List<string>()
             {
                 $"http://localhost:{DefaultHttpPort}/",
                 $"https://localhost:{DefaultHttpsPort}/",
             };
+#endif
         }
 
-        public static class Db
+        public static class Schemas
         {
-            public const string DefaultSchema = "VPEARDbContext";
+            public const string DbSchema = "VPEARDbContext";
+
+            public const string DeviceSchema = "Devices";
+
+            public const string FilterSchema = "Filters";
+
+            public const string FirmwareSchema = "Firmwares";
+
+            public const string FrameSchema = "Frames";
+
+            public const string SensorSchema = "Sensors";
+
+            public const string WifiSchema = "Wifis";
         }
 
         /// <summary>

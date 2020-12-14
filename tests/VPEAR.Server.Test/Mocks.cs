@@ -20,7 +20,7 @@ namespace VPEAR.Server.Test
         public static VPEARDbContext CreateDbContext()
         {
             var builder = new DbContextOptionsBuilder<VPEARDbContext>()
-                .UseInMemoryDatabase(Defaults.DefaultSchema);
+                .UseInMemoryDatabase(Schemas.DbSchema);
 
             return new VPEARDbContext(builder.Options);
         }

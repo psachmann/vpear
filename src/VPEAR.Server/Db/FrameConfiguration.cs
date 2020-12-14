@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using VPEAR.Core.Models;
@@ -19,6 +20,8 @@ namespace VPEAR.Server.Db
         public override void Configure(EntityTypeBuilder<Frame> builder)
         {
             base.Configure(builder);
+
+            builder.ToTable(Schemas.FrameSchema);
 
             builder.HasOne(f => f.Device)
                 .WithMany(d => d!.Frames)

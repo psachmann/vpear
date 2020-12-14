@@ -14,6 +14,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using VPEAR.Server.Db;
+using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server
 {
@@ -77,7 +78,7 @@ namespace VPEAR.Server
 #if DEBUG
             services.AddDbContext<VPEARDbContext>(options =>
             {
-                options.UseInMemoryDatabase(Constants.Db.DefaultSchema);
+                options.UseInMemoryDatabase(Schemas.DbSchema);
             });
 #else
             // TODO: configure for real database
