@@ -49,7 +49,7 @@ namespace VPEAR.Core.Abstractions
 
         Task PutWifiAsync(string ssid, string password, string? mode = null);
 
-        Task<FirmwareResponse?> GetFirmwareAsync();
+        Task<GetFirmwareResponse?> GetFirmwareAsync();
 
         Task PutFirmwareAsync(string? source, string? upgrade, bool package = false);
 

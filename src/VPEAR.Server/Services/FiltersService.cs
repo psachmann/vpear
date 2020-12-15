@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Net;
@@ -21,34 +22,41 @@ namespace VPEAR.Server.Services
     public class FiltersService : IFiltersService
     {
         private readonly ILogger<FiltersController> logger;
-        private readonly IRepository<Device, Guid> repository;
+        private readonly IRepository<Device, Guid> devices;
+        private readonly IRepository<Filters, Guid> filters;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FiltersService"/> class.
         /// </summary>
         /// <param name="logger">The service logger.</param>
-        /// <param name="repository">The device repository for database access.</param>
-        public FiltersService(ILogger<FiltersController> logger, IRepository<Device, Guid> repository)
+        /// <param name="devices">The device repository for db access.</param>
+        /// <param name="filters">The filter repository for db access.</param>
+        public FiltersService(
+            ILogger<FiltersController> logger,
+            IRepository<Device, Guid> devices,
+            IRepository<Filters, Guid> filters)
         {
             this.logger = logger;
-            this.repository = repository;
+            this.devices = devices;
+            this.filters = filters;
         }
 
         /// <inheritdoc/>
         public async Task<Response> GetAsync(Guid id)
         {
-            var device = await this.repository.GetAsync(id);
+            var filter = await this.filters.Get()
+                .FirstOrDefaultAsync(f => f.DeviceForeignKey.Equals(id));
 
-            if (device == null)
+            if (filter == null)
             {
                 return new Response(HttpStatusCode.NotFound);
             }
 
             var payload = new GetFiltersResponse()
             {
-                Noise = device.Filters.Noise,
-                Smooth = device.Filters.Smooth,
-                Spot = device.Filters.Noise,
+                Noise = filter.Noise,
+                Smooth = filter.Smooth,
+                Spot = filter.Noise,
             };
 
             return new Response(HttpStatusCode.OK, payload);
@@ -57,24 +65,23 @@ namespace VPEAR.Server.Services
         /// <inheritdoc/>
         public async Task<Response> PutAsync(Guid id, PutFiltersRequest request)
         {
-            var device = await this.repository.GetAsync(id);
+            var device = await this.devices.GetAsync(id);
+            var filter = await this.filters.Get()
+                .FirstOrDefaultAsync(f => f.DeviceForeignKey.Equals(id));
 
-            if (device == null)
+            if (device == null || filter == null)
             {
                 return new Response(HttpStatusCode.NotFound);
             }
 
-            if (device.Status == DeviceStatus.Active)
+            if (device.Status == DeviceStatus.Recording)
             {
                 // TODO: synchro service to publish updates to the device
-                device.Filters = new Filters()
-                {
-                    Noise = request.Noise ?? device.Filters.Noise,
-                    Smooth = request.Smooth ?? device.Filters.Smooth,
-                    Spot = request.Spot ?? device.Filters.Spot,
-                };
+                filter.Noise = request.Noise ?? filter.Noise;
+                filter.Smooth = request.Smooth ?? filter.Smooth;
+                filter.Spot = request.Spot ?? filter.Spot;
 
-                await this.repository.UpdateAsync(device);
+                await this.filters.UpdateAsync(filter);
 
                 return new Response(HttpStatusCode.OK);
             }
@@ -92,14 +99,11 @@ namespace VPEAR.Server.Services
             if (device.Status == DeviceStatus.Stopped)
             {
                 // TODO: synchro service to publish updates to the device
-                device.Filters = new Filters()
-                {
-                    Noise = request.Noise ?? device.Filters.Noise,
-                    Smooth = request.Smooth ?? device.Filters.Smooth,
-                    Spot = request.Spot ?? device.Filters.Spot,
-                };
+                filter.Noise = request.Noise ?? filter.Noise;
+                filter.Smooth = request.Smooth ?? filter.Smooth;
+                filter.Spot = request.Spot ?? filter.Spot;
 
-                await this.repository.UpdateAsync(device);
+                await this.filters.UpdateAsync(filter);
 
                 return new Response(HttpStatusCode.Accepted);
             }

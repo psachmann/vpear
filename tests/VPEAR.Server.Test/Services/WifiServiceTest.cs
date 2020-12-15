@@ -13,25 +13,27 @@ namespace VPEAR.Server.Test
 {
     public class WifiServiceTest
     {
-        private readonly Guid existingDevice;
-        private readonly Guid notExistingDevice;
-        private readonly Guid archivedDevice;
-        private readonly Guid notReachableDevice;
+        private readonly Guid stoppedDevice = DbSeed.Devices[0].Id;
+        private readonly Guid recordingDevice = DbSeed.Devices[1].Id;
+        private readonly Guid archivedDevice = DbSeed.Devices[2].Id;
+        private readonly Guid notReachableDevice = DbSeed.Devices[3].Id;
+        private readonly Guid notExistingDevice = new Guid();
+        private readonly VPEARDbContext context;
         private readonly IWifiService service;
 
         public WifiServiceTest()
         {
-            this.existingDevice = DbSeed.Devices[1].Id;
-            this.notExistingDevice = new Guid();
-            this.archivedDevice = DbSeed.Devices[2].Id;
-            this.notReachableDevice = DbSeed.Devices[3].Id;
-            this.service = new WifiService(Mocks.CreateLogger<WifiController>(), Mocks.CreateRepository<Device, Guid>());
+            this.context = Mocks.CreateDbContext();
+            this.service = new WifiService(
+                Mocks.CreateLogger<WifiController>(),
+                Mocks.CreateRepository<Device, Guid>(this.context),
+                Mocks.CreateRepository<Wifi, Guid>(this.context));
         }
 
         [Fact]
         public async Task GetAsync200OKTest()
         {
-            var response = await this.service.GetAsync(this.existingDevice);
+            var response = await this.service.GetAsync(this.recordingDevice);
 
             Assert.NotNull(response.Payload);
             Assert.Equal(StatusCodes.Status200OK, response.StatusCode);
@@ -49,7 +51,7 @@ namespace VPEAR.Server.Test
         [Fact]
         public async Task PutAsync200OKTest()
         {
-            var response = await this.service.PutAsync(this.existingDevice, new PutWifiRequest());
+            var response = await this.service.PutAsync(this.stoppedDevice, new PutWifiRequest());
 
             Assert.Null(response.Payload);
             Assert.Equal(StatusCodes.Status200OK, response.StatusCode);

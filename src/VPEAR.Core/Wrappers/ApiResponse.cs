@@ -74,6 +74,6 @@ namespace VPEAR.Core.Wrappers
         /// </summary>
         /// <value>The firmware details.</value>
         [JsonPropertyName("firmware")]
-        public FirmwareResponse Firmware { get; set; } = new FirmwareResponse();
+        public GetFirmwareResponse Firmware { get; set; } = new GetFirmwareResponse();
     }
 }

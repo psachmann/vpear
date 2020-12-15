@@ -52,8 +52,7 @@ namespace VPEAR.Server.Test
                 .Count;
 
             var device = this.repository.Get()
-                .Where(d => d.Status == DeviceStatus.Archived)
-                .FirstOrDefault();
+                .LastOrDefault();
 
             Assert.NotNull(device);
 

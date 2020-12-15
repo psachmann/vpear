@@ -18,7 +18,7 @@ namespace VPEAR.Core
         /// <summary>
         /// The device is recording data from a patient.
         /// </summary>
-        Active,
+        Recording,
 
         /// <summary>
         /// The device doesn't exist anymore, but the patient is kept in the database.

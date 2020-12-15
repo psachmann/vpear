@@ -11,18 +11,15 @@ using VPEAR.Core.Models;
 
 namespace VPEAR.Server.Db
 {
+    /// <summary>
+    /// Seed data for the database.
+    /// NOTE: this is only for testing
+    /// </summary>
     public static class DbSeed
     {
         static DbSeed()
         {
-            Devices = new List<Device>();
-            Filters = new List<Filters>();
-            Firmwares = new List<Firmware>();
-            Frames = new List<Frame>();
-            Sensors = new List<Sensor>();
-            Wifis = new List<Wifi>();
-
-            foreach (var i in Enumerable.Range(1, 4))
+            foreach (var i in Enumerable.Range(1, 9))
             {
                 var device = new Device()
                 {
@@ -85,16 +82,16 @@ namespace VPEAR.Server.Db
             }
         }
 
-        public static IList<Device> Devices { get; }
+        public static IList<Device> Devices { get; } = new List<Device>();
 
-        public static IList<Filters> Filters { get; }
+        public static IList<Filters> Filters { get; } = new List<Filters>();
 
-        public static IList<Firmware> Firmwares { get; }
+        public static IList<Firmware> Firmwares { get; } = new List<Firmware>();
 
-        public static IList<Frame> Frames { get; }
+        public static IList<Frame> Frames { get; } = new List<Frame>();
 
-        public static IList<Sensor> Sensors { get; }
+        public static IList<Sensor> Sensors { get; } = new List<Sensor>();
 
-        public static IList<Wifi> Wifis { get; }
+        public static IList<Wifi> Wifis { get; } = new List<Wifi>();
     }
 }

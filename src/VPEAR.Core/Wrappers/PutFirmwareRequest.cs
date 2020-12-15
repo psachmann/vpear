@@ -3,6 +3,8 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using System.Text.Json.Serialization;
+
 namespace VPEAR.Core.Wrappers
 {
     /// <summary>
@@ -10,5 +12,13 @@ namespace VPEAR.Core.Wrappers
     /// </summary>
     public class PutFirmwareRequest
     {
+        [JsonPropertyName("package")]
+        public bool Package;
+
+        [JsonPropertyName("upgrade")]
+        public string? Upgrade;
+
+        [JsonPropertyName("source")]
+        public string? Source;
     }
 }

@@ -49,7 +49,7 @@ namespace VPEAR.Server.Services
                 return new Response(HttpStatusCode.NotFound);
             }
 
-            if (device.Status == DeviceStatus.Active || device.Status == DeviceStatus.Stopped)
+            if (device.Status == DeviceStatus.Recording || device.Status == DeviceStatus.Stopped)
             {
                 var client = this.factory.Invoke(device.Address);
                 var payload = await client.GetPowerAsync();

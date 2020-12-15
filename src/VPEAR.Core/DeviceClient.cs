@@ -79,7 +79,7 @@ namespace VPEAR.Core
         }
 
         /// <inheritdoc/>
-        public async Task<FirmwareResponse?> GetFirmwareAsync()
+        public async Task<GetFirmwareResponse?> GetFirmwareAsync()
         {
             var response = await this.client.GetAsync("api/firmware/version");
             var version = await response.Content.ReadAsStringAsync();
@@ -90,7 +90,7 @@ namespace VPEAR.Core
 
             this.status = response.StatusCode;
 
-            return new FirmwareResponse()
+            return new GetFirmwareResponse()
             {
                 Source = source,
                 Upgrade = upgrade,
