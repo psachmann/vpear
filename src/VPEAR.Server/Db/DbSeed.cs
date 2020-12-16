@@ -17,8 +17,22 @@ namespace VPEAR.Server.Db
     /// </summary>
     public static class DbSeed
     {
+        private static IList<Device> devices = new List<Device>();
+        private static IList<Filters> filters = new List<Filters>();
+        private static IList<Firmware> firmwares = new List<Firmware>();
+        private static IList<Frame> frames = new List<Frame>();
+        private static IList<Sensor> sensors = new List<Sensor>();
+        private static IList<Wifi> wifis = new List<Wifi>();
+
         static DbSeed()
         {
+            devices.Clear();
+            filters.Clear();
+            firmwares.Clear();
+            frames.Clear();
+            sensors.Clear();
+            wifis.Clear();
+
             foreach (var i in Enumerable.Range(1, 9))
             {
                 var device = new Device()
@@ -32,7 +46,7 @@ namespace VPEAR.Server.Db
                     Status = (DeviceStatus)((i - 1) % 4),
                 };
 
-                var filters = new Filters()
+                var filter = new Filters()
                 {
                     DeviceForeignKey = device.Id,
                     Id = device.Id,
@@ -73,25 +87,43 @@ namespace VPEAR.Server.Db
                     Ssid = $"ssid_{i}",
                 };
 
-                Devices.Add(device);
-                Filters.Add(filters);
-                Firmwares.Add(firmware);
-                Frames.Add(frame);
-                Sensors.Add(sensor);
-                Wifis.Add(wifi);
+                devices.Add(device);
+                filters.Add(filter);
+                firmwares.Add(firmware);
+                frames.Add(frame);
+                sensors.Add(sensor);
+                wifis.Add(wifi);
             }
         }
 
-        public static IList<Device> Devices { get; } = new List<Device>();
+        public static IList<Device> Devices
+        {
+            get { return devices.Clone()!; }
+        }
 
-        public static IList<Filters> Filters { get; } = new List<Filters>();
+        public static IList<Filters> Filters
+        {
+            get { return filters.Clone()!; }
+        }
 
-        public static IList<Firmware> Firmwares { get; } = new List<Firmware>();
+        public static IList<Firmware> Firmwares
+        {
+            get { return firmwares.Clone()!; }
+        }
 
-        public static IList<Frame> Frames { get; } = new List<Frame>();
+        public static IList<Frame> Frames
+        {
+            get { return frames.Clone()!; }
+        }
 
-        public static IList<Sensor> Sensors { get; } = new List<Sensor>();
+        public static IList<Sensor> Sensors
+        {
+            get { return sensors.Clone()!; }
+        }
 
-        public static IList<Wifi> Wifis { get; } = new List<Wifi>();
+        public static IList<Wifi> Wifis
+        {
+            get { return wifis.Clone()!; }
+        }
     }
 }

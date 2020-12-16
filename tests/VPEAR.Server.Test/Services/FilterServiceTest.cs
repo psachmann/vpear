@@ -12,7 +12,8 @@ using Xunit;
 
 namespace VPEAR.Server.Test
 {
-    public class FiltersServiceTest
+    [Collection("FilterServiceTest")]
+    public class FilterServiceTest
     {
         private readonly Guid stoppedDevice = DbSeed.Devices[0].Id;
         private readonly Guid recordingDevice = DbSeed.Devices[1].Id;
@@ -22,7 +23,7 @@ namespace VPEAR.Server.Test
         private readonly VPEARDbContext context;
         private readonly IFiltersService service;
 
-        public FiltersServiceTest()
+        public FilterServiceTest()
         {
             this.context = Mocks.CreateDbContext();
             this.service = new FiltersService(

@@ -5,6 +5,7 @@
 
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using VPEAR.Core.Abstractions;
 
 namespace VPEAR.Core.Models
@@ -32,6 +33,7 @@ namespace VPEAR.Core.Models
         /// <value>The frame sensor values.</value>
         /// TODO: translate into a valid database type
         [NotMapped]
+        [JsonIgnore]
         public int[,]? Readings { get; set; }
 
         /// <summary>
