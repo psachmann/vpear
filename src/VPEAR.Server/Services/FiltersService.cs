@@ -74,7 +74,7 @@ namespace VPEAR.Server.Services
                 return new Response(HttpStatusCode.NotFound);
             }
 
-            if (device.Status == DeviceStatus.Recording)
+            if (device.Status == DeviceStatus.Recording || device.Status == DeviceStatus.Stopped)
             {
                 // TODO: synchro service to publish updates to the device
                 filter.Noise = request.Noise ?? filter.Noise;
@@ -94,18 +94,6 @@ namespace VPEAR.Server.Services
             if (device.Status == DeviceStatus.NotReachable)
             {
                 return new Response(HttpStatusCode.FailedDependency);
-            }
-
-            if (device.Status == DeviceStatus.Stopped)
-            {
-                // TODO: synchro service to publish updates to the device
-                filter.Noise = request.Noise ?? filter.Noise;
-                filter.Smooth = request.Smooth ?? filter.Smooth;
-                filter.Spot = request.Spot ?? filter.Spot;
-
-                await this.filters.UpdateAsync(filter);
-
-                return new Response(HttpStatusCode.Accepted);
             }
 
             return new Response(HttpStatusCode.InternalServerError);

@@ -70,15 +70,6 @@ namespace VPEAR.Server.Test
         }
 
         [Fact]
-        public async Task PutAsync202AcceptedTest()
-        {
-            var response = await this.service.PutAsync(this.stoppedDevice, new PutFiltersRequest());
-
-            Assert.Null(response.Payload);
-            Assert.Equal(StatusCodes.Status202Accepted, response.StatusCode);
-        }
-
-        [Fact]
         public async Task PutAsync404NotFoundTest()
         {
             var response = await this.service.PutAsync(this.notExistingDevice, new PutFiltersRequest());
