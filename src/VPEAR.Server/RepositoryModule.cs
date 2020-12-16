@@ -26,8 +26,20 @@ namespace VPEAR.Server
                 .As<IRepository<Device, Guid>>()
                 .InstancePerLifetimeScope();
 
+            builder.RegisterType<Repository<VPEARDbContext, Filters, Guid>>()
+                .As<IRepository<Filters, Guid>>()
+                .InstancePerLifetimeScope();
+
             builder.RegisterType<Repository<VPEARDbContext, Frame, Guid>>()
                 .As<IRepository<Frame, Guid>>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<Repository<VPEARDbContext, Sensor, Guid>>()
+                .As<IRepository<Sensor, Guid>>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<Repository<VPEARDbContext, Wifi, Guid>>()
+                .As<IRepository<Wifi, Guid>>()
                 .InstancePerLifetimeScope();
         }
     }
