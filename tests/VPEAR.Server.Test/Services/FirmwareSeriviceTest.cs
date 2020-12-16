@@ -47,24 +47,6 @@ namespace VPEAR.Server.Test
             Assert.Equal(StatusCodes.Status404NotFound, response.StatusCode);
         }
 
-        [Fact]
-        public async Task GetAsync410GoneTest()
-        {
-            var response = await this.service.GetAsync(this.archivedDevice);
-
-            Assert.Null(response.Payload);
-            Assert.Equal(StatusCodes.Status410Gone, response.StatusCode);
-        }
-
-        [Fact]
-        public async Task GetAsync424FailedDependencyTest()
-        {
-            var response = await this.service.GetAsync(this.notReachableDevice);
-
-            Assert.Null(response.Payload);
-            Assert.Equal(StatusCodes.Status424FailedDependency, response.StatusCode);
-        }
-
         [Theory]
         [InlineData(StatusCodes.Status200OK, false, "stable", null)]
         [InlineData(StatusCodes.Status200OK, false, "unstable", null)]
@@ -107,5 +89,13 @@ namespace VPEAR.Server.Test
             Assert.Equal(StatusCodes.Status410Gone, response.StatusCode);
         }
 
+        [Fact]
+        public async Task PutAsync424FailedDependencyTest()
+        {
+            var response = await this.service.PutAsync(this.notReachableDevice, new PutFirmwareRequest());
+
+            Assert.Null(response.Payload);
+            Assert.Equal(StatusCodes.Status424FailedDependency, response.StatusCode);
+        }
     }
 }

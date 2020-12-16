@@ -48,7 +48,7 @@ namespace VPEAR.Server.Test
         }
 
         [Fact]
-        public async Task PutAsync410GoneTest()
+        public async Task GetAsync410GoneTest()
         {
             var response = await this.service.GetAsync(this.archivedDevice);
 
@@ -57,7 +57,7 @@ namespace VPEAR.Server.Test
         }
 
         [Fact]
-        public async Task PutAsync424FailedDependencyTest()
+        public async Task GetAsync424FailedDependencyTest()
         {
             var response = await this.service.GetAsync(this.notReachableDevice);
 
