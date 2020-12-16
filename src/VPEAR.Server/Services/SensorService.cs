@@ -1,4 +1,4 @@
-// <copyright file="MeasuresService.cs" company="Patrick Sachmann">
+// <copyright file="SensorService.cs" company="Patrick Sachmann">
 // Copyright (c) Patrick Sachmann. All rights reserved.
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
@@ -13,7 +13,7 @@ namespace VPEAR.Server.Services
     /// <summary>
     /// Implements the <see cref="IDeviceService"/> interface.
     /// </summary>
-    public class MeasuresService : IMeasuresService
+    public class SensorService : ISensorService
     {
         /// <inheritdoc/>
         public Task<Response> GetFramesAsync(Guid id, int? start, int? stop)

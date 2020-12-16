@@ -32,8 +32,8 @@ namespace VPEAR.Server
                 .As<IFirmwareService>()
                 .InstancePerLifetimeScope();
 
-            builder.RegisterType<MeasuresService>()
-                .As<IMeasuresService>()
+            builder.RegisterType<SensorService>()
+                .As<ISensorService>()
                 .InstancePerLifetimeScope();
 
             builder.RegisterType<PowerService>()

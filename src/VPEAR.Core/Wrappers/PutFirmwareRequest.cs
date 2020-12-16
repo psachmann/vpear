@@ -13,12 +13,12 @@ namespace VPEAR.Core.Wrappers
     public class PutFirmwareRequest
     {
         [JsonPropertyName("package")]
-        public bool Package;
+        public bool Package { get; set; }
 
         [JsonPropertyName("upgrade")]
-        public string? Upgrade;
+        public string? Upgrade { get; set; }
 
         [JsonPropertyName("source")]
-        public string? Source;
+        public string? Source { get; set; }
     }
 }

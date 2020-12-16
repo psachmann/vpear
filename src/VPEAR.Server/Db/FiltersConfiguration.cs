@@ -24,7 +24,7 @@ namespace VPEAR.Server.Db
             builder.ToTable(Schemas.FilterSchema);
 
             builder.HasOne(f => f.Device)
-                .WithOne(d => d!.Filters)
+                .WithOne(d => d.Filters)
                 .HasForeignKey<Filters>(f => f.DeviceForeignKey);
 #if DEBUG
             builder.HasData(DbSeed.Filters);

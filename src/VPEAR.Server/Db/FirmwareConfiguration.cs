@@ -24,7 +24,7 @@ namespace VPEAR.Server.Db
             builder.ToTable(Schemas.FilterSchema);
 
             builder.HasOne(f => f.Device)
-                .WithOne(d => d!.Firmware)
+                .WithOne(d => d.Firmware)
                 .HasForeignKey<Firmware>(f => f.DeviceForeignKey);
 
             builder.Property(f => f.Source)

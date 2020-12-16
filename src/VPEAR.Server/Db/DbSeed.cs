@@ -13,7 +13,7 @@ namespace VPEAR.Server.Db
 {
     /// <summary>
     /// Seed data for the database.
-    /// NOTE: this is only for testing
+    /// NOTE: Only for testing.
     /// </summary>
     public static class DbSeed
     {
