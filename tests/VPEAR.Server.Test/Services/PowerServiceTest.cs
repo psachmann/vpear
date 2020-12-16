@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Models;
@@ -32,10 +33,19 @@ namespace VPEAR.Server.Test
         [Fact]
         public async Task GetAsync200OKTest()
         {
-            var response = await this.service.GetAsync(this.recordingDevice);
+            var devices = new List<Guid>()
+            {
+                this.stoppedDevice,
+                this.recordingDevice,
+            };
 
-            Assert.NotNull(response.Payload);
-            Assert.Equal(StatusCodes.Status200OK, response.StatusCode);
+            foreach (var device in devices)
+            {
+                var response = await this.service.GetAsync(device);
+
+                Assert.NotNull(response.Payload);
+                Assert.Equal(StatusCodes.Status200OK, response.StatusCode);
+            }
         }
 
         [Fact]

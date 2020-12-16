@@ -26,6 +26,9 @@ namespace VPEAR.Core.Models
         /// <value>The device class.</value>
         public string Class { get; set; } = string.Empty;
 
+        // TODO: configure ef core
+        public string DisplayName { get; set; } = string.Empty;
+
         /// <summary>
         /// Gets or sets the name.
         /// </summary>

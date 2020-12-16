@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Models;
@@ -11,7 +12,7 @@ using Xunit;
 
 namespace VPEAR.Server.Test
 {
-    public class FiltersServiceTest : IDisposable
+    public class FiltersServiceTest
     {
         private readonly Guid stoppedDevice = DbSeed.Devices[0].Id;
         private readonly Guid recordingDevice = DbSeed.Devices[1].Id;
@@ -30,18 +31,24 @@ namespace VPEAR.Server.Test
                 Mocks.CreateRepository<Filters, Guid>(this.context));
         }
 
-        public void Dispose()
-        {
-            context.Dispose();
-        }
-
         [Fact]
         public async Task GetAsync200OKTest()
         {
-            var response = await this.service.GetAsync(this.stoppedDevice);
+            var devices = new List<Guid>()
+            {
+                this.archivedDevice,
+                this.notReachableDevice,
+                this.stoppedDevice,
+                this.recordingDevice,
+            };
 
-            Assert.NotNull(response.Payload);
-            Assert.Equal(StatusCodes.Status200OK, response.StatusCode);
+            foreach (var device in devices)
+            {
+                var response = await this.service.GetAsync(device);
+
+                Assert.NotNull(response.Payload);
+                Assert.Equal(StatusCodes.Status200OK, response.StatusCode);
+            }
         }
 
         [Fact]

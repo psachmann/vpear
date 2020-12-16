@@ -3,6 +3,8 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using System.Text.Json.Serialization;
+
 namespace VPEAR.Core.Wrappers
 {
     /// <summary>
@@ -10,5 +12,10 @@ namespace VPEAR.Core.Wrappers
     /// </summary>
     public class PostDeviceRequest
     {
+        [JsonPropertyName("start_ip")]
+        public string? StartIP { get; set; }
+
+        [JsonPropertyName("stop_ip")]
+        public string? StopIP { get; set; }
     }
 }

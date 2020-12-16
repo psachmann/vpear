@@ -3,6 +3,8 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using System.Text.Json.Serialization;
+
 namespace VPEAR.Core.Wrappers
 {
     /// <summary>
@@ -10,5 +12,13 @@ namespace VPEAR.Core.Wrappers
     /// </summary>
     public class PutDeviceRequest
     {
+        [JsonPropertyName("display_name")]
+        public string? DisplayName { get; set; }
+
+        [JsonPropertyName("sample_frequency")]
+        public uint? SampleFrequency { get; set; }
+
+        [JsonPropertyName("required_sensors")]
+        public uint? RequiredSensors { get; set; }
     }
 }
