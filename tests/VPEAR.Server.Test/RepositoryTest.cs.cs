@@ -1,10 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using VPEAR.Core;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Models;
 using VPEAR.Server.Db;
@@ -12,7 +9,6 @@ using Xunit;
 
 namespace VPEAR.Server.Test
 {
-    [Collection("RepositoryTest")]
     public class RepositoryTest
     {
         private readonly IRepository<Device, Guid> repository;
@@ -51,12 +47,7 @@ namespace VPEAR.Server.Test
                 .ToList()
                 .Count;
 
-            var device = this.repository.Get()
-                .LastOrDefault();
-
-            Assert.NotNull(device);
-
-            var result = await this.repository.DeleteAsync(device!);
+            var result = await this.repository.DeleteAsync(DbSeed.Devices.Last());
 
             Assert.True(result);
 
@@ -80,11 +71,11 @@ namespace VPEAR.Server.Test
         public async Task GetAsyncTest()
         {
             var device = await this.repository.Get()
-                .LastOrDefaultAsync();
+                .FirstOrDefaultAsync();
 
             Assert.NotNull(device);
 
-            var otherDevice = await this.repository.GetAsync(device.Id);
+            var otherDevice = await this.repository.GetAsync(DbSeed.Devices.First().Id);
 
             Assert.NotNull(otherDevice);
             Assert.Equal(device.Id, otherDevice!.Id);

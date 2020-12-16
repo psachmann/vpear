@@ -13,7 +13,6 @@ using Xunit;
 
 namespace VPEAR.Server.Test
 {
-    [Collection("SensorServiceTest")]
     public class SensorServiceTest
     {
         private readonly Guid stoppedDevice = DbSeed.Devices[0].Id;

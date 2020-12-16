@@ -8,7 +8,6 @@ using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Test
 {
-    [Collection("EndpointTest")]
     public class EndpointTest : IClassFixture<WebApplicationFactory<Startup>>
     {
         private const string Get = "GET";

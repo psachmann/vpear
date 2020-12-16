@@ -12,7 +12,6 @@ using Xunit;
 
 namespace VPEAR.Server.Test
 {
-    [Collection("WifiServiceTest")]
     public class WifiServiceTest
     {
         private readonly Guid stoppedDevice = DbSeed.Devices[0].Id;

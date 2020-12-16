@@ -7,8 +7,7 @@ using Xunit;
 
 namespace VPEAR.Server.Test.Services
 {
-    [Collection("UserServiceTest")]
-    class UserServiceTest
+    public class UserServiceTest
     {
     }
 }

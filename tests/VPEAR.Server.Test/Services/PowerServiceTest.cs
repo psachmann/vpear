@@ -11,7 +11,6 @@ using Xunit;
 
 namespace VPEAR.Server.Test
 {
-    [Collection("PowerServiceTest")]
     public class PowerServiceTest
     {
         private readonly Guid stoppedDevice = DbSeed.Devices[0].Id;

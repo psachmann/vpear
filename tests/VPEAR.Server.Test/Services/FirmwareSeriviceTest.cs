@@ -12,7 +12,6 @@ using Xunit;
 
 namespace VPEAR.Server.Test
 {
-    [Collection("FirmwareServiceTest")]
     public class FirmwareServiceTest
     {
         private readonly Guid stoppedDevice = DbSeed.Devices[0].Id;
