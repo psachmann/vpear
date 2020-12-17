@@ -39,7 +39,7 @@ namespace VPEAR.Server.Db
         /// <summary>
         /// Gets or sets firmwares.
         /// </summary>
-        /// <value>All firmewares in the db.</value>
+        /// <value>All firmwares in the db.</value>
         public DbSet<Firmware>? Firmwares { get; set; }
 
         /// <summary>
