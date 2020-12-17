@@ -18,14 +18,6 @@ namespace VPEAR.Server.Test
             return mock.Object;
         }
 
-        public static VPEARDbContext CreateDbContext()
-        {
-            var builder = new DbContextOptionsBuilder<VPEARDbContext>()
-                .UseInMemoryDatabase(Schemas.DbSchema);
-
-            return new VPEARDbContext(builder.Options);
-        }
-
         public static IRepository<TEntity, TKey> CreateRepository<TEntity, TKey>(VPEARDbContext context)
             where TEntity : EntityBase<TKey>
             where TKey : struct, IEquatable<TKey>

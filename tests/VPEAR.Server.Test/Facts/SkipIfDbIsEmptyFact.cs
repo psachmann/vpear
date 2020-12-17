@@ -1,13 +1,18 @@
 using System.Linq;
 using VPEAR.Core.Models;
+using VPEAR.Server.Db;
 using Xunit;
 
 namespace VPEAR.Server.Test
 {
-    public class SkipIfDbIsEmptyFact : FactAttribute
+    public class SkipIfDbIsEmptyFact : FactAttribute, IClassFixture<VPEARDbContextFixture>
     {
-        public SkipIfDbIsEmptyFact()
+        private readonly VPEARDbContext context;
+
+        public SkipIfDbIsEmptyFact(VPEARDbContextFixture fixture)
         {
+            this.context = fixture.Context;
+
             if (IsEmpty())
             {
                 this.Skip = "The db is empty.";
@@ -16,9 +21,7 @@ namespace VPEAR.Server.Test
 
         private bool IsEmpty()
         {
-            var context = Mocks.CreateDbContext();
-
-            if (context.Set<Device>().Any())
+            if (this.context.Set<Device>().Any())
             {
                 return true;
             }

@@ -7,7 +7,10 @@ using Xunit;
 
 namespace VPEAR.Server.Test.Services
 {
-    public class UserServiceTest
+    public class UserServiceTest : IClassFixture<VPEARDbContextFixture>
     {
+        public UserServiceTest(VPEARDbContextFixture fixture)
+        {
+        }
     }
 }

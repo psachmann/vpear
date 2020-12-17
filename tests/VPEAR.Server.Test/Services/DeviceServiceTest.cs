@@ -12,22 +12,20 @@ using Xunit;
 
 namespace VPEAR.Server.Test
 {
-    public class DeviceServiceTest
+    public class DeviceServiceTest : IClassFixture<VPEARDbContextFixture>
     {
         private readonly Guid stoppedDevice = DbSeed.Devices[0].Id;
         private readonly Guid recordingDevice = DbSeed.Devices[1].Id;
         private readonly Guid archivedDevice = DbSeed.Devices[2].Id;
         private readonly Guid notReachableDevice = DbSeed.Devices[3].Id;
         private readonly Guid notExistingDevice = new Guid();
-        private readonly VPEARDbContext context;
         private readonly IDeviceService service;
 
-        public DeviceServiceTest()
+        public DeviceServiceTest(VPEARDbContextFixture fixture)
         {
-            this.context = Mocks.CreateDbContext();
             this.service = new DeviceService(
                 Mocks.CreateLogger<DeviceController>(),
-                Mocks.CreateRepository<Device, Guid>(this.context));
+                Mocks.CreateRepository<Device, Guid>(fixture.Context));
         }
 
         [Fact]

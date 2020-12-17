@@ -9,13 +9,14 @@ using Xunit;
 
 namespace VPEAR.Server.Test
 {
-    public class RepositoryTest
+    public class RepositoryTest : IClassFixture<VPEARDbContextFixture>
     {
         private readonly IRepository<Device, Guid> repository;
 
-        public RepositoryTest()
+        public RepositoryTest(VPEARDbContextFixture fixture)
         {
-            this.repository = new Repository<VPEARDbContext, Device, Guid>(Mocks.CreateDbContext(),
+            this.repository = new Repository<VPEARDbContext, Device, Guid>(
+                fixture.Context,
                 Mocks.CreateLogger<IRepository<Device, Guid>>());
         }
 
