@@ -18,24 +18,14 @@ namespace VPEAR.Server
     /// </summary>
     public class Program
     {
-        internal static Configuration Configuration { get; private set; } = new Configuration();
-
         /// <summary>
-        /// The entrypoint for the progeam.
+        /// The entry point for the program.
         /// </summary>
         /// <param name="args">The command line arguments for the program.</param>
         public static void Main(string[] args)
         {
             try
             {
-                Log.Logger = new LoggerConfiguration()
-                    .MinimumLevel.Is(Defaults.DefaultLogLevel)
-                    .Enrich.FromLogContext()
-                    .WriteTo.Console()
-                    .CreateLogger();
-
-                Configuration = ConfigurationHelpers.LoadConfiguration(args);
-
                 CreateHostBuilder(args)
                     .Build()
                     .Run();
@@ -58,13 +48,21 @@ namespace VPEAR.Server
         /// <returns>The host to run the server.</returns>
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
+            Log.Logger = new LoggerConfiguration()
+                       .MinimumLevel.Is(Defaults.DefaultLogLevel)
+                       .Enrich.FromLogContext()
+                       .WriteTo.Console()
+                       .CreateLogger();
+
+            Startup.Config = Configuration.Load(args);
+
             var builder = Host.CreateDefaultBuilder(args)
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureWebHostDefaults(builder =>
                 {
                     builder.UseSerilog();
                     builder.UseStartup<Startup>();
-                    builder.UseUrls(Configuration.Urls.ToArray());
+                    builder.UseUrls(Startup.Config!.Urls.ToArray());
                 });
 
             return builder;

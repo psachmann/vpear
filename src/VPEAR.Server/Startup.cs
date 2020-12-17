@@ -4,16 +4,22 @@
 // </copyright>
 
 using Autofac;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using Serilog;
 using System;
 using System.IO;
 using System.Reflection;
+using System.Text;
 using VPEAR.Server.Db;
+using VPEAR.Server.Internals;
 using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server
@@ -23,6 +29,13 @@ namespace VPEAR.Server
     /// </summary>
     public class Startup
     {
+        public Startup()
+        {
+            Configuration.EnsureLoaded(Environment.GetCommandLineArgs());
+        }
+
+        internal static Configuration? Config { get; set; }
+
         /// <summary>
         /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         /// </summary>
@@ -30,20 +43,20 @@ namespace VPEAR.Server
         /// <param name="env">The environment to configure.</param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            // TODO: hosting environment is wrong
 #if DEBUG
-            env.EnvironmentName = "Debug";
+            env.EnvironmentName = "Development";
             app.UseDeveloperExceptionPage();
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "VPEAR.Server v1"));
 #else
-            env.EnvironmentName = "Release";
+            env.EnvironmentName = "Production";
             app.UseHttpsRedirection();
 #endif
             app.UseRouting();
 
+#if !DEBUG
             app.UseAuthorization();
-
+#endif
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -69,6 +82,32 @@ namespace VPEAR.Server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<VPEARDbContext>()
+                .AddDefaultTokenProviders();
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.SaveToken = true;
+                options.RequireHttpsMetadata = false;
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+
+                    // TODO: read more about audience and issuer
+                    // ValidAudience = Configuration["JWT:ValidAudience"],
+                    // ValidIssuer = Configuration["JWT:ValidIssuer"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Config!.Secret)),
+                };
+            });
+
             this.ConfigureDatabase(services);
             this.ConfigureSwagger(services);
         }
@@ -81,7 +120,16 @@ namespace VPEAR.Server
                 options.UseInMemoryDatabase(Schemas.DbSchema);
             });
 #else
-            // TODO: configure for real database
+            services.AddDbContextPool<VPEARDbContext>(builder =>
+            {
+                builder.UseMySql(
+                    Program.Configuration.DbConnection,
+                    new MySqlServerVersion(new Version(Program.Configuration.DbVersion)),
+                    options =>
+                    {
+                        options.CharSetBehavior(CharSetBehavior.NeverAppend);
+                    });
+            });
 #endif
         }
 

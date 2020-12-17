@@ -12,7 +12,7 @@ namespace VPEAR.Server.Internals
     {
         public ConfigurationValidator()
         {
-            this.RuleFor(c => c.DatabaseConnection)
+            this.RuleFor(c => c.DbConnection)
                 .NotNull()
                 .NotEmpty();
 

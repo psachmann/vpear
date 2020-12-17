@@ -90,7 +90,7 @@ namespace VPEAR.Server
             /// <summary>
             /// The prefix for the webapi.
             /// </summary>
-            public const string ApiPrefix = "api/";
+            public const string ApiPrefix = "/api/";
 
             /// <summary>
             /// The version for the webapi.
@@ -138,11 +138,13 @@ namespace VPEAR.Server
             /// </summary>
             public const string FirmwareRoute = BaseRoute + "device/firmware";
 
-            public const string UsersRoute = BaseRoute + "users";
+            public const string UsersRoute = BaseRoute + "user";
 
-            public const string RegisterRoute = BaseRoute + "users/register";
+            public const string RegisterRoute = BaseRoute + "user/register";
 
-            public const string LoginRoute = BaseRoute + "users/login";
+            public const string LoginRoute = BaseRoute + "user/login";
+
+            public const string LogoutRoute = BaseRoute + "user/logout";
         }
     }
 }
