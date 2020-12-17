@@ -1,4 +1,5 @@
-# Build and Test withc Azure Pipelines
+# Build and Test with Azure Pipelines
+
 trigger:
 - master
 - release/*
