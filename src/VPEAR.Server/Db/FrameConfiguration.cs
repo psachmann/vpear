@@ -3,9 +3,10 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
-using VPEAR.Server.Models;
+using VPEAR.Core.Models;
 using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Db
@@ -20,13 +21,19 @@ namespace VPEAR.Server.Db
         {
             base.Configure(builder);
 
-            builder.Property(f => f.Readings)
-                .IsRequired();
+            builder.ToTable(Schemas.FrameSchema);
+
+            builder.HasOne(f => f.Device)
+                .WithMany(d => d!.Frames)
+                .HasForeignKey(f => f.DeviceForeignKey);
 
             builder.Property(f => f.Time)
                 .HasMaxLength(Limits.MaxStringLength)
                 .IsRequired()
                 .IsUnicode();
+#if DEBUG
+            builder.HasData(DbSeed.Frames);
+#endif
         }
     }
 }

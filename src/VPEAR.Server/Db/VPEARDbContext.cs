@@ -3,15 +3,17 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using VPEAR.Server.Models;
+using VPEAR.Core.Models;
 
 namespace VPEAR.Server.Db
 {
     /// <summary>
     /// The db context for the server.
     /// </summary>
-    public class VPEARDbContext : DbContext
+    public class VPEARDbContext : IdentityDbContext<IdentityUser>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VPEARDbContext"/> class.
@@ -37,7 +39,7 @@ namespace VPEAR.Server.Db
         /// <summary>
         /// Gets or sets firmwares.
         /// </summary>
-        /// <value>All firmewares in the db.</value>
+        /// <value>All firmwares in the db.</value>
         public DbSet<Firmware>? Firmwares { get; set; }
 
         /// <summary>
@@ -45,12 +47,6 @@ namespace VPEAR.Server.Db
         /// </summary>
         /// <value>All frames in the db.</value>
         public DbSet<Frame>? Frames { get; set; }
-
-        /// <summary>
-        /// Gets or sets powers.
-        /// </summary>
-        /// <value>All powers in the db.</value>
-        public DbSet<Power>? Powers { get; set; }
 
         /// <summary>
         /// Gets or sets sensors.
@@ -71,13 +67,14 @@ namespace VPEAR.Server.Db
         /// <param name="builder">The ef core model builder.</param>
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.ApplyConfiguration<Device>(new DeviceConfiguration());
-            builder.ApplyConfiguration<Filters>(new FiltersConfiguration());
-            builder.ApplyConfiguration<Firmware>(new FirmwareConfiguration());
-            builder.ApplyConfiguration<Frame>(new FrameConfiguration());
-            builder.ApplyConfiguration<Power>(new PowerConfiguration());
-            builder.ApplyConfiguration<Sensor>(new SensorConfiguration());
-            builder.ApplyConfiguration<Wifi>(new WifiConfiguration());
+            base.OnModelCreating(builder);
+
+            builder.ApplyConfiguration(new DeviceConfiguration());
+            builder.ApplyConfiguration(new FiltersConfiguration());
+            builder.ApplyConfiguration(new FirmwareConfiguration());
+            builder.ApplyConfiguration(new FrameConfiguration());
+            builder.ApplyConfiguration(new SensorConfiguration());
+            builder.ApplyConfiguration(new WifiConfiguration());
         }
     }
 }

@@ -53,27 +53,27 @@ namespace VPEAR.Core.Wrappers
         /// </summary>
         /// <value>The filter details.</value>
         [JsonPropertyName("filters")]
-        public FiltersResponse Filters { get; set; } = new FiltersResponse();
+        public GetFiltersResponse Filters { get; set; } = new GetFiltersResponse();
 
         /// <summary>
         /// Gets or sets the power object.
         /// </summary>
         /// <value>The power details.</value>
         [JsonPropertyName("power")]
-        public PowerResponse Power { get; set; } = new PowerResponse();
+        public GetPowerResponse Power { get; set; } = new GetPowerResponse();
 
         /// <summary>
         /// Gets or sets the wifi object.
         /// </summary>
         /// <value>The wifi details.</value>
         [JsonPropertyName("wifi")]
-        public WifiResponse Wifi { get; set; } = new WifiResponse();
+        public GetWifiResponse Wifi { get; set; } = new GetWifiResponse();
 
         /// <summary>
         /// Gets or sets the firmware object.
         /// </summary>
         /// <value>The firmware details.</value>
         [JsonPropertyName("firmware")]
-        public FirmwareResponse Firmware { get; set; } = new FirmwareResponse();
+        public GetFirmwareResponse Firmware { get; set; } = new GetFirmwareResponse();
     }
 }

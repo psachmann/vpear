@@ -4,6 +4,7 @@
 // </copyright>
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,38 +24,55 @@ namespace VPEAR.Server.Db
         where TKey : struct, IEquatable<TKey>
     {
         private readonly TDbContext context;
+        private readonly ILogger<IRepository<TEntity, TKey>> logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Repository{TDbContext, TEntity, TKey}"/> class.
         /// </summary>
         /// <param name="context">The connection to the db.</param>
-        public Repository(TDbContext context)
+        /// <param name="logger">The repository logger.</param>
+        public Repository(TDbContext context, ILogger<IRepository<TEntity, TKey>> logger)
         {
             this.context = context;
-#if DEBUG
-            // TODO: is populating still needed?
-            // populates the seed data into the in memory db
-            this.context.Database.EnsureCreated();
-#endif
+            this.logger = logger;
         }
 
         /// <inheritdoc/>
         public async Task<bool> CreateAsync(TEntity entity)
         {
-            await this.context.Set<TEntity>().AddAsync(entity);
-            await this.context.SaveChangesAsync();
+            try
+            {
+                await this.context.Set<TEntity>().AddAsync(entity);
+                await this.context.SaveChangesAsync();
 
-            return true;
+                return true;
+            }
+            catch (Exception exception)
+            {
+                this.logger.LogError("Message: \"{@Error}\"", exception.Message);
+                this.logger.LogDebug("Exception: \"{@Debug}\"", exception);
+
+                return false;
+            }
         }
 
         /// <inheritdoc/>
-        public async Task<bool> DeleteAsync(TKey id)
+        public async Task<bool> DeleteAsync(TEntity entity)
         {
-            var entity = await this.GetAsync(id);
-            this.context.Set<TEntity>().Remove(entity);
-            await this.context.SaveChangesAsync();
+            try
+            {
+                this.context.Set<TEntity>().Remove(entity);
+                await this.context.SaveChangesAsync();
 
-            return true;
+                return true;
+            }
+            catch (Exception exception)
+            {
+                this.logger.LogError("Message: \"{@Error}\"", exception.Message);
+                this.logger.LogDebug("Exception: \"{@Debug}\"", exception);
+
+                return false;
+            }
         }
 
         /// <inheritdoc/>
@@ -64,20 +82,40 @@ namespace VPEAR.Server.Db
         }
 
         /// <inheritdoc/>
-        public async Task<TEntity> GetAsync(TKey id)
+        public async Task<TEntity?> GetAsync(TKey id)
         {
-            return await this.context.Set<TEntity>()
-                .AsNoTracking()
-                .FirstOrDefaultAsync(e => id.Equals(e.Id));
+            try
+            {
+                return await this.context.Set<TEntity>()
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(e => id.Equals(e.Id));
+            }
+            catch (Exception exception)
+            {
+                this.logger.LogError("Message: \"{@Error}\"", exception.Message);
+                this.logger.LogDebug("Exception: \"{@Debug}\"", exception);
+
+                return null;
+            }
         }
 
         /// <inheritdoc/>
         public async Task<bool> UpdateAsync(TEntity entity)
         {
-            this.context.Set<TEntity>().Update(entity);
-            await this.context.SaveChangesAsync();
+            try
+            {
+                this.context.Set<TEntity>().Update(entity);
+                await this.context.SaveChangesAsync();
 
-            return true;
+                return true;
+            }
+            catch (Exception exception)
+            {
+                this.logger.LogError("Message: \"{@Error}\"", exception.Message);
+                this.logger.LogDebug("Exception: \"{@Debug}\"", exception);
+
+                return false;
+            }
         }
     }
 }

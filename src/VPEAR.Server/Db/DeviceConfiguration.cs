@@ -3,9 +3,10 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
-using VPEAR.Server.Models;
+using VPEAR.Core.Models;
 using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Db
@@ -19,6 +20,8 @@ namespace VPEAR.Server.Db
         public override void Configure(EntityTypeBuilder<Device> builder)
         {
             base.Configure(builder);
+
+            builder.ToTable(Schemas.DeviceSchema);
 
             builder.Property(d => d.Address)
                 .HasMaxLength(Limits.MaxStringLength)
@@ -44,14 +47,14 @@ namespace VPEAR.Server.Db
                 .IsRequired()
                 .IsUnicode();
 
-            builder.HasOne(d => d.Power)
-                .WithOne();
-
             builder.HasMany(d => d.Sensors)
                 .WithOne();
 
             builder.HasOne(d => d.Wifi)
                 .WithOne();
+#if DEBUG
+            builder.HasData(DbSeed.Devices);
+#endif
         }
     }
 }
