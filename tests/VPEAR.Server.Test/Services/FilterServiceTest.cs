@@ -10,7 +10,7 @@ using VPEAR.Server.Db;
 using VPEAR.Server.Services;
 using Xunit;
 
-namespace VPEAR.Server.Test
+namespace VPEAR.Server.Test.Services
 {
     public class FilterServiceTest : IClassFixture<VPEARDbContextFixture>
     {

@@ -3,7 +3,7 @@ using System.Net;
 using Xunit;
 using static VPEAR.Server.Constants;
 
-namespace VPEAR.Server.Test
+namespace VPEAR.Server.Test.Controllers
 {
     public class PowerControllerTest : IClassFixture<WebApplicationFactory<Startup>>
     {
