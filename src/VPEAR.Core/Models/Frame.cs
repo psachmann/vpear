@@ -4,6 +4,7 @@
 // </copyright>
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 using VPEAR.Core.Abstractions;
@@ -24,7 +25,7 @@ namespace VPEAR.Core.Models
         /// <summary>
         /// Gets or sets the time.
         /// </summary>
-        /// <value>The frame timestamp.</value>
+        /// <value>The frame time stamp.</value>
         public string Time { get; set; } = string.Empty;
 
         /// <summary>
@@ -33,8 +34,7 @@ namespace VPEAR.Core.Models
         /// <value>The frame sensor values.</value>
         /// TODO: translate into a valid database type
         [NotMapped]
-        [JsonIgnore]
-        public int[,]? Readings { get; set; }
+        public IList<IList<int>> Readings { get; set; } = new List<IList<int>>();
 
         /// <summary>
         /// Gets or sets the foreign key.

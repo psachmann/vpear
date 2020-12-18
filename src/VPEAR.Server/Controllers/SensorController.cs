@@ -16,14 +16,14 @@ namespace VPEAR.Server.Controllers
         [Route(Routes.SensorsRoute)]
         public void OnGetSensors()
         {
-            this.Response.StatusCode = StatusCodes.Status501NotImplemented;
+            this.StatusCode(StatusCodes.Status501NotImplemented);
         }
 
         [HttpPut]
         [Route(Routes.FramesRoute)]
         public void OnGetFrames()
         {
-            this.Response.StatusCode = StatusCodes.Status501NotImplemented;
+            this.StatusCode(StatusCodes.Status501NotImplemented);
         }
     }
 }
