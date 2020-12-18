@@ -58,7 +58,7 @@ namespace VPEAR.Server.Controllers
 
             var response = await this.service.GetAsync(id);
 
-            this.Response.StatusCode = response.StatusCode;
+            this.StatusCode(response.StatusCode);
 
             return this.Json(response.Payload);
         }

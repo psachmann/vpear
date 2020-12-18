@@ -76,7 +76,7 @@ namespace VPEAR.Server.Services
 
             if (device.Status == DeviceStatus.Recording || device.Status == DeviceStatus.Stopped)
             {
-                // TODO: synchro service to publish updates to the device
+                // TODO: synchronization service to publish updates to the device
                 filter.Noise = request.Noise ?? filter.Noise;
                 filter.Smooth = request.Smooth ?? filter.Smooth;
                 filter.Spot = request.Spot ?? filter.Spot;

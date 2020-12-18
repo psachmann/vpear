@@ -20,7 +20,7 @@ namespace VPEAR.Server.Controllers
         [HttpGet]
         public async Task<IActionResult> OnGetAsync()
         {
-            this.Response.StatusCode = StatusCodes.Status501NotImplemented;
+            this.StatusCode(StatusCodes.Status501NotImplemented);
 
             return this.Json(null);
         }
@@ -28,7 +28,7 @@ namespace VPEAR.Server.Controllers
         [HttpPut]
         public async Task<IActionResult> OnPutAsync()
         {
-            this.Response.StatusCode = StatusCodes.Status501NotImplemented;
+            this.StatusCode(StatusCodes.Status501NotImplemented);
 
             return this.Json(null);
         }
@@ -36,7 +36,7 @@ namespace VPEAR.Server.Controllers
         [HttpDelete]
         public async Task<IActionResult> OnDeleteAsync()
         {
-            this.Response.StatusCode = StatusCodes.Status501NotImplemented;
+            this.StatusCode(StatusCodes.Status501NotImplemented);
 
             return this.Json(null);
         }
@@ -45,7 +45,7 @@ namespace VPEAR.Server.Controllers
         [Route(Routes.RegisterRoute)]
         public async Task<IActionResult> OnPostRegisterAsync()
         {
-            this.Response.StatusCode = StatusCodes.Status501NotImplemented;
+            this.StatusCode(StatusCodes.Status501NotImplemented);
 
             return this.Json(null);
         }
@@ -54,7 +54,7 @@ namespace VPEAR.Server.Controllers
         [Route(Routes.LoginRoute)]
         public async Task<IActionResult> OnPutLoginAsync()
         {
-            this.Response.StatusCode = StatusCodes.Status501NotImplemented;
+            this.StatusCode(StatusCodes.Status501NotImplemented);
 
             return this.Json(null);
         }
@@ -63,7 +63,7 @@ namespace VPEAR.Server.Controllers
         [Route(Routes.LogoutRoute)]
         public async Task<IActionResult> OnPutLogoutAsync()
         {
-            this.Response.StatusCode = StatusCodes.Status501NotImplemented;
+            this.StatusCode(StatusCodes.Status501NotImplemented);
 
             return this.Json(null);
         }

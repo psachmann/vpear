@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Net;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using VPEAR.Core.Models;
 using VPEAR.Core.Wrappers;
@@ -18,7 +19,6 @@ namespace VPEAR.Server.Test.Controllers
         private readonly Guid recordingDevice = DbSeed.Devices[1].Id;
         private readonly Guid archivedDevice = DbSeed.Devices[2].Id;
         private readonly Guid notReachableDevice = DbSeed.Devices[3].Id;
-        private readonly Guid notExistingDevice;
         private readonly FiltersController controller;
 
         public FilterControllerTest(VPEARDbContextFixture fixture)
@@ -30,12 +30,32 @@ namespace VPEAR.Server.Test.Controllers
         }
 
         [Fact]
-        public async Task OnGetAsync2XXTest()
+        public void OnGetAsync200OKTest()
         {
-            var response = await this.controller.OnGetAsync(this.recordingDevice);
+            var devices = new List<Guid>()
+            {
+                this.archivedDevice,
+                this.notReachableDevice,
+                this.recordingDevice,
+                this.stoppedDevice,
+            };
+
+            devices.ForEach(async d =>
+            {
+                var response = await this.controller.OnGetAsync(d);
+                var result = Assert.IsType<JsonResult>(response);
+
+                Assert.IsAssignableFrom<GetFiltersResponse>(result.Value);
+            });
+        }
+
+        [Fact]
+        public async Task OnGetAsync404NotFound()
+        {
+            var response = await this.controller.OnGetAsync(new Guid());
             var result = Assert.IsType<JsonResult>(response);
 
-            Assert.IsAssignableFrom<GetFiltersResponse>(result);
+            Assert.Null(result.Value);
         }
 
         public async Task OnPutAsync()

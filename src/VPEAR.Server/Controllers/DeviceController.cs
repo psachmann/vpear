@@ -16,25 +16,25 @@ namespace VPEAR.Server.Controllers
         [HttpGet]
         public void OnGetAsync()
         {
-            this.Response.StatusCode = StatusCodes.Status501NotImplemented;
+            this.StatusCode(StatusCodes.Status501NotImplemented);
         }
 
         [HttpPut]
         public void OnPutAsync()
         {
-            this.Response.StatusCode = StatusCodes.Status501NotImplemented;
+            this.StatusCode(StatusCodes.Status501NotImplemented);
         }
 
         [HttpPost]
         public void OnPostAsync()
         {
-            this.Response.StatusCode = StatusCodes.Status501NotImplemented;
+            this.StatusCode(StatusCodes.Status501NotImplemented);
         }
 
         [HttpDelete]
         public void OnDeleteAsync()
         {
-            this.Response.StatusCode = StatusCodes.Status501NotImplemented;
+            this.StatusCode(StatusCodes.Status501NotImplemented);
         }
     }
 }
