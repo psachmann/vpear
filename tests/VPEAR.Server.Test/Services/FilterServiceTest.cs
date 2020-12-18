@@ -19,14 +19,14 @@ namespace VPEAR.Server.Test.Services
         private readonly Guid archivedDevice = DbSeed.Devices[2].Id;
         private readonly Guid notReachableDevice = DbSeed.Devices[3].Id;
         private readonly Guid notExistingDevice = new Guid();
-        private readonly IFiltersService service;
+        private readonly IFilterService service;
 
         public FilterServiceTest(VPEARDbContextFixture fixture)
         {
-            this.service = new FiltersService(
+            this.service = new FilterService(
                 Mocks.CreateLogger<FiltersController>(),
                 Mocks.CreateRepository<Device, Guid>(fixture.Context),
-                Mocks.CreateRepository<Filters, Guid>(fixture.Context));
+                Mocks.CreateRepository<Filter, Guid>(fixture.Context));
         }
 
         [Fact]

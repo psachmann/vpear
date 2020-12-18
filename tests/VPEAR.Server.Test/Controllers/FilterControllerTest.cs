@@ -1,46 +1,41 @@
-using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Net;
 using System.Threading.Tasks;
+using VPEAR.Core.Models;
+using VPEAR.Core.Wrappers;
+using VPEAR.Server.Controllers;
+using VPEAR.Server.Db;
+using VPEAR.Server.Services;
 using Xunit;
 using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Test.Controllers
 {
-    public class FilterControllerTest : IClassFixture<WebApplicationFactory<Startup>>
+    public class FilterControllerTest : IClassFixture<VPEARDbContextFixture>
     {
-        private readonly WebApplicationFactory<Startup> factory;
+        private readonly Guid stoppedDevice = DbSeed.Devices[0].Id;
+        private readonly Guid recordingDevice = DbSeed.Devices[1].Id;
+        private readonly Guid archivedDevice = DbSeed.Devices[2].Id;
+        private readonly Guid notReachableDevice = DbSeed.Devices[3].Id;
+        private readonly Guid notExistingDevice;
+        private readonly FiltersController controller;
 
-        public FilterControllerTest(WebApplicationFactory<Startup> factory)
+        public FilterControllerTest(VPEARDbContextFixture fixture)
         {
-            this.factory = factory;
+            var logger = Mocks.CreateLogger<FiltersController>();
+            this.controller = new FiltersController(logger, new FilterService(logger,
+                Mocks.CreateRepository<Device, Guid>(fixture.Context),
+                Mocks.CreateRepository<Filter, Guid>(fixture.Context)));
         }
 
-        [Theory]
-        [InlineData(true, HttpStatusCode.OK, "00000000-0000-0000-0000-000000000001")]
-        [InlineData(false, HttpStatusCode.BadRequest, null)]
-        [InlineData(false, HttpStatusCode.BadRequest, "")]
-        [InlineData(false, HttpStatusCode.Unauthorized, "00000000-0000-0000-0000-000000000001")]
-        [InlineData(false, HttpStatusCode.NotFound, "00000000-0000-0000-0000-000000000010")]
-        public async Task OnGetAsyncTest(
-            bool checkContent,
-            HttpStatusCode expectedStatus,
-            string id)
+        [Fact]
+        public async Task OnGetAsync2XXTest()
         {
-            var client = this.factory.CreateClient();
-            // client.DefaultRequestHeaders.Add("Authorization: Bearer", token);
+            var response = await this.controller.OnGetAsync(this.recordingDevice);
+            var result = Assert.IsType<JsonResult>(response);
 
-            var response = await client.GetAsync($"{Routes.FiltersRoute}?id={id}");
-
-            if (checkContent)
-            {
-                Assert.NotEmpty(await response.Content.ReadAsStringAsync());
-            }
-            else
-            {
-                Assert.Empty(await response.Content.ReadAsStringAsync());
-            }
-
-            Assert.Equal(expectedStatus, response.StatusCode);
+            Assert.IsAssignableFrom<GetFiltersResponse>(result);
         }
 
         public async Task OnPutAsync()

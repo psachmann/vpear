@@ -26,8 +26,8 @@ namespace VPEAR.Server
                 .As<IRepository<Device, Guid>>()
                 .InstancePerLifetimeScope();
 
-            builder.RegisterType<Repository<VPEARDbContext, Filters, Guid>>()
-                .As<IRepository<Filters, Guid>>()
+            builder.RegisterType<Repository<VPEARDbContext, Filter, Guid>>()
+                .As<IRepository<Filter, Guid>>()
                 .InstancePerLifetimeScope();
 
             builder.RegisterType<Repository<VPEARDbContext, Frame, Guid>>()

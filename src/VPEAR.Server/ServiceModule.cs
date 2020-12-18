@@ -24,8 +24,8 @@ namespace VPEAR.Server
                 .As<IDeviceService>()
                 .InstancePerLifetimeScope();
 
-            builder.RegisterType<FiltersService>()
-                .As<IFiltersService>()
+            builder.RegisterType<FilterService>()
+                .As<IFilterService>()
                 .InstancePerLifetimeScope();
 
             builder.RegisterType<FirmwareService>()

@@ -1,4 +1,4 @@
-// <copyright file="IFiltersService.cs" company="Patrick Sachmann">
+// <copyright file="IFilterService.cs" company="Patrick Sachmann">
 // Copyright (c) Patrick Sachmann. All rights reserved.
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
@@ -13,7 +13,7 @@ namespace VPEAR.Core.Abstractions
     /// Service definition and abstraction for dependency
     /// injection and webapi controllers.
     /// </summary>
-    public interface IFiltersService
+    public interface IFilterService
     {
         /// <summary>
         /// Gets the device filters.

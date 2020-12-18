@@ -1,4 +1,4 @@
-// <copyright file="Filters.cs" company="Patrick Sachmann">
+// <copyright file="Filter.cs" company="Patrick Sachmann">
 // Copyright (c) Patrick Sachmann. All rights reserved.
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
@@ -11,7 +11,7 @@ namespace VPEAR.Core.Models
     /// <summary>
     /// Db data model for entity framework.
     /// </summary>
-    public class Filters : EntityBase<Guid>
+    public class Filter : EntityBase<Guid>
     {
         /// <summary>
         /// Gets or sets a value indicating whether spot is used.

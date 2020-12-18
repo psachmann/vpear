@@ -12,12 +12,12 @@ using static VPEAR.Server.Constants;
 namespace VPEAR.Server.Db
 {
     /// <summary>
-    /// The entity framework configuration for the <see cref="Filters"/> class.
+    /// The entity framework configuration for the <see cref="Filter"/> class.
     /// </summary>
-    public class FiltersConfiguration : EntityBaseConfiguration<Filters, Guid>
+    public class FiltersConfiguration : EntityBaseConfiguration<Filter, Guid>
     {
         /// <inheritdoc/>
-        public override void Configure(EntityTypeBuilder<Filters> builder)
+        public override void Configure(EntityTypeBuilder<Filter> builder)
         {
             base.Configure(builder);
 
@@ -25,7 +25,7 @@ namespace VPEAR.Server.Db
 
             builder.HasOne(f => f.Device)
                 .WithOne(d => d.Filters)
-                .HasForeignKey<Filters>(f => f.DeviceForeignKey);
+                .HasForeignKey<Filter>(f => f.DeviceForeignKey);
 #if DEBUG
             builder.HasData(DbSeed.Filters);
 #endif

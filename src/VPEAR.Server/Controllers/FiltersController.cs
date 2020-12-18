@@ -25,14 +25,14 @@ namespace VPEAR.Server.Controllers
     public class FiltersController : Controller
     {
         private readonly ILogger<FiltersController> logger;
-        private readonly IFiltersService service;
+        private readonly IFilterService service;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FiltersController"/> class.
         /// </summary>
         /// <param name="logger">The controller logger.</param>
         /// <param name="service">The controller service.</param>
-        public FiltersController(ILogger<FiltersController> logger, IFiltersService service)
+        public FiltersController(ILogger<FiltersController> logger, IFilterService service)
         {
             this.logger = logger;
             this.service = service;
