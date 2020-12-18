@@ -19,6 +19,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using VPEAR.Server.Db;
+using VPEAR.Server.Filters;
 using VPEAR.Server.Internals;
 using static VPEAR.Server.Constants;
 
@@ -53,10 +54,7 @@ namespace VPEAR.Server
             app.UseHttpsRedirection();
 #endif
             app.UseRouting();
-
-#if !DEBUG
             app.UseAuthorization();
-#endif
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -82,6 +80,14 @@ namespace VPEAR.Server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddMvc(options =>
+            {
+                options.Filters.Add(typeof(GlobalExceptionFilter));
+            }).AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.IgnoreNullValues = true;
+            });
 
             services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<VPEARDbContext>()
