@@ -27,8 +27,6 @@ namespace VPEAR.Server.Controllers
     {
         private readonly ILogger<WifiController> logger;
         private readonly IWifiService service;
-
-        // TODO: implement validator
         private readonly IValidator<PutWifiRequest> validator;
 
         /// <summary>
@@ -71,7 +69,7 @@ namespace VPEAR.Server.Controllers
         }
 
         /// <summary>
-        /// Updates the wifi information for a specific deivice.
+        /// Updates the wifi information for a specific device.
         /// </summary>
         /// <param name="id">The device id.</param>
         /// <param name="request">The request data.</param>

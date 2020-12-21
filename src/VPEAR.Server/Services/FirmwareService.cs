@@ -3,8 +3,11 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using VPEAR.Core;
 using VPEAR.Core.Abstractions;
@@ -20,29 +23,90 @@ namespace VPEAR.Server.Services
     public class FirmwareService : IFirmwareService
     {
         private readonly ILogger<FirmwareController> logger;
-        private readonly IRepository<Device, Guid> repository;
+        private readonly IRepository<Device, Guid> devices;
+        private readonly IRepository<Firmware, Guid> firmwares;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FirmwareService"/> class.
         /// </summary>
         /// <param name="logger">The service logger.</param>
-        /// <param name="repository">The device repository for database access.</param>
-        public FirmwareService(ILogger<FirmwareController> logger, IRepository<Device, Guid> repository)
+        /// <param name="devices">The device repository for db access.</param>
+        /// <param name="firmwares">The firmware repository for db access.</param>
+        public FirmwareService(
+            ILogger<FirmwareController> logger,
+            IRepository<Device, Guid> devices,
+            IRepository<Firmware, Guid> firmwares)
         {
             this.logger = logger;
-            this.repository = repository;
+            this.devices = devices;
+            this.firmwares = firmwares;
         }
 
         /// <inheritdoc/>
-        public Task<Response> GetAsync(Guid id)
+        public async Task<Response> GetAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var firmware = await this.firmwares.Get()
+                .Where(f => f.DeviceForeignKey.Equals(id))
+                .FirstOrDefaultAsync();
+
+            if (firmware == null)
+            {
+                return new Response(HttpStatusCode.NotFound);
+            }
+            else
+            {
+                var payload = new GetFirmwareResponse()
+                {
+                    Source = firmware.Source,
+                    Upgrade = firmware.Upgrade,
+                    Version = firmware.Version,
+                };
+
+                return new Response(HttpStatusCode.OK, payload);
+            }
         }
 
         /// <inheritdoc/>
-        public Task<Response> PutAsync(Guid id, PutFirmwareRequest request)
+        public async Task<Response> PutAsync(Guid id, PutFirmwareRequest request)
         {
-            throw new NotImplementedException();
+            var status = HttpStatusCode.InternalServerError;
+            var device = await this.devices.GetAsync(id);
+            var firmware = await this.firmwares.Get()
+                .Where(f => f.DeviceForeignKey.Equals(id))
+                .FirstOrDefaultAsync();
+
+            if (device == null || firmware == null)
+            {
+                status = HttpStatusCode.NotFound;
+            }
+            else if (device.Status == DeviceStatus.Archived)
+            {
+                status = HttpStatusCode.Gone;
+            }
+            else if (device.Status == DeviceStatus.NotReachable)
+            {
+                status = HttpStatusCode.FailedDependency;
+            }
+            else if (request.Package)
+            {
+                status = HttpStatusCode.NotImplemented;
+            }
+            else
+            {
+                firmware.Source = request.Source ?? firmware.Source;
+                firmware.Upgrade = request.Upgrade ?? firmware.Upgrade;
+
+                if (await this.firmwares.UpdateAsync(firmware))
+                {
+                    status = HttpStatusCode.OK;
+                }
+                else
+                {
+                    status = HttpStatusCode.InternalServerError;
+                }
+            }
+
+            return new Response(status);
         }
     }
 }

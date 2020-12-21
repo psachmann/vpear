@@ -21,6 +21,6 @@ namespace VPEAR.Core.Abstractions
 
         Task<Response> PutLoginAsync(Guid id, PutLoginRequest request);
 
-        Task<Response> PutLogoutasync(Guid id);
+        Task<Response> PutLogoutAsync(Guid id);
     }
 }

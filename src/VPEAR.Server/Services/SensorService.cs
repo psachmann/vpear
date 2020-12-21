@@ -37,39 +37,66 @@ namespace VPEAR.Server.Services
         }
 
         /// <inheritdoc/>
-        public async Task<Response> GetFramesAsync(Guid id, uint? start, uint? stop)
+        public async Task<Response> GetFramesAsync(Guid id, int start, int stop)
         {
-            var statusCode = HttpStatusCode.InternalServerError;
+            var status = HttpStatusCode.InternalServerError;
             var payload = new GetFramesResponse();
             var frames = await this.frames.Get()
                 .Where(f => f.DeviceForeignKey.Equals(id))
+                .OrderBy(f => f.CreatedAt)
                 .ToListAsync();
 
             if (frames == null || frames.Count == 0)
             {
-                statusCode = HttpStatusCode.NotFound;
+                status = HttpStatusCode.NotFound;
                 payload = null;
             }
-            else if (start == null && stop == null)
+            else if (start == 0 && stop == 0)
             {
-                statusCode = HttpStatusCode.OK;
+                status = HttpStatusCode.OK;
                 frames.ForEach(f =>
                 {
-                    // TODO: modify response
                     payload.Frames.Add(new FrameResponse()
                     {
-                        Id = f.Index,
                         Readings = f.Readings,
-                        Time = f.Time,
+                        Time = f.CreatedAt.ToString("dd.MM.yyyy hh:mm:ss.ff"),
                     });
                 });
             }
+            else if (start < stop && stop < frames.Count)
+            {
+                status = HttpStatusCode.OK;
+                frames.GetRange(start, stop)
+                    .ForEach(f =>
+                    {
+                        payload.Frames.Add(new FrameResponse()
+                        {
+                            Readings = f.Readings,
+                            Time = f.CreatedAt.ToString("dd.MM.yyyy hh:mm:ss.ff"),
+                        });
+                    });
+            }
+            else if (start < stop && stop >= frames.Count)
+            {
+                status = HttpStatusCode.PartialContent;
+                frames.GetRange(start, frames.Count - 1)
+                    .ForEach(f =>
+                    {
+                        payload.Frames.Add(new FrameResponse()
+                        {
+                            Readings = f.Readings,
+                            Time = f.CreatedAt.ToString("dd.MM.yyyy hh:mm:ss.ff"),
+                        });
+                    });
+            }
             else
             {
-                return new Response(HttpStatusCode.InternalServerError);
+                // start is grater or equals stop
+                status = HttpStatusCode.BadRequest;
+                payload = null;
             }
 
-            return new Response(statusCode, payload);
+            return new Response(status, payload);
         }
 
         /// <inheritdoc/>
