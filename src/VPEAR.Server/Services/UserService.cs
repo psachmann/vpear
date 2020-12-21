@@ -47,7 +47,7 @@ namespace VPEAR.Server.Services
         }
 
         /// <inheritdoc/>
-        public Task<Response> PutLogoutasync(Guid id)
+        public Task<Response> PutLogoutAsync(Guid id)
         {
             throw new NotImplementedException();
         }

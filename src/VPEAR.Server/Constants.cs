@@ -71,6 +71,10 @@ namespace VPEAR.Server
             /// Minimum length for a db string.
             /// </summary>
             public const int MinStringLength = 1;
+
+            public const int MaxPasswordLength = 1024;
+
+            public const int MinPasswordLength = 8;
         }
 
         public static class Roles
@@ -79,7 +83,13 @@ namespace VPEAR.Server
 
             public const string UserRole = "user";
 
-            public const string TestRole = "test";
+            public const string None = "none";
+
+            public static readonly List<string> AllRoles = new List<string>()
+            {
+                AdminRole,
+                UserRole,
+            };
         }
 
         /// <summary>

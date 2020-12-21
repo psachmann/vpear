@@ -51,8 +51,11 @@ namespace VPEAR.Server.Db
             {
                 this.logger.LogError("Message: \"{@Error}\"", exception.Message);
                 this.logger.LogDebug("Exception: \"{@Debug}\"", exception);
-
+#if DEBUG
+                throw;
+#else
                 return false;
+#endif
             }
         }
 
@@ -70,8 +73,11 @@ namespace VPEAR.Server.Db
             {
                 this.logger.LogError("Message: \"{@Error}\"", exception.Message);
                 this.logger.LogDebug("Exception: \"{@Debug}\"", exception);
-
+#if DEBUG
+                throw;
+#else
                 return false;
+#endif
             }
         }
 
@@ -94,8 +100,11 @@ namespace VPEAR.Server.Db
             {
                 this.logger.LogError("Message: \"{@Error}\"", exception.Message);
                 this.logger.LogDebug("Exception: \"{@Debug}\"", exception);
-
+#if DEBUG
+                throw;
+#else
                 return null;
+#endif
             }
         }
 
@@ -113,8 +122,11 @@ namespace VPEAR.Server.Db
             {
                 this.logger.LogError("Message: \"{@Error}\"", exception.Message);
                 this.logger.LogDebug("Exception: \"{@Debug}\"", exception);
-
+#if DEBUG
+                throw;
+#else
                 return false;
+#endif
             }
         }
     }

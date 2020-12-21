@@ -31,11 +31,9 @@ namespace VPEAR.Server.Test.Services
         }
 
         [Theory]
-        [InlineData(StatusCodes.Status200OK, null, null)]
-        [InlineData(StatusCodes.Status200OK, uint.MinValue, null)]
-        [InlineData(StatusCodes.Status204NoContent, uint.MaxValue, uint.MinValue)]
-        [InlineData(StatusCodes.Status206PartialContent, uint.MinValue, uint.MaxValue)]
-        public async Task GetFramesAsync2XXTest(int expectedStatus, uint? start, uint? stop)
+        [InlineData(StatusCodes.Status200OK, 0, 0)]
+        [InlineData(StatusCodes.Status206PartialContent, 0, int.MaxValue)]
+        public async Task GetFramesAsync2XXTest(int expectedStatus, int start, int stop)
         {
             var devices = new List<Guid>()
             {
@@ -55,9 +53,18 @@ namespace VPEAR.Server.Test.Services
         }
 
         [Fact]
+        public async Task GetFramesAsync400BadRequestTest()
+        {
+            var response = await this.service.GetFramesAsync(this.stoppedDevice, int.MaxValue, int.MinValue);
+
+            Assert.Null(response.Payload);
+            Assert.Equal(StatusCodes.Status400BadRequest, response.StatusCode);
+        }
+
+        [Fact]
         public async Task GetFramesAsync404NotFoundTest()
         {
-            var response = await this.service.GetFramesAsync(this.notExistingDevice, null, null);
+            var response = await this.service.GetFramesAsync(this.notExistingDevice, 0, 0);
 
             Assert.Null(response.Payload);
             Assert.Equal(StatusCodes.Status404NotFound, response.StatusCode);

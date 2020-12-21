@@ -12,6 +12,9 @@ namespace VPEAR.Core.Wrappers
     /// </summary>
     public class PutUserRequest
     {
+        [JsonPropertyName("display_name")]
+        public string? DisplayName { get; set; }
+
         [JsonPropertyName("email")]
         public string? Email { get; set; }
 
@@ -20,5 +23,8 @@ namespace VPEAR.Core.Wrappers
 
         [JsonPropertyName("role")]
         public string? Role { get; set; }
+
+        [JsonPropertyName("is_verified")]
+        public bool IsVerified { get; set; }
     }
 }

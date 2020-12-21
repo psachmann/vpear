@@ -25,7 +25,8 @@ namespace VPEAR.Server.Test.Services
         {
             this.service = new FirmwareService(
                 Mocks.CreateLogger<FirmwareController>(),
-                Mocks.CreateRepository<Device, Guid>(fixture.Context));
+                Mocks.CreateRepository<Device, Guid>(fixture.Context),
+                Mocks.CreateRepository<Firmware, Guid>(fixture.Context));
         }
 
         [Fact]
@@ -58,10 +59,7 @@ namespace VPEAR.Server.Test.Services
         }
 
         [Theory]
-        [InlineData(StatusCodes.Status200OK, false, "stable", null)]
-        [InlineData(StatusCodes.Status200OK, false, "unstable", null)]
         [InlineData(StatusCodes.Status200OK, false, "stable", "next")]
-        [InlineData(StatusCodes.Status200OK, false, "unstable", "next")]
         [InlineData(StatusCodes.Status202Accepted, true, null, null)]
         public async Task PutAsync2XXTest(
             int expectedStatus,

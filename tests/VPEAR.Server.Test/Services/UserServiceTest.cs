@@ -181,7 +181,7 @@ namespace VPEAR.Server.Test.Services
         [Fact]
         public async Task PutLogoutAsync200OKTest()
         {
-            var response = await this.service.PutLogoutasync(this.notExistingUser);
+            var response = await this.service.PutLogoutAsync(this.notExistingUser);
 
             Assert.Null(response.Payload);
             Assert.Equal(StatusCodes.Status200OK, response.StatusCode);
@@ -190,7 +190,7 @@ namespace VPEAR.Server.Test.Services
         [Fact]
         public async Task PutLogoutAsync404NotFoundTest()
         {
-            var response = await this.service.PutLogoutasync(this.notExistingUser);
+            var response = await this.service.PutLogoutAsync(this.notExistingUser);
 
             Assert.Null(response.Payload);
             Assert.Equal(StatusCodes.Status404NotFound, response.StatusCode);

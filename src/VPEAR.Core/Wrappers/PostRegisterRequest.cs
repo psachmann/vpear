@@ -23,9 +23,5 @@ namespace VPEAR.Core.Wrappers
         [Required]
         [JsonPropertyName("password")]
         public string? Password { get; set; }
-
-        [Required]
-        [JsonPropertyName("role")]
-        public string? Role { get; set; }
     }
 }
