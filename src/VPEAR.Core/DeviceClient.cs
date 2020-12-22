@@ -161,14 +161,14 @@ namespace VPEAR.Core
         }
 
         /// <inheritdoc/>
-        public async Task<SensorResponse?> GetSensorsAsync()
+        public async Task<GetSensorResponse?> GetSensorsAsync()
         {
             var response = await this.client.GetAsync("api/sensors");
             var json = await response.Content.ReadAsStringAsync();
 
             this.status = response.StatusCode;
 
-            return JsonSerializer.Deserialize<SensorResponse>(json);
+            return JsonSerializer.Deserialize<GetSensorResponse>(json);
         }
 
         /// <inheritdoc/>

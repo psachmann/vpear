@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Annotations;
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using VPEAR.Core.Abstractions;
@@ -58,17 +57,17 @@ namespace VPEAR.Server.Controllers
         /// A GET request without any query parameters returns all users.
         /// </summary>
         /// <param name="id">The user id.</param>
-        /// <param name="role">The user role. Should be admin, user or none.</param>
+        /// <param name="role">The user role. Should be admin or user.</param>
         /// <returns>A list of found users.</returns>
         [HttpGet]
         [Authorize(Roles = Roles.AdminRole)]
         [Produces(Defaults.DefaultResponseType)]
         [SwaggerResponse(StatusCodes.Status200OK, "The user or users were found.", typeof(Container<GetUserResponse>))]
-        [SwaggerResponse(StatusCodes.Status401Unauthorized, "The request is not authorized.", null)]
-        [SwaggerResponse(StatusCodes.Status404NotFound, "No user found.", typeof(ErrorResponse))]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", null)]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "No user found.", typeof(object))]
         public async Task<IActionResult> OnGetAsync([FromQuery] string? id, [FromQuery] string? role)
         {
-            this.logger.LogDebug("@{User}: @{Role}", id, role);
+            this.logger.LogDebug("{@User}: {@Role}", id, role);
 
             var response = await this.service.GetAsync(id, role);
 
@@ -86,14 +85,14 @@ namespace VPEAR.Server.Controllers
         [HttpPut]
         [Authorize(Roles = Roles.AdminRole)]
         [Produces(Defaults.DefaultResponseType)]
-        [SwaggerResponse(StatusCodes.Status200OK, "User was updated and saved to db.", null)]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(ErrorResponse))]
-        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is not authorized.", null)]
-        [SwaggerResponse(StatusCodes.Status404NotFound, "No user found.", typeof(ErrorResponse))]
-        [SwaggerResponse(StatusCodes.Status409Conflict, "Last admin will not be changed to user or the email is already used.", typeof(ErrorResponse))]
+        [SwaggerResponse(StatusCodes.Status200OK, "User was updated and saved to db.", typeof(object))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(object))]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is not authorized.", typeof(object))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "No user found.", typeof(object))]
+        [SwaggerResponse(StatusCodes.Status409Conflict, "Last admin will not be changed to user or the email is already used.", typeof(object))]
         public async Task<IActionResult> OnPutAsync([FromQuery, Required] string id, [FromQuery, Required] PutUserRequest request)
         {
-            this.logger.LogDebug("@{User}: @{Request}", id, request);
+            this.logger.LogDebug("{@User}: {@Request}", id, request);
             this.putUserValidator.ValidateAndThrow(request);
 
             var response = await this.service.PutAsync(id, request);
@@ -111,13 +110,13 @@ namespace VPEAR.Server.Controllers
         [HttpDelete]
         [Authorize(Roles = Roles.AdminRole)]
         [Produces(Defaults.DefaultResponseType)]
-        [SwaggerResponse(StatusCodes.Status200OK, "User was deleted from db.", null)]
-        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is not authorized.", null)]
-        [SwaggerResponse(StatusCodes.Status403Forbidden, "Last admin will not be deleted.", typeof(ErrorResponse))]
-        [SwaggerResponse(StatusCodes.Status404NotFound, "No user found.", typeof(ErrorResponse))]
+        [SwaggerResponse(StatusCodes.Status200OK, "User was deleted from db.", typeof(object))]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is not authorized.", typeof(object))]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, "Last admin will not be deleted.", typeof(object))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "No user found.", typeof(object))]
         public async Task<IActionResult> OnDeleteAsync([FromQuery, Required] string id)
         {
-            this.logger.LogDebug("@{User}", id);
+            this.logger.LogDebug("{@User}", id);
 
             var response = await this.service.DeleteAsync(id);
 
@@ -127,16 +126,16 @@ namespace VPEAR.Server.Controllers
         }
 
         /// <summary>
-        /// Register a new user.
+        /// Registers a new user.
         /// </summary>
         /// <param name="request">The request data.</param>
         /// <returns>Http status code, which indicates the operation result.</returns>
         [HttpPost]
         [Route(Routes.RegisterRoute)]
         [Produces(Defaults.DefaultResponseType)]
-        [SwaggerResponse(StatusCodes.Status200OK, "User was registered.", null)]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(ErrorResponse))]
-        [SwaggerResponse(StatusCodes.Status409Conflict, "Email is already used.", typeof(ErrorResponse))]
+        [SwaggerResponse(StatusCodes.Status200OK, "User was registered.", typeof(object))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(object))]
+        [SwaggerResponse(StatusCodes.Status409Conflict, "Email is already used.", typeof(object))]
         public async Task<IActionResult> OnPostRegisterAsync([FromBody, Required] PostRegisterRequest request)
         {
             this.logger.LogDebug("@{Request}", request);
@@ -152,19 +151,17 @@ namespace VPEAR.Server.Controllers
         /// <summary>
         /// Generates token to access the endpoints, which requires authorization.
         /// </summary>
-        /// <param name="id">The user id.</param>
         /// <param name="request">The request data.</param>
         /// <returns>The authorization token and the date, when the token expires.</returns>
         [HttpPut]
         [Route(Routes.LoginRoute)]
         [Produces(Defaults.DefaultResponseType)]
         [SwaggerResponse(StatusCodes.Status200OK, "User was logged in.", typeof(PutLoginResponse))]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(ErrorResponse))]
-        [SwaggerResponse(StatusCodes.Status404NotFound, "No user found.", typeof(ErrorResponse))]
-        [SwaggerResponse(900, "User is not verified.", typeof(ErrorResponse))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(object))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "No user found.", typeof(object))]
         public async Task<IActionResult> OnPutLoginAsync([FromBody, Required] PutLoginRequest request)
         {
-            this.logger.LogDebug("@{Request}", request);
+            this.logger.LogDebug("{@Request}", request);
             this.putLoginValidator.ValidateAndThrow(request);
 
             var response = await this.service.PutLoginAsync(request);
