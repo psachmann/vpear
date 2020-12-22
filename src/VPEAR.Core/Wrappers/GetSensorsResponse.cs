@@ -11,6 +11,6 @@ namespace VPEAR.Core.Wrappers
     public class GetSensorsResponse
     {
         [JsonPropertyName("sensors")]
-        public IList<SensorResponse> Sensors { get; set; } = new List<SensorResponse>();
+        public IList<GetSensorResponse> Sensors { get; set; } = new List<GetSensorResponse>();
     }
 }

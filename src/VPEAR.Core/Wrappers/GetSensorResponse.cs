@@ -10,7 +10,7 @@ namespace VPEAR.Core.Wrappers
     /// <summary>
     /// A json wrapper class with json naming conventions.
     /// </summary>
-    public class SensorResponse
+    public class GetSensorResponse
     {
         /// <summary>
         /// Gets or sets the name.

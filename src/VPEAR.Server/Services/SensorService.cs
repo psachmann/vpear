@@ -108,11 +108,11 @@ namespace VPEAR.Server.Services
 
             if (sensors != null && sensors.Count != 0)
             {
-                var payload = new GetSensorsResponse();
+                var payload = new Container<GetSensorResponse>();
 
                 sensors.ForEach(s =>
                 {
-                    payload.Sensors.Add(new SensorResponse()
+                    payload.Items.Add(new GetSensorResponse()
                     {
                         Columns = s.Columns,
                         Height = s.Height,

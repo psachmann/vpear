@@ -25,7 +25,7 @@ namespace VPEAR.Core.Abstractions
 
         Task<DeviceResponse?> GetDeviceAsync();
 
-        Task<SensorResponse?> GetSensorsAsync();
+        Task<GetSensorResponse?> GetSensorsAsync();
 
         Task<IList<FrameResponse>?> GetFramesAsync(int? after = null);
 
