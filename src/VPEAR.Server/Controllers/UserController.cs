@@ -66,7 +66,7 @@ namespace VPEAR.Server.Controllers
         [SwaggerResponse(StatusCodes.Status200OK, "The user or users were found.", typeof(Container<GetUserResponse>))]
         [SwaggerResponse(StatusCodes.Status401Unauthorized, "The request is not authorized.", null)]
         [SwaggerResponse(StatusCodes.Status404NotFound, "No user found.", typeof(ErrorResponse))]
-        public async Task<IActionResult> OnGetAsync([FromQuery] Guid? id, [FromQuery] string? role)
+        public async Task<IActionResult> OnGetAsync([FromQuery] string? id, [FromQuery] string? role)
         {
             this.logger.LogDebug("@{User}: @{Role}", id, role);
 
@@ -91,7 +91,7 @@ namespace VPEAR.Server.Controllers
         [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is not authorized.", null)]
         [SwaggerResponse(StatusCodes.Status404NotFound, "No user found.", typeof(ErrorResponse))]
         [SwaggerResponse(StatusCodes.Status409Conflict, "Last admin will not be changed to user or the email is already used.", typeof(ErrorResponse))]
-        public async Task<IActionResult> OnPutAsync([FromQuery, Required] Guid id, [FromQuery, Required] PutUserRequest request)
+        public async Task<IActionResult> OnPutAsync([FromQuery, Required] string id, [FromQuery, Required] PutUserRequest request)
         {
             this.logger.LogDebug("@{User}: @{Request}", id, request);
             this.putUserValidator.ValidateAndThrow(request);
@@ -115,7 +115,7 @@ namespace VPEAR.Server.Controllers
         [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is not authorized.", null)]
         [SwaggerResponse(StatusCodes.Status403Forbidden, "Last admin will not be deleted.", typeof(ErrorResponse))]
         [SwaggerResponse(StatusCodes.Status404NotFound, "No user found.", typeof(ErrorResponse))]
-        public async Task<IActionResult> OnDeleteAsync([FromQuery, Required] Guid id)
+        public async Task<IActionResult> OnDeleteAsync([FromQuery, Required] string id)
         {
             this.logger.LogDebug("@{User}", id);
 
@@ -162,35 +162,12 @@ namespace VPEAR.Server.Controllers
         [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(ErrorResponse))]
         [SwaggerResponse(StatusCodes.Status404NotFound, "No user found.", typeof(ErrorResponse))]
         [SwaggerResponse(900, "User is not verified.", typeof(ErrorResponse))]
-        public async Task<IActionResult> OnPutLoginAsync([FromBody, Required] Guid id, [FromBody, Required] PutLoginRequest request)
+        public async Task<IActionResult> OnPutLoginAsync([FromBody, Required] PutLoginRequest request)
         {
-            this.logger.LogDebug("@{User}: @{Request}", id, request);
+            this.logger.LogDebug("@{Request}", request);
             this.putLoginValidator.ValidateAndThrow(request);
 
-            var response = await this.service.PutLoginAsync(id, request);
-
-            this.StatusCode(response.StatusCode);
-
-            return this.Json(response.Payload);
-        }
-
-        /// <summary>
-        /// Invalidates the authorization token.
-        /// </summary>
-        /// <param name="id">The user id.</param>
-        /// <returns>Http status code, which indicates the operation result.</returns>
-        [HttpPut]
-        [Authorize]
-        [Route(Routes.LogoutRoute)]
-        [Produces(Defaults.DefaultResponseType)]
-        [SwaggerResponse(StatusCodes.Status200OK, "User was updated and saved to db.", null)]
-        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is not authorized.", null)]
-        [SwaggerResponse(StatusCodes.Status404NotFound, "No user found.", typeof(ErrorResponse))]
-        public async Task<IActionResult> OnPutLogoutAsync([FromQuery, Required] Guid id)
-        {
-            this.logger.LogDebug("@{User}", id);
-
-            var response = await this.service.PutLogoutAsync(id);
+            var response = await this.service.PutLoginAsync(request);
 
             this.StatusCode(response.StatusCode);
 

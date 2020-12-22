@@ -16,12 +16,13 @@ namespace VPEAR.Core.Wrappers
         [JsonPropertyName("display_name")]
         public string? DisplayName { get; set; }
 
-        [Required]
         [JsonPropertyName("email")]
         public string? Email { get; set; }
 
-        [Required]
         [JsonPropertyName("password")]
         public string? Password { get; set; }
+
+        [JsonPropertyName("is_admin")]
+        public bool IsAdmin { get; set; }
     }
 }

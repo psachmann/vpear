@@ -55,6 +55,17 @@ namespace VPEAR.Server
             public const string SensorSchema = "Sensors";
 
             public const string WifiSchema = "Wifis";
+
+            public const string TimeSchema = "dd.MM.yyyy hh:mm:ss";
+        }
+
+        public static class ErrorMessages
+        {
+            public const string UserEmailAlreadyUsed = "The email address is already used.";
+
+            public const string InternalServerError = "An internal server error occurred.";
+
+            public const string LastAdminError = "The last admin can not be deleted.";
         }
 
         /// <summary>

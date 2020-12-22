@@ -32,11 +32,11 @@ namespace VPEAR.Server.Test.Validators
         {
             var request = new PutUserRequest()
             {
-                DisplayName = displayName,
+                /*DisplayName = displayName,
                 Email = email,
                 IsVerified = isVerified,
                 Password = password,
-                Role = role,
+                Role = role,*/
             };
             var result = validator.Validate(request);
 
@@ -63,11 +63,11 @@ namespace VPEAR.Server.Test.Validators
         {
             var request = new PutUserRequest()
             {
-                DisplayName = displayName,
+                /*DisplayName = displayName,
                 Email = email,
                 IsVerified = isVerified,
                 Password = password,
-                Role = role,
+                Role = role,*/
             };
             var result = validator.Validate(request);
 

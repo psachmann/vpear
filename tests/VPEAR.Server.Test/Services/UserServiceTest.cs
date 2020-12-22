@@ -10,6 +10,7 @@ using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Test.Services
 {
+    /*
     public class UserServiceTest : IClassFixture<VPEARDbContextFixture>
     {
         private readonly Guid admin = new Guid("00000000-0000-0000-0000-000000000001");
@@ -177,23 +178,6 @@ namespace VPEAR.Server.Test.Services
             Assert.Null(response.Payload);
             Assert.Equal(900, response.StatusCode);
         }
-
-        [Fact]
-        public async Task PutLogoutAsync200OKTest()
-        {
-            var response = await this.service.PutLogoutAsync(this.notExistingUser);
-
-            Assert.Null(response.Payload);
-            Assert.Equal(StatusCodes.Status200OK, response.StatusCode);
-        }
-
-        [Fact]
-        public async Task PutLogoutAsync404NotFoundTest()
-        {
-            var response = await this.service.PutLogoutAsync(this.notExistingUser);
-
-            Assert.Null(response.Payload);
-            Assert.Equal(StatusCodes.Status404NotFound, response.StatusCode);
-        }
     }
+*/
 }

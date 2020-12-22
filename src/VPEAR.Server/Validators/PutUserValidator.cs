@@ -16,6 +16,7 @@ namespace VPEAR.Server.Validators
     {
         public PutUserValidator()
         {
+/*
             this.When(r => r.DisplayName != null, () =>
             {
                 this.RuleFor(r => r.DisplayName)
@@ -68,6 +69,7 @@ namespace VPEAR.Server.Validators
                             .Must(r => r.IsVerified);
                     });
             });
+*/
         }
     }
 }

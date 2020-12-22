@@ -10,9 +10,6 @@ namespace VPEAR.Core.Wrappers
 {
     public class Container<TItem>
     {
-        [JsonPropertyName("type")]
-        public string Type { get; set; } = string.Empty;
-
         [JsonPropertyName("start")]
         public long Start { get; set; }
 
