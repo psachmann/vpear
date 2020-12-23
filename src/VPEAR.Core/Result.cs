@@ -5,7 +5,7 @@
 
 using System.Net;
 
-namespace VPEAR.Core.Models
+namespace VPEAR.Core
 {
     public class Result<TSuccess, TError>
     {
