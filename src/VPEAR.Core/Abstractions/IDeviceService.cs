@@ -15,7 +15,7 @@ namespace VPEAR.Core.Abstractions
     /// </summary>
     public interface IDeviceService
     {
-        Task<Response> GetAsync(Guid id);
+        Task<Response> GetAsync(DeviceStatus status);
 
         Task<Response> PutAsync(Guid id, PutDeviceRequest request);
 

@@ -41,7 +41,6 @@ namespace VPEAR.Server.Test
         [InlineData(Routes.UsersRoute, Delete)]
         [InlineData(Routes.RegisterRoute, Post)]
         [InlineData(Routes.LoginRoute, Put)]
-        [InlineData(Routes.LogoutRoute, Put)]
         public async Task EndpointExistenceTest(string url, string method)
         {
             var client = this.factory.CreateClient();

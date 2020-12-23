@@ -14,7 +14,7 @@ namespace VPEAR.Server.Test
                 .Options;
 
             this.Context = new VPEARDbContext(options);
-            this.Context.Database.EnsureCreated();
+            this.Seed();
         }
 
         public VPEARDbContext Context { get; private set; }
@@ -22,6 +22,12 @@ namespace VPEAR.Server.Test
         public void Dispose()
         {
             this.Context.Dispose();
+        }
+
+        private void Seed()
+        {
+            this.Context.Database.EnsureDeleted();
+            this.Context.Database.EnsureCreated();
         }
     }
 }

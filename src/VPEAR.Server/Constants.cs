@@ -66,6 +66,14 @@ namespace VPEAR.Server
             public const string InternalServerError = "An internal server error occurred.";
 
             public const string LastAdminError = "The last admin can not be deleted.";
+
+            public const string DeviceNotFound = "Device not found.";
+
+            public const string DeviceIsRecording = "Device is currently recording";
+
+            public const string DeviceIsArchived = "Device is archived.";
+
+            public const string DeviceIsNotReachable = "Device is not reachable.";
         }
 
         /// <summary>

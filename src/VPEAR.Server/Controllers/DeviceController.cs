@@ -12,6 +12,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using VPEAR.Core;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Wrappers;
 using static VPEAR.Server.Constants;
@@ -50,18 +51,18 @@ namespace VPEAR.Server.Controllers
         /// <summary>
         /// Gets the device information.
         /// </summary>
-        /// <param name="id">The device id as 32 digit hex string.</param>
-        /// <returns>The current device information.</returns>
+        /// <param name="status">The device status.</param>
+        /// <returns>List of devices.</returns>
         [HttpGet]
         [SwaggerResponse(StatusCodes.Status200OK, "Current device information.", typeof(GetDeviceResponse))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(object))]
         [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", typeof(object))]
         [SwaggerResponse(StatusCodes.Status404NotFound, "Id not found.", typeof(object))]
-        public async Task<IActionResult> OnGetAsync([FromQuery, Required] Guid id)
+        public async Task<IActionResult> OnGetAsync([FromQuery, Required] DeviceStatus status)
         {
-            this.logger.LogDebug("{@Device}", id);
+            this.logger.LogDebug("{@Status}", status);
 
-            var response = await this.service.GetAsync(id);
+            var response = await this.service.GetAsync(status);
 
             this.StatusCode(response.StatusCode);
 
@@ -78,8 +79,7 @@ namespace VPEAR.Server.Controllers
         /// <param name="request">The request data.</param>
         /// <returns>Http status code, which indicates the operation result.</returns>
         [HttpPut]
-        [SwaggerResponse(StatusCodes.Status200OK, "Changes were saved to db and device.", typeof(object))]
-        [SwaggerResponse(StatusCodes.Status202Accepted, "Device is currently recording.", typeof(object))]
+        [SwaggerResponse(StatusCodes.Status200OK, "Changes were saved to db and device.", typeof(Container<GetDeviceResponse>))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(object))]
         [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", typeof(object))]
         [SwaggerResponse(StatusCodes.Status404NotFound, "Id not found.", typeof(object))]
@@ -127,8 +127,8 @@ namespace VPEAR.Server.Controllers
         [SwaggerResponse(StatusCodes.Status200OK, "Device was deleted.", typeof(object))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(object))]
         [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", typeof(object))]
-        [SwaggerResponse(StatusCodes.Status404NotFound, "Id not found.", typeof(object))]
-        [SwaggerResponse(StatusCodes.Status409Conflict, "Device is currently recording.", typeof(object))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Device not found.", typeof(ErrorResponse))]
+        [SwaggerResponse(StatusCodes.Status409Conflict, "Device is currently recording.", typeof(ErrorResponse))]
         public async Task<IActionResult> OnDeleteAsync([FromQuery, Required] Guid id)
         {
             this.logger.LogDebug("{@Device}", id);

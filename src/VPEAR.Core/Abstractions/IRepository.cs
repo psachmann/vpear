@@ -27,7 +27,7 @@ namespace VPEAR.Core.Abstractions
         Task<bool> CreateAsync(TEntity entity);
 
         /// <summary>
-        /// Deletes an entry from the database with the given id.
+        /// Deletes an entry from the database.
         /// </summary>
         /// <param name="entity">The entry to delete.</param>
         /// <returns>The success of the operation.</returns>
@@ -37,7 +37,7 @@ namespace VPEAR.Core.Abstractions
         /// Gets all entries from the database table.
         /// NOTE: Use this to make selects on the table.
         /// </summary>
-        /// <returns>Queryable object for database queries.</returns>
+        /// <returns><see cref="Queryable"/> object for database queries.</returns>
         IQueryable<TEntity> Get();
 
         /// <summary>
