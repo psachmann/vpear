@@ -5,6 +5,7 @@
 
 using System;
 using System.Threading.Tasks;
+using VPEAR.Core.Wrappers;
 
 namespace VPEAR.Core.Abstractions
 {
@@ -19,6 +20,6 @@ namespace VPEAR.Core.Abstractions
         /// </summary>
         /// <param name="id">The device id.</param>
         /// <returns>Http status code and device power information.</returns>
-        Task<Result> GetAsync(Guid id);
+        Task<Result<GetPowerResponse, ErrorResponse>> GetAsync(Guid id);
     }
 }

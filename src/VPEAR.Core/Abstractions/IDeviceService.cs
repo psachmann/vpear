@@ -18,10 +18,10 @@ namespace VPEAR.Core.Abstractions
     {
         Task<Result<Container<GetDeviceResponse>, ErrorResponse>> GetAsync(DeviceStatus status);
 
-        Task<Result<object, ErrorResponse>> PutAsync(Guid id, PutDeviceRequest request);
+        Task<Result<Null, ErrorResponse>> PutAsync(Guid id, PutDeviceRequest request);
 
-        Task<Result<object, ErrorResponse>> PostAsync(PostDeviceRequest request);
+        Task<Result<Null, ErrorResponse>> PostAsync(PostDeviceRequest request);
 
-        Task<Result<object, ErrorResponse>> DeleteAsync(Guid id);
+        Task<Result<Null, ErrorResponse>> DeleteAsync(Guid id);
     }
 }
