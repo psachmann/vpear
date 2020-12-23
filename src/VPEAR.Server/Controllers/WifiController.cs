@@ -49,7 +49,7 @@ namespace VPEAR.Server.Controllers
         /// <summary>
         /// Gets the device wifi information.
         /// </summary>
-        /// <param name="id">The device id.</param>
+        /// <param name="id">The device id as 32 digit hex string.</param>
         /// <returns>The current device wifi information.</returns>
         [HttpGet]
         [Produces(Defaults.DefaultResponseType)]
@@ -71,7 +71,7 @@ namespace VPEAR.Server.Controllers
         /// <summary>
         /// Updates the device wifi information.
         /// </summary>
-        /// <param name="id">The device id.</param>
+        /// <param name="id">The device id as 32 digit hex string.</param>
         /// <param name="request">The request data.</param>
         /// <returns>Http status code, which indicates the operation result.</returns>
         [HttpPut]

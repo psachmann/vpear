@@ -48,7 +48,7 @@ namespace VPEAR.Server.Controllers
         /// <summary>
         /// Gets the device firmware information.
         /// </summary>
-        /// <param name="id">The device id.</param>
+        /// <param name="id">The device id as 32 digit hex string.</param>
         /// <returns>The device firmware information.</returns>
         [HttpGet]
         [Authorize]
@@ -74,7 +74,7 @@ namespace VPEAR.Server.Controllers
         /// <remarks>
         /// TODO: describe the update process more.
         /// </remarks>
-        /// <param name="id">The device id.</param>
+        /// <param name="id">The device id as 32 digit hex string.</param>
         /// <param name="request">The request data.</param>
         /// <returns>Http status code, which indicates the operation result.</returns>
         [HttpPut]
