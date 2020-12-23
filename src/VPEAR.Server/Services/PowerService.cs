@@ -40,13 +40,13 @@ namespace VPEAR.Server.Services
         }
 
         /// <inheritdoc/>
-        public async Task<Response> GetAsync(Guid id)
+        public async Task<Result> GetAsync(Guid id)
         {
             var device = await this.repository.GetAsync(id);
 
             if (device == null)
             {
-                return new Response(HttpStatusCode.NotFound);
+                return new Result(HttpStatusCode.NotFound);
             }
 
             if (device.Status == DeviceStatus.Recording || device.Status == DeviceStatus.Stopped)
@@ -54,20 +54,20 @@ namespace VPEAR.Server.Services
                 var client = this.factory.Invoke(device.Address);
                 var payload = await client.GetPowerAsync();
 
-                return new Response(HttpStatusCode.OK, payload);
+                return new Result(HttpStatusCode.OK, payload);
             }
 
             if (device.Status == DeviceStatus.Archived)
             {
-                return new Response(HttpStatusCode.Gone);
+                return new Result(HttpStatusCode.Gone);
             }
 
             if (device.Status == DeviceStatus.NotReachable)
             {
-                return new Response(HttpStatusCode.FailedDependency);
+                return new Result(HttpStatusCode.FailedDependency);
             }
 
-            return new Response(HttpStatusCode.InternalServerError);
+            return new Result(HttpStatusCode.InternalServerError);
         }
     }
 }

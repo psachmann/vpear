@@ -61,11 +61,11 @@ namespace VPEAR.Server.Controllers
         {
             this.logger.LogDebug("{@Device}", id);
 
-            var response = await this.service.GetAsync(id);
+            var result = await this.service.GetAsync(id);
 
-            this.StatusCode(response.StatusCode);
+            this.StatusCode(result.StatusCode);
 
-            return this.Json(response.Payload);
+            return result.IsSuccess ? this.Json(result.Value) : this.Json(result.Error);
         }
 
         /// <summary>
@@ -87,11 +87,11 @@ namespace VPEAR.Server.Controllers
             this.logger.LogDebug("{@Device}: {@Request}", id, request);
             this.validator.ValidateAndThrow(request);
 
-            var response = await this.service.PutAsync(id, request);
+            var result = await this.service.PutAsync(id, request);
 
-            this.StatusCode(response.StatusCode);
+            this.StatusCode(result.StatusCode);
 
-            return this.Json(response.Payload);
+            return result.IsSuccess ? this.Json(result.Value) : this.Json(result.Error);
         }
     }
 }

@@ -69,11 +69,11 @@ namespace VPEAR.Server.Controllers
         {
             this.logger.LogDebug("{@User}: {@Role}", id, role);
 
-            var response = await this.service.GetAsync(id, role);
+            var result = await this.service.GetAsync(id, role);
 
-            this.StatusCode(response.StatusCode);
+            this.StatusCode(result.StatusCode);
 
-            return this.Json(response.Payload);
+            return result.IsSuccess ? this.Json(result.Value) : this.Json(result.Error);
         }
 
         /// <summary>
@@ -95,11 +95,11 @@ namespace VPEAR.Server.Controllers
             this.logger.LogDebug("{@User}: {@Request}", id, request);
             this.putUserValidator.ValidateAndThrow(request);
 
-            var response = await this.service.PutAsync(id, request);
+            var result = await this.service.PutAsync(id, request);
 
-            this.StatusCode(response.StatusCode);
+            this.StatusCode(result.StatusCode);
 
-            return this.Json(response.Payload);
+            return result.IsSuccess ? this.Json(result.Value) : this.Json(result.Error);
         }
 
         /// <summary>
@@ -118,11 +118,11 @@ namespace VPEAR.Server.Controllers
         {
             this.logger.LogDebug("{@User}", id);
 
-            var response = await this.service.DeleteAsync(id);
+            var result = await this.service.DeleteAsync(id);
 
-            this.StatusCode(response.StatusCode);
+            this.StatusCode(result.StatusCode);
 
-            return this.Json(response.Payload);
+            return result.IsSuccess ? this.Json(result.Value) : this.Json(result.Error);
         }
 
         /// <summary>
@@ -164,11 +164,11 @@ namespace VPEAR.Server.Controllers
             this.logger.LogDebug("{@Request}", request);
             this.putLoginValidator.ValidateAndThrow(request);
 
-            var response = await this.service.PutLoginAsync(request);
+            var result = await this.service.PutLoginAsync(request);
 
-            this.StatusCode(response.StatusCode);
+            this.StatusCode(result.StatusCode);
 
-            return this.Json(response.Payload);
+            return result.IsSuccess ? this.Json(result.Value) : this.Json(result.Error);
         }
     }
 }

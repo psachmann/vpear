@@ -53,11 +53,11 @@ namespace VPEAR.Server.Controllers
         {
             this.logger.LogDebug("{@Device}", id);
 
-            var response = await this.service.GetSensorsAsync(id);
+            var result = await this.service.GetSensorsAsync(id);
 
-            this.StatusCode(response.StatusCode);
+            this.StatusCode(result.StatusCode);
 
-            return this.Json(response.Payload);
+            return result.IsSuccess ? this.Json(result.Value) : this.Json(result.Error);
         }
 
         /// <summary>
@@ -82,11 +82,11 @@ namespace VPEAR.Server.Controllers
         {
             this.logger.LogDebug("{@Device}: {@Request}", id, new { Start = start, Stop = stop, });
 
-            var response = await this.service.GetFramesAsync(id, start ?? 0, stop ?? 0);
+            var result = await this.service.GetFramesAsync(id, start ?? 0, stop ?? 0);
 
-            this.StatusCode(response.StatusCode);
+            this.StatusCode(result.StatusCode);
 
-            return this.Json(response.Payload);
+            return result.IsSuccess ? this.Json(result.Value) : this.Json(result.Error);
         }
     }
 }

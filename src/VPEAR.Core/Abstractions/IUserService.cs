@@ -11,14 +11,14 @@ namespace VPEAR.Core.Abstractions
 {
     public interface IUserService
     {
-        Task<Response> GetAsync(string? id = null, string? role = null);
+        Task<Result> GetAsync(string? id = null, string? role = null);
 
-        Task<Response> PutAsync(string id, PutUserRequest request);
+        Task<Result> PutAsync(string id, PutUserRequest request);
 
-        Task<Response> DeleteAsync(string id);
+        Task<Result> DeleteAsync(string id);
 
-        Task<Response> PostRegisterAsync(PostRegisterRequest request);
+        Task<Result> PostRegisterAsync(PostRegisterRequest request);
 
-        Task<Response> PutLoginAsync(PutLoginRequest request);
+        Task<Result> PutLoginAsync(PutLoginRequest request);
     }
 }

@@ -38,7 +38,7 @@ namespace VPEAR.Server.Services
         }
 
         /// <inheritdoc/>
-        public async Task<Response> GetAsync(DeviceStatus deviceStatus)
+        public async Task<Result> GetAsync(DeviceStatus deviceStatus)
         {
             var status = HttpStatusCode.InternalServerError;
             dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
@@ -72,11 +72,11 @@ namespace VPEAR.Server.Services
                 payload = container;
             }
 
-            return new Response(status, payload);
+            return new Result(status, payload);
         }
 
         /// <inheritdoc/>
-        public async Task<Response> PutAsync(Guid id, PutDeviceRequest request)
+        public async Task<Result> PutAsync(Guid id, PutDeviceRequest request)
         {
             var status = HttpStatusCode.InternalServerError;
             dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
@@ -110,17 +110,17 @@ namespace VPEAR.Server.Services
                 }
             }
 
-            return new Response(status, payload);
+            return new Result(status, payload);
         }
 
         /// <inheritdoc/>
-        public Task<Response> PostAsync(PostDeviceRequest request)
+        public Task<Result> PostAsync(PostDeviceRequest request)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public async Task<Response> DeleteAsync(Guid id)
+        public async Task<Result> DeleteAsync(Guid id)
         {
             var status = HttpStatusCode.InternalServerError;
             dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
@@ -142,7 +142,7 @@ namespace VPEAR.Server.Services
                 payload = null;
             }
 
-            return new Response(status, payload);
+            return new Result(status, payload);
         }
     }
 }

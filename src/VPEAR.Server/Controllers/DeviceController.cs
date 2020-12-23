@@ -62,11 +62,11 @@ namespace VPEAR.Server.Controllers
         {
             this.logger.LogDebug("{@Status}", status);
 
-            var response = await this.service.GetAsync(status);
+            var result = await this.service.GetAsync(status);
 
-            this.StatusCode(response.StatusCode);
+            this.StatusCode(result.StatusCode);
 
-            return this.Json(response.Payload);
+            return result.IsSuccess ? this.Json(result.Value) : this.Json(result.Error);
         }
 
         /// <summary>
@@ -90,11 +90,11 @@ namespace VPEAR.Server.Controllers
             this.logger.LogDebug("{@Device}: {@Request}", id, request);
             this.putDeviceValidator.ValidateAndThrow(request);
 
-            var response = await this.service.PutAsync(id, request);
+            var result = await this.service.PutAsync(id, request);
 
-            this.StatusCode(response.StatusCode);
+            this.StatusCode(result.StatusCode);
 
-            return this.Json(response.Payload);
+            return result.IsSuccess ? this.Json(result.Value) : this.Json(result.Error);
         }
 
         /// <summary>
@@ -110,11 +110,11 @@ namespace VPEAR.Server.Controllers
         [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", typeof(object))]
         public async Task<IActionResult> OnPostAsync([FromBody, Required] PostDeviceRequest request)
         {
-            var response = await this.service.PostAsync(request);
+            var result = await this.service.PostAsync(request);
 
-            this.StatusCode(response.StatusCode);
+            this.StatusCode(result.StatusCode);
 
-            return this.Json(response.Payload);
+            return result.IsSuccess ? this.Json(result.Value) : this.Json(result.Error);
         }
 
         /// <summary>
@@ -133,11 +133,11 @@ namespace VPEAR.Server.Controllers
         {
             this.logger.LogDebug("{@Device}", id);
 
-            var response = await this.service.DeleteAsync(id);
+            var result = await this.service.DeleteAsync(id);
 
-            this.StatusCode(response.StatusCode);
+            this.StatusCode(result.StatusCode);
 
-            return this.Json(response.Payload);
+            return result.IsSuccess ? this.Json(result.Value) : this.Json(result.Error);
         }
     }
 }

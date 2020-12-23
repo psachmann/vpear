@@ -37,7 +37,7 @@ namespace VPEAR.Server.Services
         }
 
         /// <inheritdoc/>
-        public async Task<Response> GetFramesAsync(Guid id, int start, int stop)
+        public async Task<Result> GetFramesAsync(Guid id, int start, int stop)
         {
             var status = HttpStatusCode.InternalServerError;
             var payload = new GetFramesResponse();
@@ -96,11 +96,11 @@ namespace VPEAR.Server.Services
                 payload = null;
             }
 
-            return new Response(status, payload);
+            return new Result(status, payload);
         }
 
         /// <inheritdoc/>
-        public async Task<Response> GetSensorsAsync(Guid id)
+        public async Task<Result> GetSensorsAsync(Guid id)
         {
             var sensors = await this.sensors.Get()
                 .Where(s => s.DeviceForeignKey.Equals(id))
@@ -125,11 +125,11 @@ namespace VPEAR.Server.Services
                     });
                 });
 
-                return new Response(HttpStatusCode.OK, payload);
+                return new Result(HttpStatusCode.OK, payload);
             }
             else
             {
-                return new Response(HttpStatusCode.NotFound);
+                return new Result(HttpStatusCode.NotFound);
             }
         }
     }

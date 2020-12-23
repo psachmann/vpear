@@ -5,6 +5,7 @@
 
 using System;
 using System.Threading.Tasks;
+using VPEAR.Core.Models;
 using VPEAR.Core.Wrappers;
 
 namespace VPEAR.Core.Abstractions
@@ -15,12 +16,12 @@ namespace VPEAR.Core.Abstractions
     /// </summary>
     public interface IDeviceService
     {
-        Task<Response> GetAsync(DeviceStatus status);
+        Task<Result<Container<GetDeviceResponse>, ErrorResponse>> GetAsync(DeviceStatus status);
 
-        Task<Response> PutAsync(Guid id, PutDeviceRequest request);
+        Task<Result<object, ErrorResponse>> PutAsync(Guid id, PutDeviceRequest request);
 
-        Task<Response> PostAsync(PostDeviceRequest request);
+        Task<Result<object, ErrorResponse>> PostAsync(PostDeviceRequest request);
 
-        Task<Response> DeleteAsync(Guid id);
+        Task<Result<object, ErrorResponse>> DeleteAsync(Guid id);
     }
 }

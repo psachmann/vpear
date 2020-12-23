@@ -43,7 +43,7 @@ namespace VPEAR.Server.Services
         }
 
         /// <inheritdoc/>
-        public async Task<Response> GetAsync(Guid id)
+        public async Task<Result> GetAsync(Guid id)
         {
             var firmware = await this.firmwares.Get()
                 .Where(f => f.DeviceForeignKey.Equals(id))
@@ -51,7 +51,7 @@ namespace VPEAR.Server.Services
 
             if (firmware == null)
             {
-                return new Response(HttpStatusCode.NotFound);
+                return new Result(HttpStatusCode.NotFound);
             }
             else
             {
@@ -62,12 +62,12 @@ namespace VPEAR.Server.Services
                     Version = firmware.Version,
                 };
 
-                return new Response(HttpStatusCode.OK, payload);
+                return new Result(HttpStatusCode.OK, payload);
             }
         }
 
         /// <inheritdoc/>
-        public async Task<Response> PutAsync(Guid id, PutFirmwareRequest request)
+        public async Task<Result> PutAsync(Guid id, PutFirmwareRequest request)
         {
             var status = HttpStatusCode.InternalServerError;
             var device = await this.devices.GetAsync(id);
@@ -106,7 +106,7 @@ namespace VPEAR.Server.Services
                 }
             }
 
-            return new Response(status);
+            return new Result(status);
         }
     }
 }

@@ -42,14 +42,14 @@ namespace VPEAR.Server.Services
         }
 
         /// <inheritdoc/>
-        public async Task<Response> GetAsync(Guid id)
+        public async Task<Result> GetAsync(Guid id)
         {
             var filter = await this.filters.Get()
                 .FirstOrDefaultAsync(f => f.DeviceForeignKey.Equals(id));
 
             if (filter == null)
             {
-                return new Response(HttpStatusCode.NotFound);
+                return new Result(HttpStatusCode.NotFound);
             }
 
             var payload = new GetFiltersResponse()
@@ -59,11 +59,11 @@ namespace VPEAR.Server.Services
                 Spot = filter.Noise,
             };
 
-            return new Response(HttpStatusCode.OK, payload);
+            return new Result(HttpStatusCode.OK, payload);
         }
 
         /// <inheritdoc/>
-        public async Task<Response> PutAsync(Guid id, PutFiltersRequest request)
+        public async Task<Result> PutAsync(Guid id, PutFiltersRequest request)
         {
             var device = await this.devices.GetAsync(id);
             var filter = await this.filters.Get()
@@ -71,7 +71,7 @@ namespace VPEAR.Server.Services
 
             if (device == null || filter == null)
             {
-                return new Response(HttpStatusCode.NotFound);
+                return new Result(HttpStatusCode.NotFound);
             }
 
             if (device.Status == DeviceStatus.Recording || device.Status == DeviceStatus.Stopped)
@@ -83,20 +83,20 @@ namespace VPEAR.Server.Services
 
                 await this.filters.UpdateAsync(filter);
 
-                return new Response(HttpStatusCode.OK);
+                return new Result(HttpStatusCode.OK);
             }
 
             if (device.Status == DeviceStatus.Archived)
             {
-                return new Response(HttpStatusCode.Gone);
+                return new Result(HttpStatusCode.Gone);
             }
 
             if (device.Status == DeviceStatus.NotReachable)
             {
-                return new Response(HttpStatusCode.FailedDependency);
+                return new Result(HttpStatusCode.FailedDependency);
             }
 
-            return new Response(HttpStatusCode.InternalServerError);
+            return new Result(HttpStatusCode.InternalServerError);
         }
     }
 }

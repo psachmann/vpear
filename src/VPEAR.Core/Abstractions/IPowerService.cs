@@ -19,6 +19,6 @@ namespace VPEAR.Core.Abstractions
         /// </summary>
         /// <param name="id">The device id.</param>
         /// <returns>Http status code and device power information.</returns>
-        Task<Response> GetAsync(Guid id);
+        Task<Result> GetAsync(Guid id);
     }
 }
