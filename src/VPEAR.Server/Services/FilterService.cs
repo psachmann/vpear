@@ -13,6 +13,7 @@ using VPEAR.Core.Abstractions;
 using VPEAR.Core.Models;
 using VPEAR.Core.Wrappers;
 using VPEAR.Server.Controllers;
+using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Services
 {
@@ -42,61 +43,71 @@ namespace VPEAR.Server.Services
         }
 
         /// <inheritdoc/>
-        public async Task<Result> GetAsync(Guid id)
+        public async Task<Result<GetFiltersResponse, ErrorResponse>> GetAsync(Guid id)
         {
+            var status = HttpStatusCode.InternalServerError;
+            dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
             var filter = await this.filters.Get()
                 .FirstOrDefaultAsync(f => f.DeviceForeignKey.Equals(id));
 
             if (filter == null)
             {
-                return new Result(HttpStatusCode.NotFound);
+                status = HttpStatusCode.NotFound;
+                payload = new ErrorResponse(status, ErrorMessages.DeviceNotFound);
+            }
+            else
+            {
+                status = HttpStatusCode.OK;
+                payload = new GetFiltersResponse()
+                {
+                    Noise = filter.Noise,
+                    Smooth = filter.Smooth,
+                    Spot = filter.Noise,
+                };
             }
 
-            var payload = new GetFiltersResponse()
-            {
-                Noise = filter.Noise,
-                Smooth = filter.Smooth,
-                Spot = filter.Noise,
-            };
-
-            return new Result(HttpStatusCode.OK, payload);
+            return new Result<GetFiltersResponse, ErrorResponse>(status, payload);
         }
 
         /// <inheritdoc/>
-        public async Task<Result> PutAsync(Guid id, PutFiltersRequest request)
+        public async Task<Result<Null, ErrorResponse>> PutAsync(Guid id, PutFiltersRequest request)
         {
+            var status = HttpStatusCode.InternalServerError;
+            dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
             var device = await this.devices.GetAsync(id);
             var filter = await this.filters.Get()
                 .FirstOrDefaultAsync(f => f.DeviceForeignKey.Equals(id));
 
             if (device == null || filter == null)
             {
-                return new Result(HttpStatusCode.NotFound);
+                status = HttpStatusCode.NotFound;
+                payload = new ErrorResponse(status, ErrorMessages.DeviceNotFound);
             }
-
-            if (device.Status == DeviceStatus.Recording || device.Status == DeviceStatus.Stopped)
+            else if (device.Status == DeviceStatus.Archived)
+            {
+                status = HttpStatusCode.Gone;
+                payload = new ErrorResponse(status, ErrorMessages.DeviceIsArchived);
+            }
+            else if (device.Status == DeviceStatus.NotReachable)
+            {
+                status = HttpStatusCode.FailedDependency;
+                payload = new ErrorResponse(status, ErrorMessages.DeviceIsNotReachable);
+            }
+            else if (device.Status == DeviceStatus.Recording || device.Status == DeviceStatus.Stopped)
             {
                 // TODO: synchronization service to publish updates to the device
                 filter.Noise = request.Noise ?? filter.Noise;
                 filter.Smooth = request.Smooth ?? filter.Smooth;
                 filter.Spot = request.Spot ?? filter.Spot;
 
-                await this.filters.UpdateAsync(filter);
-
-                return new Result(HttpStatusCode.OK);
+                if (await this.filters.UpdateAsync(filter))
+                {
+                    status = HttpStatusCode.OK;
+                    payload = null;
+                }
             }
 
-            if (device.Status == DeviceStatus.Archived)
-            {
-                return new Result(HttpStatusCode.Gone);
-            }
-
-            if (device.Status == DeviceStatus.NotReachable)
-            {
-                return new Result(HttpStatusCode.FailedDependency);
-            }
-
-            return new Result(HttpStatusCode.InternalServerError);
+            return new Result<Null, ErrorResponse>(status, payload);
         }
     }
 }

@@ -13,6 +13,7 @@ using VPEAR.Core.Abstractions;
 using VPEAR.Core.Models;
 using VPEAR.Core.Wrappers;
 using VPEAR.Server.Controllers;
+using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Services
 {
@@ -30,7 +31,7 @@ namespace VPEAR.Server.Services
         /// </summary>
         /// <param name="logger">The service logger.</param>
         /// <param name="devices">The device repository for db access.</param>
-        /// <param name="wifis">The wifi repositroy for db access.</param>
+        /// <param name="wifis">The wifi repository for db access.</param>
         public WifiService(
             ILogger<WifiController> logger,
             IRepository<Device, Guid> devices,
@@ -42,39 +43,57 @@ namespace VPEAR.Server.Services
         }
 
         /// <inheritdoc/>
-        public async Task<Result> GetAsync(Guid id)
+        public async Task<Result<GetWifiResponse, ErrorResponse>> GetAsync(Guid id)
         {
+            var status = HttpStatusCode.InternalServerError;
+            dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
             var wifi = await this.wifis.Get()
                 .FirstOrDefaultAsync(w => w.DeviceForeignKey.Equals(id));
 
             if (wifi == null)
             {
-                return new Result(HttpStatusCode.NotFound);
+                status = HttpStatusCode.NotFound;
+                payload = new ErrorResponse(status, ErrorMessages.DeviceNotFound);
+            }
+            else
+            {
+                status = HttpStatusCode.OK;
+                payload = new GetWifiResponse()
+                {
+                    Mode = wifi.Mode,
+                    Neighbors = wifi.Neighbors,
+                    Ssid = wifi.Ssid,
+                };
             }
 
-            var payload = new GetWifiResponse()
-            {
-                Mode = wifi.Mode,
-                Neighbors = wifi.Neighbors,
-                Ssid = wifi.Ssid,
-            };
-
-            return new Result(HttpStatusCode.OK, payload);
+            return new Result<GetWifiResponse, ErrorResponse>(status, payload);
         }
 
         /// <inheritdoc/>
-        public async Task<Result> PutAsync(Guid id, PutWifiRequest request)
+        public async Task<Result<Null, ErrorResponse>> PutAsync(Guid id, PutWifiRequest request)
         {
+            var status = HttpStatusCode.InternalServerError;
+            dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
             var device = await this.devices.GetAsync(id);
             var wifi = await this.wifis.Get()
                 .FirstOrDefaultAsync(w => w.DeviceForeignKey.Equals(id));
 
             if (device == null || wifi == null)
             {
-                return new Result(HttpStatusCode.NotFound);
+                status = HttpStatusCode.NotFound;
+                payload = new ErrorResponse(status, ErrorMessages.DeviceNotFound);
             }
-
-            if (device.Status == DeviceStatus.Recording || device.Status == DeviceStatus.Stopped)
+            else if (device.Status == DeviceStatus.Archived)
+            {
+                status = HttpStatusCode.Gone;
+                payload = new ErrorResponse(status, ErrorMessages.DeviceIsArchived);
+            }
+            else if (device.Status == DeviceStatus.NotReachable)
+            {
+                status = HttpStatusCode.FailedDependency;
+                payload = new ErrorResponse(status, ErrorMessages.DeviceIsNotReachable);
+            }
+            else if (device.Status == DeviceStatus.Recording || device.Status == DeviceStatus.Stopped)
             {
                 // TODO: how to store the password?
                 // TODO: synchro service to publish updates to the device
@@ -82,22 +101,14 @@ namespace VPEAR.Server.Services
                 wifi.Password = request.Password;
                 wifi.Ssid = request.Ssid;
 
-                await this.wifis.UpdateAsync(wifi);
-
-                return new Result(HttpStatusCode.OK);
+                if (await this.wifis.UpdateAsync(wifi))
+                {
+                    status = HttpStatusCode.OK;
+                    payload = null;
+                }
             }
 
-            if (device.Status == DeviceStatus.Archived)
-            {
-                return new Result(HttpStatusCode.Gone);
-            }
-
-            if (device.Status == DeviceStatus.NotReachable)
-            {
-                return new Result(HttpStatusCode.FailedDependency);
-            }
-
-            return new Result(HttpStatusCode.InternalServerError);
+            return new Result<Null, ErrorResponse>(status, payload);
         }
     }
 }

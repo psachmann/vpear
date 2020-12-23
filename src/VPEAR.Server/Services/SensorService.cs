@@ -14,6 +14,7 @@ using VPEAR.Core.Abstractions;
 using VPEAR.Core.Models;
 using VPEAR.Core.Wrappers;
 using VPEAR.Server.Controllers;
+using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Services
 {
@@ -37,10 +38,10 @@ namespace VPEAR.Server.Services
         }
 
         /// <inheritdoc/>
-        public async Task<Result> GetFramesAsync(Guid id, int start, int stop)
+        public async Task<Result<Container<GetFrameResponse>, ErrorResponse>> GetFramesAsync(Guid id, int start, int stop)
         {
             var status = HttpStatusCode.InternalServerError;
-            var payload = new GetFramesResponse();
+            dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
             var frames = await this.frames.Get()
                 .Where(f => f.DeviceForeignKey.Equals(id))
                 .OrderBy(f => f.CreatedAt)
@@ -96,19 +97,27 @@ namespace VPEAR.Server.Services
                 payload = null;
             }
 
-            return new Result(status, payload);
+            return new Result<Container<GetFrameResponse>, ErrorResponse>(status, payload);
         }
 
         /// <inheritdoc/>
-        public async Task<Result> GetSensorsAsync(Guid id)
+        public async Task<Result<Container<GetSensorResponse>, ErrorResponse>> GetSensorsAsync(Guid id)
         {
+            var status = HttpStatusCode.InternalServerError;
+            dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
             var sensors = await this.sensors.Get()
                 .Where(s => s.DeviceForeignKey.Equals(id))
                 .ToListAsync();
 
-            if (sensors != null && sensors.Count != 0)
+            if (sensors == null || sensors.Count == 0)
             {
-                var payload = new Container<GetSensorResponse>();
+                status = HttpStatusCode.NotFound;
+                payload = new ErrorResponse(status, ErrorMessages.DeviceNotFound);
+            }
+            else
+            {
+                status = HttpStatusCode.OK;
+                payload = new Container<GetSensorResponse>();
 
                 sensors.ForEach(s =>
                 {
@@ -124,13 +133,9 @@ namespace VPEAR.Server.Services
                         Width = s.Width,
                     });
                 });
+            }
 
-                return new Result(HttpStatusCode.OK, payload);
-            }
-            else
-            {
-                return new Result(HttpStatusCode.NotFound);
-            }
+            return new Result<Container<GetSensorResponse>, ErrorResponse>(status, payload);
         }
     }
 }

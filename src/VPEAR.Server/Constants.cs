@@ -69,6 +69,10 @@ namespace VPEAR.Server
 
             public const string DeviceNotFound = "Device not found.";
 
+            public const string FirmwareNotFound = "Firmware not found.";
+
+            public const string UserNotFound = "User not found.";
+
             public const string DeviceIsRecording = "Device is currently recording";
 
             public const string DeviceIsArchived = "Device is archived.";

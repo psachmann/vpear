@@ -141,11 +141,11 @@ namespace VPEAR.Server.Controllers
             this.logger.LogDebug("@{Request}", request);
             this.postRegisterValidator.ValidateAndThrow(request);
 
-            var response = await this.service.PostRegisterAsync(request);
+            var result = await this.service.PostRegisterAsync(request);
 
-            this.StatusCode(response.StatusCode);
+            this.StatusCode(result.StatusCode);
 
-            return this.Json(response.Payload);
+            return result.IsSuccess ? this.Json(result.Value) : this.Json(result.Error);
         }
 
         /// <summary>

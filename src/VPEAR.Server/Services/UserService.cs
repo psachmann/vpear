@@ -42,7 +42,7 @@ namespace VPEAR.Server.Services
         }
 
         /// <inheritdoc/>
-        public async Task<Result> DeleteAsync(string id)
+        public async Task<Result<Null, ErrorResponse>> DeleteAsync(string id)
         {
             var status = HttpStatusCode.InternalServerError;
             dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
@@ -51,7 +51,7 @@ namespace VPEAR.Server.Services
             if (user == null)
             {
                 status = HttpStatusCode.NotFound;
-                payload = null;
+                payload = new ErrorResponse(status, ErrorMessages.UserNotFound);
             }
             else if ((await this.users.GetRolesAsync(user)).Contains(Roles.AdminRole)
                 && (await this.users.GetUsersInRoleAsync(Roles.AdminRole)).Count == 1)
@@ -68,11 +68,11 @@ namespace VPEAR.Server.Services
                 }
             }
 
-            return new Result(status, payload);
+            return new Result<Null, ErrorResponse>(status, payload);
         }
 
         /// <inheritdoc/>
-        public async Task<Result> GetAsync(string? id = null, string? role = null)
+        public async Task<Result<Container<GetUserResponse>, ErrorResponse>> GetAsync(string? id = null, string? role = null)
         {
             var status = HttpStatusCode.InternalServerError;
             dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
@@ -128,14 +128,14 @@ namespace VPEAR.Server.Services
             {
                 // no id or role provided
                 status = HttpStatusCode.NotFound;
-                payload = null;
+                payload = new ErrorResponse(status, ErrorMessages.UserNotFound);
             }
 
-            return new Result(status, payload);
+            return new Result<Container<GetUserResponse>, ErrorResponse>(status, payload);
         }
 
         /// <inheritdoc/>
-        public async Task<Result> PostRegisterAsync(PostRegisterRequest request)
+        public async Task<Result<Null, ErrorResponse>> PostRegisterAsync(PostRegisterRequest request)
         {
             var status = HttpStatusCode.InternalServerError;
             dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
@@ -167,12 +167,14 @@ namespace VPEAR.Server.Services
                 payload = new ErrorResponse(status, ErrorMessages.UserEmailAlreadyUsed);
             }
 
-            return new Result(status, payload);
+            return new Result<Null, ErrorResponse>(status, payload);
         }
 
         /// <inheritdoc/>
-        public async Task<Result> PutAsync(string id, PutUserRequest request)
+        public Task<Result<Null, ErrorResponse>> PutAsync(string id, PutUserRequest request)
         {
+            throw new NotImplementedException();
+/*
             var user = await this.users.FindByIdAsync(id);
 
             if (user == null)
@@ -195,10 +197,11 @@ namespace VPEAR.Server.Services
             }
 
             return new Result(HttpStatusCode.OK);
+*/
         }
 
         /// <inheritdoc/>
-        public async Task<Result> PutLoginAsync(PutLoginRequest request)
+        public async Task<Result<PutLoginResponse, ErrorResponse>> PutLoginAsync(PutLoginRequest request)
         {
             var status = HttpStatusCode.InternalServerError;
             dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
@@ -247,7 +250,7 @@ namespace VPEAR.Server.Services
                 };
             }
 
-            return new Result(status, payload);
+            return new Result<PutLoginResponse, ErrorResponse>(status, payload);
         }
 
         private async Task CreateAdminAsync(IdentityUser user)

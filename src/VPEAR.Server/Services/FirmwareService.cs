@@ -14,6 +14,7 @@ using VPEAR.Core.Abstractions;
 using VPEAR.Core.Models;
 using VPEAR.Core.Wrappers;
 using VPEAR.Server.Controllers;
+using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Services
 {
@@ -43,33 +44,38 @@ namespace VPEAR.Server.Services
         }
 
         /// <inheritdoc/>
-        public async Task<Result> GetAsync(Guid id)
+        public async Task<Result<GetFirmwareResponse, ErrorResponse>> GetAsync(Guid id)
         {
+            var status = HttpStatusCode.InternalServerError;
+            dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
             var firmware = await this.firmwares.Get()
                 .Where(f => f.DeviceForeignKey.Equals(id))
                 .FirstOrDefaultAsync();
 
             if (firmware == null)
             {
-                return new Result(HttpStatusCode.NotFound);
+                status = HttpStatusCode.NotFound;
+                payload = new ErrorResponse(status, ErrorMessages.DeviceNotFound);
             }
             else
             {
-                var payload = new GetFirmwareResponse()
+                status = HttpStatusCode.OK;
+                payload = new GetFirmwareResponse()
                 {
                     Source = firmware.Source,
                     Upgrade = firmware.Upgrade,
                     Version = firmware.Version,
                 };
-
-                return new Result(HttpStatusCode.OK, payload);
             }
+
+            return new Result<GetFirmwareResponse, ErrorResponse>(status, payload);
         }
 
         /// <inheritdoc/>
-        public async Task<Result> PutAsync(Guid id, PutFirmwareRequest request)
+        public async Task<Result<Null, ErrorResponse>> PutAsync(Guid id, PutFirmwareRequest request)
         {
             var status = HttpStatusCode.InternalServerError;
+            dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
             var device = await this.devices.GetAsync(id);
             var firmware = await this.firmwares.Get()
                 .Where(f => f.DeviceForeignKey.Equals(id))
@@ -78,18 +84,22 @@ namespace VPEAR.Server.Services
             if (device == null || firmware == null)
             {
                 status = HttpStatusCode.NotFound;
+                payload = new ErrorResponse(status, ErrorMessages.DeviceNotFound);
             }
             else if (device.Status == DeviceStatus.Archived)
             {
                 status = HttpStatusCode.Gone;
+                payload = new ErrorResponse(status, ErrorMessages.DeviceIsArchived);
             }
             else if (device.Status == DeviceStatus.NotReachable)
             {
                 status = HttpStatusCode.FailedDependency;
+                payload = new ErrorResponse(status, ErrorMessages.DeviceIsNotReachable);
             }
             else if (request.Package)
             {
                 status = HttpStatusCode.NotImplemented;
+                payload = new ErrorResponse(status, "Not implemented.");
             }
             else
             {
@@ -99,14 +109,11 @@ namespace VPEAR.Server.Services
                 if (await this.firmwares.UpdateAsync(firmware))
                 {
                     status = HttpStatusCode.OK;
-                }
-                else
-                {
-                    status = HttpStatusCode.InternalServerError;
+                    payload = null;
                 }
             }
 
-            return new Result(status);
+            return new Result<Null, ErrorResponse>(status, payload);
         }
     }
 }

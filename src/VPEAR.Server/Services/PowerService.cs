@@ -10,7 +10,9 @@ using System.Threading.Tasks;
 using VPEAR.Core;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Models;
+using VPEAR.Core.Wrappers;
 using VPEAR.Server.Controllers;
+using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Services
 {
@@ -40,34 +42,36 @@ namespace VPEAR.Server.Services
         }
 
         /// <inheritdoc/>
-        public async Task<Result> GetAsync(Guid id)
+        public async Task<Result<GetPowerResponse, ErrorResponse>> GetAsync(Guid id)
         {
+            var status = HttpStatusCode.InternalServerError;
+            dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
             var device = await this.repository.GetAsync(id);
 
             if (device == null)
             {
-                return new Result(HttpStatusCode.NotFound);
+                status = HttpStatusCode.NotFound;
+                payload = new ErrorResponse(status, ErrorMessages.DeviceNotFound);
             }
-
-            if (device.Status == DeviceStatus.Recording || device.Status == DeviceStatus.Stopped)
+            else if (device.Status == DeviceStatus.Archived)
+            {
+                status = HttpStatusCode.Gone;
+                payload = new ErrorResponse(status, ErrorMessages.DeviceIsArchived);
+            }
+            else if (device.Status == DeviceStatus.NotReachable)
+            {
+                status = HttpStatusCode.FailedDependency;
+                payload = new ErrorResponse(status, ErrorMessages.DeviceIsNotReachable);
+            }
+            else if (device.Status == DeviceStatus.Recording || device.Status == DeviceStatus.Stopped)
             {
                 var client = this.factory.Invoke(device.Address);
-                var payload = await client.GetPowerAsync();
 
-                return new Result(HttpStatusCode.OK, payload);
+                status = HttpStatusCode.OK;
+                payload = await client.GetPowerAsync();
             }
 
-            if (device.Status == DeviceStatus.Archived)
-            {
-                return new Result(HttpStatusCode.Gone);
-            }
-
-            if (device.Status == DeviceStatus.NotReachable)
-            {
-                return new Result(HttpStatusCode.FailedDependency);
-            }
-
-            return new Result(HttpStatusCode.InternalServerError);
+            return new Result<GetPowerResponse, ErrorResponse>(status, payload);
         }
     }
 }
