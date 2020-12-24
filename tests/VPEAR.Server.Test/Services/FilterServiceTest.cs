@@ -3,7 +3,6 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
-/*
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -12,19 +11,14 @@ using VPEAR.Core.Abstractions;
 using VPEAR.Core.Models;
 using VPEAR.Core.Wrappers;
 using VPEAR.Server.Controllers;
-using VPEAR.Server.Db;
 using VPEAR.Server.Services;
 using Xunit;
+using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Test.Services
 {
     public class FilterServiceTest : IClassFixture<VPEARDbContextFixture>
     {
-        private readonly Guid stoppedDevice = DbSeed.Devices[0].Id;
-        private readonly Guid recordingDevice = DbSeed.Devices[1].Id;
-        private readonly Guid archivedDevice = DbSeed.Devices[2].Id;
-        private readonly Guid notReachableDevice = DbSeed.Devices[3].Id;
-        private readonly Guid notExistingDevice = new Guid();
         private readonly IFilterService service;
 
         public FilterServiceTest(VPEARDbContextFixture fixture)
@@ -36,69 +30,91 @@ namespace VPEAR.Server.Test.Services
         }
 
         [Fact]
-        public async Task GetAsync200OKTest()
+        public void GetAsync200OKTest()
         {
             var devices = new List<Guid>()
             {
-                this.archivedDevice,
-                this.notReachableDevice,
-                this.stoppedDevice,
-                this.recordingDevice,
+                Mocks.ArchivedDeviceId,
+                Mocks.NotReachableDeviceId,
+                Mocks.StoppedDeviceId,
+                Mocks.RecordingDeviceId,
             };
 
-            foreach (var device in devices)
+            devices.ForEach(async device =>
             {
-                var response = await this.service.GetAsync(device);
+                var result = await this.service.GetAsync(device);
 
-                Assert.NotNull(response.Payload);
-                Assert.Equal(StatusCodes.Status200OK, response.StatusCode);
-            }
+                Assert.True(result.IsSuccess);
+                Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
+                Assert.NotNull(result.Value);
+            });
         }
 
         [Fact]
         public async Task GetAsync404NotFoundTest()
         {
-            var response = await this.service.GetAsync(this.notExistingDevice);
+            var result = await this.service.GetAsync(Mocks.NotExistingDeviceId);
 
-            Assert.Null(response.Payload);
-            Assert.Equal(StatusCodes.Status404NotFound, response.StatusCode);
+            Assert.False(result.IsSuccess);
+            Assert.Equal(StatusCodes.Status404NotFound, result.StatusCode);
+            Assert.NotNull(result.Error);
+            Assert.Equal(StatusCodes.Status404NotFound, result.Error!.StatusCode);
+            Assert.Equal(ErrorMessages.DeviceNotFound, result.Error!.Message);
         }
 
         [Fact]
-        public async Task PutAsync200OKTest()
+        public void PutAsync200OKTest()
         {
-            var response = await this.service.PutAsync(this.recordingDevice, new PutFiltersRequest());
+            var devices = new List<Guid>()
+            {
+                Mocks.StoppedDeviceId,
+                Mocks.RecordingDeviceId,
+            };
 
-            Assert.Null(response.Payload);
-            Assert.Equal(StatusCodes.Status200OK, response.StatusCode);
+            devices.ForEach(async device =>
+            {
+                var result = await this.service.PutAsync(device, new PutFiltersRequest());
+
+                Assert.True(result.IsSuccess);
+                Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
+                Assert.NotNull(result.Value);
+            });
         }
 
         [Fact]
         public async Task PutAsync404NotFoundTest()
         {
-            var response = await this.service.PutAsync(this.notExistingDevice, new PutFiltersRequest());
+            var result = await this.service.PutAsync(Mocks.NotExistingDeviceId, new PutFiltersRequest());
 
-            Assert.Null(response.Payload);
-            Assert.Equal(StatusCodes.Status404NotFound, response.StatusCode);
+            Assert.False(result.IsSuccess);
+            Assert.Equal(StatusCodes.Status404NotFound, result.StatusCode);
+            Assert.NotNull(result.Error);
+            Assert.Equal(StatusCodes.Status404NotFound, result.Error!.StatusCode);
+            Assert.Equal(ErrorMessages.DeviceNotFound, result.Error!.Message);
         }
 
         [Fact]
-        public async Task PutAsync410FailedDependencyTest()
+        public async Task PutAsync410GoneTest()
         {
-            var response = await this.service.PutAsync(this.archivedDevice, new PutFiltersRequest());
+            var result = await this.service.PutAsync(Mocks.ArchivedDeviceId, new PutFiltersRequest());
 
-            Assert.Null(response.Payload);
-            Assert.Equal(StatusCodes.Status410Gone, response.StatusCode);
+            Assert.False(result.IsSuccess);
+            Assert.Equal(StatusCodes.Status410Gone, result.StatusCode);
+            Assert.NotNull(result.Error);
+            Assert.Equal(StatusCodes.Status410Gone, result.Error!.StatusCode);
+            Assert.Equal(ErrorMessages.DeviceIsArchived, result.Error!.Message);
         }
 
         [Fact]
         public async Task PutAsync424FailedDependencyTest()
         {
-            var response = await this.service.PutAsync(this.notReachableDevice, new PutFiltersRequest());
+            var result = await this.service.PutAsync(Mocks.NotReachableDeviceId, new PutFiltersRequest());
 
-            Assert.Null(response.Payload);
-            Assert.Equal(StatusCodes.Status424FailedDependency, response.StatusCode);
+            Assert.False(result.IsSuccess);
+            Assert.Equal(StatusCodes.Status424FailedDependency, result.StatusCode);
+            Assert.NotNull(result.Error);
+            Assert.Equal(StatusCodes.Status424FailedDependency, result.Error!.StatusCode);
+            Assert.Equal(ErrorMessages.DeviceIsNotReachable, result.Error!.Message);
         }
     }
 }
-*/

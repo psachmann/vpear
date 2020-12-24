@@ -14,6 +14,12 @@ namespace VPEAR.Server.Test
 {
     public static class Mocks
     {
+        public static readonly Guid ArchivedDeviceId = new Guid("00000000000000000000000000000003");
+        public static readonly Guid NotExistingDeviceId = new Guid("00000000000000000000000000000000");
+        public static readonly Guid NotReachableDeviceId = new Guid("00000000000000000000000000000004");
+        public static readonly Guid RecordingDeviceId = new Guid("00000000000000000000000000000002");
+        public static readonly Guid StoppedDeviceId = new Guid("00000000000000000000000000000001");
+
         public static ILogger<T> CreateLogger<T>()
         {
             var mock = new Mock<ILogger<T>>();

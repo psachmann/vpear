@@ -8,7 +8,7 @@ namespace VPEAR.Core
     /// <summary>
     /// The current device state.
     /// </summary>
-    public enum DeviceStatus
+    public enum DeviceStatus : byte
     {
         /// <summary>
         /// The device has stopped recording data from a patient.

@@ -70,7 +70,6 @@ namespace VPEAR.Server.Controllers
         [HttpPut]
         [Produces(Defaults.DefaultResponseType)]
         [SwaggerResponse(StatusCodes.Status200OK, "Saved filters to device and database.", typeof(object))]
-        [SwaggerResponse(StatusCodes.Status202Accepted, "Saved filters to device and database, but recording is stopped.", typeof(object))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(object))]
         [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", typeof(object))]
         [SwaggerResponse(StatusCodes.Status404NotFound, "Id not found.", typeof(object))]
