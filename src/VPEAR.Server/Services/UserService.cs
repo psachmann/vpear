@@ -42,7 +42,7 @@ namespace VPEAR.Server.Services
         }
 
         /// <inheritdoc/>
-        public async Task<Result<Null, ErrorResponse>> DeleteAsync(string id)
+        public async Task<Result<Null>> DeleteAsync(string id)
         {
             var status = HttpStatusCode.InternalServerError;
             dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
@@ -68,11 +68,11 @@ namespace VPEAR.Server.Services
                 }
             }
 
-            return new Result<Null, ErrorResponse>(status, payload);
+            return new Result<Null>(status, payload);
         }
 
         /// <inheritdoc/>
-        public async Task<Result<Container<GetUserResponse>, ErrorResponse>> GetAsync(string? id = null, string? role = null)
+        public async Task<Result<Container<GetUserResponse>>> GetAsync(string? id = null, string? role = null)
         {
             var status = HttpStatusCode.InternalServerError;
             dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
@@ -131,11 +131,11 @@ namespace VPEAR.Server.Services
                 payload = new ErrorResponse(status, ErrorMessages.UserNotFound);
             }
 
-            return new Result<Container<GetUserResponse>, ErrorResponse>(status, payload);
+            return new Result<Container<GetUserResponse>>(status, payload);
         }
 
         /// <inheritdoc/>
-        public async Task<Result<Null, ErrorResponse>> PostRegisterAsync(PostRegisterRequest request)
+        public async Task<Result<Null>> PostRegisterAsync(PostRegisterRequest request)
         {
             var status = HttpStatusCode.InternalServerError;
             dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
@@ -167,11 +167,11 @@ namespace VPEAR.Server.Services
                 payload = new ErrorResponse(status, ErrorMessages.UserEmailAlreadyUsed);
             }
 
-            return new Result<Null, ErrorResponse>(status, payload);
+            return new Result<Null>(status, payload);
         }
 
         /// <inheritdoc/>
-        public Task<Result<Null, ErrorResponse>> PutAsync(string id, PutUserRequest request)
+        public Task<Result<Null>> PutAsync(string id, PutUserRequest request)
         {
             throw new NotImplementedException();
 /*
@@ -201,7 +201,7 @@ namespace VPEAR.Server.Services
         }
 
         /// <inheritdoc/>
-        public async Task<Result<PutLoginResponse, ErrorResponse>> PutLoginAsync(PutLoginRequest request)
+        public async Task<Result<PutLoginResponse>> PutLoginAsync(PutLoginRequest request)
         {
             var status = HttpStatusCode.InternalServerError;
             dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
@@ -250,7 +250,7 @@ namespace VPEAR.Server.Services
                 };
             }
 
-            return new Result<PutLoginResponse, ErrorResponse>(status, payload);
+            return new Result<PutLoginResponse>(status, payload);
         }
 
         private async Task CreateAdminAsync(IdentityUser user)

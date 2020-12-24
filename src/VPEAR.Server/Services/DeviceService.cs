@@ -38,7 +38,7 @@ namespace VPEAR.Server.Services
         }
 
         /// <inheritdoc/>
-        public async Task<Result<Container<GetDeviceResponse>, ErrorResponse>> GetAsync(DeviceStatus deviceStatus)
+        public async Task<Result<Container<GetDeviceResponse>>> GetAsync(DeviceStatus deviceStatus)
         {
             var status = HttpStatusCode.InternalServerError;
             dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
@@ -72,11 +72,11 @@ namespace VPEAR.Server.Services
                 payload = container;
             }
 
-            return new Result<Container<GetDeviceResponse>, ErrorResponse>(status, payload);
+            return new Result<Container<GetDeviceResponse>>(status, payload);
         }
 
         /// <inheritdoc/>
-        public async Task<Result<Null, ErrorResponse>> PutAsync(Guid id, PutDeviceRequest request)
+        public async Task<Result<Null>> PutAsync(Guid id, PutDeviceRequest request)
         {
             var status = HttpStatusCode.InternalServerError;
             dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
@@ -110,17 +110,17 @@ namespace VPEAR.Server.Services
                 }
             }
 
-            return new Result<Null, ErrorResponse>(status, payload);
+            return new Result<Null>(status, payload);
         }
 
         /// <inheritdoc/>
-        public Task<Result<Null, ErrorResponse>> PostAsync(PostDeviceRequest request)
+        public Task<Result<Null>> PostAsync(PostDeviceRequest request)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public async Task<Result<Null, ErrorResponse>> DeleteAsync(Guid id)
+        public async Task<Result<Null>> DeleteAsync(Guid id)
         {
             var status = HttpStatusCode.InternalServerError;
             dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
@@ -142,7 +142,7 @@ namespace VPEAR.Server.Services
                 payload = null;
             }
 
-            return new Result<Null, ErrorResponse>(status, payload);
+            return new Result<Null>(status, payload);
         }
     }
 }

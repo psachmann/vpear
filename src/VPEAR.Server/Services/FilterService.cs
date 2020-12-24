@@ -43,10 +43,10 @@ namespace VPEAR.Server.Services
         }
 
         /// <inheritdoc/>
-        public async Task<Result<GetFiltersResponse, ErrorResponse>> GetAsync(Guid id)
+        public async Task<Result<GetFiltersResponse>> GetAsync(Guid id)
         {
             var status = HttpStatusCode.InternalServerError;
-            dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
+            dynamic? payload = ErrorMessages.InternalServerError;
             var filter = await this.filters.Get()
                 .FirstOrDefaultAsync(f => f.DeviceForeignKey.Equals(id));
 
@@ -66,14 +66,14 @@ namespace VPEAR.Server.Services
                 };
             }
 
-            return new Result<GetFiltersResponse, ErrorResponse>(status, payload);
+            return new Result<GetFiltersResponse>(status, payload);
         }
 
         /// <inheritdoc/>
-        public async Task<Result<Null, ErrorResponse>> PutAsync(Guid id, PutFiltersRequest request)
+        public async Task<Result<Null>> PutAsync(Guid id, PutFiltersRequest request)
         {
             var status = HttpStatusCode.InternalServerError;
-            dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
+            dynamic? payload = ErrorMessages.InternalServerError;
             var device = await this.devices.GetAsync(id);
             var filter = await this.filters.Get()
                 .FirstOrDefaultAsync(f => f.DeviceForeignKey.Equals(id));
@@ -107,7 +107,7 @@ namespace VPEAR.Server.Services
                 }
             }
 
-            return new Result<Null, ErrorResponse>(status, payload);
+            return new Result<Null>(status, payload);
         }
     }
 }

@@ -43,7 +43,7 @@ namespace VPEAR.Server.Services
         }
 
         /// <inheritdoc/>
-        public async Task<Result<GetWifiResponse, ErrorResponse>> GetAsync(Guid id)
+        public async Task<Result<GetWifiResponse>> GetAsync(Guid id)
         {
             var status = HttpStatusCode.InternalServerError;
             dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
@@ -66,11 +66,11 @@ namespace VPEAR.Server.Services
                 };
             }
 
-            return new Result<GetWifiResponse, ErrorResponse>(status, payload);
+            return new Result<GetWifiResponse>(status, payload);
         }
 
         /// <inheritdoc/>
-        public async Task<Result<Null, ErrorResponse>> PutAsync(Guid id, PutWifiRequest request)
+        public async Task<Result<Null>> PutAsync(Guid id, PutWifiRequest request)
         {
             var status = HttpStatusCode.InternalServerError;
             dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
@@ -108,7 +108,7 @@ namespace VPEAR.Server.Services
                 }
             }
 
-            return new Result<Null, ErrorResponse>(status, payload);
+            return new Result<Null>(status, payload);
         }
     }
 }

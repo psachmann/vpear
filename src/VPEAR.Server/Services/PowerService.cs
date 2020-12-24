@@ -42,7 +42,7 @@ namespace VPEAR.Server.Services
         }
 
         /// <inheritdoc/>
-        public async Task<Result<GetPowerResponse, ErrorResponse>> GetAsync(Guid id)
+        public async Task<Result<GetPowerResponse>> GetAsync(Guid id)
         {
             var status = HttpStatusCode.InternalServerError;
             dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
@@ -71,7 +71,7 @@ namespace VPEAR.Server.Services
                 payload = await client.GetPowerAsync();
             }
 
-            return new Result<GetPowerResponse, ErrorResponse>(status, payload);
+            return new Result<GetPowerResponse>(status, payload);
         }
     }
 }

@@ -44,7 +44,7 @@ namespace VPEAR.Server.Services
         }
 
         /// <inheritdoc/>
-        public async Task<Result<GetFirmwareResponse, ErrorResponse>> GetAsync(Guid id)
+        public async Task<Result<GetFirmwareResponse>> GetAsync(Guid id)
         {
             var status = HttpStatusCode.InternalServerError;
             dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
@@ -68,11 +68,11 @@ namespace VPEAR.Server.Services
                 };
             }
 
-            return new Result<GetFirmwareResponse, ErrorResponse>(status, payload);
+            return new Result<GetFirmwareResponse>(status, payload);
         }
 
         /// <inheritdoc/>
-        public async Task<Result<Null, ErrorResponse>> PutAsync(Guid id, PutFirmwareRequest request)
+        public async Task<Result<Null>> PutAsync(Guid id, PutFirmwareRequest request)
         {
             var status = HttpStatusCode.InternalServerError;
             dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
@@ -113,7 +113,7 @@ namespace VPEAR.Server.Services
                 }
             }
 
-            return new Result<Null, ErrorResponse>(status, payload);
+            return new Result<Null>(status, payload);
         }
     }
 }

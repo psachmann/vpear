@@ -35,50 +35,46 @@ namespace VPEAR.Server.Test.Controllers
             var mock = new Mock<IFilterService>();
 
             mock.Setup(service => service.GetAsync(this.archivedDevice))
-                .ReturnsAsync(new Result<GetFiltersResponse, ErrorResponse>(
+                .ReturnsAsync(new Result<GetFiltersResponse>(
                     HttpStatusCode.OK,
                     new GetFiltersResponse()));
 
             mock.Setup(service => service.GetAsync(this.notReachableDevice))
-                .ReturnsAsync(new Result<GetFiltersResponse, ErrorResponse>(
+                .ReturnsAsync(new Result<GetFiltersResponse>(
                     HttpStatusCode.OK,
                     new GetFiltersResponse()));
 
             mock.Setup(service => service.GetAsync(this.recordingDevice))
-                .ReturnsAsync(new Result<GetFiltersResponse, ErrorResponse>(
+                .ReturnsAsync(new Result<GetFiltersResponse>(
                     HttpStatusCode.OK,
                     new GetFiltersResponse()));
 
             mock.Setup(service => service.GetAsync(this.stoppedDevice))
-                .ReturnsAsync(new Result<GetFiltersResponse, ErrorResponse>(
+                .ReturnsAsync(new Result<GetFiltersResponse>(
                     HttpStatusCode.OK,
                     new GetFiltersResponse()));
 
             mock.Setup(service => service.GetAsync(this.notExistingDevice))
-                .ReturnsAsync(new Result<GetFiltersResponse, ErrorResponse>(
-                    HttpStatusCode.NotFound,
-                    new ErrorResponse(HttpStatusCode.NotFound, ErrorMessages.DeviceNotFound)));
+                .ReturnsAsync(new Result<GetFiltersResponse>(
+                    HttpStatusCode.NotFound, ErrorMessages.DeviceNotFound));
 
             mock.Setup(service => service.PutAsync(this.archivedDevice, It.IsAny<PutFiltersRequest>()))
-                .ReturnsAsync(new Result<Null, ErrorResponse>(
-                    HttpStatusCode.Gone,
-                    new ErrorResponse(HttpStatusCode.Gone, ErrorMessages.DeviceIsArchived)));
+                .ReturnsAsync(new Result<Null>(
+                    HttpStatusCode.Gone, ErrorMessages.DeviceIsArchived));
 
             mock.Setup(service => service.PutAsync(this.notExistingDevice, It.IsAny<PutFiltersRequest>()))
-                .ReturnsAsync(new Result<Null, ErrorResponse>(
-                    HttpStatusCode.NotFound,
-                    new ErrorResponse(HttpStatusCode.NotFound, ErrorMessages.DeviceNotFound)));
+                .ReturnsAsync(new Result<Null>(
+                    HttpStatusCode.NotFound, ErrorMessages.DeviceNotFound));
 
             mock.Setup(service => service.PutAsync(this.notReachableDevice, It.IsAny<PutFiltersRequest>()))
-                .ReturnsAsync(new Result<Null, ErrorResponse>(
-                    HttpStatusCode.FailedDependency,
-                    new ErrorResponse(HttpStatusCode.FailedDependency, ErrorMessages.DeviceIsNotReachable)));
+                .ReturnsAsync(new Result<Null>(
+                    HttpStatusCode.FailedDependency, ErrorMessages.DeviceIsNotReachable));
 
             mock.Setup(service => service.PutAsync(this.recordingDevice, It.IsAny<PutFiltersRequest>()))
-                .ReturnsAsync(new Result<Null, ErrorResponse>(statusCode: HttpStatusCode.OK, value: null));
+                .ReturnsAsync(new Result<Null>(statusCode: HttpStatusCode.OK, value: null));
 
             mock.Setup(service => service.PutAsync(this.stoppedDevice, It.IsAny<PutFiltersRequest>()))
-                .ReturnsAsync(new Result<Null, ErrorResponse>(statusCode: HttpStatusCode.OK, value: null));
+                .ReturnsAsync(new Result<Null>(statusCode: HttpStatusCode.OK, value: null));
 
             this.controller = new FiltersController(logger, mock.Object);
         }

@@ -38,7 +38,7 @@ namespace VPEAR.Server.Services
         }
 
         /// <inheritdoc/>
-        public async Task<Result<Container<GetFrameResponse>, ErrorResponse>> GetFramesAsync(Guid id, int start, int stop)
+        public async Task<Result<Container<GetFrameResponse>>> GetFramesAsync(Guid id, int start, int stop)
         {
             var status = HttpStatusCode.InternalServerError;
             dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
@@ -97,11 +97,11 @@ namespace VPEAR.Server.Services
                 payload = null;
             }
 
-            return new Result<Container<GetFrameResponse>, ErrorResponse>(status, payload);
+            return new Result<Container<GetFrameResponse>>(status, payload);
         }
 
         /// <inheritdoc/>
-        public async Task<Result<Container<GetSensorResponse>, ErrorResponse>> GetSensorsAsync(Guid id)
+        public async Task<Result<Container<GetSensorResponse>>> GetSensorsAsync(Guid id)
         {
             var status = HttpStatusCode.InternalServerError;
             dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
@@ -135,7 +135,7 @@ namespace VPEAR.Server.Services
                 });
             }
 
-            return new Result<Container<GetSensorResponse>, ErrorResponse>(status, payload);
+            return new Result<Container<GetSensorResponse>>(status, payload);
         }
     }
 }
