@@ -15,8 +15,8 @@ namespace VPEAR.Core.Abstractions
     /// </summary>
     public interface ISensorService
     {
-        Task<Result<Container<GetSensorResponse>, ErrorResponse>> GetSensorsAsync(Guid id);
+        Task<Result<Container<GetSensorResponse>>> GetSensorsAsync(Guid id);
 
-        Task<Result<Container<GetFrameResponse>, ErrorResponse>> GetFramesAsync(Guid id, int start, int stop);
+        Task<Result<Container<GetFrameResponse>>> GetFramesAsync(Guid id, int start, int stop);
     }
 }
