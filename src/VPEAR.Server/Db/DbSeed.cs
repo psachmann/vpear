@@ -11,11 +11,7 @@ using VPEAR.Core.Models;
 
 namespace VPEAR.Server.Db
 {
-    /// <summary>
-    /// Seed data for the database.
-    /// NOTE: Only for testing.
-    /// </summary>
-    public static class DbSeed
+    internal static class DbSeed
     {
         private static IList<Device> devices = new List<Device>();
         private static IList<Filter> filters = new List<Filter>();

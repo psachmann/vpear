@@ -1,7 +1,13 @@
+// <copyright file="RepositorySuccessTest.cs.cs" company="Patrick Sachmann">
+// Copyright (c) Patrick Sachmann. All rights reserved.
+// Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
+// </copyright>
+
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using VPEAR.Core;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Models;
 using VPEAR.Server.Db;
@@ -9,13 +15,14 @@ using Xunit;
 
 namespace VPEAR.Server.Test
 {
-    public class RepositoryTest : IClassFixture<VPEARDbContextFixture>
+    [Collection("RepositoryTest")]
+    public class RepositorySuccessTest : IClassFixture<VPEARDbContextFixture>
     {
-        private readonly IRepository<Device, Guid> repository;
+        private readonly IRepository<Device, Guid> devices;
 
-        public RepositoryTest(VPEARDbContextFixture fixture)
+        public RepositorySuccessTest(VPEARDbContextFixture fixture)
         {
-            this.repository = new Repository<VPEARDbContext, Device, Guid>(
+            this.devices = new Repository<VPEARDbContext, Device, Guid>(
                 fixture.Context,
                 Mocks.CreateLogger<IRepository<Device, Guid>>());
         }
@@ -23,36 +30,41 @@ namespace VPEAR.Server.Test
         [Fact]
         public async Task CreateAsyncTest()
         {
-            var previousCount = this.repository.Get()
+            var previousCount = this.devices.Get()
                 .ToList()
                 .Count;
 
             var device = new Device();
 
-            var result = await this.repository.CreateAsync(device);
+            var result = await this.devices.CreateAsync(device);
 
-            var newCount = this.repository.Get()
+            var newCount = this.devices.Get()
                 .ToList()
                 .Count;
 
             Assert.True(result);
             Assert.NotEqual(default, device.Id);
             Assert.Equal(previousCount + 1, newCount);
-
         }
 
         [Fact]
         public async Task DeleteAsyncTest()
         {
-            var previousCount = this.repository.Get()
+            var deviceToDelete = this.devices.Get()
+                .Where(device => device.Status == DeviceStatus.Archived)
+                .FirstOrDefault();
+
+            Assert.NotNull(deviceToDelete);
+
+            var previousCount = this.devices.Get()
                 .ToList()
                 .Count;
 
-            var result = await this.repository.DeleteAsync(DbSeed.Devices.Last());
+            var result = await this.devices.DeleteAsync(deviceToDelete!);
 
             Assert.True(result);
 
-            var newCount = this.repository.Get()
+            var newCount = this.devices.Get()
                 .ToList()
                 .Count;
 
@@ -62,7 +74,7 @@ namespace VPEAR.Server.Test
         [Fact]
         public void GetTest()
         {
-            var result = this.repository.Get();
+            var result = this.devices.Get();
 
             Assert.NotNull(result);
             Assert.InRange(result.Count(), 0, int.MaxValue);
@@ -71,12 +83,13 @@ namespace VPEAR.Server.Test
         [Fact]
         public async Task GetAsyncTest()
         {
-            var device = await this.repository.Get()
+            var device = await this.devices.Get()
+                .Where(device => device.Status == DeviceStatus.NotReachable)
                 .FirstOrDefaultAsync();
 
             Assert.NotNull(device);
 
-            var otherDevice = await this.repository.GetAsync(DbSeed.Devices.First().Id);
+            var otherDevice = await this.devices.GetAsync(device.Id);
 
             Assert.NotNull(otherDevice);
             Assert.Equal(device.Id, otherDevice!.Id);
@@ -85,23 +98,22 @@ namespace VPEAR.Server.Test
         [Fact]
         public async Task UpdateAsyncTest()
         {
-            var device = this.repository.Get()
+            var device = this.devices.Get()
+                .Where(device => device.Status == DeviceStatus.Recording)
                 .FirstOrDefault();
 
             Assert.NotNull(device);
 
             device!.Address = "new_address";
 
-            var result = await this.repository.UpdateAsync(device);
+            var result = await this.devices.UpdateAsync(device);
 
             Assert.True(result);
 
-            device = this.repository.Get()
-                .FirstOrDefault();
+            device = await this.devices.GetAsync(device.Id);
 
             Assert.NotNull(device);
             Assert.Equal("new_address", device!.Address);
-
         }
     }
 }

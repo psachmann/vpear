@@ -1,11 +1,14 @@
-using Microsoft.EntityFrameworkCore;
+// <copyright file="Mocks.cs" company="Patrick Sachmann">
+// Copyright (c) Patrick Sachmann. All rights reserved.
+// Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
+// </copyright>
+
 using Microsoft.Extensions.Logging;
-using System;
 using Moq;
+using System;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Wrappers;
 using VPEAR.Server.Db;
-using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Test
 {

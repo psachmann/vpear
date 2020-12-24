@@ -1,3 +1,9 @@
+// <copyright file="UserServiceTest.cs" company="Patrick Sachmann">
+// Copyright (c) Patrick Sachmann. All rights reserved.
+// Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
+// </copyright>
+
+/*
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -10,7 +16,6 @@ using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Test.Services
 {
-    /*
     public class UserServiceTest : IClassFixture<VPEARDbContextFixture>
     {
         private readonly Guid admin = new Guid("00000000-0000-0000-0000-000000000001");
@@ -179,5 +184,5 @@ namespace VPEAR.Server.Test.Services
             Assert.Equal(900, response.StatusCode);
         }
     }
-*/
 }
+*/

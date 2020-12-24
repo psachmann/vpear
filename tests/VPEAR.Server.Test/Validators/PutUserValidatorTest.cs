@@ -1,3 +1,8 @@
+// <copyright file="PutUserValidatorTest.cs" company="Patrick Sachmann">
+// Copyright (c) Patrick Sachmann. All rights reserved.
+// Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
+// </copyright>
+
 using FluentValidation;
 using VPEAR.Core.Wrappers;
 using VPEAR.Server.Validators;
@@ -38,7 +43,7 @@ namespace VPEAR.Server.Test.Validators
                 Password = password,
                 Role = role,*/
             };
-            var result = validator.Validate(request);
+            var result = this.validator.Validate(request);
 
             Assert.True(result.IsValid);
         }
@@ -69,7 +74,7 @@ namespace VPEAR.Server.Test.Validators
                 Password = password,
                 Role = role,*/
             };
-            var result = validator.Validate(request);
+            var result = this.validator.Validate(request);
 
             Assert.False(result.IsValid);
         }
