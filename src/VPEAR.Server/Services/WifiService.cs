@@ -47,34 +47,36 @@ namespace VPEAR.Server.Services
         public async Task<Result<GetWifiResponse>> GetAsync(Guid id)
         {
             var status = HttpStatusCode.InternalServerError;
-            dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
+            var message = ErrorMessages.InternalServerError;
             var wifi = this.wifis.Get()
                 .FirstOrDefault(w => w.DeviceForeignKey.Equals(id));
 
             if (wifi == null)
             {
                 status = HttpStatusCode.NotFound;
-                payload = new ErrorResponse(status, ErrorMessages.DeviceNotFound);
+                message = ErrorMessages.DeviceNotFound;
             }
             else
             {
                 status = HttpStatusCode.OK;
-                payload = new GetWifiResponse()
+                var payload = new GetWifiResponse()
                 {
                     Mode = wifi.Mode,
                     Neighbors = wifi.Neighbors,
                     Ssid = wifi.Ssid,
                 };
+
+                return new Result<GetWifiResponse>(status, payload);
             }
 
-            return new Result<GetWifiResponse>(status, payload);
+            return new Result<GetWifiResponse>(status, message);
         }
 
         /// <inheritdoc/>
         public async Task<Result<Null>> PutAsync(Guid id, PutWifiRequest request)
         {
             var status = HttpStatusCode.InternalServerError;
-            dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
+            var message = ErrorMessages.InternalServerError;
             var device = await this.devices.GetAsync(id);
             var wifi = this.wifis.Get()
                 .FirstOrDefault(w => w.DeviceForeignKey.Equals(id));
@@ -82,17 +84,17 @@ namespace VPEAR.Server.Services
             if (device == null || wifi == null)
             {
                 status = HttpStatusCode.NotFound;
-                payload = new ErrorResponse(status, ErrorMessages.DeviceNotFound);
+                message = ErrorMessages.DeviceNotFound;
             }
             else if (device.Status == DeviceStatus.Archived)
             {
                 status = HttpStatusCode.Gone;
-                payload = new ErrorResponse(status, ErrorMessages.DeviceIsArchived);
+                message = ErrorMessages.DeviceIsArchived;
             }
             else if (device.Status == DeviceStatus.NotReachable)
             {
                 status = HttpStatusCode.FailedDependency;
-                payload = new ErrorResponse(status, ErrorMessages.DeviceIsNotReachable);
+                message = ErrorMessages.DeviceIsNotReachable;
             }
             else if (device.Status == DeviceStatus.Recording || device.Status == DeviceStatus.Stopped)
             {
@@ -105,11 +107,13 @@ namespace VPEAR.Server.Services
                 if (await this.wifis.UpdateAsync(wifi))
                 {
                     status = HttpStatusCode.OK;
-                    payload = null;
+                    message = null;
+
+                    return new Result<Null>(status);
                 }
             }
 
-            return new Result<Null>(status, payload);
+            return new Result<Null>(status, message);
         }
     }
 }

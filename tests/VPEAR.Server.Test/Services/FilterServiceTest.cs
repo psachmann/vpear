@@ -37,10 +37,10 @@ namespace VPEAR.Server.Test.Services
         {
             var devices = new List<Guid>()
             {
-                Mocks.ArchivedDeviceId.Id,
-                Mocks.NotReachableDeviceId.Id,
-                Mocks.StoppedDeviceId.Id,
-                Mocks.RecordingDeviceId.Id,
+                Mocks.Archived.Id,
+                Mocks.NotReachable.Id,
+                Mocks.Stopped.Id,
+                Mocks.Recording.Id,
             };
 
             devices.ForEach(async device =>
@@ -55,7 +55,7 @@ namespace VPEAR.Server.Test.Services
         [Fact]
         public async Task GetAsync404NotFoundTest()
         {
-            var result = await this.service.GetAsync(Mocks.NotExistingDeviceId);
+            var result = await this.service.GetAsync(Mocks.NotExisting.Id);
 
             Assert.Equal(StatusCodes.Status404NotFound, result.StatusCode);
             Assert.NotNull(result.Error);
@@ -67,8 +67,8 @@ namespace VPEAR.Server.Test.Services
         {
             var devices = new List<Guid>()
             {
-                Mocks.StoppedDeviceId.Id,
-                Mocks.RecordingDeviceId.Id,
+                Mocks.Stopped.Id,
+                Mocks.Recording.Id,
             };
 
             devices.ForEach(async device =>
@@ -83,7 +83,7 @@ namespace VPEAR.Server.Test.Services
         [Fact]
         public async Task PutAsync404NotFoundTest()
         {
-            var result = await this.service.PutAsync(Mocks.NotExistingDeviceId, new PutFiltersRequest());
+            var result = await this.service.PutAsync(Mocks.NotExisting.Id, new PutFiltersRequest());
 
             Assert.Equal(StatusCodes.Status404NotFound, result.StatusCode);
             Assert.NotNull(result.Error);
@@ -93,7 +93,7 @@ namespace VPEAR.Server.Test.Services
         [Fact]
         public async Task PutAsync410GoneTest()
         {
-            var result = await this.service.PutAsync(Mocks.ArchivedDeviceId.Id, new PutFiltersRequest());
+            var result = await this.service.PutAsync(Mocks.Archived.Id, new PutFiltersRequest());
 
             Assert.Equal(StatusCodes.Status410Gone, result.StatusCode);
             Assert.NotNull(result.Error);
@@ -103,7 +103,7 @@ namespace VPEAR.Server.Test.Services
         [Fact]
         public async Task PutAsync424FailedDependencyTest()
         {
-            var result = await this.service.PutAsync(Mocks.NotReachableDeviceId.Id, new PutFiltersRequest());
+            var result = await this.service.PutAsync(Mocks.NotReachable.Id, new PutFiltersRequest());
 
             Assert.Equal(StatusCodes.Status424FailedDependency, result.StatusCode);
             Assert.NotNull(result.Error);

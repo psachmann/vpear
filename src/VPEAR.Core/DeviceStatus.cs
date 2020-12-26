@@ -29,5 +29,10 @@ namespace VPEAR.Core
         /// The device is currently not reachable (new address, out of energy).
         /// </summary>
         NotReachable,
+
+        /// <summary>
+        /// No valid device state.
+        /// </summary>
+        None,
     }
 }

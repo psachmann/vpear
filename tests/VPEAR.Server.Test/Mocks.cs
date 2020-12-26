@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using VPEAR.Core;
@@ -20,11 +21,11 @@ namespace VPEAR.Server.Test
 {
     public static class Mocks
     {
-        public static readonly Guid NotExistingDeviceId = new Guid("00000000000000000000000000000000");
-        public static readonly (Guid Id, DeviceStatus Status) ArchivedDeviceId = (new Guid("00000000000000000000000000000001"), DeviceStatus.Archived);
-        public static readonly (Guid Id, DeviceStatus Status) NotReachableDeviceId = (new Guid("00000000000000000000000000000002"), DeviceStatus.NotReachable);
-        public static readonly (Guid Id, DeviceStatus Status) RecordingDeviceId = (new Guid("00000000000000000000000000000003"), DeviceStatus.Recording);
-        public static readonly (Guid Id, DeviceStatus Status) StoppedDeviceId = (new Guid("00000000000000000000000000000004"), DeviceStatus.Stopped);
+        public static readonly  (Guid Id, DeviceStatus Status) NotExisting = (new Guid("00000000000000000000000000000000"), DeviceStatus.None);
+        public static readonly (Guid Id, DeviceStatus Status) Archived = (new Guid("00000000000000000000000000000001"), DeviceStatus.Archived);
+        public static readonly (Guid Id, DeviceStatus Status) NotReachable = (new Guid("00000000000000000000000000000002"), DeviceStatus.NotReachable);
+        public static readonly (Guid Id, DeviceStatus Status) Recording = (new Guid("00000000000000000000000000000003"), DeviceStatus.Recording);
+        public static readonly (Guid Id, DeviceStatus Status) Stopped = (new Guid("00000000000000000000000000000004"), DeviceStatus.Stopped);
 
         public static ILogger<T> CreateLogger<T>()
         {
@@ -37,35 +38,49 @@ namespace VPEAR.Server.Test
             where TEntity : EntityBase<Guid>
         {
             var mock = new Mock<IRepository<TEntity, Guid>>();
-            var existingEntities = new List<TEntity>();
-            var existingEntityIds = new List<(Guid Id, DeviceStatus Status)>()
-            {
-                ArchivedDeviceId,
-                NotReachableDeviceId,
-                RecordingDeviceId,
-                StoppedDeviceId,
-            };
             var notExistingEntity = Activator.CreateInstance<TEntity>();
+            var archivedEntity = Activator.CreateInstance<TEntity>();
+            var notReachableEntity = Activator.CreateInstance<TEntity>();
+            var recordingEntity = Activator.CreateInstance<TEntity>();
+            var stoppedEntity = Activator.CreateInstance<TEntity>();
 
-            notExistingEntity.Id = NotExistingDeviceId;
-
-            existingEntityIds.ForEach(entityId =>
+            var entities = new List<TEntity>()
             {
-                var entity = Activator.CreateInstance<TEntity>();
-                var info = entity.GetType().GetProperty("DeviceForeignKey");
+                notExistingEntity,
+                archivedEntity,
+                notReachableEntity,
+                recordingEntity,
+                stoppedEntity,
+            };
+
+            var ids = new List<(Guid Id, DeviceStatus Status)>()
+            {
+                NotExisting,
+                Archived,
+                NotReachable,
+                Recording,
+                Stopped,
+            };
+
+            var i = 0;
+            entities.ForEach(entity =>
+            {
+                var info = entity.GetType()
+                    .GetProperty("DeviceForeignKey");
 
                 if (info != null)
                 {
-                    entity.Id = entityId.Id;
-                    info.SetValue(entity, entityId.Id);
-                }
-                else if (entity is Device device)
-                {
-                    device.Id = entityId.Id;
-                    device.Status = entityId.Status;
+                    entity.Id = ids[i].Id;
+                    info.SetValue(entity, ids[i].Id);
                 }
 
-                existingEntities.Add(entity);
+                if (entity is Device device)
+                {
+                    device.Id = ids[i].Id;
+                    device.Status = ids[i].Status;
+                }
+
+                i += 1;
             });
 
             mock.Setup(repository => repository.CreateAsync(It.IsAny<TEntity>()))
@@ -74,40 +89,53 @@ namespace VPEAR.Server.Test
             mock.Setup(repository => repository.DeleteAsync(notExistingEntity))
                 .ReturnsAsync(false);
 
-            existingEntities.ForEach(existingEntity =>
-            {
-                mock.Setup(repository => repository.DeleteAsync(existingEntity))
-                    .ReturnsAsync(true);
-            });
+            mock.Setup(repository => repository.DeleteAsync(archivedEntity))
+                .ReturnsAsync(true);
 
-            existingEntityIds.ForEach(existingEntityId =>
-            {
-                var temp = Activator.CreateInstance<TEntity>();
-                temp.Id = existingEntityId.Id;
+            mock.Setup(repository => repository.DeleteAsync(notReachableEntity))
+                .ReturnsAsync(true);
 
-                if (temp is Device device)
-                {
-                    device.Status = existingEntityId.Status;
-                }
+            mock.Setup(repository => repository.DeleteAsync(recordingEntity))
+                .ReturnsAsync(true);
 
-                mock.Setup(repository => repository.GetAsync(existingEntityId.Id))
-                    .ReturnsAsync(temp);
-            });
+            mock.Setup(repository => repository.DeleteAsync(stoppedEntity))
+                .ReturnsAsync(true);
+
+            mock.Setup(repository => repository.GetAsync(Archived.Id))
+                    .ReturnsAsync(archivedEntity);
+
+            mock.Setup(repository => repository.GetAsync(NotReachable.Id))
+                    .ReturnsAsync(notReachableEntity);
+
+            mock.Setup(repository => repository.GetAsync(Recording.Id))
+                    .ReturnsAsync(recordingEntity);
+
+            mock.Setup(repository => repository.GetAsync(Stopped.Id))
+                    .ReturnsAsync(stoppedEntity);
 
             mock.Setup(repository => repository.Get())
-                .Returns(existingEntities);
+                .Returns(new List<TEntity>()
+                {
+                    archivedEntity,
+                    notReachableEntity,
+                    recordingEntity,
+                    stoppedEntity,
+                });
 
-            existingEntities.GetRange(0, 2).ForEach(entity =>
-            {
-                mock.Setup(repository => repository.UpdateAsync(entity))
-                    .ReturnsAsync(false);
-            });
+            mock.Setup(repository => repository.UpdateAsync(notExistingEntity))
+                .ReturnsAsync(false);
 
-            existingEntities.GetRange(2, 2).ForEach(entity =>
-            {
-                mock.Setup(repository => repository.UpdateAsync(entity))
-                    .ReturnsAsync(true);
-            });
+            mock.Setup(repository => repository.UpdateAsync(archivedEntity))
+                .ReturnsAsync(true);
+
+            mock.Setup(repository => repository.UpdateAsync(notReachableEntity))
+                .ReturnsAsync(true);
+
+            mock.Setup(repository => repository.UpdateAsync(recordingEntity))
+                .ReturnsAsync(true);
+
+            mock.Setup(repository => repository.UpdateAsync(stoppedEntity))
+                .ReturnsAsync(true);
 
             return mock.Object;
         }
