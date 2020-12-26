@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -18,6 +19,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using VPEAR.Core.Wrappers;
 using VPEAR.Server.Db;
 using VPEAR.Server.Filters;
 using VPEAR.Server.Internals;
@@ -88,6 +90,15 @@ namespace VPEAR.Server
             {
                 options.JsonSerializerOptions.IgnoreNullValues = true;
             });
+            /*.ConfigureApiBehaviorOptions(options =>
+            {
+                options.InvalidModelStateResponseFactory = context =>
+                {
+                    var response = new ErrorResponse(context.HttpContext.Response.);
+
+                    return new JsonResult(response);
+                };
+            });*/
 
             services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<VPEARDbContext>()

@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Wrappers;
@@ -11,7 +12,14 @@ namespace VPEAR.Core
 {
     public class Result<TSuccess>
     {
-        public Result(HttpStatusCode statusCode, TSuccess? value = default)
+        public Result(HttpStatusCode statusCode)
+        {
+            this.IsSuccess = true;
+            this.StatusCode = (int)statusCode;
+            this.Value = default;
+        }
+
+        public Result(HttpStatusCode statusCode, TSuccess? value)
         {
             this.IsSuccess = true;
             this.StatusCode = (int)statusCode;

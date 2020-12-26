@@ -42,9 +42,9 @@ namespace VPEAR.Server.Services
         {
             var status = HttpStatusCode.InternalServerError;
             dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
-            var devices = await this.devices.Get()
+            var devices = this.devices.Get()
                 .Where(d => d.Status.Equals(deviceStatus))
-                .ToListAsync();
+                .ToList();
 
             if (devices == null || devices.Count == 0)
             {

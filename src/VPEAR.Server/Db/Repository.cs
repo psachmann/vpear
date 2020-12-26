@@ -6,6 +6,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using VPEAR.Core.Abstractions;
@@ -76,7 +77,7 @@ namespace VPEAR.Server.Db
         }
 
         /// <inheritdoc/>
-        public IQueryable<TEntity> Get()
+        public IEnumerable<TEntity> Get()
         {
             return this.context.Set<TEntity>().AsNoTracking();
         }

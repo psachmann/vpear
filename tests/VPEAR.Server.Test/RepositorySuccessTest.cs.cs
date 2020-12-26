@@ -38,11 +38,12 @@ namespace VPEAR.Server.Test
 
             var result = await this.devices.CreateAsync(device);
 
+            Assert.True(result, "Device was not created.");
+
             var newCount = this.devices.Get()
                 .ToList()
                 .Count;
 
-            Assert.True(result);
             Assert.NotEqual(default, device.Id);
             Assert.Equal(previousCount + 1, newCount);
         }
@@ -52,9 +53,7 @@ namespace VPEAR.Server.Test
         {
             var deviceToDelete = this.devices.Get()
                 .Where(device => device.Status == DeviceStatus.Archived)
-                .FirstOrDefault();
-
-            Assert.NotNull(deviceToDelete);
+                .First();
 
             var previousCount = this.devices.Get()
                 .ToList()
@@ -62,7 +61,7 @@ namespace VPEAR.Server.Test
 
             var result = await this.devices.DeleteAsync(deviceToDelete!);
 
-            Assert.True(result);
+            Assert.True(result, "Device was not deleted.");
 
             var newCount = this.devices.Get()
                 .ToList()
@@ -83,11 +82,9 @@ namespace VPEAR.Server.Test
         [Fact]
         public async Task GetAsyncTest()
         {
-            var device = await this.devices.Get()
+            var device = this.devices.Get()
                 .Where(device => device.Status == DeviceStatus.NotReachable)
-                .FirstOrDefaultAsync();
-
-            Assert.NotNull(device);
+                .First();
 
             var otherDevice = await this.devices.GetAsync(device.Id);
 
@@ -100,15 +97,13 @@ namespace VPEAR.Server.Test
         {
             var device = this.devices.Get()
                 .Where(device => device.Status == DeviceStatus.Recording)
-                .FirstOrDefault();
+                .First();
 
-            Assert.NotNull(device);
-
-            device!.Address = "new_address";
+            device.Address = "new_address";
 
             var result = await this.devices.UpdateAsync(device);
 
-            Assert.True(result);
+            Assert.True(result, "Device was not updated.");
 
             device = await this.devices.GetAsync(device.Id);
 

@@ -6,6 +6,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using VPEAR.Core;
@@ -46,52 +47,51 @@ namespace VPEAR.Server.Services
         public async Task<Result<GetFiltersResponse>> GetAsync(Guid id)
         {
             var status = HttpStatusCode.InternalServerError;
-            dynamic? payload = ErrorMessages.InternalServerError;
-            var filter = await this.filters.Get()
-                .FirstOrDefaultAsync(f => f.DeviceForeignKey.Equals(id));
+            var message = ErrorMessages.InternalServerError;
+            var filter = this.filters.Get()
+                .FirstOrDefault(f => f.DeviceForeignKey.Equals(id));
 
             if (filter == null)
             {
                 status = HttpStatusCode.NotFound;
-                payload = new ErrorResponse(status, ErrorMessages.DeviceNotFound);
+                message = ErrorMessages.DeviceNotFound;
             }
             else
             {
-                status = HttpStatusCode.OK;
-                payload = new GetFiltersResponse()
+                return new Result<GetFiltersResponse>(HttpStatusCode.OK, new GetFiltersResponse()
                 {
                     Noise = filter.Noise,
                     Smooth = filter.Smooth,
                     Spot = filter.Noise,
-                };
+                });
             }
 
-            return new Result<GetFiltersResponse>(status, payload);
+            return new Result<GetFiltersResponse>(status, message);
         }
 
         /// <inheritdoc/>
         public async Task<Result<Null>> PutAsync(Guid id, PutFiltersRequest request)
         {
             var status = HttpStatusCode.InternalServerError;
-            dynamic? payload = ErrorMessages.InternalServerError;
+            var message = ErrorMessages.InternalServerError;
             var device = await this.devices.GetAsync(id);
-            var filter = await this.filters.Get()
-                .FirstOrDefaultAsync(f => f.DeviceForeignKey.Equals(id));
+            var filter = this.filters.Get()
+                .FirstOrDefault(f => f.DeviceForeignKey.Equals(id));
 
             if (device == null || filter == null)
             {
                 status = HttpStatusCode.NotFound;
-                payload = new ErrorResponse(status, ErrorMessages.DeviceNotFound);
+                message = ErrorMessages.DeviceNotFound;
             }
             else if (device.Status == DeviceStatus.Archived)
             {
                 status = HttpStatusCode.Gone;
-                payload = new ErrorResponse(status, ErrorMessages.DeviceIsArchived);
+                message = ErrorMessages.DeviceIsArchived;
             }
             else if (device.Status == DeviceStatus.NotReachable)
             {
                 status = HttpStatusCode.FailedDependency;
-                payload = new ErrorResponse(status, ErrorMessages.DeviceIsNotReachable);
+                message = ErrorMessages.DeviceIsNotReachable;
             }
             else if (device.Status == DeviceStatus.Recording || device.Status == DeviceStatus.Stopped)
             {
@@ -102,12 +102,11 @@ namespace VPEAR.Server.Services
 
                 if (await this.filters.UpdateAsync(filter))
                 {
-                    status = HttpStatusCode.OK;
-                    payload = null;
+                    return new Result<Null>(HttpStatusCode.OK);
                 }
             }
 
-            return new Result<Null>(status, payload);
+            return new Result<Null>(status, message);
         }
     }
 }

@@ -4,6 +4,7 @@
 // </copyright>
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -38,7 +39,7 @@ namespace VPEAR.Core.Abstractions
         /// NOTE: Use this to make selects on the table.
         /// </summary>
         /// <returns><see cref="Queryable"/> object for database queries.</returns>
-        IQueryable<TEntity> Get();
+        IEnumerable<TEntity> Get();
 
         /// <summary>
         /// Gets an entry from the database.

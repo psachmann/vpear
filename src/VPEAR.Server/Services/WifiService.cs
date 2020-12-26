@@ -6,6 +6,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using VPEAR.Core;
@@ -47,8 +48,8 @@ namespace VPEAR.Server.Services
         {
             var status = HttpStatusCode.InternalServerError;
             dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
-            var wifi = await this.wifis.Get()
-                .FirstOrDefaultAsync(w => w.DeviceForeignKey.Equals(id));
+            var wifi = this.wifis.Get()
+                .FirstOrDefault(w => w.DeviceForeignKey.Equals(id));
 
             if (wifi == null)
             {
@@ -75,8 +76,8 @@ namespace VPEAR.Server.Services
             var status = HttpStatusCode.InternalServerError;
             dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
             var device = await this.devices.GetAsync(id);
-            var wifi = await this.wifis.Get()
-                .FirstOrDefaultAsync(w => w.DeviceForeignKey.Equals(id));
+            var wifi = this.wifis.Get()
+                .FirstOrDefault(w => w.DeviceForeignKey.Equals(id));
 
             if (device == null || wifi == null)
             {

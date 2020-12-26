@@ -4,9 +4,12 @@
 // </copyright>
 
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using VPEAR.Core;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Models;
 using VPEAR.Core.Wrappers;
@@ -17,16 +20,16 @@ using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Test.Services
 {
-    public class FilterServiceTest : IClassFixture<VPEARDbContextFixture>
+    public class FilterServiceTest
     {
         private readonly IFilterService service;
 
-        public FilterServiceTest(VPEARDbContextFixture fixture)
+        public FilterServiceTest()
         {
             this.service = new FilterService(
                 Mocks.CreateLogger<FiltersController>(),
-                Mocks.CreateRepository<Device, Guid>(fixture.Context),
-                Mocks.CreateRepository<Filter, Guid>(fixture.Context));
+                Mocks.CreateRepository<Device>(),
+                Mocks.CreateRepository<Filter>());
         }
 
         [Fact]
@@ -34,17 +37,16 @@ namespace VPEAR.Server.Test.Services
         {
             var devices = new List<Guid>()
             {
-                Mocks.ArchivedDeviceId,
-                Mocks.NotReachableDeviceId,
-                Mocks.StoppedDeviceId,
-                Mocks.RecordingDeviceId,
+                Mocks.ArchivedDeviceId.Id,
+                Mocks.NotReachableDeviceId.Id,
+                Mocks.StoppedDeviceId.Id,
+                Mocks.RecordingDeviceId.Id,
             };
 
             devices.ForEach(async device =>
             {
                 var result = await this.service.GetAsync(device);
 
-                Assert.True(result.IsSuccess);
                 Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
                 Assert.NotNull(result.Value);
             });
@@ -55,10 +57,8 @@ namespace VPEAR.Server.Test.Services
         {
             var result = await this.service.GetAsync(Mocks.NotExistingDeviceId);
 
-            Assert.False(result.IsSuccess);
             Assert.Equal(StatusCodes.Status404NotFound, result.StatusCode);
             Assert.NotNull(result.Error);
-            Assert.Equal(StatusCodes.Status404NotFound, result.Error!.StatusCode);
             Assert.Equal(ErrorMessages.DeviceNotFound, result.Error!.Message);
         }
 
@@ -67,17 +67,16 @@ namespace VPEAR.Server.Test.Services
         {
             var devices = new List<Guid>()
             {
-                Mocks.StoppedDeviceId,
-                Mocks.RecordingDeviceId,
+                Mocks.StoppedDeviceId.Id,
+                Mocks.RecordingDeviceId.Id,
             };
 
             devices.ForEach(async device =>
             {
                 var result = await this.service.PutAsync(device, new PutFiltersRequest());
 
-                Assert.True(result.IsSuccess);
                 Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
-                Assert.NotNull(result.Value);
+                Assert.Null(result.Value);
             });
         }
 
@@ -86,34 +85,28 @@ namespace VPEAR.Server.Test.Services
         {
             var result = await this.service.PutAsync(Mocks.NotExistingDeviceId, new PutFiltersRequest());
 
-            Assert.False(result.IsSuccess);
             Assert.Equal(StatusCodes.Status404NotFound, result.StatusCode);
             Assert.NotNull(result.Error);
-            Assert.Equal(StatusCodes.Status404NotFound, result.Error!.StatusCode);
             Assert.Equal(ErrorMessages.DeviceNotFound, result.Error!.Message);
         }
 
         [Fact]
         public async Task PutAsync410GoneTest()
         {
-            var result = await this.service.PutAsync(Mocks.ArchivedDeviceId, new PutFiltersRequest());
+            var result = await this.service.PutAsync(Mocks.ArchivedDeviceId.Id, new PutFiltersRequest());
 
-            Assert.False(result.IsSuccess);
             Assert.Equal(StatusCodes.Status410Gone, result.StatusCode);
             Assert.NotNull(result.Error);
-            Assert.Equal(StatusCodes.Status410Gone, result.Error!.StatusCode);
             Assert.Equal(ErrorMessages.DeviceIsArchived, result.Error!.Message);
         }
 
         [Fact]
         public async Task PutAsync424FailedDependencyTest()
         {
-            var result = await this.service.PutAsync(Mocks.NotReachableDeviceId, new PutFiltersRequest());
+            var result = await this.service.PutAsync(Mocks.NotReachableDeviceId.Id, new PutFiltersRequest());
 
-            Assert.False(result.IsSuccess);
             Assert.Equal(StatusCodes.Status424FailedDependency, result.StatusCode);
             Assert.NotNull(result.Error);
-            Assert.Equal(StatusCodes.Status424FailedDependency, result.Error!.StatusCode);
             Assert.Equal(ErrorMessages.DeviceIsNotReachable, result.Error!.Message);
         }
     }

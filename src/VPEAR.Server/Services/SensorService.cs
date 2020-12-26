@@ -42,10 +42,10 @@ namespace VPEAR.Server.Services
         {
             var status = HttpStatusCode.InternalServerError;
             dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
-            var frames = await this.frames.Get()
+            var frames = this.frames.Get()
                 .Where(f => f.DeviceForeignKey.Equals(id))
                 .OrderBy(f => f.CreatedAt)
-                .ToListAsync();
+                .ToList();
 
             if (frames == null || frames.Count == 0)
             {
@@ -105,9 +105,9 @@ namespace VPEAR.Server.Services
         {
             var status = HttpStatusCode.InternalServerError;
             dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
-            var sensors = await this.sensors.Get()
+            var sensors = this.sensors.Get()
                 .Where(s => s.DeviceForeignKey.Equals(id))
-                .ToListAsync();
+                .ToList();
 
             if (sensors == null || sensors.Count == 0)
             {

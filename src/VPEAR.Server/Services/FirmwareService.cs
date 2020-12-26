@@ -48,9 +48,9 @@ namespace VPEAR.Server.Services
         {
             var status = HttpStatusCode.InternalServerError;
             dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
-            var firmware = await this.firmwares.Get()
+            var firmware = this.firmwares.Get()
                 .Where(f => f.DeviceForeignKey.Equals(id))
-                .FirstOrDefaultAsync();
+                .FirstOrDefault();
 
             if (firmware == null)
             {
@@ -77,9 +77,9 @@ namespace VPEAR.Server.Services
             var status = HttpStatusCode.InternalServerError;
             dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
             var device = await this.devices.GetAsync(id);
-            var firmware = await this.firmwares.Get()
+            var firmware = this.firmwares.Get()
                 .Where(f => f.DeviceForeignKey.Equals(id))
-                .FirstOrDefaultAsync();
+                .FirstOrDefault();
 
             if (device == null || firmware == null)
             {
