@@ -30,53 +30,53 @@ namespace VPEAR.Server.Test.Controllers
             var logger = fixture.Container.Resolve<ILogger<FilterController>>();
             var mock = new Mock<IFilterService>();
 
-            mock.Setup(service => service.GetAsync(Mocks.Archived.Id))
-                .ReturnsAsync(new Result<GetFiltersResponse>(
+            mock.Setup(mock => mock.Get(Mocks.Archived.Id))
+                .Returns(new Result<GetFiltersResponse>(
                     HttpStatusCode.OK,
                     new GetFiltersResponse()));
 
-            mock.Setup(service => service.GetAsync(Mocks.NotReachable.Id))
-                .ReturnsAsync(new Result<GetFiltersResponse>(
+            mock.Setup(mock => mock.Get(Mocks.NotReachable.Id))
+                .Returns(new Result<GetFiltersResponse>(
                     HttpStatusCode.OK,
                     new GetFiltersResponse()));
 
-            mock.Setup(service => service.GetAsync(Mocks.Recording.Id))
-                .ReturnsAsync(new Result<GetFiltersResponse>(
+            mock.Setup(mock => mock.Get(Mocks.Recording.Id))
+                .Returns(new Result<GetFiltersResponse>(
                     HttpStatusCode.OK,
                     new GetFiltersResponse()));
 
-            mock.Setup(service => service.GetAsync(Mocks.Stopped.Id))
-                .ReturnsAsync(new Result<GetFiltersResponse>(
+            mock.Setup(mock => mock.Get(Mocks.Stopped.Id))
+                .Returns(new Result<GetFiltersResponse>(
                     HttpStatusCode.OK,
                     new GetFiltersResponse()));
 
-            mock.Setup(service => service.GetAsync(Mocks.NotExisting.Id))
-                .ReturnsAsync(new Result<GetFiltersResponse>(
+            mock.Setup(mock => mock.Get(Mocks.NotExisting.Id))
+                .Returns(new Result<GetFiltersResponse>(
                     HttpStatusCode.NotFound, ErrorMessages.DeviceNotFound));
 
-            mock.Setup(service => service.PutAsync(Mocks.Archived.Id, It.IsAny<PutFilterRequest>()))
+            mock.Setup(mock => mock.PutAsync(Mocks.Archived.Id, It.IsAny<PutFilterRequest>()))
                 .ReturnsAsync(new Result<Null>(
                     HttpStatusCode.Gone, ErrorMessages.DeviceIsArchived));
 
-            mock.Setup(service => service.PutAsync(Mocks.NotExisting.Id, It.IsAny<PutFilterRequest>()))
+            mock.Setup(mock => mock.PutAsync(Mocks.NotExisting.Id, It.IsAny<PutFilterRequest>()))
                 .ReturnsAsync(new Result<Null>(
                     HttpStatusCode.NotFound, ErrorMessages.DeviceNotFound));
 
-            mock.Setup(service => service.PutAsync(Mocks.NotReachable.Id, It.IsAny<PutFilterRequest>()))
+            mock.Setup(mock => mock.PutAsync(Mocks.NotReachable.Id, It.IsAny<PutFilterRequest>()))
                 .ReturnsAsync(new Result<Null>(
                     HttpStatusCode.FailedDependency, ErrorMessages.DeviceIsNotReachable));
 
-            mock.Setup(service => service.PutAsync(Mocks.Recording.Id, It.IsAny<PutFilterRequest>()))
+            mock.Setup(mock => mock.PutAsync(Mocks.Recording.Id, It.IsAny<PutFilterRequest>()))
                 .ReturnsAsync(new Result<Null>(statusCode: HttpStatusCode.OK, value: null));
 
-            mock.Setup(service => service.PutAsync(Mocks.Stopped.Id, It.IsAny<PutFilterRequest>()))
+            mock.Setup(mock => mock.PutAsync(Mocks.Stopped.Id, It.IsAny<PutFilterRequest>()))
                 .ReturnsAsync(new Result<Null>(statusCode: HttpStatusCode.OK, value: null));
 
             this.controller = new FilterController(logger, mock.Object);
         }
 
         [Fact]
-        public void OnGetAsync200OKTest()
+        public void OnGet200OKTest()
         {
             var devices = new List<Guid>()
             {
@@ -86,9 +86,9 @@ namespace VPEAR.Server.Test.Controllers
                 Mocks.Stopped.Id,
             };
 
-            devices.ForEach(async device =>
+            devices.ForEach(device =>
             {
-                var result = await this.controller.OnGetAsync(device);
+                var result = this.controller.OnGet(device);
                 var jsonResult = Assert.IsType<JsonResult>(result);
                 var response = Assert.IsAssignableFrom<GetFiltersResponse>(jsonResult.Value);
 
@@ -97,9 +97,9 @@ namespace VPEAR.Server.Test.Controllers
         }
 
         [Fact]
-        public async Task OnGetAsync404NotFound()
+        public void OnGet404NotFound()
         {
-            var result = await this.controller.OnGetAsync(Mocks.NotExisting.Id);
+            var result = this.controller.OnGet(Mocks.NotExisting.Id);
             var jsonResult = Assert.IsType<JsonResult>(result);
             var response = Assert.IsAssignableFrom<ErrorResponse>(jsonResult.Value);
 

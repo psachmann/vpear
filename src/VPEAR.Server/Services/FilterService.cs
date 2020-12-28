@@ -48,7 +48,7 @@ namespace VPEAR.Server.Services
         }
 
         /// <inheritdoc/>
-        public async Task<Result<GetFiltersResponse>> GetAsync(Guid id)
+        public Result<GetFiltersResponse> Get(Guid id)
         {
             var status = HttpStatusCode.InternalServerError;
             var message = ErrorMessages.InternalServerError;
