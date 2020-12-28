@@ -109,7 +109,7 @@ namespace VPEAR.Server.Test.Controllers
 
             Assert.NotNull(response);
             Assert.Equal(StatusCodes.Status404NotFound, response.StatusCode);
-            Assert.Equal(ErrorMessages.DeviceNotFound, response.Message);
+            Assert.Contains(ErrorMessages.DeviceNotFound, response.Messages);
         }
 
         [Fact]
@@ -139,7 +139,7 @@ namespace VPEAR.Server.Test.Controllers
 
             Assert.NotNull(response);
             Assert.Equal(StatusCodes.Status404NotFound, response.StatusCode);
-            Assert.Equal(ErrorMessages.DeviceNotFound, response.Message);
+            Assert.Contains(ErrorMessages.DeviceNotFound, response.Messages);
         }
 
         [Fact]
@@ -151,7 +151,7 @@ namespace VPEAR.Server.Test.Controllers
 
             Assert.NotNull(response);
             Assert.Equal(StatusCodes.Status410Gone, response.StatusCode);
-            Assert.Equal(ErrorMessages.DeviceIsArchived, response.Message);
+            Assert.Contains(ErrorMessages.DeviceIsArchived, response.Messages);
         }
 
         [Fact]
@@ -163,7 +163,7 @@ namespace VPEAR.Server.Test.Controllers
 
             Assert.NotNull(response);
             Assert.Equal(StatusCodes.Status424FailedDependency, response.StatusCode);
-            Assert.Equal(ErrorMessages.DeviceIsNotReachable, response.Message);
+            Assert.Contains(ErrorMessages.DeviceIsNotReachable, response.Messages);
         }
     }
 }

@@ -26,6 +26,7 @@ namespace VPEAR.Server.Services
         private readonly ILogger<FiltersController> logger;
         private readonly IRepository<Device, Guid> devices;
         private readonly IRepository<Filter, Guid> filters;
+        private readonly IDeviceClient.Factory factory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FilterService"/> class.
@@ -33,14 +34,17 @@ namespace VPEAR.Server.Services
         /// <param name="logger">The service logger.</param>
         /// <param name="devices">The device repository for db access.</param>
         /// <param name="filters">The filter repository for db access.</param>
+        /// <param name="factory">The factory to create a device client.</param>
         public FilterService(
             ILogger<FiltersController> logger,
             IRepository<Device, Guid> devices,
-            IRepository<Filter, Guid> filters)
+            IRepository<Filter, Guid> filters,
+            IDeviceClient.Factory factory)
         {
             this.logger = logger;
             this.devices = devices;
             this.filters = filters;
+            this.factory = factory;
         }
 
         /// <inheritdoc/>
@@ -95,14 +99,39 @@ namespace VPEAR.Server.Services
             }
             else if (device.Status == DeviceStatus.Recording || device.Status == DeviceStatus.Stopped)
             {
-                // TODO: synchronization service to publish updates to the device
-                filter.Noise = request.Noise ?? filter.Noise;
-                filter.Smooth = request.Smooth ?? filter.Smooth;
-                filter.Spot = request.Spot ?? filter.Spot;
+                var client = this.factory.Invoke(device.Address);
 
-                if (await this.filters.UpdateAsync(filter))
+                if (await client.IsReachableAsync())
                 {
-                    return new Result<Null>(HttpStatusCode.OK);
+                    await client.PutFiltersAsync(
+                        request.Spot ?? filter.Spot,
+                        request.Smooth ?? filter.Smooth,
+                        request.Noise ?? filter.Noise);
+
+                    var newFilter = new Filter()
+                    {
+                        Noise = request.Noise ?? filter.Noise,
+                        Smooth = request.Smooth ?? filter.Smooth,
+                        Spot = request.Spot ?? filter.Spot,
+                    };
+
+                    device.Filters = newFilter;
+
+                    if (await this.filters.CreateAsync(filter)
+                        && await this.devices.UpdateAsync(device))
+                    {
+                        return new Result<Null>(HttpStatusCode.OK);
+                    }
+                }
+                else
+                {
+                    device.Status = DeviceStatus.NotReachable;
+
+                    if (await this.devices.UpdateAsync(device))
+                    {
+                        status = HttpStatusCode.FailedDependency;
+                        message = ErrorMessages.DeviceIsNotReachable;
+                    }
                 }
             }
 

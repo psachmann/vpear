@@ -3,7 +3,9 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using Autofac;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -17,16 +19,16 @@ using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Test.Services
 {
-    public class WifiServiceTest
+    public class WifiServiceTest : IClassFixture<AutofacFixture>
     {
         private readonly IWifiService service;
 
-        public WifiServiceTest()
+        public WifiServiceTest(AutofacFixture fixture)
         {
             this.service = new WifiService(
-                Mocks.CreateLogger<WifiController>(),
-                Mocks.CreateRepository<Device>(),
-                Mocks.CreateRepository<Wifi>());
+                fixture.Container.Resolve<ILogger<WifiController>>(),
+                fixture.Container.Resolve<IRepository<Device, Guid>>(),
+                fixture.Container.Resolve<IRepository<Wifi, Guid>>());
         }
 
         [Fact]
@@ -56,7 +58,7 @@ namespace VPEAR.Server.Test.Services
 
             Assert.Equal(StatusCodes.Status404NotFound, result.StatusCode);
             Assert.NotNull(result.Error);
-            Assert.Equal(ErrorMessages.DeviceNotFound, result.Error!.Message);
+            Assert.Contains(ErrorMessages.DeviceNotFound, result.Error!.Messages);
         }
 
         [Fact]
@@ -84,7 +86,7 @@ namespace VPEAR.Server.Test.Services
 
             Assert.Equal(StatusCodes.Status404NotFound, result.StatusCode);
             Assert.NotNull(result.Error);
-            Assert.Equal(ErrorMessages.DeviceNotFound, result.Error!.Message);
+            Assert.Contains(ErrorMessages.DeviceNotFound, result.Error!.Messages);
         }
 
         [Fact]
@@ -94,7 +96,7 @@ namespace VPEAR.Server.Test.Services
 
             Assert.Equal(StatusCodes.Status410Gone, result.StatusCode);
             Assert.NotNull(result.Error);
-            Assert.Equal(ErrorMessages.DeviceIsArchived, result.Error!.Message);
+            Assert.Contains(ErrorMessages.DeviceIsArchived, result.Error!.Messages);
         }
 
         [Fact]
@@ -104,7 +106,7 @@ namespace VPEAR.Server.Test.Services
 
             Assert.Equal(StatusCodes.Status424FailedDependency, result.StatusCode);
             Assert.NotNull(result.Error);
-            Assert.Equal(ErrorMessages.DeviceIsNotReachable, result.Error!.Message);
+            Assert.Contains(ErrorMessages.DeviceIsNotReachable, result.Error!.Messages);
         }
     }
 }
