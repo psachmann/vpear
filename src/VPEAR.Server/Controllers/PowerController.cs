@@ -11,6 +11,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using VPEAR.Core;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Wrappers;
 using static VPEAR.Server.Constants;
@@ -47,11 +48,11 @@ namespace VPEAR.Server.Controllers
         [HttpGet]
         [Produces(Defaults.DefaultResponseType)]
         [SwaggerResponse(StatusCodes.Status200OK, "The current device power information.", typeof(GetPowerResponse))]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(object))]
-        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", typeof(object))]
-        [SwaggerResponse(StatusCodes.Status404NotFound, "Id not found.", typeof(object))]
-        [SwaggerResponse(StatusCodes.Status410Gone, "Device is archived.", typeof(object))]
-        [SwaggerResponse(StatusCodes.Status424FailedDependency, "Device is not reachable.", typeof(object))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(ErrorResponse))]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", typeof(Null))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Id not found.", typeof(ErrorResponse))]
+        [SwaggerResponse(StatusCodes.Status410Gone, "Device is archived.", typeof(ErrorResponse))]
+        [SwaggerResponse(StatusCodes.Status424FailedDependency, "Device is not reachable.", typeof(ErrorResponse))]
         public async Task<IActionResult> OnGetAsync([FromQuery, Required] Guid id)
         {
             this.logger.LogDebug("{@Device}", id);
