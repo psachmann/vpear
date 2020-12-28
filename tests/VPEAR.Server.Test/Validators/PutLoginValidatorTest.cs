@@ -3,20 +3,20 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using Autofac;
 using FluentValidation;
 using VPEAR.Core.Wrappers;
-using VPEAR.Server.Validators;
 using Xunit;
 
 namespace VPEAR.Server.Test.Validators
 {
-    public class PutLoginValidatorTest
+    public class PutLoginValidatorTest : IClassFixture<AutofacFixture>
     {
         private readonly IValidator<PutLoginRequest> validator;
 
-        public PutLoginValidatorTest()
+        public PutLoginValidatorTest(AutofacFixture fixture)
         {
-            this.validator = new PutLoginValidator();
+            this.validator = fixture.Container.Resolve<IValidator<PutLoginRequest>>();
         }
 
         [Theory]

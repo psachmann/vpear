@@ -21,7 +21,7 @@ namespace VPEAR.Server.Test
 {
     public static class Mocks
     {
-        public static readonly  (Guid Id, DeviceStatus Status) NotExisting = (new Guid("00000000000000000000000000000000"), DeviceStatus.None);
+        public static readonly (Guid Id, DeviceStatus Status) NotExisting = (new Guid("00000000000000000000000000000000"), DeviceStatus.None);
         public static readonly (Guid Id, DeviceStatus Status) Archived = (new Guid("00000000000000000000000000000001"), DeviceStatus.Archived);
         public static readonly (Guid Id, DeviceStatus Status) NotReachable = (new Guid("00000000000000000000000000000002"), DeviceStatus.NotReachable);
         public static readonly (Guid Id, DeviceStatus Status) Recording = (new Guid("00000000000000000000000000000003"), DeviceStatus.Recording);
@@ -147,7 +147,6 @@ namespace VPEAR.Server.Test
             return new Repository<VPEARDbContext, TEntity, TKey>(context, CreateLogger<IRepository<TEntity, TKey>>());
         }
 
-
         public static IDeviceClient.Factory CreateDeviceClientFactory()
         {
             var mock = new Mock<IDeviceClient.Factory>();
@@ -161,6 +160,9 @@ namespace VPEAR.Server.Test
         private static IDeviceClient CreateDeviceClient()
         {
             var mock = new Mock<IDeviceClient>();
+
+            mock.Setup(mock => mock.IsReachableAsync())
+                .ReturnsAsync(true);
 
             mock.Setup(m => m.GetPowerAsync())
                 .ReturnsAsync(new GetPowerResponse());

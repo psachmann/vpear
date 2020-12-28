@@ -3,20 +3,20 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using Autofac;
 using FluentValidation;
 using VPEAR.Core.Wrappers;
-using VPEAR.Server.Validators;
 using Xunit;
 
 namespace VPEAR.Server.Test.Validators
 {
-    public class PostRegisterValidatorTest
+    public class PostRegisterValidatorTest : IClassFixture<AutofacFixture>
     {
         private readonly IValidator<PostRegisterRequest> validator;
 
-        public PostRegisterValidatorTest()
+        public PostRegisterValidatorTest(AutofacFixture fixture)
         {
-            this.validator = new PostRegisterValidator();
+            this.validator = fixture.Container.Resolve<IValidator<PostRegisterRequest>>();
         }
 
         [Theory]
