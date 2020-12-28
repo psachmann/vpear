@@ -74,7 +74,7 @@ namespace VPEAR.Server.Services
         }
 
         /// <inheritdoc/>
-        public async Task<Result<Null>> PutAsync(Guid id, PutFiltersRequest request)
+        public async Task<Result<Null>> PutAsync(Guid id, PutFilterRequest request)
         {
             var status = HttpStatusCode.InternalServerError;
             var message = ErrorMessages.InternalServerError;

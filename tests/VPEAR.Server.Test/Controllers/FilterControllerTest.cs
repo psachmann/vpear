@@ -58,22 +58,22 @@ namespace VPEAR.Server.Test.Controllers
                 .ReturnsAsync(new Result<GetFiltersResponse>(
                     HttpStatusCode.NotFound, ErrorMessages.DeviceNotFound));
 
-            mock.Setup(service => service.PutAsync(this.archivedDevice, It.IsAny<PutFiltersRequest>()))
+            mock.Setup(service => service.PutAsync(this.archivedDevice, It.IsAny<PutFilterRequest>()))
                 .ReturnsAsync(new Result<Null>(
                     HttpStatusCode.Gone, ErrorMessages.DeviceIsArchived));
 
-            mock.Setup(service => service.PutAsync(this.notExistingDevice, It.IsAny<PutFiltersRequest>()))
+            mock.Setup(service => service.PutAsync(this.notExistingDevice, It.IsAny<PutFilterRequest>()))
                 .ReturnsAsync(new Result<Null>(
                     HttpStatusCode.NotFound, ErrorMessages.DeviceNotFound));
 
-            mock.Setup(service => service.PutAsync(this.notReachableDevice, It.IsAny<PutFiltersRequest>()))
+            mock.Setup(service => service.PutAsync(this.notReachableDevice, It.IsAny<PutFilterRequest>()))
                 .ReturnsAsync(new Result<Null>(
                     HttpStatusCode.FailedDependency, ErrorMessages.DeviceIsNotReachable));
 
-            mock.Setup(service => service.PutAsync(this.recordingDevice, It.IsAny<PutFiltersRequest>()))
+            mock.Setup(service => service.PutAsync(this.recordingDevice, It.IsAny<PutFilterRequest>()))
                 .ReturnsAsync(new Result<Null>(statusCode: HttpStatusCode.OK, value: null));
 
-            mock.Setup(service => service.PutAsync(this.stoppedDevice, It.IsAny<PutFiltersRequest>()))
+            mock.Setup(service => service.PutAsync(this.stoppedDevice, It.IsAny<PutFilterRequest>()))
                 .ReturnsAsync(new Result<Null>(statusCode: HttpStatusCode.OK, value: null));
 
             this.controller = new FilterController(logger, mock.Object);
@@ -123,7 +123,7 @@ namespace VPEAR.Server.Test.Controllers
 
             devices.ForEach(async device =>
             {
-                var result = await this.controller.OnPutAsync(device, new PutFiltersRequest());
+                var result = await this.controller.OnPutAsync(device, new PutFilterRequest());
                 var jsonResult = Assert.IsType<JsonResult>(result);
 
                 Assert.Null(jsonResult.Value);
@@ -133,7 +133,7 @@ namespace VPEAR.Server.Test.Controllers
         [Fact]
         public async Task OnPutAsync404NotFoundTest()
         {
-            var result = await this.controller.OnPutAsync(this.notExistingDevice, new PutFiltersRequest());
+            var result = await this.controller.OnPutAsync(this.notExistingDevice, new PutFilterRequest());
             var jsonResult = Assert.IsType<JsonResult>(result);
             var response = Assert.IsAssignableFrom<ErrorResponse>(jsonResult.Value);
 
@@ -145,7 +145,7 @@ namespace VPEAR.Server.Test.Controllers
         [Fact]
         public async Task OnPutAsync410GoneTest()
         {
-            var result = await this.controller.OnPutAsync(this.archivedDevice, new PutFiltersRequest());
+            var result = await this.controller.OnPutAsync(this.archivedDevice, new PutFilterRequest());
             var jsonResult = Assert.IsType<JsonResult>(result);
             var response = Assert.IsAssignableFrom<ErrorResponse>(jsonResult.Value);
 
@@ -157,7 +157,7 @@ namespace VPEAR.Server.Test.Controllers
         [Fact]
         public async Task OnPutAsync424FailedDependencyTest()
         {
-            var result = await this.controller.OnPutAsync(this.notReachableDevice, new PutFiltersRequest());
+            var result = await this.controller.OnPutAsync(this.notReachableDevice, new PutFilterRequest());
             var jsonResult = Assert.IsType<JsonResult>(result);
             var response = Assert.IsAssignableFrom<ErrorResponse>(jsonResult.Value);
 

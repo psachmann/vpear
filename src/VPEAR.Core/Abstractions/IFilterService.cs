@@ -28,6 +28,6 @@ namespace VPEAR.Core.Abstractions
         /// <param name="id">The device id.</param>
         /// <param name="request">The request data.</param>
         /// <returns>Http status code.</returns>
-        Task<Result<Null>> PutAsync(Guid id, PutFiltersRequest request);
+        Task<Result<Null>> PutAsync(Guid id, PutFilterRequest request);
     }
 }
