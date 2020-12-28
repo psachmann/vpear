@@ -10,7 +10,7 @@ using static VPEAR.Server.Constants;
 namespace VPEAR.Server.Validators
 {
     /// <summary>
-    /// Validates the put user request data.
+    /// Validates the <see cref="PutUserRequest"/> request body.
     /// </summary>
     public class PutUserValidator : AbstractValidator<PutUserRequest>
     {

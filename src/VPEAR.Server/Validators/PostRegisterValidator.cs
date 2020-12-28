@@ -10,7 +10,7 @@ using static VPEAR.Server.Constants;
 namespace VPEAR.Server.Validators
 {
     /// <summary>
-    /// Validates the post register request data.
+    /// Validates the <see cref="PostRegisterRequest"/> request body.
     /// </summary>
     public class PostRegisterValidator : AbstractValidator<PostRegisterRequest>
     {

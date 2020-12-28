@@ -10,7 +10,7 @@ using static VPEAR.Server.Constants;
 namespace VPEAR.Server.Validators
 {
     /// <summary>
-    /// Validates the user login request data.
+    /// Validates the <see cref="PutLoginRequest"/> request body.
     /// </summary>
     public class PutLoginValidator : AbstractValidator<PutLoginRequest>
     {
