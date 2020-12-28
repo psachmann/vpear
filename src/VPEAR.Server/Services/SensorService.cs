@@ -38,10 +38,10 @@ namespace VPEAR.Server.Services
         }
 
         /// <inheritdoc/>
-        public async Task<Result<Container<GetFrameResponse>>> GetFramesAsync(Guid id, int start, int stop)
+        public Result<Container<GetFrameResponse>> GetFrames(Guid id, int start, int stop)
         {
             var status = HttpStatusCode.InternalServerError;
-            dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
+            var message = ErrorMessages.InternalServerError;
             var frames = this.frames.Get()
                 .Where(f => f.DeviceForeignKey.Equals(id))
                 .OrderBy(f => f.CreatedAt)
@@ -50,74 +50,79 @@ namespace VPEAR.Server.Services
             if (frames == null || frames.Count == 0)
             {
                 status = HttpStatusCode.NotFound;
-                payload = null;
+                message = ErrorMessages.FramesNotFound;
             }
             else if (start == 0 && stop == 0)
             {
-                status = HttpStatusCode.OK;
+                var payload = new Container<GetFrameResponse>();
+
                 frames.ForEach(f =>
                 {
-                    payload.Frames.Add(new FrameResponse()
+                    payload.Items.Add(new GetFrameResponse()
                     {
                         Readings = f.Readings,
                         Time = f.CreatedAt.ToString("dd.MM.yyyy hh:mm:ss.ff"),
                     });
                 });
+
+                return new Result<Container<GetFrameResponse>>(HttpStatusCode.OK, payload);
             }
             else if (start < stop && stop < frames.Count)
             {
-                status = HttpStatusCode.OK;
+                var payload = new Container<GetFrameResponse>();
+
                 frames.GetRange(start, stop)
                     .ForEach(f =>
                     {
-                        payload.Frames.Add(new FrameResponse()
+                        payload.Items.Add(new GetFrameResponse()
                         {
                             Readings = f.Readings,
                             Time = f.CreatedAt.ToString("dd.MM.yyyy hh:mm:ss.ff"),
                         });
                     });
+
+                return new Result<Container<GetFrameResponse>>(HttpStatusCode.OK, payload);
             }
             else if (start < stop && stop >= frames.Count)
             {
-                status = HttpStatusCode.PartialContent;
+                var payload = new Container<GetFrameResponse>();
+
                 frames.GetRange(start, frames.Count - 1)
                     .ForEach(f =>
                     {
-                        payload.Frames.Add(new FrameResponse()
+                        payload.Items.Add(new GetFrameResponse()
                         {
                             Readings = f.Readings,
                             Time = f.CreatedAt.ToString("dd.MM.yyyy hh:mm:ss.ff"),
                         });
                     });
+
+                return new Result<Container<GetFrameResponse>>(HttpStatusCode.PartialContent, payload);
             }
             else
             {
                 // start is grater or equals stop
                 status = HttpStatusCode.BadRequest;
-                payload = null;
+                message = ErrorMessages.BadRequest;
             }
 
-            return new Result<Container<GetFrameResponse>>(status, payload);
+            return new Result<Container<GetFrameResponse>>(status, message);
         }
 
         /// <inheritdoc/>
-        public async Task<Result<Container<GetSensorResponse>>> GetSensorsAsync(Guid id)
+        public Result<Container<GetSensorResponse>> GetSensors(Guid id)
         {
-            var status = HttpStatusCode.InternalServerError;
-            dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
             var sensors = this.sensors.Get()
                 .Where(s => s.DeviceForeignKey.Equals(id))
                 .ToList();
 
             if (sensors == null || sensors.Count == 0)
             {
-                status = HttpStatusCode.NotFound;
-                payload = new ErrorResponse(status, ErrorMessages.DeviceNotFound);
+                return new Result<Container<GetSensorResponse>>(HttpStatusCode.NotFound, ErrorMessages.SensorsNotFound);
             }
             else
             {
-                status = HttpStatusCode.OK;
-                payload = new Container<GetSensorResponse>();
+                var payload = new Container<GetSensorResponse>();
 
                 sensors.ForEach(s =>
                 {
@@ -133,9 +138,9 @@ namespace VPEAR.Server.Services
                         Width = s.Width,
                     });
                 });
-            }
 
-            return new Result<Container<GetSensorResponse>>(status, payload);
+                return new Result<Container<GetSensorResponse>>(HttpStatusCode.OK, payload);
+            }
         }
     }
 }

@@ -26,7 +26,7 @@ TODO: write short introduction
 | Firmware | `InProgress` | `InProgress` | `InProgress` |
 | Home | Done | - | - |
 | Power | Done | Done | - |
-| Sensor | `InProgress` | `InProgress` | - |
+| Sensor | `InProgress` | Done | - |
 | User | `InProgress` | `InProgress` | `InProgress` |
 | Wifi | Done | Done | Done |
 | Reading Device | - | `NotStarted` | - |

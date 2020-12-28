@@ -51,7 +51,7 @@ namespace VPEAR.Server.Validators
                 this.RuleFor(request => request.Mode)
                     .NotNull()
                     .NotEmpty()
-                    .Must(mode => Wifi.Modes.Contains(mode))
+                    .Must(mode => WifiModes.All.Contains(mode))
                     .OverridePropertyName("mode");
             });
         }

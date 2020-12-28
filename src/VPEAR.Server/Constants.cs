@@ -40,13 +40,13 @@ namespace VPEAR.Server
 #endif
         }
 
-        public static class Wifi
+        public static class WifiModes
         {
             public const string Direct = "direct";
 
             public const string Inderiect = "indirect";
 
-            public static readonly IList<string> Modes = new List<string>()
+            public static readonly IList<string> All = new List<string>()
             {
                 Direct,
                 Inderiect,
@@ -91,6 +91,14 @@ namespace VPEAR.Server
             public const string DeviceIsArchived = "Device is archived.";
 
             public const string DeviceIsNotReachable = "Device is not reachable.";
+
+            public const string StartGreaterOrEqualsStop = "The start index is greater or equals stop index.";
+
+            public const string FramesNotFound = "No frames in range found.";
+
+            public const string SensorsNotFound = "No sensors found.";
+
+            public const string BadRequest = "Wrong request format.";
         }
 
         /// <summary>

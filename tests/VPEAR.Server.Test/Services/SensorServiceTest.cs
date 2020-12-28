@@ -3,8 +3,9 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
-/*
+using Autofac;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,94 +17,92 @@ using VPEAR.Server.Controllers;
 using VPEAR.Server.Db;
 using VPEAR.Server.Services;
 using Xunit;
+using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Test.Services
 {
-    public class SensorServiceTest : IClassFixture<VPEARDbContextFixture>
+    public class SensorServiceTest : IClassFixture<AutofacFixture>
     {
-        private readonly Guid stoppedDevice = DbSeed.Devices[0].Id;
-        private readonly Guid recordingDevice = DbSeed.Devices[1].Id;
-        private readonly Guid archivedDevice = DbSeed.Devices[2].Id;
-        private readonly Guid notReachableDevice = DbSeed.Devices[3].Id;
-        private readonly Guid notExistingDevice = new Guid();
         private readonly ISensorService service;
 
-        public SensorServiceTest(VPEARDbContextFixture fixture)
+        public SensorServiceTest(AutofacFixture fixture)
         {
             this.service = new SensorService(
-                Mocks.CreateLogger<SensorController>(),
-                Mocks.CreateRepository<Frame, Guid>(fixture.Context),
-                Mocks.CreateRepository<Sensor, Guid>(fixture.Context));
+                fixture.Container.Resolve<ILogger<SensorController>>(),
+                fixture.Container.Resolve<IRepository<Frame, Guid>>(),
+                fixture.Container.Resolve<IRepository<Sensor, Guid>>());
         }
 
         [Theory]
         [InlineData(StatusCodes.Status200OK, 0, 0)]
         [InlineData(StatusCodes.Status206PartialContent, 0, int.MaxValue)]
-        public async Task GetFramesAsync2XXTest(int expectedStatus, int start, int stop)
+        public void GetFrames2XXTest(int expectedStatus, int start, int stop)
         {
             var devices = new List<Guid>()
             {
-                this.archivedDevice,
-                this.notReachableDevice,
-                this.stoppedDevice,
-                this.recordingDevice,
+                Mocks.Archived.Id,
+                Mocks.NotReachable.Id,
+                Mocks.Stopped.Id,
+                Mocks.Recording.Id,
             };
 
-            foreach (var device in devices)
+            devices.ForEach(device =>
             {
-                var response = await this.service.GetFramesAsync(device, start, stop);
+                var result = this.service.GetFrames(device, start, stop);
 
-                Assert.NotNull(response.Payload);
-                Assert.Equal(expectedStatus, response.StatusCode);
-            }
+                Assert.NotNull(result.Value);
+                Assert.Equal(expectedStatus, result.StatusCode);
+            });
         }
 
         [Fact]
-        public async Task GetFramesAsync400BadRequestTest()
+        public void GetFrames400BadRequestTest()
         {
-            var response = await this.service.GetFramesAsync(this.stoppedDevice, int.MaxValue, int.MinValue);
+            var result = this.service.GetFrames(Mocks.Archived.Id, int.MaxValue, int.MinValue);
 
-            Assert.Null(response.Payload);
-            Assert.Equal(StatusCodes.Status400BadRequest, response.StatusCode);
+            Assert.Equal(StatusCodes.Status400BadRequest, result.StatusCode);
+            Assert.NotNull(result.Error);
+            Assert.Contains(ErrorMessages.BadRequest, result.Error!.Messages);
         }
 
         [Fact]
-        public async Task GetFramesAsync404NotFoundTest()
+        public void GetFrames404NotFoundTest()
         {
-            var response = await this.service.GetFramesAsync(this.notExistingDevice, 0, 0);
+            var result = this.service.GetFrames(Mocks.NotExisting.Id, 0, 0);
 
-            Assert.Null(response.Payload);
-            Assert.Equal(StatusCodes.Status404NotFound, response.StatusCode);
+            Assert.Equal(StatusCodes.Status404NotFound, result.StatusCode);
+            Assert.NotNull(result.Error);
+            Assert.Contains(ErrorMessages.FramesNotFound, result.Error!.Messages);
         }
 
         [Fact]
-        public async Task GetSensorsAsync200OKTest()
+        public void GetSensors200OKTest()
         {
             var devices = new List<Guid>()
             {
-                this.archivedDevice,
-                this.notReachableDevice,
-                this.stoppedDevice,
-                this.recordingDevice,
+                Mocks.Archived.Id,
+                Mocks.NotReachable.Id,
+                Mocks.Stopped.Id,
+                Mocks.Recording.Id,
             };
 
-            foreach (var device in devices)
+            devices.ForEach(device =>
             {
-                var response = await this.service.GetSensorsAsync(device);
+                var result = this.service.GetSensors(device);
 
-                Assert.NotNull(response.Payload);
-                Assert.Equal(StatusCodes.Status200OK, response.StatusCode);
-            }
+                Assert.NotNull(result.Value);
+                Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
+            });
         }
 
         [Fact]
-        public async Task GetSensorsAsync404NotFoundTest()
+        public void GetSensors404NotFoundTest()
         {
-            var response = await this.service.GetSensorsAsync(this.notExistingDevice);
+            var result = this.service.GetSensors(Mocks.NotExisting.Id);
 
-            Assert.Null(response.Payload);
-            Assert.Equal(StatusCodes.Status404NotFound, response.StatusCode);
+            Assert.NotNull(result.Error);
+            Assert.Equal(StatusCodes.Status404NotFound, result.StatusCode);
+            Assert.Contains(ErrorMessages.SensorsNotFound, result.Error!.Messages);
         }
     }
 }
-*/

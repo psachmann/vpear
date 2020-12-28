@@ -11,6 +11,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using VPEAR.Core;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Wrappers;
 using static VPEAR.Server.Constants;
@@ -46,14 +47,14 @@ namespace VPEAR.Server.Controllers
         [HttpGet]
         [Route(Routes.SensorsRoute)]
         [SwaggerResponse(StatusCodes.Status200OK, "Device sensor information.", typeof(Container<GetSensorResponse>))]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(object))]
-        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", typeof(object))]
-        [SwaggerResponse(StatusCodes.Status404NotFound, "Id not found.", typeof(object))]
-        public async Task<IActionResult> OnGetSensors([FromQuery, Required] Guid id)
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(ErrorMessages))]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", typeof(Null))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Id not found.", typeof(ErrorResponse))]
+        public IActionResult OnGetSensors([FromQuery, Required] Guid id)
         {
             this.logger.LogDebug("{@Device}", id);
 
-            var result = await this.service.GetSensorsAsync(id);
+            var result = this.service.GetSensors(id);
 
             this.StatusCode(result.StatusCode);
 
@@ -72,17 +73,17 @@ namespace VPEAR.Server.Controllers
         [Produces(Defaults.DefaultResponseType)]
         [SwaggerResponse(StatusCodes.Status200OK, "Recorded data frames.", typeof(Container<GetFrameResponse>))]
         [SwaggerResponse(StatusCodes.Status206PartialContent, "Frame count is smaller than stop.", typeof(Container<GetFrameResponse>))]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format or start is greater or equals stop.", typeof(object))]
-        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", typeof(object))]
-        [SwaggerResponse(StatusCodes.Status404NotFound, "Id not found.", typeof(object))]
-        public async Task<IActionResult> OnGetFrames(
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format or start is greater or equals stop.", typeof(ErrorResponse))]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", typeof(Null))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Id not found.", typeof(ErrorResponse))]
+        public IActionResult OnGetFrames(
             [FromQuery, Required] Guid id,
             [FromQuery] int? start,
             [FromQuery] int? stop)
         {
             this.logger.LogDebug("{@Device}: {@Request}", id, new { Start = start, Stop = stop, });
 
-            var result = await this.service.GetFramesAsync(id, start ?? 0, stop ?? 0);
+            var result = this.service.GetFrames(id, start ?? 0, stop ?? 0);
 
             this.StatusCode(result.StatusCode);
 
