@@ -23,6 +23,8 @@ namespace VPEAR.Core.Abstractions
 
         HttpStatusCode ResponseStatusCode { get; }
 
+        Task<bool> IsReachableAsync();
+
         Task<DeviceResponse?> GetDeviceAsync();
 
         Task<GetSensorResponse?> GetSensorsAsync();

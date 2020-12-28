@@ -16,7 +16,10 @@ using Microsoft.OpenApi.Models;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Serilog;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Text;
 using VPEAR.Core.Wrappers;
@@ -89,16 +92,30 @@ namespace VPEAR.Server
             }).AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.IgnoreNullValues = true;
-            });
-            /*.ConfigureApiBehaviorOptions(options =>
+            })
+            .ConfigureApiBehaviorOptions(options =>
             {
                 options.InvalidModelStateResponseFactory = context =>
                 {
-                    var response = new ErrorResponse(context.HttpContext.Response.);
+                    var status = HttpStatusCode.BadRequest;
+                    var messages = new List<string>();
 
-                    return new JsonResult(response);
+                    context.ModelState.ToList().ForEach(keyValuePair =>
+                    {
+                        var key = keyValuePair.Key;
+                        var errors = new StringBuilder();
+
+                        keyValuePair.Value.Errors.ToList().ForEach(error =>
+                        {
+                            errors.AppendJoin(' ', error.ErrorMessage);
+                        });
+
+                        messages.Add($"{key}: {errors}.");
+                    });
+
+                    return new JsonResult(new ErrorResponse(status, messages));
                 };
-            });*/
+            });
 
             services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<VPEARDbContext>()

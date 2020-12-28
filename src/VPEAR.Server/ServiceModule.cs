@@ -22,27 +22,27 @@ namespace VPEAR.Server
         {
             builder.RegisterType<DeviceService>()
                 .As<IDeviceService>()
-                .InstancePerLifetimeScope();
+                .InstancePerRequest();
 
             builder.RegisterType<FilterService>()
                 .As<IFilterService>()
-                .InstancePerLifetimeScope();
+                .InstancePerRequest();
 
             builder.RegisterType<FirmwareService>()
                 .As<IFirmwareService>()
-                .InstancePerLifetimeScope();
+                .InstancePerRequest();
 
             builder.RegisterType<SensorService>()
                 .As<ISensorService>()
-                .InstancePerLifetimeScope();
+                .InstancePerRequest();
 
             builder.RegisterType<PowerService>()
                 .As<IPowerService>()
-                .InstancePerLifetimeScope();
+                .InstancePerRequest();
 
             builder.RegisterType<WifiService>()
                 .As<IWifiService>()
-                .InstancePerLifetimeScope();
+                .InstancePerRequest();
         }
     }
 }

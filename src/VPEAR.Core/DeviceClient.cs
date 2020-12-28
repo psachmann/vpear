@@ -50,6 +50,20 @@ namespace VPEAR.Core
             get { return this.status; }
         }
 
+        public async Task<bool> IsReachableAsync()
+        {
+            try
+            {
+                _ = await this.client.GetAsync("api");
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         /// <inheritdoc/>
         public void Dispose()
         {

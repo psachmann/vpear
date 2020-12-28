@@ -13,7 +13,7 @@ namespace VPEAR.Server
     public class ValidatorModule : Module
     {
         /// <summary>
-        /// Register all vaildators with the Autofac container.
+        /// Register all validators with the Autofac container.
         /// </summary>
         /// <param name="builder">The container builder to build the Autofac container.</param>
         protected override void Load(ContainerBuilder builder)
