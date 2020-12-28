@@ -9,14 +9,41 @@
 [1]: https://dev.azure.com/psachmann/vpear/_apis/build/status/psachmann.vpear?branchName=master
 [2]: https://dev.azure.com/psachmann/vpear/_apis/build/status/psachmann.vpear?branchName=develop
 
-## Introduction
+---
+## Overview
 
 TODO: write short introduction
 
-## Documentation
+---
+## Progress
 
-TODO: reference to the documentation
+### Server
 
+| Feature | Controller | Service | Validators |
+| :- | :-: | :-: | :-: |
+| Device | `InProgress` | `InProgress` | `InProgress` |
+| Filter | Done | Done | Done |
+| Firmware | `InProgress` | - | - |
+| Home | Done | Done | - |
+| Power | `InProgress` | `InProgress` | - |
+| Sensor | `InProgress` | `InProgress` | - |
+| User | `InProgress` | `InProgress` | - |
+| Wifi | `InProgress` | Done | - |
+| Reading Device | - | `NotStarted` | - |
+| DeviceClient | - | `InProgress`  | - |
+| VPEARClient | - | `NotStarted`  | - |
+
+### Security
+
+| Feature | Status | Description |
+| :- | :-: | :- |
+
+### Client
+
+| Feature | Status | Description |
+| :- | :-: | :- |
+
+---
 ## Wep Api
 
 | Route | Method | Function |

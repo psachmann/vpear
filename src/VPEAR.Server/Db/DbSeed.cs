@@ -79,7 +79,6 @@ namespace VPEAR.Server.Db
                     Id = device.Id,
                     Mode = $"mode_{i}",
                     Neighbors = { $"neighbors_{i}" },
-                    Password = $"password_{i}",
                     Ssid = $"ssid_{i}",
                 };
 

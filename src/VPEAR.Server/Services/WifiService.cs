@@ -3,7 +3,6 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
@@ -26,6 +25,7 @@ namespace VPEAR.Server.Services
         private readonly ILogger<WifiController> logger;
         private readonly IRepository<Device, Guid> devices;
         private readonly IRepository<Wifi, Guid> wifis;
+        private readonly IDeviceClient.Factory factory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WifiService"/> class.
@@ -33,14 +33,17 @@ namespace VPEAR.Server.Services
         /// <param name="logger">The service logger.</param>
         /// <param name="devices">The device repository for db access.</param>
         /// <param name="wifis">The wifi repository for db access.</param>
+        /// <param name="factory">The factory to create a device client.</param>
         public WifiService(
             ILogger<WifiController> logger,
             IRepository<Device, Guid> devices,
-            IRepository<Wifi, Guid> wifis)
+            IRepository<Wifi, Guid> wifis,
+            IDeviceClient.Factory factory)
         {
             this.logger = logger;
             this.devices = devices;
             this.wifis = wifis;
+            this.factory = factory;
         }
 
         /// <inheritdoc/>
@@ -98,18 +101,32 @@ namespace VPEAR.Server.Services
             }
             else if (device.Status == DeviceStatus.Recording || device.Status == DeviceStatus.Stopped)
             {
-                // TODO: how to store the password?
-                // TODO: synchro service to publish updates to the device
-                wifi.Mode = request.Mode;
-                wifi.Password = request.Password;
-                wifi.Ssid = request.Ssid;
+                var client = this.factory.Invoke(device.Address);
 
-                if (await this.wifis.UpdateAsync(wifi))
+                if (await client.IsReachableAsync())
                 {
-                    status = HttpStatusCode.OK;
-                    message = null;
+                    await client.PutWifiAsync(
+                        request.Ssid!,
+                        request.Password!,
+                        request.Mode);
 
-                    return new Result<Null>(status);
+                    wifi.Mode = request.Mode ?? wifi.Mode!;
+                    wifi.Ssid = request.Ssid ?? wifi.Ssid!;
+
+                    if (await this.wifis.UpdateAsync(wifi))
+                    {
+                        return new Result<Null>(HttpStatusCode.OK);
+                    }
+                }
+                else
+                {
+                    device.Status = DeviceStatus.NotReachable;
+
+                    if (await this.devices.UpdateAsync(device))
+                    {
+                        status = HttpStatusCode.FailedDependency;
+                        message = ErrorMessages.DeviceIsNotReachable;
+                    }
                 }
             }
 
