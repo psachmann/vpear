@@ -26,7 +26,7 @@ namespace VPEAR.Server.Test.Services
         public FilterServiceTest(AutofacFixture fixture)
         {
             this.service = new FilterService(
-                fixture.Container.Resolve<ILogger<FiltersController>>(),
+                fixture.Container.Resolve<ILogger<FilterController>>(),
                 fixture.Container.Resolve<IRepository<Device, Guid>>(),
                 fixture.Container.Resolve<IRepository<Filter, Guid>>(),
                 Mocks.CreateDeviceClientFactory());

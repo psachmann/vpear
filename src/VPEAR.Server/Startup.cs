@@ -4,6 +4,7 @@
 // </copyright>
 
 using Autofac;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -14,7 +15,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
-using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -89,33 +89,35 @@ namespace VPEAR.Server
             services.AddMvc(options =>
             {
                 options.Filters.Add(typeof(GlobalExceptionFilter));
-            }).AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.IgnoreNullValues = true;
             })
-            .ConfigureApiBehaviorOptions(options =>
-            {
-                options.InvalidModelStateResponseFactory = context =>
+                .AddFluentValidation()
+                .AddJsonOptions(options =>
                 {
-                    var status = HttpStatusCode.BadRequest;
-                    var messages = new List<string>();
-
-                    context.ModelState.ToList().ForEach(keyValuePair =>
+                    options.JsonSerializerOptions.IgnoreNullValues = true;
+                })
+                .ConfigureApiBehaviorOptions(options =>
+                {
+                    options.InvalidModelStateResponseFactory = context =>
                     {
-                        var key = keyValuePair.Key;
-                        var errors = new StringBuilder();
+                        var status = HttpStatusCode.BadRequest;
+                        var messages = new List<string>();
 
-                        keyValuePair.Value.Errors.ToList().ForEach(error =>
+                        context.ModelState.ToList().ForEach(keyValuePair =>
                         {
-                            errors.AppendJoin(' ', error.ErrorMessage);
+                            var key = keyValuePair.Key;
+                            var errors = new StringBuilder();
+
+                            keyValuePair.Value.Errors.ToList().ForEach(error =>
+                            {
+                                errors.AppendJoin(' ', error.ErrorMessage);
+                            });
+
+                            messages.Add($"{key}: {errors}.");
                         });
 
-                        messages.Add($"{key}: {errors}.");
-                    });
-
-                    return new JsonResult(new ErrorResponse(status, messages));
-                };
-            });
+                        return new JsonResult(new ErrorResponse(status, messages));
+                    };
+                });
 
             services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<VPEARDbContext>()
@@ -126,21 +128,22 @@ namespace VPEAR.Server
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
-            {
-                options.SaveToken = true;
-                options.RequireHttpsMetadata = false;
-                options.TokenValidationParameters = new TokenValidationParameters()
+            })
+                .AddJwtBearer(options =>
                 {
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
+                    options.SaveToken = true;
+                    options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
 
-                    // TODO: read more about audience and issuer
-                    // ValidAudience = Configuration["JWT:ValidAudience"],
-                    // ValidIssuer = Configuration["JWT:ValidIssuer"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Config!.Secret)),
-                };
-            });
+                        // TODO: read more about audience and issuer
+                        // ValidAudience = Configuration["JWT:ValidAudience"],
+                        // ValidIssuer = Configuration["JWT:ValidIssuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Config!.Secret)),
+                    };
+                });
 
             this.ConfigureDatabase(services);
             this.ConfigureSwagger(services);

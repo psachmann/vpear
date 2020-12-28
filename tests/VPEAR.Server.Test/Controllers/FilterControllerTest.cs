@@ -27,11 +27,11 @@ namespace VPEAR.Server.Test.Controllers
         private readonly Guid notReachableDevice = new Guid("00000000000000000000000000000002");
         private readonly Guid recordingDevice = new Guid("00000000000000000000000000000003");
         private readonly Guid stoppedDevice = new Guid("00000000000000000000000000000004");
-        private readonly FiltersController controller;
+        private readonly FilterController controller;
 
         public FilterControllerTest()
         {
-            var logger = Mocks.CreateLogger<FiltersController>();
+            var logger = Mocks.CreateLogger<FilterController>();
             var mock = new Mock<IFilterService>();
 
             mock.Setup(service => service.GetAsync(this.archivedDevice))
@@ -76,7 +76,7 @@ namespace VPEAR.Server.Test.Controllers
             mock.Setup(service => service.PutAsync(this.stoppedDevice, It.IsAny<PutFiltersRequest>()))
                 .ReturnsAsync(new Result<Null>(statusCode: HttpStatusCode.OK, value: null));
 
-            this.controller = new FiltersController(logger, mock.Object);
+            this.controller = new FilterController(logger, mock.Object);
         }
 
         [Fact]

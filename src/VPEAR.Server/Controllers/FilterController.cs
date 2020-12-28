@@ -1,4 +1,4 @@
-// <copyright file="FiltersController.cs" company="Patrick Sachmann">
+// <copyright file="FilterController.cs" company="Patrick Sachmann">
 // Copyright (c) Patrick Sachmann. All rights reserved.
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
@@ -23,18 +23,18 @@ namespace VPEAR.Server.Controllers
     /// </summary>
     [ApiController]
     [Authorize]
-    [Route(Routes.FiltersRoute)]
-    public class FiltersController : Controller
+    [Route(Routes.FilterRoute)]
+    public class FilterController : Controller
     {
-        private readonly ILogger<FiltersController> logger;
+        private readonly ILogger<FilterController> logger;
         private readonly IFilterService service;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FiltersController"/> class.
+        /// Initializes a new instance of the <see cref="FilterController"/> class.
         /// </summary>
         /// <param name="logger">The controller logger.</param>
         /// <param name="service">The controller service.</param>
-        public FiltersController(ILogger<FiltersController> logger, IFilterService service)
+        public FilterController(ILogger<FilterController> logger, IFilterService service)
         {
             this.logger = logger;
             this.service = service;

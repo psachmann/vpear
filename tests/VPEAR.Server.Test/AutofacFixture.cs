@@ -67,8 +67,8 @@ namespace VPEAR.Server.Test
                 .As<ILogger<DeviceController>>()
                 .InstancePerDependency();
 
-            builder.Register(context => Mocks.CreateLogger<FiltersController>())
-                .As<ILogger<FiltersController>>()
+            builder.Register(context => Mocks.CreateLogger<FilterController>())
+                .As<ILogger<FilterController>>()
                 .InstancePerDependency();
 
             builder.Register(context => Mocks.CreateLogger<FirmwareController>())

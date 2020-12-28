@@ -23,7 +23,7 @@ namespace VPEAR.Server.Services
     /// </summary>
     public class FilterService : IFilterService
     {
-        private readonly ILogger<FiltersController> logger;
+        private readonly ILogger<FilterController> logger;
         private readonly IRepository<Device, Guid> devices;
         private readonly IRepository<Filter, Guid> filters;
         private readonly IDeviceClient.Factory factory;
@@ -36,7 +36,7 @@ namespace VPEAR.Server.Services
         /// <param name="filters">The filter repository for db access.</param>
         /// <param name="factory">The factory to create a device client.</param>
         public FilterService(
-            ILogger<FiltersController> logger,
+            ILogger<FilterController> logger,
             IRepository<Device, Guid> devices,
             IRepository<Filter, Guid> filters,
             IDeviceClient.Factory factory)
