@@ -28,7 +28,8 @@ namespace VPEAR.Server.Test.Services
             this.service = new WifiService(
                 fixture.Container.Resolve<ILogger<WifiController>>(),
                 fixture.Container.Resolve<IRepository<Device, Guid>>(),
-                fixture.Container.Resolve<IRepository<Wifi, Guid>>());
+                fixture.Container.Resolve<IRepository<Wifi, Guid>>(),
+                fixture.Container.Resolve<IDeviceClient.Factory>());
         }
 
         [Fact]

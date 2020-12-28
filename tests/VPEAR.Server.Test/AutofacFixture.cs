@@ -31,7 +31,7 @@ namespace VPEAR.Server.Test
                 {
                     var builder = new ContainerBuilder();
 
-                    this.RegisterClients(builder);
+                    this.RegisterClientFactoties(builder);
                     this.RegisterLoggers(builder);
                     this.RegisterRepositories(builder);
                     this.RegisterValidators(builder);
@@ -57,8 +57,11 @@ namespace VPEAR.Server.Test
             this.child!.Dispose();
         }
 
-        private void RegisterClients(ContainerBuilder builder)
+        private void RegisterClientFactoties(ContainerBuilder builder)
         {
+            builder.Register(context => Mocks.CreateDeviceClientFactory())
+                .As<IDeviceClient.Factory>()
+                .InstancePerDependency();
         }
 
         private void RegisterLoggers(ContainerBuilder builder)

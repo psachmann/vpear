@@ -29,7 +29,7 @@ namespace VPEAR.Server.Test.Services
                 fixture.Container.Resolve<ILogger<FilterController>>(),
                 fixture.Container.Resolve<IRepository<Device, Guid>>(),
                 fixture.Container.Resolve<IRepository<Filter, Guid>>(),
-                Mocks.CreateDeviceClientFactory());
+                fixture.Container.Resolve<IDeviceClient.Factory>());
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace VPEAR.Server.Test.Services
 
             devices.ForEach(async device =>
             {
-                var result = await this.service.PutAsync(device, new PutFiltersRequest());
+                var result = await this.service.PutAsync(device, new PutFilterRequest());
 
                 Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
                 Assert.Null(result.Value);
@@ -83,7 +83,7 @@ namespace VPEAR.Server.Test.Services
         [Fact]
         public async Task PutAsync404NotFoundTest()
         {
-            var result = await this.service.PutAsync(Mocks.NotExisting.Id, new PutFiltersRequest());
+            var result = await this.service.PutAsync(Mocks.NotExisting.Id, new PutFilterRequest());
 
             Assert.Equal(StatusCodes.Status404NotFound, result.StatusCode);
             Assert.NotNull(result.Error);
@@ -93,7 +93,7 @@ namespace VPEAR.Server.Test.Services
         [Fact]
         public async Task PutAsync410GoneTest()
         {
-            var result = await this.service.PutAsync(Mocks.Archived.Id, new PutFiltersRequest());
+            var result = await this.service.PutAsync(Mocks.Archived.Id, new PutFilterRequest());
 
             Assert.Equal(StatusCodes.Status410Gone, result.StatusCode);
             Assert.NotNull(result.Error);
@@ -103,7 +103,7 @@ namespace VPEAR.Server.Test.Services
         [Fact]
         public async Task PutAsync424FailedDependencyTest()
         {
-            var result = await this.service.PutAsync(Mocks.NotReachable.Id, new PutFiltersRequest());
+            var result = await this.service.PutAsync(Mocks.NotReachable.Id, new PutFilterRequest());
 
             Assert.Equal(StatusCodes.Status424FailedDependency, result.StatusCode);
             Assert.NotNull(result.Error);
