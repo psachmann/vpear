@@ -31,29 +31,24 @@ namespace VPEAR.Server.Test.Controllers
             var mock = new Mock<IPowerService>();
 
             mock.Setup(mock => mock.GetAsync(Mocks.Archived.Id))
-                .ReturnsAsync(new Result<Core.Wrappers.GetPowerResponse>(
-                    HttpStatusCode.Gone,
-                    ErrorMessages.DeviceIsArchived));
+                .ReturnsAsync(new Result<GetPowerResponse>(
+                    HttpStatusCode.Gone, ErrorMessages.DeviceIsArchived));
 
             mock.Setup(mock => mock.GetAsync(Mocks.NotExisting.Id))
-                .ReturnsAsync(new Result<Core.Wrappers.GetPowerResponse>(
-                    HttpStatusCode.NotFound,
-                    ErrorMessages.DeviceNotFound));
+                .ReturnsAsync(new Result<GetPowerResponse>(
+                    HttpStatusCode.NotFound, ErrorMessages.DeviceNotFound));
 
             mock.Setup(mock => mock.GetAsync(Mocks.NotReachable.Id))
-                .ReturnsAsync(new Result<Core.Wrappers.GetPowerResponse>(
-                    HttpStatusCode.FailedDependency,
-                    ErrorMessages.DeviceIsNotReachable));
+                .ReturnsAsync(new Result<GetPowerResponse>(
+                    HttpStatusCode.FailedDependency, ErrorMessages.DeviceIsNotReachable));
 
             mock.Setup(mock => mock.GetAsync(Mocks.Recording.Id))
-                .ReturnsAsync(new Result<Core.Wrappers.GetPowerResponse>(
-                    HttpStatusCode.OK,
-                    new GetPowerResponse()));
+                .ReturnsAsync(new Result<GetPowerResponse>(
+                    HttpStatusCode.OK, new GetPowerResponse()));
 
             mock.Setup(mock => mock.GetAsync(Mocks.Stopped.Id))
-                .ReturnsAsync(new Result<Core.Wrappers.GetPowerResponse>(
-                    HttpStatusCode.OK,
-                    new GetPowerResponse()));
+                .ReturnsAsync(new Result<GetPowerResponse>(
+                    HttpStatusCode.OK, new GetPowerResponse()));
 
             this.controller = new PowerController(logger, mock.Object);
         }

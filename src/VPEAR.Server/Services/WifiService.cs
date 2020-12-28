@@ -24,7 +24,7 @@ namespace VPEAR.Server.Services
     {
         private readonly ILogger<WifiController> logger;
         private readonly IRepository<Device, Guid> devices;
-        private readonly IRepository<Wifi, Guid> wifis;
+        private readonly IRepository<Core.Models.Wifi, Guid> wifis;
         private readonly IDeviceClient.Factory factory;
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace VPEAR.Server.Services
         public WifiService(
             ILogger<WifiController> logger,
             IRepository<Device, Guid> devices,
-            IRepository<Wifi, Guid> wifis,
+            IRepository<Core.Models.Wifi, Guid> wifis,
             IDeviceClient.Factory factory)
         {
             this.logger = logger;
@@ -47,7 +47,7 @@ namespace VPEAR.Server.Services
         }
 
         /// <inheritdoc/>
-        public async Task<Result<GetWifiResponse>> GetAsync(Guid id)
+        public Result<GetWifiResponse> Get(Guid id)
         {
             var status = HttpStatusCode.InternalServerError;
             var message = ErrorMessages.InternalServerError;

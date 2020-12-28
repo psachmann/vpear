@@ -40,6 +40,19 @@ namespace VPEAR.Server
 #endif
         }
 
+        public static class Wifi
+        {
+            public const string Direct = "direct";
+
+            public const string Inderiect = "indirect";
+
+            public static readonly IList<string> Modes = new List<string>()
+            {
+                Direct,
+                Inderiect,
+            };
+        }
+
         public static class Schemas
         {
             public const string DbSchema = "VPEARDbContext";

@@ -131,6 +131,10 @@ namespace VPEAR.Server.Test
             builder.RegisterType<PutUserValidator>()
                 .As<IValidator<PutUserRequest>>()
                 .InstancePerDependency();
+
+            builder.RegisterType<PutWifiValidator>()
+                .As<IValidator<PutWifiRequest>>()
+                .InstancePerDependency();
         }
     }
 }

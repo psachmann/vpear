@@ -23,12 +23,12 @@ TODO: write short introduction
 | :- | :-: | :-: | :-: |
 | Device | `InProgress` | `InProgress` | `InProgress` |
 | Filter | Done | Done | Done |
-| Firmware | `InProgress` | - | - |
-| Home | Done | Done | - |
-| Power | `InProgress` | `InProgress` | - |
+| Firmware | `InProgress` | `InProgress` | `InProgress` |
+| Home | Done | - | - |
+| Power | Done | Done | - |
 | Sensor | `InProgress` | `InProgress` | - |
-| User | `InProgress` | `InProgress` | - |
-| Wifi | `InProgress` | Done | - |
+| User | `InProgress` | `InProgress` | `InProgress` |
+| Wifi | Done | Done | Done |
 | Reading Device | - | `NotStarted` | - |
 | DeviceClient | - | `InProgress`  | - |
 | VPEARClient | - | `NotStarted`  | - |

@@ -20,7 +20,7 @@ namespace VPEAR.Core.Abstractions
         /// </summary>
         /// <param name="id">The device id.</param>
         /// <returns>Http status code and device wifi information.</returns>
-        Task<Result<GetWifiResponse>> GetAsync(Guid id);
+        Result<GetWifiResponse> Get(Guid id);
 
         /// <summary>
         /// Updates the device wife information.
