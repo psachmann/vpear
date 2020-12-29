@@ -31,11 +31,11 @@ namespace VPEAR.Server.Test
                 {
                     var builder = new ContainerBuilder();
 
-                    this.RegisterClientFactoties(builder);
-                    this.RegisterLoggers(builder);
-                    this.RegisterRepositories(builder);
-                    this.RegisterServices(builder);
-                    this.RegisterValidators(builder);
+                    RegisterClientFactoties(builder);
+                    RegisterLoggers(builder);
+                    RegisterRepositories(builder);
+                    RegisterServices(builder);
+                    RegisterValidators(builder);
 
                     root = builder.Build();
                     isInitialized = true;
@@ -55,17 +55,27 @@ namespace VPEAR.Server.Test
 
         public void Dispose()
         {
-            this.child!.Dispose();
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
-        private void RegisterClientFactoties(ContainerBuilder builder)
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing && this.child != null)
+            {
+                this.child.Dispose();
+                this.child = null;
+            }
+        }
+
+        private static void RegisterClientFactoties(ContainerBuilder builder)
         {
             builder.Register(context => Mocks.CreateDeviceClientFactory())
                 .As<IDeviceClient.Factory>()
                 .InstancePerDependency();
         }
 
-        private void RegisterLoggers(ContainerBuilder builder)
+        private static void RegisterLoggers(ContainerBuilder builder)
         {
             builder.Register(context => Mocks.CreateLogger<DeviceController>())
                 .As<ILogger<DeviceController>>()
@@ -96,7 +106,7 @@ namespace VPEAR.Server.Test
                 .InstancePerDependency();
         }
 
-        private void RegisterRepositories(ContainerBuilder builder)
+        private static void RegisterRepositories(ContainerBuilder builder)
         {
             builder.Register(context => Mocks.CreateRepository<Device>())
                 .As<IRepository<Device, Guid>>()
@@ -123,14 +133,34 @@ namespace VPEAR.Server.Test
                 .InstancePerDependency();
         }
 
-        private void RegisterServices(ContainerBuilder builder)
+        private static void RegisterServices(ContainerBuilder builder)
         {
             builder.RegisterType<DeviceService>()
                 .As<IDeviceService>()
                 .InstancePerDependency();
+
+            builder.RegisterType<FilterService>()
+                .As<IFilterService>()
+                .InstancePerDependency();
+
+            builder.RegisterType<FirmwareService>()
+                .As<IFirmwareService>()
+                .InstancePerDependency();
+
+            builder.RegisterType<SensorService>()
+                .As<ISensorService>()
+                .InstancePerDependency();
+
+            builder.RegisterType<PowerService>()
+                .As<IPowerService>()
+                .InstancePerDependency();
+
+            builder.RegisterType<WifiService>()
+                .As<IWifiService>()
+                .InstancePerDependency();
         }
 
-        private void RegisterValidators(ContainerBuilder builder)
+        private static void RegisterValidators(ContainerBuilder builder)
         {
             builder.RegisterType<PostDeviceValidator>()
                 .As<IValidator<PostDeviceRequest>>()

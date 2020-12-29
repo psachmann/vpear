@@ -5,15 +5,10 @@
 
 using Autofac;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using VPEAR.Core.Abstractions;
-using VPEAR.Core.Models;
-using VPEAR.Server.Controllers;
-using VPEAR.Server.Db;
-using VPEAR.Server.Services;
 using Xunit;
 using static VPEAR.Server.Constants;
 
@@ -25,10 +20,7 @@ namespace VPEAR.Server.Test.Services
 
         public PowerServiceTest(AutofacFixture fixture)
         {
-            this.service = new PowerService(
-                fixture.Container.Resolve<ILogger<PowerController>>(),
-                fixture.Container.Resolve<IRepository<Device, Guid>>(),
-                fixture.Container.Resolve<IDeviceClient.Factory>());
+            this.service = fixture.Container.Resolve<IPowerService>();
         }
 
         [Fact]

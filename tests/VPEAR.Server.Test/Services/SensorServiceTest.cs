@@ -5,13 +5,9 @@
 
 using Autofac;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using VPEAR.Core.Abstractions;
-using VPEAR.Core.Models;
-using VPEAR.Server.Controllers;
-using VPEAR.Server.Services;
 using Xunit;
 using static VPEAR.Server.Constants;
 
@@ -23,10 +19,7 @@ namespace VPEAR.Server.Test.Services
 
         public SensorServiceTest(AutofacFixture fixture)
         {
-            this.service = new SensorService(
-                fixture.Container.Resolve<ILogger<SensorController>>(),
-                fixture.Container.Resolve<IRepository<Frame, Guid>>(),
-                fixture.Container.Resolve<IRepository<Sensor, Guid>>());
+            this.service = fixture.Container.Resolve<ISensorService>();
         }
 
         [Theory]

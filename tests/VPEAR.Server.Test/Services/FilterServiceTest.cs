@@ -5,15 +5,11 @@
 
 using Autofac;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using VPEAR.Core.Abstractions;
-using VPEAR.Core.Models;
 using VPEAR.Core.Wrappers;
-using VPEAR.Server.Controllers;
-using VPEAR.Server.Services;
 using Xunit;
 using static VPEAR.Server.Constants;
 
@@ -25,11 +21,7 @@ namespace VPEAR.Server.Test.Services
 
         public FilterServiceTest(AutofacFixture fixture)
         {
-            this.service = new FilterService(
-                fixture.Container.Resolve<ILogger<FilterController>>(),
-                fixture.Container.Resolve<IRepository<Device, Guid>>(),
-                fixture.Container.Resolve<IRepository<Filter, Guid>>(),
-                fixture.Container.Resolve<IDeviceClient.Factory>());
+            this.service = fixture.Container.Resolve<IFilterService>();
         }
 
         [Fact]

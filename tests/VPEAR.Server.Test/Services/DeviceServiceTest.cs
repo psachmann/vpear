@@ -5,18 +5,12 @@
 
 using Autofac;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using VPEAR.Core;
 using VPEAR.Core.Abstractions;
-using VPEAR.Core.Models;
 using VPEAR.Core.Wrappers;
-using VPEAR.Server.Controllers;
-using VPEAR.Server.Db;
-using VPEAR.Server.Services;
 using Xunit;
 using static VPEAR.Server.Constants;
 
@@ -28,9 +22,7 @@ namespace VPEAR.Server.Test.Services
 
         public DeviceServiceTest(AutofacFixture fixture)
         {
-            this.service = new DeviceService(
-                fixture.Container.Resolve<ILogger<DeviceController>>(),
-                fixture.Container.Resolve<IRepository<Device, Guid>>());
+            this.service = fixture.Container.Resolve<IDeviceService>();
         }
 
         [Fact]
