@@ -42,7 +42,6 @@ namespace VPEAR.Server.Validators
                     .NotNull()
                     .InclusiveBetween(1U, uint.MaxValue)
                     .OverridePropertyName("required_sensors");
-
             });
         }
     }

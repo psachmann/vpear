@@ -8,7 +8,7 @@ using System;
 namespace VPEAR.Core
 {
     /// <summary>
-    /// Dummy class for the <see cref="Result{TSuccess, TError}"/> success or error type.
+    /// Dummy class for the <see cref="Result{TSuccess}"/> success or error type.
     /// NEVER instantiate this class, it will throw an <see cref="InvalidOperationException"/>.
     /// </summary>
     public sealed class Null

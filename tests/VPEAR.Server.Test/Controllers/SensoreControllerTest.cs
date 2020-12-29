@@ -27,6 +27,7 @@ namespace VPEAR.Server.Test.Controllers
         public SensoreControllerTest(AutofacFixture fixture)
         {
             var logger = fixture.Container.Resolve<ILogger<SensorController>>();
+            var service = fixture.Container.Resolve<ISensorService>();
             var mock = new Mock<ISensorService>();
 
             mock.Setup(mock => mock.GetFrames(Mocks.Archived.Id, It.IsAny<int>(), It.IsAny<int>()))
@@ -53,9 +54,6 @@ namespace VPEAR.Server.Test.Controllers
                 .Returns(new Result<Container<GetFrameResponse>>(
                     HttpStatusCode.NotFound, ErrorMessages.DeviceNotFound));
 
-
-
-
             mock.Setup(mock => mock.GetSensors(Mocks.Archived.Id))
                 .Returns(new Result<Container<GetSensorResponse>>(
                     HttpStatusCode.OK,
@@ -80,7 +78,7 @@ namespace VPEAR.Server.Test.Controllers
                 .Returns(new Result<Container<GetSensorResponse>>(
                     HttpStatusCode.NotFound, ErrorMessages.DeviceNotFound));
 
-            this.controller = new SensorController(logger, mock.Object);
+            this.controller = new SensorController(logger, service);
         }
 
         [Theory]

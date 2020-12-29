@@ -58,6 +58,7 @@ namespace VPEAR.Server
             env.EnvironmentName = "Production";
             app.UseHttpsRedirection();
 #endif
+
             app.UseRouting();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>

@@ -11,7 +11,7 @@ namespace VPEAR.Server.Validators
     /// <summary>
     /// Validates the <see cref="PutFilterRequest"/> request body.
     /// This request don't need validation, but to prevent an unresolved
-    /// exception from the FluenteValidation.AspNetCore extension we will
+    /// exception from the FluentValidation.AspNetCore extension we will
     /// register this dummy validator with the dependency injection container.
     /// </summary>
     public class PutFilterValidator : AbstractValidator<PutFilterRequest>

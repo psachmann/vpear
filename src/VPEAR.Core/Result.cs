@@ -3,9 +3,7 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
-using System.Diagnostics.CodeAnalysis;
 using System.Net;
-using VPEAR.Core.Abstractions;
 using VPEAR.Core.Wrappers;
 
 namespace VPEAR.Core

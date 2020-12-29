@@ -4,7 +4,6 @@
 // </copyright>
 
 using System;
-using System.Threading.Tasks;
 using VPEAR.Core.Wrappers;
 
 namespace VPEAR.Core.Abstractions

@@ -10,7 +10,6 @@ using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
 using VPEAR.Core;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Wrappers;
