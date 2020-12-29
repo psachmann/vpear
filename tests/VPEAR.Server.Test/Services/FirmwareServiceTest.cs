@@ -1,4 +1,4 @@
-// <copyright file="WifiServiceTest.cs" company="Patrick Sachmann">
+// <copyright file="FirmwareServiceTest.cs" company="Patrick Sachmann">
 // Copyright (c) Patrick Sachmann. All rights reserved.
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
@@ -19,16 +19,16 @@ using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Test.Services
 {
-    public class WifiServiceTest : IClassFixture<AutofacFixture>
+    public class FirmwareServiceTest : IClassFixture<AutofacFixture>
     {
-        private readonly IWifiService service;
+        private readonly IFirmwareService service;
 
-        public WifiServiceTest(AutofacFixture fixture)
+        public FirmwareServiceTest(AutofacFixture fixture)
         {
-            this.service = new WifiService(
-                fixture.Container.Resolve<ILogger<WifiController>>(),
+            this.service = new FirmwareService(
+                fixture.Container.Resolve<ILogger<FirmwareController>>(),
                 fixture.Container.Resolve<IRepository<Device, Guid>>(),
-                fixture.Container.Resolve<IRepository<Wifi, Guid>>(),
+                fixture.Container.Resolve<IRepository<Firmware, Guid>>(),
                 fixture.Container.Resolve<IDeviceClient.Factory>());
         }
 
@@ -57,33 +57,45 @@ namespace VPEAR.Server.Test.Services
         {
             var result = this.service.Get(Mocks.NotExisting.Id);
 
-            Assert.Equal(StatusCodes.Status404NotFound, result.StatusCode);
             Assert.NotNull(result.Error);
+            Assert.Equal(StatusCodes.Status404NotFound, result.StatusCode);
             Assert.Contains(ErrorMessages.DeviceNotFound, result.Error!.Messages);
         }
 
-        [Fact]
-        public void PutAsync200OKTest()
+        [Theory]
+        [InlineData(StatusCodes.Status200OK, false, "stable", "next")]
+        [InlineData(StatusCodes.Status200OK, true, null, null)]
+        public void PutAsync200OKTest(
+            int expectedStatus,
+            bool package,
+            string? source,
+            string? upgrade)
         {
             var devices = new List<Guid>()
             {
                 Mocks.Stopped.Id,
                 Mocks.Recording.Id,
             };
+            var request = new PutFirmwareRequest()
+            {
+                Package = package,
+                Source = source,
+                Upgrade = upgrade,
+            };
 
             devices.ForEach(async device =>
             {
-                var result = await this.service.PutAsync(device, new PutWifiRequest());
+                var result = await this.service.PutAsync(device, request);
 
-                Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
+                Assert.Equal(expectedStatus, result.StatusCode);
                 Assert.Null(result.Value);
             });
         }
 
         [Fact]
-        public async Task PutAsync404NoFoundTest()
+        public async Task PutAsync404NotFoundTest()
         {
-            var result = await this.service.PutAsync(Mocks.NotExisting.Id, new PutWifiRequest());
+            var result = await this.service.PutAsync(Mocks.NotExisting.Id, new PutFirmwareRequest());
 
             Assert.Equal(StatusCodes.Status404NotFound, result.StatusCode);
             Assert.NotNull(result.Error);
@@ -93,7 +105,7 @@ namespace VPEAR.Server.Test.Services
         [Fact]
         public async Task PutAsync410GoneTest()
         {
-            var result = await this.service.PutAsync(Mocks.Archived.Id, new PutWifiRequest());
+            var result = await this.service.PutAsync(Mocks.Archived.Id, new PutFirmwareRequest());
 
             Assert.Equal(StatusCodes.Status410Gone, result.StatusCode);
             Assert.NotNull(result.Error);
@@ -103,7 +115,7 @@ namespace VPEAR.Server.Test.Services
         [Fact]
         public async Task PutAsync424FailedDependencyTest()
         {
-            var result = await this.service.PutAsync(Mocks.NotReachable.Id, new PutWifiRequest());
+            var result = await this.service.PutAsync(Mocks.NotReachable.Id, new PutFirmwareRequest());
 
             Assert.Equal(StatusCodes.Status424FailedDependency, result.StatusCode);
             Assert.NotNull(result.Error);

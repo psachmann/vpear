@@ -39,7 +39,7 @@ namespace VPEAR.Server.Test.Validators
             };
             var result = this.validator.Validate(request);
 
-            Assert.True(result.IsValid, "Validation should be successful.");
+            Assert.True(result.IsValid, "This should be a valid request.");
         }
 
         [Theory]
@@ -60,7 +60,7 @@ namespace VPEAR.Server.Test.Validators
             };
             var result = this.validator.Validate(request);
 
-            Assert.False(result.IsValid, "Validation should be unsuccessful.");
+            Assert.False(result.IsValid, "This should NOT be a valid request.");
         }
     }
 }

@@ -3,7 +3,6 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
-using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +11,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using VPEAR.Core;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Wrappers;
 using static VPEAR.Server.Constants;
@@ -27,22 +27,18 @@ namespace VPEAR.Server.Controllers
     {
         private readonly ILogger<FirmwareController> logger;
         private readonly IFirmwareService service;
-        private readonly IValidator<PutFirmwareRequest> putFirmwareValidator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FirmwareController"/> class.
         /// </summary>
         /// <param name="logger">The controller logger.</param>
         /// <param name="service">The controller service.</param>
-        /// <param name="putFirmwareValidator">The put firmware request validator.</param>
         public FirmwareController(
             ILogger<FirmwareController> logger,
-            IFirmwareService service,
-            IValidator<PutFirmwareRequest> putFirmwareValidator)
+            IFirmwareService service)
         {
             this.logger = logger;
             this.service = service;
-            this.putFirmwareValidator = putFirmwareValidator;
         }
 
         /// <summary>
@@ -54,14 +50,14 @@ namespace VPEAR.Server.Controllers
         [Authorize]
         [Produces(Defaults.DefaultResponseType)]
         [SwaggerResponse(StatusCodes.Status200OK, "Current device firmware information.", typeof(GetFirmwareResponse))]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(object))]
-        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", typeof(object))]
-        [SwaggerResponse(StatusCodes.Status404NotFound, "Id not found.", typeof(object))]
-        public async Task<IActionResult> OnGet([FromQuery, Required] Guid id)
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(ErrorResponse))]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", typeof(Null))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Id not found.", typeof(ErrorResponse))]
+        public IActionResult OnGet([FromQuery, Required] Guid id)
         {
             this.logger.LogDebug("{@Device}", id);
 
-            var result = await this.service.GetAsync(id);
+            var result = this.service.Get(id);
 
             this.StatusCode(result.StatusCode);
 
@@ -80,17 +76,15 @@ namespace VPEAR.Server.Controllers
         [HttpPut]
         [Authorize(Roles = Roles.AdminRole)]
         [Produces(Defaults.DefaultResponseType)]
-        [SwaggerResponse(StatusCodes.Status200OK, "Firmware information were saved to db and device.", typeof(object))]
-        [SwaggerResponse(StatusCodes.Status202Accepted, "Started update process.", typeof(object))]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(object))]
-        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", typeof(object))]
-        [SwaggerResponse(StatusCodes.Status404NotFound, "Id not found.", typeof(object))]
-        [SwaggerResponse(StatusCodes.Status410Gone, "Device is archived.", typeof(object))]
-        [SwaggerResponse(StatusCodes.Status424FailedDependency, "Device is not reachable.", typeof(object))]
-        public async Task<IActionResult> OnPut([FromQuery, Required] Guid id, [FromBody, Required] PutFirmwareRequest request)
+        [SwaggerResponse(StatusCodes.Status200OK, "Firmware information were saved to device and db.", typeof(Null))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(ErrorResponse))]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", typeof(Null))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Id not found.", typeof(ErrorResponse))]
+        [SwaggerResponse(StatusCodes.Status410Gone, "Device is archived.", typeof(ErrorResponse))]
+        [SwaggerResponse(StatusCodes.Status424FailedDependency, "Device is not reachable.", typeof(ErrorResponse))]
+        public async Task<IActionResult> OnPutAsync([FromQuery, Required] Guid id, [FromBody, Required] PutFirmwareRequest request)
         {
             this.logger.LogDebug("{@Device}: {@Request}", id, request);
-            this.putFirmwareValidator.ValidateAndThrow(request);
 
             var result = await this.service.PutAsync(id, request);
 

@@ -26,6 +26,7 @@ namespace VPEAR.Server.Services
         private readonly ILogger<FirmwareController> logger;
         private readonly IRepository<Device, Guid> devices;
         private readonly IRepository<Firmware, Guid> firmwares;
+        private readonly IDeviceClient.Factory factory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FirmwareService"/> class.
@@ -33,21 +34,24 @@ namespace VPEAR.Server.Services
         /// <param name="logger">The service logger.</param>
         /// <param name="devices">The device repository for db access.</param>
         /// <param name="firmwares">The firmware repository for db access.</param>
+        /// <param name="factory">The factory to create a device client.</param>
         public FirmwareService(
             ILogger<FirmwareController> logger,
             IRepository<Device, Guid> devices,
-            IRepository<Firmware, Guid> firmwares)
+            IRepository<Firmware, Guid> firmwares,
+            IDeviceClient.Factory factory)
         {
             this.logger = logger;
             this.devices = devices;
             this.firmwares = firmwares;
+            this.factory = factory;
         }
 
         /// <inheritdoc/>
-        public async Task<Result<GetFirmwareResponse>> GetAsync(Guid id)
+        public Result<GetFirmwareResponse> Get(Guid id)
         {
             var status = HttpStatusCode.InternalServerError;
-            dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
+            var message = ErrorMessages.InternalServerError;
             var firmware = this.firmwares.Get()
                 .Where(f => f.DeviceForeignKey.Equals(id))
                 .FirstOrDefault();
@@ -55,27 +59,26 @@ namespace VPEAR.Server.Services
             if (firmware == null)
             {
                 status = HttpStatusCode.NotFound;
-                payload = new ErrorResponse(status, ErrorMessages.DeviceNotFound);
+                message = ErrorMessages.DeviceNotFound;
             }
             else
             {
-                status = HttpStatusCode.OK;
-                payload = new GetFirmwareResponse()
+                return new Result<GetFirmwareResponse>(HttpStatusCode.OK, new GetFirmwareResponse()
                 {
                     Source = firmware.Source,
                     Upgrade = firmware.Upgrade,
                     Version = firmware.Version,
-                };
+                });
             }
 
-            return new Result<GetFirmwareResponse>(status, payload);
+            return new Result<GetFirmwareResponse>(status, message);
         }
 
         /// <inheritdoc/>
         public async Task<Result<Null>> PutAsync(Guid id, PutFirmwareRequest request)
         {
             var status = HttpStatusCode.InternalServerError;
-            dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
+            var message = ErrorMessages.InternalServerError;
             var device = await this.devices.GetAsync(id);
             var firmware = this.firmwares.Get()
                 .Where(f => f.DeviceForeignKey.Equals(id))
@@ -84,36 +87,52 @@ namespace VPEAR.Server.Services
             if (device == null || firmware == null)
             {
                 status = HttpStatusCode.NotFound;
-                payload = new ErrorResponse(status, ErrorMessages.DeviceNotFound);
+                message = ErrorMessages.DeviceNotFound;
             }
             else if (device.Status == DeviceStatus.Archived)
             {
                 status = HttpStatusCode.Gone;
-                payload = new ErrorResponse(status, ErrorMessages.DeviceIsArchived);
+                message = ErrorMessages.DeviceIsArchived;
             }
             else if (device.Status == DeviceStatus.NotReachable)
             {
                 status = HttpStatusCode.FailedDependency;
-                payload = new ErrorResponse(status, ErrorMessages.DeviceIsNotReachable);
-            }
-            else if (request.Package)
-            {
-                status = HttpStatusCode.NotImplemented;
-                payload = new ErrorResponse(status, "Not implemented.");
+                message = ErrorMessages.DeviceIsNotReachable;
             }
             else
             {
-                firmware.Source = request.Source ?? firmware.Source;
-                firmware.Upgrade = request.Upgrade ?? firmware.Upgrade;
+                var client = this.factory.Invoke(device.Address);
 
-                if (await this.firmwares.UpdateAsync(firmware))
+                if (await client.IsReachableAsync())
                 {
-                    status = HttpStatusCode.OK;
-                    payload = null;
+                    await client.PutFirmwareAsync(
+                        request.Source,
+                        request.Upgrade);
+
+                    var response = await client.GetFirmwareAsync();
+
+                    firmware.Source = response!.Source;
+                    firmware.Upgrade = response.Upgrade;
+                    firmware.Version = response.Version;
+
+                    if (await this.firmwares.UpdateAsync(firmware))
+                    {
+                        return new Result<Null>(HttpStatusCode.OK);
+                    }
+                }
+                else
+                {
+                    device.Status = DeviceStatus.NotReachable;
+
+                    if (await this.devices.UpdateAsync(device))
+                    {
+                        status = HttpStatusCode.FailedDependency;
+                        message = ErrorMessages.DeviceIsNotReachable;
+                    }
                 }
             }
 
-            return new Result<Null>(status, payload);
+            return new Result<Null>(status, message);
         }
     }
 }

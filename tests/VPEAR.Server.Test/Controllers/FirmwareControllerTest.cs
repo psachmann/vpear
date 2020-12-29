@@ -1,4 +1,4 @@
-// <copyright file="FilterControllerTest.cs" company="Patrick Sachmann">
+// <copyright file="FirmwareControllerTest.cs" company="Patrick Sachmann">
 // Copyright (c) Patrick Sachmann. All rights reserved.
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
@@ -21,58 +21,58 @@ using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Test.Controllers
 {
-    public class FilterControllerTest : IClassFixture<AutofacFixture>
+    public class FirmwareControllerTest : IClassFixture<AutofacFixture>
     {
-        private readonly FilterController controller;
+        private readonly FirmwareController controller;
 
-        public FilterControllerTest(AutofacFixture fixture)
+        public FirmwareControllerTest(AutofacFixture fixture)
         {
-            var logger = fixture.Container.Resolve<ILogger<FilterController>>();
-            var mock = new Mock<IFilterService>();
+            var logger = fixture.Container.Resolve<ILogger<FirmwareController>>();
+            var mock = new Mock<IFirmwareService>();
 
             mock.Setup(mock => mock.Get(Mocks.Archived.Id))
-                .Returns(new Result<GetFiltersResponse>(
+                .Returns(new Result<GetFirmwareResponse>(
                     HttpStatusCode.OK,
-                    new GetFiltersResponse()));
+                    new GetFirmwareResponse()));
 
             mock.Setup(mock => mock.Get(Mocks.NotReachable.Id))
-                .Returns(new Result<GetFiltersResponse>(
+                .Returns(new Result<GetFirmwareResponse>(
                     HttpStatusCode.OK,
-                    new GetFiltersResponse()));
+                    new GetFirmwareResponse()));
 
             mock.Setup(mock => mock.Get(Mocks.Recording.Id))
-                .Returns(new Result<GetFiltersResponse>(
+                .Returns(new Result<GetFirmwareResponse>(
                     HttpStatusCode.OK,
-                    new GetFiltersResponse()));
+                    new GetFirmwareResponse()));
 
             mock.Setup(mock => mock.Get(Mocks.Stopped.Id))
-                .Returns(new Result<GetFiltersResponse>(
+                .Returns(new Result<GetFirmwareResponse>(
                     HttpStatusCode.OK,
-                    new GetFiltersResponse()));
+                    new GetFirmwareResponse()));
 
             mock.Setup(mock => mock.Get(Mocks.NotExisting.Id))
-                .Returns(new Result<GetFiltersResponse>(
+                .Returns(new Result<GetFirmwareResponse>(
                     HttpStatusCode.NotFound, ErrorMessages.DeviceNotFound));
 
-            mock.Setup(mock => mock.PutAsync(Mocks.Archived.Id, It.IsAny<PutFilterRequest>()))
+            mock.Setup(mock => mock.PutAsync(Mocks.Archived.Id, It.IsAny<PutFirmwareRequest>()))
                 .ReturnsAsync(new Result<Null>(
                     HttpStatusCode.Gone, ErrorMessages.DeviceIsArchived));
 
-            mock.Setup(mock => mock.PutAsync(Mocks.NotExisting.Id, It.IsAny<PutFilterRequest>()))
+            mock.Setup(mock => mock.PutAsync(Mocks.NotExisting.Id, It.IsAny<PutFirmwareRequest>()))
                 .ReturnsAsync(new Result<Null>(
                     HttpStatusCode.NotFound, ErrorMessages.DeviceNotFound));
 
-            mock.Setup(mock => mock.PutAsync(Mocks.NotReachable.Id, It.IsAny<PutFilterRequest>()))
+            mock.Setup(mock => mock.PutAsync(Mocks.NotReachable.Id, It.IsAny<PutFirmwareRequest>()))
                 .ReturnsAsync(new Result<Null>(
                     HttpStatusCode.FailedDependency, ErrorMessages.DeviceIsNotReachable));
 
-            mock.Setup(mock => mock.PutAsync(Mocks.Recording.Id, It.IsAny<PutFilterRequest>()))
+            mock.Setup(mock => mock.PutAsync(Mocks.Recording.Id, It.IsAny<PutFirmwareRequest>()))
                 .ReturnsAsync(new Result<Null>(HttpStatusCode.OK));
 
-            mock.Setup(mock => mock.PutAsync(Mocks.Stopped.Id, It.IsAny<PutFilterRequest>()))
+            mock.Setup(mock => mock.PutAsync(Mocks.Stopped.Id, It.IsAny<PutFirmwareRequest>()))
                 .ReturnsAsync(new Result<Null>(HttpStatusCode.OK));
 
-            this.controller = new FilterController(logger, mock.Object);
+            this.controller = new FirmwareController(logger, mock.Object);
         }
 
         [Fact]
@@ -90,7 +90,7 @@ namespace VPEAR.Server.Test.Controllers
             {
                 var result = this.controller.OnGet(device);
                 var jsonResult = Assert.IsType<JsonResult>(result);
-                var response = Assert.IsAssignableFrom<GetFiltersResponse>(jsonResult.Value);
+                var response = Assert.IsAssignableFrom<GetFirmwareResponse>(jsonResult.Value);
 
                 Assert.NotNull(response);
             });
@@ -119,7 +119,7 @@ namespace VPEAR.Server.Test.Controllers
 
             devices.ForEach(async device =>
             {
-                var result = await this.controller.OnPutAsync(device, new PutFilterRequest());
+                var result = await this.controller.OnPutAsync(device, new PutFirmwareRequest());
                 var jsonResult = Assert.IsType<JsonResult>(result);
 
                 Assert.Null(jsonResult.Value);
@@ -129,7 +129,7 @@ namespace VPEAR.Server.Test.Controllers
         [Fact]
         public async Task OnPutAsync404NotFoundTest()
         {
-            var result = await this.controller.OnPutAsync(Mocks.NotExisting.Id, new PutFilterRequest());
+            var result = await this.controller.OnPutAsync(Mocks.NotExisting.Id, new PutFirmwareRequest());
             var jsonResult = Assert.IsType<JsonResult>(result);
             var response = Assert.IsAssignableFrom<ErrorResponse>(jsonResult.Value);
 
@@ -141,7 +141,7 @@ namespace VPEAR.Server.Test.Controllers
         [Fact]
         public async Task OnPutAsync410GoneTest()
         {
-            var result = await this.controller.OnPutAsync(Mocks.Archived.Id, new PutFilterRequest());
+            var result = await this.controller.OnPutAsync(Mocks.Archived.Id, new PutFirmwareRequest());
             var jsonResult = Assert.IsType<JsonResult>(result);
             var response = Assert.IsAssignableFrom<ErrorResponse>(jsonResult.Value);
 
@@ -153,7 +153,7 @@ namespace VPEAR.Server.Test.Controllers
         [Fact]
         public async Task OnPutAsync424FailedDependencyTest()
         {
-            var result = await this.controller.OnPutAsync(Mocks.NotReachable.Id, new PutFilterRequest());
+            var result = await this.controller.OnPutAsync(Mocks.NotReachable.Id, new PutFirmwareRequest());
             var jsonResult = Assert.IsType<JsonResult>(result);
             var response = Assert.IsAssignableFrom<ErrorResponse>(jsonResult.Value);
 
