@@ -7,12 +7,9 @@ using Autofac;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Moq;
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading.Tasks;
-using VPEAR.Core;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Wrappers;
 using VPEAR.Server.Controllers;
@@ -28,29 +25,9 @@ namespace VPEAR.Server.Test.Controllers
         public PowerControllerTest(AutofacFixture fixture)
         {
             var logger = fixture.Container.Resolve<ILogger<PowerController>>();
-            var mock = new Mock<IPowerService>();
+            var service = fixture.Container.Resolve<IPowerService>();
 
-            mock.Setup(mock => mock.GetAsync(Mocks.Archived.Id))
-                .ReturnsAsync(new Result<GetPowerResponse>(
-                    HttpStatusCode.Gone, ErrorMessages.DeviceIsArchived));
-
-            mock.Setup(mock => mock.GetAsync(Mocks.NotExisting.Id))
-                .ReturnsAsync(new Result<GetPowerResponse>(
-                    HttpStatusCode.NotFound, ErrorMessages.DeviceNotFound));
-
-            mock.Setup(mock => mock.GetAsync(Mocks.NotReachable.Id))
-                .ReturnsAsync(new Result<GetPowerResponse>(
-                    HttpStatusCode.FailedDependency, ErrorMessages.DeviceIsNotReachable));
-
-            mock.Setup(mock => mock.GetAsync(Mocks.Recording.Id))
-                .ReturnsAsync(new Result<GetPowerResponse>(
-                    HttpStatusCode.OK, new GetPowerResponse()));
-
-            mock.Setup(mock => mock.GetAsync(Mocks.Stopped.Id))
-                .ReturnsAsync(new Result<GetPowerResponse>(
-                    HttpStatusCode.OK, new GetPowerResponse()));
-
-            this.controller = new PowerController(logger, mock.Object);
+            this.controller = new PowerController(logger, service);
         }
 
         [Fact]

@@ -7,12 +7,9 @@ using Autofac;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Moq;
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading.Tasks;
-using VPEAR.Core;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Wrappers;
 using VPEAR.Server.Controllers;
@@ -28,44 +25,9 @@ namespace VPEAR.Server.Test.Controllers
         public WifiControllerTest(AutofacFixture fixture)
         {
             var logger = fixture.Container.Resolve<ILogger<WifiController>>();
-            var mock = new Mock<IWifiService>();
+            var service = fixture.Container.Resolve<IWifiService>();
 
-            mock.Setup(mock => mock.Get(Mocks.Archived.Id))
-                .Returns(new Result<GetWifiResponse>(
-                    HttpStatusCode.OK, new GetWifiResponse()));
-
-            mock.Setup(mock => mock.Get(Mocks.NotExisting.Id))
-                .Returns(new Result<GetWifiResponse>(
-                    HttpStatusCode.NotFound, ErrorMessages.DeviceNotFound));
-
-            mock.Setup(mock => mock.Get(Mocks.NotReachable.Id))
-                .Returns(new Result<GetWifiResponse>(
-                    HttpStatusCode.OK, new GetWifiResponse()));
-
-            mock.Setup(mock => mock.Get(Mocks.Recording.Id))
-                .Returns(new Result<GetWifiResponse>(
-                    HttpStatusCode.OK, new GetWifiResponse()));
-
-            mock.Setup(mock => mock.Get(Mocks.Stopped.Id))
-                .Returns(new Result<GetWifiResponse>(
-                    HttpStatusCode.OK, new GetWifiResponse()));
-
-            mock.Setup(mock => mock.PutAsync(Mocks.Archived.Id, It.IsAny<PutWifiRequest>()))
-                .ReturnsAsync(new Result<Null>(HttpStatusCode.Gone, ErrorMessages.DeviceIsArchived));
-
-            mock.Setup(mock => mock.PutAsync(Mocks.NotExisting.Id, It.IsAny<PutWifiRequest>()))
-                .ReturnsAsync(new Result<Null>(HttpStatusCode.NotFound, ErrorMessages.DeviceNotFound));
-
-            mock.Setup(mock => mock.PutAsync(Mocks.NotReachable.Id, It.IsAny<PutWifiRequest>()))
-                .ReturnsAsync(new Result<Null>(HttpStatusCode.FailedDependency, ErrorMessages.DeviceIsNotReachable));
-
-            mock.Setup(mock => mock.PutAsync(Mocks.Recording.Id, It.IsAny<PutWifiRequest>()))
-                .ReturnsAsync(new Result<Null>(HttpStatusCode.OK));
-
-            mock.Setup(mock => mock.PutAsync(Mocks.Stopped.Id, It.IsAny<PutWifiRequest>()))
-                .ReturnsAsync(new Result<Null>(HttpStatusCode.OK));
-
-            this.controller = new WifiController(logger, mock.Object);
+            this.controller = new WifiController(logger, service);
         }
 
         [Fact]

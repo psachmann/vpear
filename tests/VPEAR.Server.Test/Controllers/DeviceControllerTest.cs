@@ -14,7 +14,6 @@ using VPEAR.Core;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Wrappers;
 using VPEAR.Server.Controllers;
-using VPEAR.Server.Services;
 using Xunit;
 using static VPEAR.Server.Constants;
 
