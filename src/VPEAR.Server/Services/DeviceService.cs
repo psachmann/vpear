@@ -38,79 +38,72 @@ namespace VPEAR.Server.Services
         }
 
         /// <inheritdoc/>
-        public async Task<Result<Container<GetDeviceResponse>>> GetAsync(DeviceStatus deviceStatus)
+        public Result<Container<GetDeviceResponse>> Get(DeviceStatus deviceStatus)
         {
-            var status = HttpStatusCode.InternalServerError;
-            dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
             var devices = this.devices.Get()
                 .Where(d => d.Status.Equals(deviceStatus))
                 .ToList();
 
             if (devices == null || devices.Count == 0)
             {
-                status = HttpStatusCode.NotFound;
-                payload = new ErrorResponse(status, ErrorMessages.DeviceNotFound);
+                return new Result<Container<GetDeviceResponse>>(HttpStatusCode.NotFound, ErrorMessages.DeviceNotFound);
             }
             else
             {
-                var container = new Container<GetDeviceResponse>();
+                var payload = new Container<GetDeviceResponse>();
 
                 devices.ForEach(device =>
                 {
-                    container.Items.Add(new GetDeviceResponse()
+                    payload.Items.Add(new GetDeviceResponse()
                     {
                         Address = device.Address,
                         DisplayName = device.DisplayName,
                         Id = device.Id.ToString(),
                         ReqioredSensors = device.RequiredSensors,
-                        SampleFrequency = device.SampleFrequency,
+                        SampleFrequency = device.Frequency,
                         Status = device.Status,
                     });
                 });
 
-                status = HttpStatusCode.OK;
-                payload = container;
+                return new Result<Container<GetDeviceResponse>>(HttpStatusCode.OK, payload);
             }
-
-            return new Result<Container<GetDeviceResponse>>(status, payload);
         }
 
         /// <inheritdoc/>
         public async Task<Result<Null>> PutAsync(Guid id, PutDeviceRequest request)
         {
             var status = HttpStatusCode.InternalServerError;
-            dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
+            var message = ErrorMessages.InternalServerError;
             var device = await this.devices.GetAsync(id);
 
             if (device == null)
             {
                 status = HttpStatusCode.NotFound;
-                payload = new ErrorResponse(status, ErrorMessages.DeviceNotFound);
+                message = ErrorMessages.DeviceNotFound;
             }
             else if (device.Status == DeviceStatus.Archived)
             {
                 status = HttpStatusCode.Gone;
-                payload = new ErrorResponse(status, ErrorMessages.DeviceIsArchived);
+                message = ErrorMessages.DeviceIsArchived;
             }
             else if (device.Status == DeviceStatus.NotReachable)
             {
                 status = HttpStatusCode.FailedDependency;
-                payload = new ErrorResponse(status, ErrorMessages.DeviceIsNotReachable);
+                message = ErrorMessages.DeviceIsNotReachable;
             }
             else
             {
                 device.DisplayName = request.DisplayName ?? device.DisplayName;
                 device.RequiredSensors = request.RequiredSensors ?? device.RequiredSensors;
-                device.SampleFrequency = request.SampleFrequency ?? device.SampleFrequency;
+                device.Frequency = request.Frequency ?? device.Frequency;
 
                 if (await this.devices.UpdateAsync(device))
                 {
-                    status = HttpStatusCode.OK;
-                    payload = null;
+                    return new Result<Null>(HttpStatusCode.OK);
                 }
             }
 
-            return new Result<Null>(status, payload);
+            return new Result<Null>(status, message);
         }
 
         /// <inheritdoc/>
@@ -123,26 +116,25 @@ namespace VPEAR.Server.Services
         public async Task<Result<Null>> DeleteAsync(Guid id)
         {
             var status = HttpStatusCode.InternalServerError;
-            dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
+            var message = ErrorMessages.InternalServerError;
             var device = await this.devices.GetAsync(id);
 
             if (device == null)
             {
                 status = HttpStatusCode.NotFound;
-                payload = new ErrorResponse(status, ErrorMessages.DeviceNotFound);
+                message = ErrorMessages.DeviceNotFound;
             }
             else if (device.Status == DeviceStatus.Recording)
             {
                 status = HttpStatusCode.Conflict;
-                payload = new ErrorResponse(status, ErrorMessages.DeviceIsRecording);
+                message = ErrorMessages.DeviceIsRecording;
             }
             else if (await this.devices.DeleteAsync(device))
             {
-                status = HttpStatusCode.OK;
-                payload = null;
+                return new Result<Null>(HttpStatusCode.OK);
             }
 
-            return new Result<Null>(status, payload);
+            return new Result<Null>(status, message);
         }
     }
 }

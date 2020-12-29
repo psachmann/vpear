@@ -30,22 +30,18 @@ namespace VPEAR.Server.Controllers
     {
         private readonly ILogger<DeviceController> logger;
         private readonly IDeviceService service;
-        private readonly IValidator<PutDeviceRequest> putDeviceValidator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceController"/> class.
         /// </summary>
         /// <param name="logger">The controller logger.</param>
         /// <param name="service">The controller service.</param>
-        /// <param name="putDeviceValidator">The put device request validator.</param>
         public DeviceController(
             ILogger<DeviceController> logger,
-            IDeviceService service,
-            IValidator<PutDeviceRequest> putDeviceValidator)
+            IDeviceService service)
         {
             this.logger = logger;
             this.service = service;
-            this.putDeviceValidator = putDeviceValidator;
         }
 
         /// <summary>
@@ -54,15 +50,15 @@ namespace VPEAR.Server.Controllers
         /// <param name="status">The device status.</param>
         /// <returns>List of devices.</returns>
         [HttpGet]
-        [SwaggerResponse(StatusCodes.Status200OK, "Current device information.", typeof(GetDeviceResponse))]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(object))]
-        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", typeof(object))]
-        [SwaggerResponse(StatusCodes.Status404NotFound, "Id not found.", typeof(object))]
-        public async Task<IActionResult> OnGetAsync([FromQuery, Required] DeviceStatus status)
+        [SwaggerResponse(StatusCodes.Status200OK, "Current device information.", typeof(Container<GetDeviceResponse>))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(ErrorResponse))]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", typeof(Null))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Id not found.", typeof(ErrorResponse))]
+        public IActionResult OnGet([FromQuery, Required] DeviceStatus status)
         {
             this.logger.LogDebug("{@Status}", status);
 
-            var result = await this.service.GetAsync(status);
+            var result = this.service.Get(status);
 
             this.StatusCode(result.StatusCode);
 
@@ -79,16 +75,15 @@ namespace VPEAR.Server.Controllers
         /// <param name="request">The request data.</param>
         /// <returns>Http status code, which indicates the operation result.</returns>
         [HttpPut]
-        [SwaggerResponse(StatusCodes.Status200OK, "Changes were saved to db and device.", typeof(Container<GetDeviceResponse>))]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(object))]
-        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", typeof(object))]
-        [SwaggerResponse(StatusCodes.Status404NotFound, "Id not found.", typeof(object))]
-        [SwaggerResponse(StatusCodes.Status410Gone, "Device is archived.", typeof(object))]
-        [SwaggerResponse(StatusCodes.Status424FailedDependency, "Device is not reachable.", typeof(object))]
+        [SwaggerResponse(StatusCodes.Status200OK, "Changes were saved to db and device.", typeof(Null))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(ErrorResponse))]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", typeof(Null))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Id not found.", typeof(ErrorResponse))]
+        [SwaggerResponse(StatusCodes.Status410Gone, "Device is archived.", typeof(ErrorResponse))]
+        [SwaggerResponse(StatusCodes.Status424FailedDependency, "Device is not reachable.", typeof(ErrorResponse))]
         public async Task<IActionResult> OnPutAsync([FromQuery, Required] Guid id, [FromBody, Required] PutDeviceRequest request)
         {
             this.logger.LogDebug("{@Device}: {@Request}", id, request);
-            this.putDeviceValidator.ValidateAndThrow(request);
 
             var result = await this.service.PutAsync(id, request);
 
@@ -106,8 +101,8 @@ namespace VPEAR.Server.Controllers
         /// <param name="request">The request data.</param>
         /// <returns>Http status code, which indicates the operation result.</returns>
         [HttpPost]
-        [SwaggerResponse(StatusCodes.Status102Processing, "Searching for devices.", typeof(object))]
-        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", typeof(object))]
+        [SwaggerResponse(StatusCodes.Status102Processing, "Searching for devices.", typeof(Null))]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", typeof(Null))]
         public async Task<IActionResult> OnPostAsync([FromBody, Required] PostDeviceRequest request)
         {
             var result = await this.service.PostAsync(request);
@@ -124,9 +119,9 @@ namespace VPEAR.Server.Controllers
         /// <returns>Http status code, which indicates the operation result.</returns>
         [HttpDelete]
         [Authorize(Roles = Roles.AdminRole)]
-        [SwaggerResponse(StatusCodes.Status200OK, "Device was deleted.", typeof(object))]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(object))]
-        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", typeof(object))]
+        [SwaggerResponse(StatusCodes.Status200OK, "Device was deleted.", typeof(Null))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(ErrorResponse))]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", typeof(Null))]
         [SwaggerResponse(StatusCodes.Status404NotFound, "Device not found.", typeof(ErrorResponse))]
         [SwaggerResponse(StatusCodes.Status409Conflict, "Device is currently recording.", typeof(ErrorResponse))]
         public async Task<IActionResult> OnDeleteAsync([FromQuery, Required] Guid id)
