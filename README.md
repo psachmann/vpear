@@ -21,7 +21,7 @@ TODO: write short introduction
 
 | Feature | Controller | Service | Validators |
 | :- | :-: | :-: | :-: |
-| Device | `InProgress` | `InProgress` | `InProgress` |
+| Device | Done | `InProgress` | Done |
 | Filter | Done | Done | Done |
 | Firmware | Done | Done | Done |
 | Home | Done | - | - |

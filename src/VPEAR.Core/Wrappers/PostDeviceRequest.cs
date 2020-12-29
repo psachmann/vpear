@@ -12,9 +12,6 @@ namespace VPEAR.Core.Wrappers
     /// </summary>
     public class PostDeviceRequest
     {
-        [JsonPropertyName("version")]
-        public string? Version { get; set; }
-
         [JsonPropertyName("start_ip")]
         public string? StartIP { get; set; }
 

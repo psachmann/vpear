@@ -34,6 +34,7 @@ namespace VPEAR.Server.Test
                     this.RegisterClientFactoties(builder);
                     this.RegisterLoggers(builder);
                     this.RegisterRepositories(builder);
+                    this.RegisterServices(builder);
                     this.RegisterValidators(builder);
 
                     root = builder.Build();
@@ -122,10 +123,29 @@ namespace VPEAR.Server.Test
                 .InstancePerDependency();
         }
 
+        private void RegisterServices(ContainerBuilder builder)
+        {
+            builder.RegisterType<DeviceService>()
+                .As<IDeviceService>()
+                .InstancePerDependency();
+        }
+
         private void RegisterValidators(ContainerBuilder builder)
         {
+            builder.RegisterType<PostDeviceValidator>()
+                .As<IValidator<PostDeviceRequest>>()
+                .InstancePerDependency();
+
             builder.RegisterType<PostRegisterValidator>()
                 .As<IValidator<PostRegisterRequest>>()
+                .InstancePerDependency();
+
+            builder.RegisterType<PutDeviceValidator>()
+                .As<IValidator<PutDeviceRequest>>()
+                .InstancePerDependency();
+
+            builder.RegisterType<PutFilterValidator>()
+                .As<IValidator<PutFilterRequest>>()
                 .InstancePerDependency();
 
             builder.RegisterType<PutFirmwareValidator>()

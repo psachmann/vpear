@@ -38,7 +38,7 @@ namespace VPEAR.Server.Db
                     Id = new Guid($"00000000-0000-0000-0000-00000000000{i}"),
                     Name = $"name_{i}",
                     RequiredSensors = (uint)i,
-                    SampleFrequency = (uint)i,
+                    Frequency = (uint)i,
                     Status = (DeviceStatus)((i - 1) % 4),
                 };
 
