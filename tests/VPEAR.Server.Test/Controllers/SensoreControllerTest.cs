@@ -7,11 +7,8 @@ using Autofac;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Moq;
 using System;
 using System.Collections.Generic;
-using System.Net;
-using VPEAR.Core;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Wrappers;
 using VPEAR.Server.Controllers;
@@ -28,55 +25,6 @@ namespace VPEAR.Server.Test.Controllers
         {
             var logger = fixture.Container.Resolve<ILogger<SensorController>>();
             var service = fixture.Container.Resolve<ISensorService>();
-            var mock = new Mock<ISensorService>();
-
-            mock.Setup(mock => mock.GetFrames(Mocks.Archived.Id, It.IsAny<int>(), It.IsAny<int>()))
-                .Returns(new Result<Container<GetFrameResponse>>(
-                    HttpStatusCode.OK,
-                    new Container<GetFrameResponse>()));
-
-            mock.Setup(mock => mock.GetFrames(Mocks.NotReachable.Id, It.IsAny<int>(), It.IsAny<int>()))
-                .Returns(new Result<Container<GetFrameResponse>>(
-                    HttpStatusCode.OK,
-                    new Container<GetFrameResponse>()));
-
-            mock.Setup(mock => mock.GetFrames(Mocks.Recording.Id, It.IsAny<int>(), It.IsAny<int>()))
-                .Returns(new Result<Container<GetFrameResponse>>(
-                    HttpStatusCode.OK,
-                    new Container<GetFrameResponse>()));
-
-            mock.Setup(mock => mock.GetFrames(Mocks.Stopped.Id, It.IsAny<int>(), It.IsAny<int>()))
-                .Returns(new Result<Container<GetFrameResponse>>(
-                    HttpStatusCode.OK,
-                    new Container<GetFrameResponse>()));
-
-            mock.Setup(mock => mock.GetFrames(Mocks.NotExisting.Id, It.IsAny<int>(), It.IsAny<int>()))
-                .Returns(new Result<Container<GetFrameResponse>>(
-                    HttpStatusCode.NotFound, ErrorMessages.DeviceNotFound));
-
-            mock.Setup(mock => mock.GetSensors(Mocks.Archived.Id))
-                .Returns(new Result<Container<GetSensorResponse>>(
-                    HttpStatusCode.OK,
-                    new Container<GetSensorResponse>()));
-
-            mock.Setup(mock => mock.GetSensors(Mocks.NotReachable.Id))
-                .Returns(new Result<Container<GetSensorResponse>>(
-                    HttpStatusCode.OK,
-                    new Container<GetSensorResponse>()));
-
-            mock.Setup(mock => mock.GetSensors(Mocks.Recording.Id))
-                .Returns(new Result<Container<GetSensorResponse>>(
-                    HttpStatusCode.OK,
-                    new Container<GetSensorResponse>()));
-
-            mock.Setup(mock => mock.GetSensors(Mocks.Stopped.Id))
-                .Returns(new Result<Container<GetSensorResponse>>(
-                    HttpStatusCode.OK,
-                    new Container<GetSensorResponse>()));
-
-            mock.Setup(mock => mock.GetSensors(Mocks.NotExisting.Id))
-                .Returns(new Result<Container<GetSensorResponse>>(
-                    HttpStatusCode.NotFound, ErrorMessages.DeviceNotFound));
 
             this.controller = new SensorController(logger, service);
         }
@@ -113,7 +61,7 @@ namespace VPEAR.Server.Test.Controllers
 
             Assert.NotNull(response);
             Assert.Equal(StatusCodes.Status404NotFound, response.StatusCode);
-            Assert.Contains(ErrorMessages.DeviceNotFound, response.Messages);
+            Assert.Contains(ErrorMessages.FramesNotFound, response.Messages);
         }
 
         [Fact]
@@ -146,7 +94,7 @@ namespace VPEAR.Server.Test.Controllers
 
             Assert.NotNull(response);
             Assert.Equal(StatusCodes.Status404NotFound, response.StatusCode);
-            Assert.Contains(ErrorMessages.DeviceNotFound, response.Messages);
+            Assert.Contains(ErrorMessages.SensorsNotFound, response.Messages);
         }
     }
 }
