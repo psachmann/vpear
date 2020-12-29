@@ -160,8 +160,11 @@ namespace VPEAR.Server.Test
             mock.Setup(mock => mock.IsReachableAsync())
                 .ReturnsAsync(true);
 
-            mock.Setup(m => m.GetPowerAsync())
+            mock.Setup(mock => mock.GetPowerAsync())
                 .ReturnsAsync(new GetPowerResponse());
+
+            mock.Setup(mock => mock.GetFirmwareAsync())
+                .ReturnsAsync(new GetFirmwareResponse());
 
             return mock.Object;
         }

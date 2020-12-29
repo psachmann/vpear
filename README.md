@@ -23,10 +23,10 @@ TODO: write short introduction
 | :- | :-: | :-: | :-: |
 | Device | `InProgress` | `InProgress` | `InProgress` |
 | Filter | Done | Done | Done |
-| Firmware | `InProgress` | `InProgress` | `InProgress` |
+| Firmware | Done | Done | Done |
 | Home | Done | - | - |
 | Power | Done | Done | - |
-| Sensor | `InProgress` | Done | - |
+| Sensor | Done | Done | - |
 | User | `InProgress` | `InProgress` | `InProgress` |
 | Wifi | Done | Done | Done |
 | Reading Device | - | `NotStarted` | - |

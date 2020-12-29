@@ -105,6 +105,10 @@ namespace VPEAR.Server.Test
                 .As<IRepository<Filter, Guid>>()
                 .InstancePerDependency();
 
+            builder.Register(context => Mocks.CreateRepository<Firmware>())
+                .As<IRepository<Firmware, Guid>>()
+                .InstancePerDependency();
+
             builder.Register(context => Mocks.CreateRepository<Frame>())
                 .As<IRepository<Frame, Guid>>()
                 .InstancePerDependency();
@@ -122,6 +126,10 @@ namespace VPEAR.Server.Test
         {
             builder.RegisterType<PostRegisterValidator>()
                 .As<IValidator<PostRegisterRequest>>()
+                .InstancePerDependency();
+
+            builder.RegisterType<PutFirmwareValidator>()
+                .As<IValidator<PutFirmwareRequest>>()
                 .InstancePerDependency();
 
             builder.RegisterType<PutLoginValidator>()
