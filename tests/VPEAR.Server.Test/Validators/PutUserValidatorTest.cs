@@ -3,12 +3,10 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
-/*
 using Autofac;
 using FluentValidation;
 using VPEAR.Core.Wrappers;
 using Xunit;
-using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Test.Validators
 {
@@ -22,27 +20,16 @@ namespace VPEAR.Server.Test.Validators
         }
 
         [Theory]
-        [InlineData(null, null, false, null, null)]
-        [InlineData("display_name", null, false, null, null)]
-        [InlineData(null, "example@domain.tld", false, null, null)]
-        [InlineData(null, null, false, "password", null)]
-        [InlineData(null, null, true, null, Roles.AdminRole)]
-        [InlineData(null, null, true, null, Roles.UserRole)]
-        [InlineData("display_name", "example@domain.tld", true, "password", Roles.UserRole)]
+        [InlineData(null, null)]
+        [InlineData("old_password", "new_password")]
         public void ValidateSuccessTest(
-            string? displayName,
-            string? email,
-            bool isVerified,
-            string? password,
-            string? role)
+            string? newPassword,
+            string? oldPassword)
         {
             var request = new PutUserRequest()
             {
-                DisplayName = displayName,
-                Email = email,
-                IsVerified = isVerified,
-                Password = password,
-                Role = role,
+                NewPassword = newPassword,
+                OldPassword = oldPassword,
             };
             var result = this.validator.Validate(request);
 
@@ -50,30 +37,22 @@ namespace VPEAR.Server.Test.Validators
         }
 
         [Theory]
-        [InlineData("", null, false, null, null)]
-        [InlineData(null, "", false, null, null)]
-        [InlineData(null, "exampledomain.tld", false, null, null)]
-        [InlineData(null, null, true, null, null)]
-        [InlineData(null, null, true, null, "")]
-        [InlineData(null, null, true, null, "none")]
-        [InlineData(null, null, false, "", null)]
-        [InlineData(null, null, false, "short", null)]
-        [InlineData(null, null, false, null, "admin")]
-        [InlineData(null, null, false, null, "user")]
+        [InlineData("", "")]
+        [InlineData("password", "")]
+        [InlineData("", "password")]
+        [InlineData(null, "password")]
+        [InlineData("password", null)]
+        [InlineData("password", "password")]
+        [InlineData("short", "long_enough")]
+        [InlineData("long_enough", "short")]
         public void ValidateFailureTest(
-            string? displayName,
-            string? email,
-            bool isVerified,
-            string? password,
-            string? role)
+            string? newPassword,
+            string? oldPassword)
         {
             var request = new PutUserRequest()
             {
-                DisplayName = displayName,
-                Email = email,
-                IsVerified = isVerified,
-                Password = password,
-                Role = role,
+                NewPassword = newPassword,
+                OldPassword = oldPassword,
             };
             var result = this.validator.Validate(request);
 
@@ -81,4 +60,3 @@ namespace VPEAR.Server.Test.Validators
         }
     }
 }
-*/

@@ -9,7 +9,6 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
@@ -45,100 +44,92 @@ namespace VPEAR.Server.Services
         public async Task<Result<Null>> DeleteAsync(string id)
         {
             var status = HttpStatusCode.InternalServerError;
-            dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
+            var message = ErrorMessages.InternalServerError;
             var user = await this.users.FindByIdAsync(id);
 
             if (user == null)
             {
                 status = HttpStatusCode.NotFound;
-                payload = new ErrorResponse(status, ErrorMessages.UserNotFound);
+                message = ErrorMessages.UserNotFound;
             }
             else if ((await this.users.GetRolesAsync(user)).Contains(Roles.AdminRole)
                 && (await this.users.GetUsersInRoleAsync(Roles.AdminRole)).Count == 1)
             {
                 status = HttpStatusCode.Forbidden;
-                payload = new ErrorResponse(status, ErrorMessages.LastAdminError);
+                message = ErrorMessages.LastAdminError;
             }
             else
             {
                 if ((await this.users.DeleteAsync(user)).Succeeded)
                 {
-                    status = HttpStatusCode.OK;
-                    payload = null;
+                    return new Result<Null>(HttpStatusCode.OK);
                 }
             }
 
-            return new Result<Null>(status, payload);
+            return new Result<Null>(status, message);
         }
 
         /// <inheritdoc/>
-        public async Task<Result<Container<GetUserResponse>>> GetAsync(string? id = null, string? role = null)
+        public async Task<Result<Container<GetUserResponse>>> GetAsync(string? role = null)
         {
-            var status = HttpStatusCode.InternalServerError;
-            dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
-
-            if (id != null && role == null
-                && (await this.users.FindByIdAsync(id)) != null)
+            if (role == null)
             {
-                var user = await this.users.FindByIdAsync(id);
-                var wrapper = new GetUserResponse()
-                {
-                    DisplayName = user.UserName,
-                    Email = user.Email,
-                    Id = user.Id,
-                    IsVerified = user.EmailConfirmed,
-                    Roles = await this.users.GetRolesAsync(user),
-                };
+                var admins = await this.users.GetUsersInRoleAsync(Roles.AdminRole);
+                var users = await this.users.GetUsersInRoleAsync(Roles.UserRole);
+                var payload = new Container<GetUserResponse>();
 
-                status = HttpStatusCode.OK;
-                payload = new Container<GetUserResponse>()
+                foreach (var admin in admins)
                 {
-                    Items = new List<GetUserResponse>() { wrapper, },
-                    Start = 0,
-                    Stop = 1,
-                };
-            }
-            else if (id == null && role != null
-                && (await this.users.GetUsersInRoleAsync(role)).Count >= 1)
-            {
-                var users = await this.users.GetUsersInRoleAsync(role);
-                var wrapper = new List<GetUserResponse>();
-
-                users.ToList().ForEach(async u =>
-                {
-                    wrapper.Add(new GetUserResponse()
+                    payload.Items.Add(new GetUserResponse()
                     {
-                        DisplayName = u.UserName,
-                        Email = u.Email,
-                        Id = u.Id,
-                        IsVerified = u.EmailConfirmed,
-                        Roles = await this.users.GetRolesAsync(u),
+                        DisplayName = admin.UserName,
+                        Email = admin.Email,
+                        Id = admin.Id,
+                        IsVerified = admin.EmailConfirmed,
+                        Roles = Roles.AllRoles,
                     });
-                });
+                }
 
-                status = HttpStatusCode.OK;
-                payload = new Container<GetUserResponse>()
+                foreach (var user in users)
                 {
-                    Items = wrapper,
-                    Start = 0,
-                    Stop = wrapper.Count - 1,
-                };
+                    payload.Items.Add(new GetUserResponse()
+                    {
+                        DisplayName = user.UserName,
+                        Email = user.Email,
+                        Id = user.Id,
+                        IsVerified = user.EmailConfirmed,
+                        Roles = new List<string>() { Roles.UserRole, },
+                    });
+                }
+
+                return new Result<Container<GetUserResponse>>(HttpStatusCode.OK, payload);
             }
             else
             {
-                // no id or role provided
-                status = HttpStatusCode.NotFound;
-                payload = new ErrorResponse(status, ErrorMessages.UserNotFound);
-            }
+                var users = await this.users.GetUsersInRoleAsync(role);
+                var payload = new Container<GetUserResponse>();
 
-            return new Result<Container<GetUserResponse>>(status, payload);
+                foreach (var user in users)
+                {
+                    payload.Items.Add(new GetUserResponse()
+                    {
+                        DisplayName = user.UserName,
+                        Email = user.Email,
+                        Id = user.Id,
+                        IsVerified = user.EmailConfirmed,
+                        Roles = await this.users.GetRolesAsync(user),
+                    });
+                }
+
+                return new Result<Container<GetUserResponse>>(HttpStatusCode.OK, payload);
+            }
         }
 
         /// <inheritdoc/>
         public async Task<Result<Null>> PostRegisterAsync(PostRegisterRequest request)
         {
             var status = HttpStatusCode.InternalServerError;
-            dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
+            var message = ErrorMessages.InternalServerError;
             var existingUser = await this.users.FindByEmailAsync(request.Email);
 
             if (existingUser == null)
@@ -150,72 +141,70 @@ namespace VPEAR.Server.Services
                     UserName = request.DisplayName ?? request.Email,
                 };
 
-                if ((await this.users.CreateAsync(user, request.Password)).Succeeded)
-                {
-                    status = HttpStatusCode.OK;
-                    payload = null;
-                }
-
                 if (request.IsAdmin)
                 {
                     await this.CreateAdminAsync(user);
+                }
+
+                if ((await this.users.CreateAsync(user, request.Password)).Succeeded)
+                {
+                    return new Result<Null>(HttpStatusCode.OK);
                 }
             }
             else
             {
                 status = HttpStatusCode.Conflict;
-                payload = new ErrorResponse(status, ErrorMessages.UserEmailAlreadyUsed);
+                message = ErrorMessages.UserEmailAlreadyUsed;
             }
 
-            return new Result<Null>(status, payload);
+            return new Result<Null>(status, message);
         }
 
         /// <inheritdoc/>
-        public Task<Result<Null>> PutAsync(string id, PutUserRequest request)
+        public async Task<Result<Null>> PutAsync(string id, PutUserRequest request)
         {
-            throw new NotImplementedException();
-/*
             var user = await this.users.FindByIdAsync(id);
 
             if (user == null)
             {
-                return new Result(HttpStatusCode.NotFound);
+                return new Result<Null>(HttpStatusCode.NotFound, ErrorMessages.UserNotFound);
             }
 
-            if (request.OldPassword != null && request.NewPassword != null
+            if (request.NewPassword != null && request.OldPassword != null
                 && !(await this.users.ChangePasswordAsync(user, request.OldPassword, request.NewPassword)).Succeeded)
             {
-                return new Result(HttpStatusCode.InternalServerError);
+                return new Result<Null>(HttpStatusCode.InternalServerError, ErrorMessages.InternalServerError);
             }
 
             if (request.IsVerified)
             {
-                if (!(await this.users.AddToRolesAsync(user, request.Roles)).Succeeded)
+                user.EmailConfirmed = request.IsVerified;
+
+                if (!(await this.users.UpdateAsync(user)).Succeeded)
                 {
-                    return new Result(HttpStatusCode.InternalServerError);
+                    return new Result<Null>(HttpStatusCode.InternalServerError, ErrorMessages.InternalServerError);
                 }
             }
 
-            return new Result(HttpStatusCode.OK);
-*/
+            return new Result<Null>(HttpStatusCode.OK);
         }
 
         /// <inheritdoc/>
         public async Task<Result<PutLoginResponse>> PutLoginAsync(PutLoginRequest request)
         {
-            var status = HttpStatusCode.InternalServerError;
-            dynamic? payload = new ErrorResponse(status, ErrorMessages.InternalServerError);
             var user = await this.users.FindByEmailAsync(request.Email);
 
-            if (user == null || user.EmailConfirmed)
+            if (user == null)
             {
-                status = HttpStatusCode.NotFound;
-                payload = null;
+                return new Result<PutLoginResponse>(HttpStatusCode.NotFound, ErrorMessages.UserNotFound);
             }
-            else if (await this.users.CheckPasswordAsync(user, request.Password))
+            else if (!user.EmailConfirmed)
             {
-                status = HttpStatusCode.Unauthorized;
-                payload = null;
+                return new Result<PutLoginResponse>(HttpStatusCode.Forbidden, ErrorMessages.UserNotVerfied);
+            }
+            else if (!await this.users.CheckPasswordAsync(user, request.Password))
+            {
+                return new Result<PutLoginResponse>(HttpStatusCode.Forbidden, ErrorMessages.InvalidPassword);
             }
             else
             {
@@ -242,15 +231,14 @@ namespace VPEAR.Server.Services
                     claims: authClaims,
                     signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256));
 
-                status = HttpStatusCode.OK;
-                payload = new PutLoginResponse()
+                var payload = new PutLoginResponse()
                 {
                     ExpiresAt = token.ValidTo.ToString(Schemas.TimeSchema),
                     Token = new JwtSecurityTokenHandler().WriteToken(token),
                 };
-            }
 
-            return new Result<PutLoginResponse>(status, payload);
+                return new Result<PutLoginResponse>(HttpStatusCode.OK, payload);
+            }
         }
 
         private async Task CreateAdminAsync(IdentityUser user)

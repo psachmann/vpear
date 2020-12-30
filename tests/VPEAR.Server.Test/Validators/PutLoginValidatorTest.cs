@@ -3,7 +3,6 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
-/*
 using Autofac;
 using FluentValidation;
 using VPEAR.Core.Wrappers;
@@ -53,4 +52,3 @@ namespace VPEAR.Server.Test.Validators
         }
     }
 }
-*/

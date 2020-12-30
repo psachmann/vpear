@@ -16,60 +16,25 @@ namespace VPEAR.Server.Validators
     {
         public PutUserValidator()
         {
-/*
-            this.When(r => r.DisplayName != null, () =>
+            this.When(request => request.NewPassword != null || request.OldPassword != null, () =>
             {
-                this.RuleFor(r => r.DisplayName)
-                    .NotNull()
-                    .NotEmpty()
-                    .MinimumLength(Limits.MinStringLength)
-                    .MaximumLength(Limits.MaxStringLength)
-                    .OverridePropertyName("display_name");
-            });
-
-            this.When(r => r.Email != null, () =>
-            {
-                this.RuleFor(r => r.Email)
-                    .NotNull()
-                    .NotEmpty()
-                    .MaximumLength(Limits.MaxStringLength)
-                    .EmailAddress()
-                    .OverridePropertyName("email");
-            });
-
-            this.When(r => r.IsVerified, () =>
-            {
-                this.RuleFor(r => r.Role)
-                    .NotNull()
-                    .NotEmpty()
-                    .Must(r => Roles.AllRoles.Contains(r!))
-                    .OverridePropertyName("role");
-            });
-
-            this.When(r => r.Password != null, () =>
-            {
-                this.RuleFor(r => r.Password)
+                this.RuleFor(request => request.NewPassword)
                     .NotNull()
                     .NotEmpty()
                     .MinimumLength(Limits.MinPasswordLength)
                     .MaximumLength(Limits.MaxPasswordLength)
-                    .OverridePropertyName("password");
-            });
+                    .OverridePropertyName("new_password");
 
-            this.When(r => r.Role != null, () =>
-            {
-                this.RuleFor(r => r.Role)
+                this.RuleFor(request => request.OldPassword)
                     .NotNull()
                     .NotEmpty()
-                    .Must(r => Roles.AllRoles.Contains(r!))
-                    .OverridePropertyName("role")
-                    .DependentRules(() =>
-                    {
-                        this.RuleFor(r => r)
-                            .Must(r => r.IsVerified);
-                    });
+                    .MinimumLength(Limits.MinPasswordLength)
+                    .MaximumLength(Limits.MaxPasswordLength)
+                    .OverridePropertyName("old_password");
+
+                this.RuleFor(request => request)
+                    .Must(request => request.NewPassword != request.OldPassword);
             });
-*/
         }
     }
 }

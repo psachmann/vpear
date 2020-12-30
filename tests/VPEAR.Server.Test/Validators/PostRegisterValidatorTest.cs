@@ -3,7 +3,6 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
-/*
 using Autofac;
 using FluentValidation;
 using VPEAR.Core.Wrappers;
@@ -21,12 +20,12 @@ namespace VPEAR.Server.Test.Validators
         }
 
         [Theory]
-        [InlineData(null, "example@domain.tld", "password")]
-        [InlineData("display_name", "example@domain.tld", "password")]
+        [InlineData(null, "example@email.tld", "password")]
+        [InlineData("display_name", "example@email.tld", "password")]
         public void ValidateSuccessTest(
             string? displayName,
-            string email,
-            string password)
+            string? email,
+            string? password)
         {
             var request = new PostRegisterRequest()
             {
@@ -41,10 +40,12 @@ namespace VPEAR.Server.Test.Validators
 
         [Theory]
         [InlineData(null, null, null)]
-        [InlineData(null, "", "")]
-        [InlineData(null, "example@domain.tld", "")]
-        [InlineData("", "example@domain.tld", "password")]
-        [InlineData(null, "example@domain.tld", "pass")]
+        [InlineData("", "", "")]
+        [InlineData(null, "example@email.tld", null)]
+        [InlineData(null, null, "password")]
+        [InlineData(null, "example@email.tld", "")]
+        [InlineData(null, "", "password")]
+        [InlineData(null, "example@domain.tld", "short")]
         public void ValidateFailureTest(
             string? displayName,
             string email,
@@ -62,4 +63,3 @@ namespace VPEAR.Server.Test.Validators
         }
     }
 }
-*/

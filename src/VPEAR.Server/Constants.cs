@@ -99,6 +99,10 @@ namespace VPEAR.Server
             public const string SensorsNotFound = "No sensors found.";
 
             public const string BadRequest = "Wrong request format.";
+
+            public const string UserNotVerfied = "User not verified.";
+
+            public const string InvalidPassword = "The user password is not correct.";
         }
 
         /// <summary>

@@ -19,9 +19,6 @@ namespace VPEAR.Core.Wrappers
         [JsonPropertyName("new_password")]
         public string? NewPassword { get; set; }
 
-        [JsonPropertyName("roles")]
-        public IList<string>? Roles { get; set; }
-
         [JsonPropertyName("is_verified")]
         public bool IsVerified { get; set; }
     }

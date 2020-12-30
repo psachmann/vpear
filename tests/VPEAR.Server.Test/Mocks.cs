@@ -3,20 +3,30 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using VPEAR.Core;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Models;
 using VPEAR.Core.Wrappers;
 using VPEAR.Server.Db;
+using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Test
 {
     public static class Mocks
     {
+        public const string ConfirmedEmail = "confirmed@email.tld";
+        public const string UnconfirmedEmail = "unconfirmed@email.tld";
+        public const string ValidPassword = "valid_password";
+        public const string InvalidPassword = "invalid_password";
+        public static readonly (Guid Id, string Role) Admin = (new Guid("00000000000000000000000000000001"), Roles.AdminRole);
+        public static readonly (Guid Id, string Role) User = (new Guid("00000000000000000000000000000002"), Roles.UserRole);
         public static readonly (Guid Id, DeviceStatus Status) NotExisting = (new Guid("00000000000000000000000000000000"), DeviceStatus.None);
         public static readonly (Guid Id, DeviceStatus Status) Archived = (new Guid("00000000000000000000000000000001"), DeviceStatus.Archived);
         public static readonly (Guid Id, DeviceStatus Status) NotReachable = (new Guid("00000000000000000000000000000002"), DeviceStatus.NotReachable);
@@ -149,6 +159,106 @@ namespace VPEAR.Server.Test
 
             mock.Setup(m => m.Invoke(It.IsAny<string>()))
                 .Returns(CreateDeviceClient());
+
+            return mock.Object;
+        }
+
+        public static RoleManager<IdentityRole> CreateRoleManager()
+        {
+            var store = new Mock<IRoleStore<IdentityRole>>().Object;
+            var roles = new List<IRoleValidator<IdentityRole>>();
+            var mock = new Mock<RoleManager<IdentityRole>>(store, roles, new UpperInvariantLookupNormalizer(), new IdentityErrorDescriber(), null);
+
+            roles.Add(new RoleValidator<IdentityRole>());
+
+            mock.Setup(mock => mock.RoleExistsAsync(It.IsAny<string>()))
+                .ReturnsAsync(false);
+
+            mock.Setup(mock => mock.CreateAsync(It.IsAny<IdentityRole>()))
+                .ReturnsAsync(new IdentityResult());
+
+            return mock.Object;
+        }
+
+        public static UserManager<IdentityUser> CreateUserManager()
+        {
+            var store = new Mock<IUserStore<IdentityUser>>();
+            var mock = new Mock<UserManager<IdentityUser>>(store.Object, null, null, null, null, null, null, null, null);
+            var admin = new IdentityUser()
+            {
+                Id = Mocks.Admin.Id.ToString(),
+                Email = "admin@mail.tld",
+                EmailConfirmed = true,
+                NormalizedEmail = "ADMIN@MAIL.TLD",
+                NormalizedUserName = "ADMIN",
+                UserName = "Admin",
+            };
+            var user = new IdentityUser()
+            {
+                Id = Mocks.User.Id.ToString(),
+                Email = "user@email.tld",
+                EmailConfirmed = true,
+                NormalizedEmail = "USER@MAIL.TLD",
+                NormalizedUserName = "USER",
+                UserName = "User",
+            };
+
+            mock.Object.UserValidators.Add(new UserValidator<IdentityUser>());
+            mock.Object.PasswordValidators.Add(new PasswordValidator<IdentityUser>());
+
+            mock.Setup(mock => mock.AddToRoleAsync(It.IsAny<IdentityUser>(), It.IsAny<string>()))
+                .ReturnsAsync(IdentityResult.Success);
+
+            mock.Setup(mock => mock.ChangeEmailAsync(It.IsAny<IdentityUser>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(IdentityResult.Success);
+
+            mock.Setup(mock => mock.ChangePasswordAsync(It.IsAny<IdentityUser>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(IdentityResult.Success);
+
+            mock.Setup(mock => mock.CheckPasswordAsync(It.IsAny<IdentityUser>(), ValidPassword))
+                .ReturnsAsync(true);
+
+            mock.Setup(mock => mock.CheckPasswordAsync(It.IsAny<IdentityUser>(), InvalidPassword))
+                .ReturnsAsync(false);
+
+            mock.Setup(mock => mock.ConfirmEmailAsync(It.IsAny<IdentityUser>(), It.IsAny<string>()))
+                .ReturnsAsync(IdentityResult.Success);
+
+            mock.Setup(mock => mock.DeleteAsync(It.IsAny<IdentityUser>()))
+                .ReturnsAsync(IdentityResult.Success);
+
+            mock.Setup(mock => mock.CreateAsync(It.IsAny<IdentityUser>()))
+                .ReturnsAsync(IdentityResult.Success);
+
+            mock.Setup(mock => mock.CreateAsync(It.IsAny<IdentityUser>(), It.IsAny<string>()))
+               .ReturnsAsync(IdentityResult.Success);
+
+            mock.Setup(mock => mock.UpdateAsync(It.IsAny<IdentityUser>()))
+                .ReturnsAsync(IdentityResult.Success);
+
+            mock.Setup(mock => mock.GetRolesAsync(admin))
+                .ReturnsAsync(new List<string>() { Roles.AdminRole, Roles.UserRole, });
+
+            mock.Setup(mock => mock.GetRolesAsync(user))
+                .ReturnsAsync(new List<string>() { Roles.UserRole, });
+
+            mock.Setup(mock => mock.GetUsersInRoleAsync(Roles.AdminRole))
+                .ReturnsAsync(new List<IdentityUser>() { admin, });
+
+            mock.Setup(mock => mock.GetUsersInRoleAsync(Roles.UserRole))
+                .ReturnsAsync(new List<IdentityUser>() { admin, user, });
+
+            mock.Setup(mock => mock.GetUsersInRoleAsync(Roles.None))
+                .ReturnsAsync(new List<IdentityUser>());
+
+            mock.Setup(mock => mock.FindByEmailAsync(ConfirmedEmail))
+                .ReturnsAsync(user);
+
+            mock.Setup(mock => mock.FindByIdAsync(admin.Id))
+                .ReturnsAsync(admin);
+
+            mock.Setup(mock => mock.FindByIdAsync(user.Id))
+                .ReturnsAsync(user);
 
             return mock.Object;
         }
