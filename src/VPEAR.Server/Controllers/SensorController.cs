@@ -67,7 +67,7 @@ namespace VPEAR.Server.Controllers
         /// <param name="start">The inclusive start frame (0 is the first recorded frame). If omitted, 0 will be assumed.</param>
         /// <param name="stop">The exclusive stop frame. If omitted, the last recorded frame will be assumed.</param>
         /// <returns>The recorded data frames.</returns>
-        [HttpPut]
+        [HttpGet]
         [Route(Routes.FramesRoute)]
         [Produces(Defaults.DefaultResponseType)]
         [SwaggerResponse(StatusCodes.Status200OK, "Recorded data frames.", typeof(Container<GetFrameResponse>))]
