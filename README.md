@@ -1,7 +1,5 @@
 # Master Thesis: Visualization of Pressure Effects using an Augmented Reality Android App for Decubitus Prophylaxis
 
-## Status
-
 | Branches | Master | Develop |
 | - | - | - |
 | Build | ![Build Status][1] | ![Build Status][2] |

@@ -13,34 +13,16 @@ using VPEAR.Core.Wrappers;
 
 namespace VPEAR.Core
 {
-    public class VPEARClient : IDisposable
+    public class VPEARClient : AbstractClient
     {
         private const string AuthenticationScheme = "Bearer";
         private const string BaseRoute = "/api/v1";
-        private readonly HttpClient client = new HttpClient();
         private string token = string.Empty;
         private DateTimeOffset expiresAt;
-        private Exception? error;
-        private HttpResponseMessage? response;
 
-        public VPEARClient(string baseAddress)
+        public VPEARClient(string? baseAddress)
+            : base(baseAddress)
         {
-            this.client.BaseAddress = new Uri(baseAddress);
-        }
-
-        public Exception? Error
-        {
-            get { return this.error; }
-        }
-
-        public HttpResponseMessage? Response
-        {
-            get { return this.response; }
-        }
-
-        public void Dispose()
-        {
-            this.client.Dispose();
         }
 
         public Task LoginAsync(string? email, string? password)
@@ -72,13 +54,13 @@ namespace VPEAR.Core
 
         public async Task<GetFiltersResponse?> GetFiltersAsync(Guid id)
         {
-            Func<Guid, string> uri = id => $"{BaseRoute}/filter?id={id}";
+            var uri = $"{BaseRoute}/filter?id={id}";
 
-            if (await this.GetAsync(uri(id))
-                && this.response != null
-                && this.response.StatusCode == HttpStatusCode.OK)
+            if (await this.GetAsync(uri)
+                && this.Response != null
+                && this.Response.IsSuccessStatusCode)
             {
-                var json = await this.response.Content.ReadAsStringAsync();
+                var json = await this.Response.Content.ReadAsStringAsync();
 
                 return JsonSerializer.Deserialize<GetFiltersResponse>(json);
             }
@@ -88,39 +70,7 @@ namespace VPEAR.Core
             }
         }
 
-        private bool IsExpired()
-        {
-            if (DateTimeOffset.UtcNow < this.expiresAt)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
-
-        private Task<bool> DeleteAsync(string uri)
-        {
-            return this.SendAsync(HttpMethod.Delete, uri);
-        }
-
-        private Task<bool> GetAsync(string uri)
-        {
-            return this.SendAsync(HttpMethod.Get, uri);
-        }
-
-        private Task<bool> PostAsync(string uri, object payload)
-        {
-            return this.SendAsync(HttpMethod.Post, uri, payload);
-        }
-
-        private Task<bool> PutAsync(string uri, object payload)
-        {
-            return this.SendAsync(HttpMethod.Put, uri, payload);
-        }
-
-        private async Task<bool> SendAsync(HttpMethod method, string uri, object? payload = null)
+        protected override async Task<bool> SendAsync(HttpMethod method, string uri, object? payload = null)
         {
             var message = new HttpRequestMessage()
             {
@@ -133,17 +83,29 @@ namespace VPEAR.Core
 
             try
             {
-                this.response = await this.client.SendAsync(message);
-                this.error = null;
+                this.Response = await this.Client.SendAsync(message);
+                this.Error = null;
 
                 return true;
             }
             catch (Exception exception)
             {
-                this.error = exception;
-                this.response = null;
+                this.Error = exception;
+                this.Response = null;
 
                 return false;
+            }
+        }
+
+        private bool IsExpired()
+        {
+            if (DateTimeOffset.UtcNow < this.expiresAt)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
             }
         }
     }
