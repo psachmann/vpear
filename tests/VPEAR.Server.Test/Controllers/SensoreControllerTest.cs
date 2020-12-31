@@ -44,7 +44,7 @@ namespace VPEAR.Server.Test.Controllers
 
             devices.ForEach(device =>
             {
-                var result = this.controller.OnGetFrames(device, start, stop);
+                var result = this.controller.OnGetFramesAsync(device, start, stop);
                 var jsonResult = Assert.IsType<JsonResult>(result);
                 var response = Assert.IsAssignableFrom<Container<GetFrameResponse>>(jsonResult.Value);
 
@@ -55,7 +55,7 @@ namespace VPEAR.Server.Test.Controllers
         [Fact]
         public void OnGetFrames404NotFound()
         {
-            var result = this.controller.OnGetFrames(Mocks.NotExisting.Id, null, null);
+            var result = this.controller.OnGetFramesAsync(Mocks.NotExisting.Id, null, null);
             var jsonResult = Assert.IsType<JsonResult>(result);
             var response = Assert.IsAssignableFrom<ErrorResponse>(jsonResult.Value);
 

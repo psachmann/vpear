@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 using VPEAR.Core;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Wrappers;
@@ -49,11 +50,11 @@ namespace VPEAR.Server.Controllers
         [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(ErrorMessages))]
         [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", typeof(Null))]
         [SwaggerResponse(StatusCodes.Status404NotFound, "Id not found.", typeof(ErrorResponse))]
-        public IActionResult OnGetSensors([FromQuery, Required] Guid id)
+        public async Task<IActionResult> OnGetSensorsAsync([FromQuery, Required] Guid id)
         {
             this.logger.LogDebug("{@Device}", id);
 
-            var result = this.service.GetSensorsAsync(id);
+            var result = await this.service.GetSensorsAsync(id);
 
             this.StatusCode(result.StatusCode);
 
@@ -75,14 +76,14 @@ namespace VPEAR.Server.Controllers
         [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format or start is greater or equals stop.", typeof(ErrorResponse))]
         [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", typeof(Null))]
         [SwaggerResponse(StatusCodes.Status404NotFound, "Id not found.", typeof(ErrorResponse))]
-        public IActionResult OnGetFrames(
+        public async Task<IActionResult> OnGetFramesAsync(
             [FromQuery, Required] Guid id,
             [FromQuery] int? start,
             [FromQuery] int? stop)
         {
             this.logger.LogDebug("{@Device}: {@Request}", id, new { Start = start, Stop = stop, });
 
-            var result = this.service.GetFramesAsync(id, start ?? 0, stop ?? 0);
+            var result = await this.service.GetFramesAsync(id, start ?? 0, stop ?? 0);
 
             this.StatusCode(result.StatusCode);
 

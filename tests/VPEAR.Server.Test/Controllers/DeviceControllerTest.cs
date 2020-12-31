@@ -44,7 +44,7 @@ namespace VPEAR.Server.Test.Controllers
 
             statuses.ForEach(status =>
             {
-                var result = this.controller.OnGet(status);
+                var result = this.controller.OnGetAsync(status);
                 var jsonResult = Assert.IsType<JsonResult>(result);
                 var response = Assert.IsAssignableFrom<Container<GetDeviceResponse>>(jsonResult.Value);
 
@@ -55,7 +55,7 @@ namespace VPEAR.Server.Test.Controllers
         [Fact]
         public void GetAsync404NotFoundTest()
         {
-            var result = this.controller.OnGet(DeviceStatus.None);
+            var result = this.controller.OnGetAsync(DeviceStatus.None);
             var jsonResult = Assert.IsType<JsonResult>(result);
             var response = Assert.IsAssignableFrom<ErrorResponse>(jsonResult.Value);
 
