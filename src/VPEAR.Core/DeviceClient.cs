@@ -70,6 +70,11 @@ namespace VPEAR.Core
             this.client.Dispose();
         }
 
+        public Task<ApiResponse> GetAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         /// <inheritdoc/>
         public async Task<DeviceResponse?> GetDeviceAsync()
         {

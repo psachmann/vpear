@@ -13,6 +13,11 @@ namespace VPEAR.Server
     /// </summary>
     public partial class Constants
     {
+        public static class Regex
+        {
+            public const string IPv4 = @"^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
+        }
+
         public static class Defaults
         {
             public const string DefaultConfigurationPath = "./appsettings.json";

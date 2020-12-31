@@ -12,10 +12,10 @@ namespace VPEAR.Core.Wrappers
     /// </summary>
     public class PostDeviceRequest
     {
-        [JsonPropertyName("start_ip")]
-        public string? StartIP { get; set; }
+        [JsonPropertyName("address")]
+        public string? Address { get; set; }
 
-        [JsonPropertyName("stop_ip")]
-        public string? StopIP { get; set; }
+        [JsonPropertyName("subent_mask")]
+        public string? SubnetMask { get; set; }
     }
 }

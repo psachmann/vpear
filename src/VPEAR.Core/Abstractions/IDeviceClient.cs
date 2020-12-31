@@ -25,6 +25,8 @@ namespace VPEAR.Core.Abstractions
 
         Task<bool> IsReachableAsync();
 
+        Task<ApiResponse> GetAsync();
+
         Task<DeviceResponse?> GetDeviceAsync();
 
         Task<GetSensorResponse?> GetSensorsAsync();

@@ -19,14 +19,14 @@ namespace VPEAR.Server.Validators
         /// </summary>
         public PostDeviceValidator()
         {
-            this.RuleFor(request => request.StartIP)
+            this.RuleFor(request => request.Address)
                 .NotNull()
                 .NotEmpty()
                 .Must(ip => IPAddress.TryParse(ip, out _))
                 .OverridePropertyName("start_ip")
                 .WithMessage("'start_ip' is NOT a valid IP address.");
 
-            this.RuleFor(request => request.StopIP)
+            this.RuleFor(request => request.SubnetMask)
                 .NotNull()
                 .NotEmpty()
                 .Must(ip => IPAddress.TryParse(ip, out _))

@@ -6,6 +6,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -24,16 +25,16 @@ namespace VPEAR.Server.Services
     public class DeviceService : IDeviceService
     {
         private readonly IRepository<Device, Guid> devices;
+        private readonly IDiscoveryService discovery;
         private readonly ILogger<DeviceController> logger;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DeviceService"/> class.
-        /// </summary>
-        /// <param name="devices">The device repository for db access.</param>
-        /// <param name="logger">The service logger.</param>
-        public DeviceService(IRepository<Device, Guid> devices, ILogger<DeviceController> logger)
+        public DeviceService(
+            IRepository<Device, Guid> devices,
+            IDiscoveryService discovery,
+            ILogger<DeviceController> logger)
         {
             this.devices = devices;
+            this.discovery = discovery;
             this.logger = logger;
         }
 
@@ -107,9 +108,21 @@ namespace VPEAR.Server.Services
         }
 
         /// <inheritdoc/>
-        public Task<Result<Null>> PostAsync(PostDeviceRequest request)
+        public async Task<Result<Null>> PostAsync(PostDeviceRequest request)
         {
-            throw new NotImplementedException();
+            var address = IPAddress.Parse(request.Address!);
+            var subnetMask = IPAddress.Parse(request.SubnetMask!);
+
+            if (address.IsIPv4() && subnetMask.IsIPv4())
+            {
+                await this.discovery.SearchDevicesAsync(address, subnetMask);
+
+                return new Result<Null>(HttpStatusCode.Processing);
+            }
+            else
+            {
+                return new Result<Null>(HttpStatusCode.BadRequest, ErrorMessages.BadRequest);
+            }
         }
 
         /// <inheritdoc/>

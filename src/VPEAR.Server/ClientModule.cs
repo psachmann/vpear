@@ -22,7 +22,7 @@ namespace VPEAR.Server
         {
             builder.RegisterType<DeviceClient>()
                 .As<IDeviceClient>()
-                .InstancePerRequest();
+                .InstancePerDependency();
         }
     }
 }

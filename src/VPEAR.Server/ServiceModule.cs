@@ -26,8 +26,16 @@ namespace VPEAR.Server
         {
             builder.Register(context => new DeviceService(
                     context.Resolve<IRepository<Device, Guid>>(),
+                    context.Resolve<IDiscoveryService>(),
                     context.Resolve<ILogger<DeviceController>>()))
                 .As<IDeviceService>()
+                .InstancePerRequest();
+
+            builder.Register(context => new DiscoveryService(
+                    context.Resolve<IRepository<Device, Guid>>(),
+                    context.Resolve<IDeviceClient.Factory>(),
+                    context.Resolve<ILogger<DeviceController>>()))
+                .As<IDiscoveryService>()
                 .InstancePerRequest();
 
             builder.Register(context => new FilterService(
