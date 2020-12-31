@@ -78,8 +78,6 @@ namespace VPEAR.Server.Test
         [InlineData(Routes.UsersRoute, Get)]
         [InlineData(Routes.UsersRoute, Put)]
         [InlineData(Routes.UsersRoute, Delete)]
-        [InlineData(Routes.RegisterRoute, Post)]
-        [InlineData(Routes.LoginRoute, Put)]
         public async Task EndpointAuthorizationTest(string url, string method)
         {
             var client = this.factory.CreateClient();

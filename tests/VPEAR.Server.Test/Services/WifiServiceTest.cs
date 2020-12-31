@@ -25,7 +25,7 @@ namespace VPEAR.Server.Test.Services
         }
 
         [Fact]
-        public void Get200OKTest()
+        public void GetAsync200OKTest()
         {
             var devices = new List<Guid>()
             {
@@ -35,9 +35,9 @@ namespace VPEAR.Server.Test.Services
                 Mocks.Recording.Id,
             };
 
-            devices.ForEach(device =>
+            devices.ForEach(async device =>
             {
-                var result = this.service.GetAsync(device);
+                var result = await this.service.GetAsync(device);
 
                 Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
                 Assert.NotNull(result.Value);
@@ -45,9 +45,9 @@ namespace VPEAR.Server.Test.Services
         }
 
         [Fact]
-        public void Get404NotFoundTest()
+        public async Task GetAsync404NotFoundTest()
         {
-            var result = this.service.GetAsync(Mocks.NotExisting.Id);
+            var result = await this.service.GetAsync(Mocks.NotExisting.Id);
 
             Assert.Equal(StatusCodes.Status404NotFound, result.StatusCode);
             Assert.NotNull(result.Error);

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Wrappers;
 using VPEAR.Server.Controllers;
@@ -42,9 +43,9 @@ namespace VPEAR.Server.Test.Controllers
                 Mocks.Stopped.Id,
             };
 
-            devices.ForEach(device =>
+            devices.ForEach(async device =>
             {
-                var result = this.controller.OnGetFramesAsync(device, start, stop);
+                var result = await this.controller.OnGetFramesAsync(device, start, stop);
                 var jsonResult = Assert.IsType<JsonResult>(result);
                 var response = Assert.IsAssignableFrom<Container<GetFrameResponse>>(jsonResult.Value);
 
@@ -53,9 +54,9 @@ namespace VPEAR.Server.Test.Controllers
         }
 
         [Fact]
-        public void OnGetFrames404NotFound()
+        public async Task OnGetFrames404NotFound()
         {
-            var result = this.controller.OnGetFramesAsync(Mocks.NotExisting.Id, null, null);
+            var result = await this.controller.OnGetFramesAsync(Mocks.NotExisting.Id, null, null);
             var jsonResult = Assert.IsType<JsonResult>(result);
             var response = Assert.IsAssignableFrom<ErrorResponse>(jsonResult.Value);
 
@@ -75,9 +76,9 @@ namespace VPEAR.Server.Test.Controllers
                 Mocks.Stopped.Id,
             };
 
-            devices.ForEach(device =>
+            devices.ForEach(async device =>
             {
-                var result = this.controller.OnGetSensors(device);
+                var result = await this.controller.OnGetSensorsAsync(device);
                 var jsonResult = Assert.IsType<JsonResult>(result);
                 var response = Assert.IsAssignableFrom<Container<GetSensorResponse>>(jsonResult.Value);
 
@@ -86,9 +87,9 @@ namespace VPEAR.Server.Test.Controllers
         }
 
         [Fact]
-        public void OnGetSensors404NotFound()
+        public async Task OnGetSensors404NotFoundTest()
         {
-            var result = this.controller.OnGetSensors(Mocks.NotExisting.Id);
+            var result = await this.controller.OnGetSensorsAsync(Mocks.NotExisting.Id);
             var jsonResult = Assert.IsType<JsonResult>(result);
             var response = Assert.IsAssignableFrom<ErrorResponse>(jsonResult.Value);
 

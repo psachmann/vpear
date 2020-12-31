@@ -5,6 +5,7 @@
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using MockQueryable.Moq;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,6 @@ using VPEAR.Core;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Models;
 using VPEAR.Core.Wrappers;
-using VPEAR.Server.Db;
 using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Test
@@ -125,7 +125,10 @@ namespace VPEAR.Server.Test
                     notReachableEntity,
                     recordingEntity,
                     stoppedEntity,
-                }.AsQueryable());
+                }
+                .AsQueryable()
+                .BuildMock()
+                .Object);
 
             mock.Setup(repository => repository.UpdateAsync(notExistingEntity))
                 .ReturnsAsync(false);
@@ -143,13 +146,6 @@ namespace VPEAR.Server.Test
                 .ReturnsAsync(true);
 
             return mock.Object;
-        }
-
-        public static IRepository<TEntity, TKey> CreateRepository<TEntity, TKey>(VPEARDbContext context)
-            where TEntity : EntityBase<TKey>
-            where TKey : struct, IEquatable<TKey>
-        {
-            return new Repository<VPEARDbContext, TEntity, TKey>(context, CreateLogger<IRepository<TEntity, TKey>>());
         }
 
         public static IDeviceClient.Factory CreateDeviceClientFactory()

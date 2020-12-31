@@ -42,9 +42,9 @@ namespace VPEAR.Server.Test.Controllers
                 DeviceStatus.Stopped,
             };
 
-            statuses.ForEach(status =>
+            statuses.ForEach(async status =>
             {
-                var result = this.controller.OnGetAsync(status);
+                var result = await this.controller.OnGetAsync(status);
                 var jsonResult = Assert.IsType<JsonResult>(result);
                 var response = Assert.IsAssignableFrom<Container<GetDeviceResponse>>(jsonResult.Value);
 
@@ -53,9 +53,9 @@ namespace VPEAR.Server.Test.Controllers
         }
 
         [Fact]
-        public void GetAsync404NotFoundTest()
+        public async Task GetAsync404NotFoundTest()
         {
-            var result = this.controller.OnGetAsync(DeviceStatus.None);
+            var result = await this.controller.OnGetAsync(DeviceStatus.None);
             var jsonResult = Assert.IsType<JsonResult>(result);
             var response = Assert.IsAssignableFrom<ErrorResponse>(jsonResult.Value);
 
@@ -123,14 +123,30 @@ namespace VPEAR.Server.Test.Controllers
         {
             var request = new PostDeviceRequest()
             {
-                StartIP = "0.0.0.0",
-                StopIP = "255.255.255.255",
+                Address = "192.168.178.33",
+                SubnetMask = "255.255.255.0",
             };
             var result = await this.controller.OnPostAsync(request);
             var jsonResult = Assert.IsType<JsonResult>(result);
 
             Assert.Null(jsonResult.Value);
-            Assert.Equal(StatusCodes.Status102Processing, jsonResult.StatusCode);
+        }
+
+        [Fact]
+        public async Task PostAsync400BadRequestTest()
+        {
+            var request = new PostDeviceRequest()
+            {
+                Address = "192.168.178.33",
+                SubnetMask = "255::0",
+            };
+            var result = await this.controller.OnPostAsync(request);
+            var jsonResult = Assert.IsType<JsonResult>(result);
+            var response = Assert.IsAssignableFrom<ErrorResponse>(jsonResult.Value);
+
+            Assert.NotNull(response);
+            Assert.Equal(StatusCodes.Status400BadRequest, response.StatusCode);
+            Assert.Contains(ErrorMessages.BadRequest, response.Messages);
         }
 
         [Fact]

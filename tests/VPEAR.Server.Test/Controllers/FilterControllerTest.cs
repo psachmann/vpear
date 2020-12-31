@@ -31,7 +31,7 @@ namespace VPEAR.Server.Test.Controllers
         }
 
         [Fact]
-        public void OnGet200OKTest()
+        public void OnGetAsync200OKTest()
         {
             var devices = new List<Guid>()
             {
@@ -41,9 +41,9 @@ namespace VPEAR.Server.Test.Controllers
                 Mocks.Stopped.Id,
             };
 
-            devices.ForEach(device =>
+            devices.ForEach(async device =>
             {
-                var result = this.controller.OnGetAsync(device);
+                var result = await this.controller.OnGetAsync(device);
                 var jsonResult = Assert.IsType<JsonResult>(result);
                 var response = Assert.IsAssignableFrom<GetFiltersResponse>(jsonResult.Value);
 
@@ -52,9 +52,9 @@ namespace VPEAR.Server.Test.Controllers
         }
 
         [Fact]
-        public void OnGet404NotFound()
+        public async Task OnGetAsync404NotFound()
         {
-            var result = this.controller.OnGetAsync(Mocks.NotExisting.Id);
+            var result = await this.controller.OnGetAsync(Mocks.NotExisting.Id);
             var jsonResult = Assert.IsType<JsonResult>(result);
             var response = Assert.IsAssignableFrom<ErrorResponse>(jsonResult.Value);
 

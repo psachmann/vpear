@@ -7,6 +7,7 @@ using Autofac;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using VPEAR.Core.Abstractions;
 using Xunit;
 using static VPEAR.Server.Constants;
@@ -25,7 +26,7 @@ namespace VPEAR.Server.Test.Services
         [Theory]
         [InlineData(StatusCodes.Status200OK, 0, 0)]
         [InlineData(StatusCodes.Status206PartialContent, 0, int.MaxValue)]
-        public void GetFrames2XXTest(int expectedStatus, int start, int stop)
+        public void GetFramesAsync2XXTest(int expectedStatus, int start, int stop)
         {
             var devices = new List<Guid>()
             {
@@ -35,9 +36,9 @@ namespace VPEAR.Server.Test.Services
                 Mocks.Recording.Id,
             };
 
-            devices.ForEach(device =>
+            devices.ForEach(async device =>
             {
-                var result = this.service.GetFramesAsync(device, start, stop);
+                var result = await this.service.GetFramesAsync(device, start, stop);
 
                 Assert.NotNull(result.Value);
                 Assert.Equal(expectedStatus, result.StatusCode);
@@ -45,9 +46,9 @@ namespace VPEAR.Server.Test.Services
         }
 
         [Fact]
-        public void GetFrames400BadRequestTest()
+        public async Task GetFramesAsync400BadRequestTest()
         {
-            var result = this.service.GetFramesAsync(Mocks.Archived.Id, int.MaxValue, int.MinValue);
+            var result = await this.service.GetFramesAsync(Mocks.Archived.Id, int.MaxValue, int.MinValue);
 
             Assert.Equal(StatusCodes.Status400BadRequest, result.StatusCode);
             Assert.NotNull(result.Error);
@@ -55,9 +56,9 @@ namespace VPEAR.Server.Test.Services
         }
 
         [Fact]
-        public void GetFrames404NotFoundTest()
+        public async Task GetFramesAsnyc404NotFoundTest()
         {
-            var result = this.service.GetFramesAsync(Mocks.NotExisting.Id, 0, 0);
+            var result = await this.service.GetFramesAsync(Mocks.NotExisting.Id, 0, 0);
 
             Assert.Equal(StatusCodes.Status404NotFound, result.StatusCode);
             Assert.NotNull(result.Error);
@@ -65,7 +66,7 @@ namespace VPEAR.Server.Test.Services
         }
 
         [Fact]
-        public void GetSensors200OKTest()
+        public void GetSensorsAsync200OKTest()
         {
             var devices = new List<Guid>()
             {
@@ -75,9 +76,9 @@ namespace VPEAR.Server.Test.Services
                 Mocks.Recording.Id,
             };
 
-            devices.ForEach(device =>
+            devices.ForEach(async device =>
             {
-                var result = this.service.GetSensorsAsync(device);
+                var result = await this.service.GetSensorsAsync(device);
 
                 Assert.NotNull(result.Value);
                 Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
@@ -85,9 +86,9 @@ namespace VPEAR.Server.Test.Services
         }
 
         [Fact]
-        public void GetSensors404NotFoundTest()
+        public async Task GetSensorsAsync404NotFoundTest()
         {
-            var result = this.service.GetSensorsAsync(Mocks.NotExisting.Id);
+            var result = await this.service.GetSensorsAsync(Mocks.NotExisting.Id);
 
             Assert.NotNull(result.Error);
             Assert.Equal(StatusCodes.Status404NotFound, result.StatusCode);

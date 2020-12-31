@@ -27,7 +27,7 @@ namespace VPEAR.Server.Test.Controllers
             var logger = fixture.Container.Resolve<ILogger<UserController>>();
             var roles = Mocks.CreateRoleManager();
             var users = Mocks.CreateUserManager();
-            var service = new UserService(logger, roles, users);
+            var service = new UserService(roles, users, logger);
 
             this.controller = new UserController(logger, service);
             Configuration.EnsureLoaded(Environment.GetCommandLineArgs());

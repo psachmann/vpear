@@ -36,9 +36,9 @@ namespace VPEAR.Server.Test.Services
                 DeviceStatus.Stopped,
             };
 
-            statuses.ForEach(status =>
+            statuses.ForEach(async status =>
             {
-                var result = this.service.GetAsync(status);
+                var result = await this.service.GetAsync(status);
 
                 Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
                 Assert.NotNull(result.Value);
@@ -47,9 +47,9 @@ namespace VPEAR.Server.Test.Services
         }
 
         [Fact]
-        public void GetAsync404NotFoundTest()
+        public async Task GetAsync404NotFoundTest()
         {
-            var result = this.service.GetAsync(DeviceStatus.None);
+            var result = await this.service.GetAsync(DeviceStatus.None);
 
             Assert.NotNull(result.Error);
             Assert.Equal(StatusCodes.Status404NotFound, result.StatusCode);
@@ -109,13 +109,28 @@ namespace VPEAR.Server.Test.Services
         {
             var request = new PostDeviceRequest()
             {
-                StartIP = "0.0.0.0",
-                StopIP = "255.255.255.255",
+                Address = "192.168.178.33",
+                SubnetMask = "255.255.255.0",
             };
             var result = await this.service.PostAsync(request);
 
             Assert.Null(result.Value);
             Assert.Equal(StatusCodes.Status102Processing, result.StatusCode);
+        }
+
+        [Fact]
+        public async Task PostAsync400BadRequestTest()
+        {
+            var request = new PostDeviceRequest()
+            {
+                Address = "192.168.178.33",
+                SubnetMask = "255::0",
+            };
+            var result = await this.service.PostAsync(request);
+
+            Assert.NotNull(result.Error);
+            Assert.Equal(StatusCodes.Status400BadRequest, result.StatusCode);
+            Assert.Contains(ErrorMessages.BadRequest, result.Error!.Messages);
         }
 
         [Fact]

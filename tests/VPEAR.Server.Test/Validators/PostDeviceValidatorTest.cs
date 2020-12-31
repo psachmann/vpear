@@ -27,8 +27,8 @@ namespace VPEAR.Server.Test.Validators
         {
             var request = new PostDeviceRequest()
             {
-                StartIP = startIP,
-                StopIP = stopIP,
+                Address = startIP,
+                SubnetMask = stopIP,
             };
             var result = this.validator.Validate(request);
 
@@ -45,8 +45,8 @@ namespace VPEAR.Server.Test.Validators
         {
             var request = new PostDeviceRequest()
             {
-                StartIP = startIP,
-                StopIP = stopIP,
+                Address = startIP,
+                SubnetMask = stopIP,
             };
             var result = this.validator.Validate(request);
 

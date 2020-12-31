@@ -31,7 +31,7 @@ namespace VPEAR.Server.Test.Services
             var roles = Mocks.CreateRoleManager();
             var users = Mocks.CreateUserManager();
 
-            this.service = new UserService(logger, roles, users);
+            this.service = new UserService(roles, users, logger);
             Configuration.EnsureLoaded(Environment.GetCommandLineArgs());
         }
 
