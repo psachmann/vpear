@@ -23,35 +23,35 @@ namespace VPEAR.Server
         {
             builder.Register(context => new PostDeviceValidator())
                 .As<IValidator<PostDeviceRequest>>()
-                .InstancePerRequest();
+                .InstancePerLifetimeScope();
 
             builder.Register(context => new PostRegisterValidator())
                 .As<IValidator<PostRegisterRequest>>()
-                .InstancePerRequest();
+                .InstancePerLifetimeScope();
 
             builder.Register(context => new PutDeviceValidator())
                 .As<IValidator<PutDeviceRequest>>()
-                .InstancePerRequest();
+                .InstancePerLifetimeScope();
 
             builder.Register(context => new PutFilterValidator())
                 .As<IValidator<PutFilterRequest>>()
-                .InstancePerRequest();
+                .InstancePerLifetimeScope();
 
             builder.Register(context => new PutFirmwareValidator())
                 .As<IValidator<PutFirmwareRequest>>()
-                .InstancePerRequest();
+                .InstancePerLifetimeScope();
 
             builder.Register(context => new PutLoginValidator())
                 .As<IValidator<PutLoginRequest>>()
-                .InstancePerRequest();
+                .InstancePerLifetimeScope();
 
             builder.Register(context => new PutUserValidator())
                 .As<IValidator<PutUserRequest>>()
-                .InstancePerRequest();
+                .InstancePerLifetimeScope();
 
             builder.Register(context => new PutWifiValidator())
                 .As<IValidator<PutWifiRequest>>()
-                .InstancePerRequest();
+                .InstancePerLifetimeScope();
         }
     }
 }

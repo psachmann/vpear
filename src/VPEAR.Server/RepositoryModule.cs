@@ -27,37 +27,37 @@ namespace VPEAR.Server
                     context.Resolve<VPEARDbContext>(),
                     context.Resolve<ILogger<IRepository<Device, Guid>>>()))
                 .As<IRepository<Device, Guid>>()
-                .InstancePerRequest();
+                .InstancePerLifetimeScope();
 
             builder.Register(context => new Repository<VPEARDbContext, Filter, Guid>(
                     context.Resolve<VPEARDbContext>(),
                     context.Resolve<ILogger<IRepository<Filter, Guid>>>()))
                 .As<IRepository<Filter, Guid>>()
-                .InstancePerRequest();
+                .InstancePerLifetimeScope();
 
             builder.Register(context => new Repository<VPEARDbContext, Firmware, Guid>(
                     context.Resolve<VPEARDbContext>(),
                     context.Resolve<ILogger<IRepository<Firmware, Guid>>>()))
                 .As<IRepository<Firmware, Guid>>()
-                .InstancePerRequest();
+                .InstancePerLifetimeScope();
 
             builder.Register(context => new Repository<VPEARDbContext, Frame, Guid>(
                     context.Resolve<VPEARDbContext>(),
                     context.Resolve<ILogger<IRepository<Frame, Guid>>>()))
                 .As<IRepository<Frame, Guid>>()
-                .InstancePerRequest();
+                .InstancePerLifetimeScope();
 
             builder.Register(context => new Repository<VPEARDbContext, Sensor, Guid>(
                     context.Resolve<VPEARDbContext>(),
                     context.Resolve<ILogger<IRepository<Sensor, Guid>>>()))
                 .As<IRepository<Sensor, Guid>>()
-                .InstancePerRequest();
+                .InstancePerLifetimeScope();
 
             builder.Register(context => new Repository<VPEARDbContext, Wifi, Guid>(
                     context.Resolve<VPEARDbContext>(),
                     context.Resolve<ILogger<IRepository<Wifi, Guid>>>()))
                 .As<IRepository<Wifi, Guid>>()
-                .InstancePerRequest();
+                .InstancePerLifetimeScope();
         }
     }
 }

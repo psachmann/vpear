@@ -19,7 +19,7 @@ TODO: write short introduction
 
 | Feature | Controller | Service | Validators |
 | :- | :-: | :-: | :-: |
-| Device | Done | `InProgress` | Done |
+| Device | Done | Done | Done |
 | Filter | Done | Done | Done |
 | Firmware | Done | Done | Done |
 | Home | Done | - | - |
@@ -29,7 +29,7 @@ TODO: write short introduction
 | Wifi | Done | Done | Done |
 | Reading Device | - | `NotStarted` | - |
 | DeviceClient | - | `InProgress`  | - |
-| VPEARClient | - | `NotStarted`  | - |
+| VPEARClient | - | `InProgress`  | - |
 
 ### Security
 
