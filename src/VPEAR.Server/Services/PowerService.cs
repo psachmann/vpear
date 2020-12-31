@@ -21,24 +21,24 @@ namespace VPEAR.Server.Services
     /// </summary>
     public class PowerService : IPowerService
     {
-        private readonly ILogger<PowerController> logger;
         private readonly IRepository<Device, Guid> devices;
         private readonly IDeviceClient.Factory factory;
+        private readonly ILogger<PowerController> logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PowerService"/> class.
         /// </summary>
-        /// <param name="logger">The service logger.</param>
         /// <param name="devices">The device repository for database access.</param>
         /// <param name="factory">The factory for the device client.</param>
+        /// <param name="logger">The service logger.</param>
         public PowerService(
-            ILogger<PowerController> logger,
             IRepository<Device, Guid> devices,
-            IDeviceClient.Factory factory)
+            IDeviceClient.Factory factory,
+            ILogger<PowerController> logger)
         {
-            this.logger = logger;
             this.devices = devices;
             this.factory = factory;
+            this.logger = logger;
         }
 
         /// <inheritdoc/>

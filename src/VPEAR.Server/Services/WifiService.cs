@@ -22,23 +22,23 @@ namespace VPEAR.Server.Services
     /// </summary>
     public class WifiService : IWifiService
     {
-        private readonly ILogger<WifiController> logger;
         private readonly IRepository<Device, Guid> devices;
-        private readonly IRepository<Core.Models.Wifi, Guid> wifis;
+        private readonly IRepository<Wifi, Guid> wifis;
         private readonly IDeviceClient.Factory factory;
+        private readonly ILogger<WifiController> logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WifiService"/> class.
         /// </summary>
-        /// <param name="logger">The service logger.</param>
         /// <param name="devices">The device repository for db access.</param>
         /// <param name="wifis">The wifi repository for db access.</param>
         /// <param name="factory">The factory to create a device client.</param>
+        /// <param name="logger">The service logger.</param>
         public WifiService(
-            ILogger<WifiController> logger,
             IRepository<Device, Guid> devices,
-            IRepository<Core.Models.Wifi, Guid> wifis,
-            IDeviceClient.Factory factory)
+            IRepository<Wifi, Guid> wifis,
+            IDeviceClient.Factory factory,
+            ILogger<WifiController> logger)
         {
             this.logger = logger;
             this.devices = devices;

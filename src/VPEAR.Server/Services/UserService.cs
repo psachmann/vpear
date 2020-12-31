@@ -26,18 +26,18 @@ namespace VPEAR.Server.Services
     /// </summary>
     public class UserService : IUserService
     {
-        private readonly ILogger<UserController> logger;
         private readonly RoleManager<IdentityRole> roles;
         private readonly UserManager<IdentityUser> users;
+        private readonly ILogger<UserController> logger;
 
         public UserService(
-            ILogger<UserController> logger,
             RoleManager<IdentityRole> roles,
-            UserManager<IdentityUser> users)
+            UserManager<IdentityUser> users,
+            ILogger<UserController> logger)
         {
-            this.logger = logger;
             this.roles = roles;
             this.users = users;
+            this.logger = logger;
         }
 
         /// <inheritdoc/>

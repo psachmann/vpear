@@ -22,28 +22,28 @@ namespace VPEAR.Server.Services
     /// </summary>
     public class FilterService : IFilterService
     {
-        private readonly ILogger<FilterController> logger;
         private readonly IRepository<Device, Guid> devices;
         private readonly IRepository<Filter, Guid> filters;
         private readonly IDeviceClient.Factory factory;
+        private readonly ILogger<FilterController> logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FilterService"/> class.
         /// </summary>
-        /// <param name="logger">The service logger.</param>
         /// <param name="devices">The device repository for db access.</param>
         /// <param name="filters">The filter repository for db access.</param>
         /// <param name="factory">The factory to create a device client.</param>
+        /// <param name="logger">The service logger.</param>
         public FilterService(
-            ILogger<FilterController> logger,
             IRepository<Device, Guid> devices,
             IRepository<Filter, Guid> filters,
-            IDeviceClient.Factory factory)
+            IDeviceClient.Factory factory,
+            ILogger<FilterController> logger)
         {
-            this.logger = logger;
             this.devices = devices;
             this.filters = filters;
             this.factory = factory;
+            this.logger = logger;
         }
 
         /// <inheritdoc/>

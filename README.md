@@ -27,7 +27,7 @@ TODO: write short introduction
 | Home | Done | - | - |
 | Power | Done | Done | - |
 | Sensor | Done | Done | - |
-| User | `InProgress` | `InProgress` | `InProgress` |
+| User | Done | Done | Done |
 | Wifi | Done | Done | Done |
 | Reading Device | - | `NotStarted` | - |
 | DeviceClient | - | `InProgress`  | - |

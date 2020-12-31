@@ -4,6 +4,9 @@
 // </copyright>
 
 using Autofac;
+using FluentValidation;
+using VPEAR.Core.Wrappers;
+using VPEAR.Server.Validators;
 
 namespace VPEAR.Server
 {
@@ -18,6 +21,37 @@ namespace VPEAR.Server
         /// <param name="builder">The container builder to build the Autofac container.</param>
         protected override void Load(ContainerBuilder builder)
         {
+            builder.Register(context => new PostDeviceValidator())
+                .As<IValidator<PostDeviceRequest>>()
+                .InstancePerRequest();
+
+            builder.Register(context => new PostRegisterValidator())
+                .As<IValidator<PostRegisterRequest>>()
+                .InstancePerRequest();
+
+            builder.Register(context => new PutDeviceValidator())
+                .As<IValidator<PutDeviceRequest>>()
+                .InstancePerRequest();
+
+            builder.Register(context => new PutFilterValidator())
+                .As<IValidator<PutFilterRequest>>()
+                .InstancePerRequest();
+
+            builder.Register(context => new PutFirmwareValidator())
+                .As<IValidator<PutFirmwareRequest>>()
+                .InstancePerRequest();
+
+            builder.Register(context => new PutLoginValidator())
+                .As<IValidator<PutLoginRequest>>()
+                .InstancePerRequest();
+
+            builder.Register(context => new PutUserValidator())
+                .As<IValidator<PutUserRequest>>()
+                .InstancePerRequest();
+
+            builder.Register(context => new PutWifiValidator())
+                .As<IValidator<PutWifiRequest>>()
+                .InstancePerRequest();
         }
     }
 }

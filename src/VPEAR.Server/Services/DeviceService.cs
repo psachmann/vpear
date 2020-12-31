@@ -22,18 +22,18 @@ namespace VPEAR.Server.Services
     /// </summary>
     public class DeviceService : IDeviceService
     {
-        private readonly ILogger<DeviceController> logger;
         private readonly IRepository<Device, Guid> devices;
+        private readonly ILogger<DeviceController> logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceService"/> class.
         /// </summary>
-        /// <param name="logger">The service logger.</param>
         /// <param name="devices">The device repository for db access.</param>
-        public DeviceService(ILogger<DeviceController> logger, IRepository<Device, Guid> devices)
+        /// <param name="logger">The service logger.</param>
+        public DeviceService(IRepository<Device, Guid> devices, ILogger<DeviceController> logger)
         {
-            this.logger = logger;
             this.devices = devices;
+            this.logger = logger;
         }
 
         /// <inheritdoc/>

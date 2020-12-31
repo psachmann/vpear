@@ -22,28 +22,28 @@ namespace VPEAR.Server.Services
     /// </summary>
     public class FirmwareService : IFirmwareService
     {
-        private readonly ILogger<FirmwareController> logger;
         private readonly IRepository<Device, Guid> devices;
         private readonly IRepository<Firmware, Guid> firmwares;
         private readonly IDeviceClient.Factory factory;
+        private readonly ILogger<FirmwareController> logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FirmwareService"/> class.
         /// </summary>
-        /// <param name="logger">The service logger.</param>
         /// <param name="devices">The device repository for db access.</param>
         /// <param name="firmwares">The firmware repository for db access.</param>
         /// <param name="factory">The factory to create a device client.</param>
+        /// <param name="logger">The service logger.</param>
         public FirmwareService(
-            ILogger<FirmwareController> logger,
             IRepository<Device, Guid> devices,
             IRepository<Firmware, Guid> firmwares,
-            IDeviceClient.Factory factory)
+            IDeviceClient.Factory factory,
+            ILogger<FirmwareController> logger)
         {
-            this.logger = logger;
             this.devices = devices;
             this.firmwares = firmwares;
             this.factory = factory;
+            this.logger = logger;
         }
 
         /// <inheritdoc/>

@@ -21,18 +21,18 @@ namespace VPEAR.Server.Services
     /// </summary>
     public class SensorService : ISensorService
     {
-        private readonly ILogger<SensorController> logger;
         private readonly IRepository<Frame, Guid> frames;
         private readonly IRepository<Sensor, Guid> sensors;
+        private readonly ILogger<SensorController> logger;
 
         public SensorService(
-            ILogger<SensorController> logger,
             IRepository<Frame, Guid> frames,
-            IRepository<Sensor, Guid> sensors)
+            IRepository<Sensor, Guid> sensors,
+            ILogger<SensorController> logger)
         {
-            this.logger = logger;
             this.frames = frames;
             this.sensors = sensors;
+            this.logger = logger;
         }
 
         /// <inheritdoc/>
