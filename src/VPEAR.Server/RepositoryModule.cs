@@ -4,6 +4,7 @@
 // </copyright>
 
 using Autofac;
+using Microsoft.Extensions.Logging;
 using System;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Models;
@@ -22,23 +23,39 @@ namespace VPEAR.Server
         /// <param name="builder">The container builder to build the Autofac container.</param>
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<Repository<VPEARDbContext, Device, Guid>>()
+            builder.Register(context => new Repository<VPEARDbContext, Device, Guid>(
+                    context.Resolve<VPEARDbContext>(),
+                    context.Resolve<ILogger<IRepository<Device, Guid>>>()))
                 .As<IRepository<Device, Guid>>()
                 .InstancePerRequest();
 
-            builder.RegisterType<Repository<VPEARDbContext, Filter, Guid>>()
+            builder.Register(context => new Repository<VPEARDbContext, Filter, Guid>(
+                    context.Resolve<VPEARDbContext>(),
+                    context.Resolve<ILogger<IRepository<Filter, Guid>>>()))
                 .As<IRepository<Filter, Guid>>()
                 .InstancePerRequest();
 
-            builder.RegisterType<Repository<VPEARDbContext, Frame, Guid>>()
+            builder.Register(context => new Repository<VPEARDbContext, Firmware, Guid>(
+                    context.Resolve<VPEARDbContext>(),
+                    context.Resolve<ILogger<IRepository<Firmware, Guid>>>()))
+                .As<IRepository<Firmware, Guid>>()
+                .InstancePerRequest();
+
+            builder.Register(context => new Repository<VPEARDbContext, Frame, Guid>(
+                    context.Resolve<VPEARDbContext>(),
+                    context.Resolve<ILogger<IRepository<Frame, Guid>>>()))
                 .As<IRepository<Frame, Guid>>()
                 .InstancePerRequest();
 
-            builder.RegisterType<Repository<VPEARDbContext, Sensor, Guid>>()
+            builder.Register(context => new Repository<VPEARDbContext, Sensor, Guid>(
+                    context.Resolve<VPEARDbContext>(),
+                    context.Resolve<ILogger<IRepository<Sensor, Guid>>>()))
                 .As<IRepository<Sensor, Guid>>()
                 .InstancePerRequest();
 
-            builder.RegisterType<Repository<VPEARDbContext, Wifi, Guid>>()
+            builder.Register(context => new Repository<VPEARDbContext, Wifi, Guid>(
+                    context.Resolve<VPEARDbContext>(),
+                    context.Resolve<ILogger<IRepository<Wifi, Guid>>>()))
                 .As<IRepository<Wifi, Guid>>()
                 .InstancePerRequest();
         }

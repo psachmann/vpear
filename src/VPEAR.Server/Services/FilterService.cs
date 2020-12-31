@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
@@ -47,12 +48,12 @@ namespace VPEAR.Server.Services
         }
 
         /// <inheritdoc/>
-        public Result<GetFiltersResponse> Get(Guid id)
+        public async Task<Result<GetFiltersResponse>> GetAsync(Guid id)
         {
             var status = HttpStatusCode.InternalServerError;
             var message = ErrorMessages.InternalServerError;
-            var filter = this.filters.Get()
-                .FirstOrDefault(f => f.DeviceForeignKey.Equals(id));
+            var filter = await this.filters.Get()
+                .FirstOrDefaultAsync(f => f.DeviceForeignKey.Equals(id));
 
             if (filter == null)
             {

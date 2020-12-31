@@ -15,7 +15,7 @@ namespace VPEAR.Core.Abstractions
     /// </summary>
     public interface IDeviceService
     {
-        Result<Container<GetDeviceResponse>> Get(DeviceStatus status);
+        Task<Result<Container<GetDeviceResponse>>> GetAsync(DeviceStatus status);
 
         Task<Result<Null>> PutAsync(Guid id, PutDeviceRequest request);
 

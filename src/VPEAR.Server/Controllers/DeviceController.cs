@@ -57,7 +57,7 @@ namespace VPEAR.Server.Controllers
         {
             this.logger.LogDebug("{@Status}", status);
 
-            var result = this.service.Get(status);
+            var result = this.service.GetAsync(status);
 
             this.StatusCode(result.StatusCode);
 

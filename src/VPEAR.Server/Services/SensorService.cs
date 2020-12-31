@@ -3,10 +3,12 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using VPEAR.Core;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Models;
@@ -36,14 +38,14 @@ namespace VPEAR.Server.Services
         }
 
         /// <inheritdoc/>
-        public Result<Container<GetFrameResponse>> GetFrames(Guid id, int start, int stop)
+        public async Task<Result<Container<GetFrameResponse>>> GetFramesAsync(Guid id, int start, int stop)
         {
             var status = HttpStatusCode.InternalServerError;
             var message = ErrorMessages.InternalServerError;
-            var frames = this.frames.Get()
+            var frames = await this.frames.Get()
                 .Where(f => f.DeviceForeignKey.Equals(id))
                 .OrderBy(f => f.CreatedAt)
-                .ToList();
+                .ToListAsync();
 
             if (frames == null || frames.Count == 0)
             {
@@ -108,11 +110,11 @@ namespace VPEAR.Server.Services
         }
 
         /// <inheritdoc/>
-        public Result<Container<GetSensorResponse>> GetSensors(Guid id)
+        public async Task<Result<Container<GetSensorResponse>>> GetSensorsAsync(Guid id)
         {
-            var sensors = this.sensors.Get()
+            var sensors = await this.sensors.Get()
                 .Where(s => s.DeviceForeignKey.Equals(id))
-                .ToList();
+                .ToListAsync();
 
             if (sensors == null || sensors.Count == 0)
             {

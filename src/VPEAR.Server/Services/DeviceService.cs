@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
@@ -37,11 +38,11 @@ namespace VPEAR.Server.Services
         }
 
         /// <inheritdoc/>
-        public Result<Container<GetDeviceResponse>> Get(DeviceStatus deviceStatus)
+        public async Task<Result<Container<GetDeviceResponse>>> GetAsync(DeviceStatus deviceStatus)
         {
-            var devices = this.devices.Get()
+            var devices = await this.devices.Get()
                 .Where(d => d.Status.Equals(deviceStatus))
-                .ToList();
+                .ToListAsync();
 
             if (devices == null || devices.Count == 0)
             {

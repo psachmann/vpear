@@ -53,7 +53,7 @@ namespace VPEAR.Server.Controllers
         {
             this.logger.LogDebug("{@Device}", id);
 
-            var result = this.service.GetSensors(id);
+            var result = this.service.GetSensorsAsync(id);
 
             this.StatusCode(result.StatusCode);
 
@@ -82,7 +82,7 @@ namespace VPEAR.Server.Controllers
         {
             this.logger.LogDebug("{@Device}: {@Request}", id, new { Start = start, Stop = stop, });
 
-            var result = this.service.GetFrames(id, start ?? 0, stop ?? 0);
+            var result = this.service.GetFramesAsync(id, start ?? 0, stop ?? 0);
 
             this.StatusCode(result.StatusCode);
 

@@ -37,7 +37,7 @@ namespace VPEAR.Server.Test.Services
 
             devices.ForEach(device =>
             {
-                var result = this.service.Get(device);
+                var result = this.service.GetAsync(device);
 
                 Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
                 Assert.NotNull(result.Value);
@@ -47,7 +47,7 @@ namespace VPEAR.Server.Test.Services
         [Fact]
         public void Get404NotFoundTest()
         {
-            var result = this.service.Get(Mocks.NotExisting.Id);
+            var result = this.service.GetAsync(Mocks.NotExisting.Id);
 
             Assert.NotNull(result.Error);
             Assert.Equal(StatusCodes.Status404NotFound, result.StatusCode);

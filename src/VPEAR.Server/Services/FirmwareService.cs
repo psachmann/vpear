@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
@@ -47,13 +48,13 @@ namespace VPEAR.Server.Services
         }
 
         /// <inheritdoc/>
-        public Result<GetFirmwareResponse> Get(Guid id)
+        public async Task<Result<GetFirmwareResponse>> GetAsync(Guid id)
         {
             var status = HttpStatusCode.InternalServerError;
             var message = ErrorMessages.InternalServerError;
-            var firmware = this.firmwares.Get()
+            var firmware = await this.firmwares.Get()
                 .Where(f => f.DeviceForeignKey.Equals(id))
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
 
             if (firmware == null)
             {

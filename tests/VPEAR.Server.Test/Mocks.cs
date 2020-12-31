@@ -5,11 +5,10 @@
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Moq;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Linq;
 using VPEAR.Core;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Models;
@@ -126,7 +125,7 @@ namespace VPEAR.Server.Test
                     notReachableEntity,
                     recordingEntity,
                     stoppedEntity,
-                });
+                }.AsQueryable());
 
             mock.Setup(repository => repository.UpdateAsync(notExistingEntity))
                 .ReturnsAsync(false);

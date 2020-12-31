@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
@@ -47,12 +48,12 @@ namespace VPEAR.Server.Services
         }
 
         /// <inheritdoc/>
-        public Result<GetWifiResponse> Get(Guid id)
+        public async Task<Result<GetWifiResponse>> GetAsync(Guid id)
         {
             var status = HttpStatusCode.InternalServerError;
             var message = ErrorMessages.InternalServerError;
-            var wifi = this.wifis.Get()
-                .FirstOrDefault(w => w.DeviceForeignKey.Equals(id));
+            var wifi = await this.wifis.Get()
+                .FirstOrDefaultAsync(w => w.DeviceForeignKey.Equals(id));
 
             if (wifi == null)
             {

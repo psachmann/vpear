@@ -20,7 +20,7 @@ namespace VPEAR.Core.Abstractions
         /// </summary>
         /// <param name="id">The device id.</param>
         /// <returns>Https status code and device filters.</returns>
-        Result<GetFiltersResponse> Get(Guid id);
+        Task<Result<GetFiltersResponse>> GetAsync(Guid id);
 
         /// <summary>
         /// Updates the device filters.

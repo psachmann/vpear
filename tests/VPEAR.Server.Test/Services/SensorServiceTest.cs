@@ -37,7 +37,7 @@ namespace VPEAR.Server.Test.Services
 
             devices.ForEach(device =>
             {
-                var result = this.service.GetFrames(device, start, stop);
+                var result = this.service.GetFramesAsync(device, start, stop);
 
                 Assert.NotNull(result.Value);
                 Assert.Equal(expectedStatus, result.StatusCode);
@@ -47,7 +47,7 @@ namespace VPEAR.Server.Test.Services
         [Fact]
         public void GetFrames400BadRequestTest()
         {
-            var result = this.service.GetFrames(Mocks.Archived.Id, int.MaxValue, int.MinValue);
+            var result = this.service.GetFramesAsync(Mocks.Archived.Id, int.MaxValue, int.MinValue);
 
             Assert.Equal(StatusCodes.Status400BadRequest, result.StatusCode);
             Assert.NotNull(result.Error);
@@ -57,7 +57,7 @@ namespace VPEAR.Server.Test.Services
         [Fact]
         public void GetFrames404NotFoundTest()
         {
-            var result = this.service.GetFrames(Mocks.NotExisting.Id, 0, 0);
+            var result = this.service.GetFramesAsync(Mocks.NotExisting.Id, 0, 0);
 
             Assert.Equal(StatusCodes.Status404NotFound, result.StatusCode);
             Assert.NotNull(result.Error);
@@ -77,7 +77,7 @@ namespace VPEAR.Server.Test.Services
 
             devices.ForEach(device =>
             {
-                var result = this.service.GetSensors(device);
+                var result = this.service.GetSensorsAsync(device);
 
                 Assert.NotNull(result.Value);
                 Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
@@ -87,7 +87,7 @@ namespace VPEAR.Server.Test.Services
         [Fact]
         public void GetSensors404NotFoundTest()
         {
-            var result = this.service.GetSensors(Mocks.NotExisting.Id);
+            var result = this.service.GetSensorsAsync(Mocks.NotExisting.Id);
 
             Assert.NotNull(result.Error);
             Assert.Equal(StatusCodes.Status404NotFound, result.StatusCode);

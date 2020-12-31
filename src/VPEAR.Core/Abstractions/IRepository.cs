@@ -38,8 +38,8 @@ namespace VPEAR.Core.Abstractions
         /// Gets all entries from the database table.
         /// NOTE: Use this to make selects on the table.
         /// </summary>
-        /// <returns><see cref="Queryable"/> object for database queries.</returns>
-        IEnumerable<TEntity> Get();
+        /// <returns><see cref="IQueryable{TEntity}"/> object for database queries.</returns>
+        IQueryable<TEntity> Get();
 
         /// <summary>
         /// Gets an entry from the database.

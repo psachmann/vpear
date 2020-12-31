@@ -4,6 +4,7 @@
 // </copyright>
 
 using System;
+using System.Threading.Tasks;
 using VPEAR.Core.Wrappers;
 
 namespace VPEAR.Core.Abstractions
@@ -14,8 +15,8 @@ namespace VPEAR.Core.Abstractions
     /// </summary>
     public interface ISensorService
     {
-        Result<Container<GetSensorResponse>> GetSensors(Guid id);
+        Task<Result<Container<GetSensorResponse>>> GetSensorsAsync(Guid id);
 
-        Result<Container<GetFrameResponse>> GetFrames(Guid id, int start, int stop);
+        Task<Result<Container<GetFrameResponse>>> GetFramesAsync(Guid id, int start, int stop);
     }
 }
