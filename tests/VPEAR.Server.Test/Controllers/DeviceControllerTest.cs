@@ -6,12 +6,10 @@
 using Autofac;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using VPEAR.Core;
-using VPEAR.Core.Abstractions;
 using VPEAR.Core.Wrappers;
 using VPEAR.Server.Controllers;
 using Xunit;
@@ -25,10 +23,7 @@ namespace VPEAR.Server.Test.Controllers
 
         public DeviceControllerTest(AutofacFixture fixture)
         {
-            var logger = fixture.Container.Resolve<ILogger<DeviceController>>();
-            var service = fixture.Container.Resolve<IDeviceService>();
-
-            this.controller = new DeviceController(logger, service);
+            this.controller = fixture.Container.Resolve<DeviceController>();
         }
 
         [Fact]

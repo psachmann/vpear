@@ -5,6 +5,7 @@
 
 using Autofac;
 using FluentValidation;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using System;
 using VPEAR.Core.Abstractions;
@@ -32,6 +33,7 @@ namespace VPEAR.Server.Test
                     var builder = new ContainerBuilder();
 
                     RegisterClientFactoties(builder);
+                    RegisterControllers(builder);
                     RegisterLoggers(builder);
                     RegisterRepositories(builder);
                     RegisterServices(builder);
@@ -72,6 +74,37 @@ namespace VPEAR.Server.Test
         {
             builder.Register(context => Mocks.CreateDeviceClientFactory())
                 .As<IDeviceClient.Factory>()
+                .InstancePerDependency();
+        }
+
+        private static void RegisterControllers(ContainerBuilder builder)
+        {
+            builder.RegisterType<DeviceController>()
+                .AsSelf()
+                .InstancePerDependency();
+
+            builder.RegisterType<FilterController>()
+                .AsSelf()
+                .InstancePerDependency();
+
+            builder.RegisterType<FirmwareController>()
+                .AsSelf()
+                .InstancePerDependency();
+
+            builder.RegisterType<PowerController>()
+                .AsSelf()
+                .InstancePerDependency();
+
+            builder.RegisterType<SensorController>()
+                .AsSelf()
+                .InstancePerDependency();
+
+            builder.RegisterType<UserController>()
+                .AsSelf()
+                .InstancePerDependency();
+
+            builder.RegisterType<WifiController>()
+                .AsSelf()
                 .InstancePerDependency();
         }
 
@@ -159,8 +192,20 @@ namespace VPEAR.Server.Test
                 .As<IPowerService>()
                 .InstancePerDependency();
 
+            builder.RegisterType<UserService>()
+                .As<IUserService>()
+                .InstancePerDependency();
+
             builder.RegisterType<WifiService>()
                 .As<IWifiService>()
+                .InstancePerDependency();
+
+            builder.Register(context => Mocks.CreateRoleManager())
+                .AsSelf()
+                .InstancePerDependency();
+
+            builder.Register(context => Mocks.CreateUserManager())
+                .AsSelf()
                 .InstancePerDependency();
         }
 

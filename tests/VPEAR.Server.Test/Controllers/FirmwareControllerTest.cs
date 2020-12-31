@@ -6,11 +6,9 @@
 using Autofac;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using VPEAR.Core.Abstractions;
 using VPEAR.Core.Wrappers;
 using VPEAR.Server.Controllers;
 using Xunit;
@@ -24,10 +22,7 @@ namespace VPEAR.Server.Test.Controllers
 
         public FirmwareControllerTest(AutofacFixture fixture)
         {
-            var logger = fixture.Container.Resolve<ILogger<FirmwareController>>();
-            var service = fixture.Container.Resolve<IFirmwareService>();
-
-            this.controller = new FirmwareController(logger, service);
+            this.controller = fixture.Container.Resolve<FirmwareController>();
         }
 
         [Fact]

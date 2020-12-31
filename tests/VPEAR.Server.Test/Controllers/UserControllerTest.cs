@@ -6,13 +6,11 @@
 using Autofac;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 using VPEAR.Core.Wrappers;
 using VPEAR.Server.Controllers;
 using VPEAR.Server.Internals;
-using VPEAR.Server.Services;
 using Xunit;
 using static VPEAR.Server.Constants;
 
@@ -24,12 +22,8 @@ namespace VPEAR.Server.Test.Controllers
 
         public UserControllerTest(AutofacFixture fixture)
         {
-            var logger = fixture.Container.Resolve<ILogger<UserController>>();
-            var roles = Mocks.CreateRoleManager();
-            var users = Mocks.CreateUserManager();
-            var service = new UserService(roles, users, logger);
+            this.controller = fixture.Container.Resolve<UserController>();
 
-            this.controller = new UserController(logger, service);
             Configuration.EnsureLoaded(Environment.GetCommandLineArgs());
         }
 
