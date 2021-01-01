@@ -13,6 +13,11 @@ namespace VPEAR.Server
     /// </summary>
     public partial class Constants
     {
+        public static class Regex
+        {
+            public const string IPv4 = @"^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
+        }
+
         public static class Defaults
         {
             public const string DefaultConfigurationPath = "./appsettings.json";
@@ -40,6 +45,19 @@ namespace VPEAR.Server
 #endif
         }
 
+        public static class WifiModes
+        {
+            public const string Direct = "direct";
+
+            public const string Inderiect = "indirect";
+
+            public static readonly IList<string> All = new List<string>()
+            {
+                Direct,
+                Inderiect,
+            };
+        }
+
         public static class Schemas
         {
             public const string DbSchema = "VPEARDbContext";
@@ -55,6 +73,41 @@ namespace VPEAR.Server
             public const string SensorSchema = "Sensors";
 
             public const string WifiSchema = "Wifis";
+
+            public const string TimeSchema = "dd.MM.yyyy hh:mm:ss";
+        }
+
+        public static class ErrorMessages
+        {
+            public const string UserEmailAlreadyUsed = "The email address is already used.";
+
+            public const string InternalServerError = "An internal server error occurred.";
+
+            public const string LastAdminError = "The last admin can not be deleted.";
+
+            public const string DeviceNotFound = "Device not found.";
+
+            public const string FirmwareNotFound = "Firmware not found.";
+
+            public const string UserNotFound = "User not found.";
+
+            public const string DeviceIsRecording = "Device is currently recording";
+
+            public const string DeviceIsArchived = "Device is archived.";
+
+            public const string DeviceIsNotReachable = "Device is not reachable.";
+
+            public const string StartGreaterOrEqualsStop = "The start index is greater or equals stop index.";
+
+            public const string FramesNotFound = "No frames in range found.";
+
+            public const string SensorsNotFound = "No sensors found.";
+
+            public const string BadRequest = "Wrong request format.";
+
+            public const string UserNotVerfied = "User not verified.";
+
+            public const string InvalidPassword = "The user password is not correct.";
         }
 
         /// <summary>
@@ -71,15 +124,26 @@ namespace VPEAR.Server
             /// Minimum length for a db string.
             /// </summary>
             public const int MinStringLength = 1;
+
+            public const int MaxPasswordLength = 1024;
+
+            public const int MinPasswordLength = 8;
         }
 
         public static class Roles
         {
+            // TODO: rename
             public const string AdminRole = "admin";
 
             public const string UserRole = "user";
 
-            public const string TestRole = "test";
+            public const string None = "none";
+
+            public static readonly List<string> AllRoles = new List<string>()
+            {
+                AdminRole,
+                UserRole,
+            };
         }
 
         /// <summary>
@@ -121,7 +185,7 @@ namespace VPEAR.Server
             /// <summary>
             /// The filters endpoint route.
             /// </summary>
-            public const string FiltersRoute = BaseRoute + "device/filters";
+            public const string FilterRoute = BaseRoute + "device/filters";
 
             /// <summary>
             /// The power endpoint route.

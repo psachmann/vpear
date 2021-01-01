@@ -23,9 +23,13 @@ namespace VPEAR.Core.Abstractions
 
         HttpStatusCode ResponseStatusCode { get; }
 
+        Task<bool> IsReachableAsync();
+
+        Task<ApiResponse> GetAsync();
+
         Task<DeviceResponse?> GetDeviceAsync();
 
-        Task<SensorResponse?> GetSensorsAsync();
+        Task<GetSensorResponse?> GetSensorsAsync();
 
         Task<IList<FrameResponse>?> GetFramesAsync(int? after = null);
 

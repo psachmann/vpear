@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace VPEAR.Core.Wrappers
@@ -17,12 +18,12 @@ namespace VPEAR.Core.Wrappers
         /// </summary>
         /// <value>The frame id.</value>
         [JsonPropertyName("id")]
-        public uint Id { get; set; }
+        public int? Id { get; set; }
 
         /// <summary>
         /// Gets or sets the time.
         /// </summary>
-        /// <value>The frame timestamp.</value>
+        /// <value>The frame time stamp.</value>
         [JsonPropertyName("time")]
         public string Time { get; set; } = string.Empty;
 
@@ -31,6 +32,6 @@ namespace VPEAR.Core.Wrappers
         /// </summary>
         /// <value>The frame sensor values.</value>
         [JsonPropertyName("readings")]
-        public int[,]? Readings { get; set; }
+        public IList<IList<int>> Readings { get; set; } = new List<IList<int>>();
     }
 }

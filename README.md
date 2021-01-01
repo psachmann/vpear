@@ -10,14 +10,41 @@
 [build-status]: https://github.com/psachmann/vpear/workflows/VPEAR%20CI/badge.svg
 [coverage-status]: https://raw.githubusercontent.com/psachmann/vpear-docs/main/report/badge_combined.svg
 
-## Introduction
+---
+## Overview
 
 TODO: write short introduction
 
-## Documentation
+---
+## Progress
 
-TODO: reference to the documentation
+### Server
 
+| Feature | Controller | Service | Validators |
+| :- | :-: | :-: | :-: |
+| Device | Done | Done | Done |
+| Filter | Done | Done | Done |
+| Firmware | Done | Done | Done |
+| Home | Done | - | - |
+| Power | Done | Done | - |
+| Sensor | Done | Done | - |
+| User | Done | Done | Done |
+| Wifi | Done | Done | Done |
+| Reading Device | - | `NotStarted` | - |
+| DeviceClient | - | `InProgress`  | - |
+| VPEARClient | - | `InProgress`  | - |
+
+### Security
+
+| Feature | Status | Description |
+| :- | :-: | :- |
+
+### Client
+
+| Feature | Status | Description |
+| :- | :-: | :- |
+
+---
 ## Wep Api
 
 | Route | Method | Function |

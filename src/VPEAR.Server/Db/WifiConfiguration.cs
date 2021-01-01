@@ -12,20 +12,20 @@ using static VPEAR.Server.Constants;
 namespace VPEAR.Server.Db
 {
     /// <summary>
-    /// The entity framework configuration for the <see cref="Wifi"/> class.
+    /// The entity framework configuration for the <see cref="Core.Models.Wifi"/> class.
     /// </summary>
-    public class WifiConfiguration : EntityBaseConfiguration<Wifi, Guid>
+    public class WifiConfiguration : EntityBaseConfiguration<Core.Models.Wifi, Guid>
     {
         /// <inheritdoc/>
-        public override void Configure(EntityTypeBuilder<Wifi> builder)
+        public override void Configure(EntityTypeBuilder<Core.Models.Wifi> builder)
         {
             base.Configure(builder);
 
             builder.ToTable(Schemas.WifiSchema);
 
-            builder.HasOne(w => w.Device)
+            builder.HasOne<Device>(w => w.Device)
                 .WithOne(d => d.Wifi)
-                .HasForeignKey<Wifi>(w => w.DeviceForeignKey);
+                .HasForeignKey<Core.Models.Wifi>(w => w.DeviceForeignKey);
 
             builder.Property(w => w.Mode)
                 .HasMaxLength(Limits.MaxStringLength)

@@ -4,6 +4,9 @@
 // </copyright>
 
 using Autofac;
+using FluentValidation;
+using VPEAR.Core.Wrappers;
+using VPEAR.Server.Validators;
 
 namespace VPEAR.Server
 {
@@ -13,11 +16,42 @@ namespace VPEAR.Server
     public class ValidatorModule : Module
     {
         /// <summary>
-        /// Register all vaildators with the Autofac container.
+        /// Register all validators with the Autofac container.
         /// </summary>
         /// <param name="builder">The container builder to build the Autofac container.</param>
         protected override void Load(ContainerBuilder builder)
         {
+            builder.Register(context => new PostDeviceValidator())
+                .As<IValidator<PostDeviceRequest>>()
+                .InstancePerLifetimeScope();
+
+            builder.Register(context => new PostRegisterValidator())
+                .As<IValidator<PostRegisterRequest>>()
+                .InstancePerLifetimeScope();
+
+            builder.Register(context => new PutDeviceValidator())
+                .As<IValidator<PutDeviceRequest>>()
+                .InstancePerLifetimeScope();
+
+            builder.Register(context => new PutFilterValidator())
+                .As<IValidator<PutFilterRequest>>()
+                .InstancePerLifetimeScope();
+
+            builder.Register(context => new PutFirmwareValidator())
+                .As<IValidator<PutFirmwareRequest>>()
+                .InstancePerLifetimeScope();
+
+            builder.Register(context => new PutLoginValidator())
+                .As<IValidator<PutLoginRequest>>()
+                .InstancePerLifetimeScope();
+
+            builder.Register(context => new PutUserValidator())
+                .As<IValidator<PutUserRequest>>()
+                .InstancePerLifetimeScope();
+
+            builder.Register(context => new PutWifiValidator())
+                .As<IValidator<PutWifiRequest>>()
+                .InstancePerLifetimeScope();
         }
     }
 }

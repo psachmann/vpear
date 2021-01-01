@@ -21,13 +21,6 @@ namespace VPEAR.Core.Models
         public string Ssid { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the password.
-        /// </summary>
-        /// <value>The wifi password.</value>
-        // TODO: configure entity framework
-        public string Password { get; set; } = string.Empty;
-
-        /// <summary>
         /// Gets or sets the mode.
         /// </summary>
         /// <value>The wifi mode.</value>

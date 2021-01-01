@@ -1,61 +1,83 @@
-using Microsoft.AspNetCore.Mvc.Testing;
-using System.Net;
+// <copyright file="PowerControllerTest.cs" company="Patrick Sachmann">
+// Copyright (c) Patrick Sachmann. All rights reserved.
+// Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
+// </copyright>
+
+using Autofac;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using VPEAR.Core.Wrappers;
+using VPEAR.Server.Controllers;
 using Xunit;
 using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Test.Controllers
 {
-    public class PowerControllerTest : IClassFixture<WebApplicationFactory<Startup>>
+    public class PowerControllerTest : IClassFixture<AutofacFixture>
     {
-        private readonly WebApplicationFactory<Startup> factory;
+        private readonly PowerController controller;
 
-        public PowerControllerTest(WebApplicationFactory<Startup> factory)
+        public PowerControllerTest(AutofacFixture fixture)
         {
-            this.factory = factory;
+            this.controller = fixture.Container.Resolve<PowerController>();
         }
 
         [Fact]
-        public async void OnGetAsync200OKTest()
+        public void OnGetAsync200OKTest()
         {
-            var client = this.factory.CreateClient();
-            var respone = await client.GetAsync($"{Routes.PowerRoute}?id=00000000-0000-0000-0000-000000000001");
+            var devices = new List<Guid>()
+            {
+                Mocks.Recording.Id,
+                Mocks.Stopped.Id,
+            };
 
-            Assert.Equal(HttpStatusCode.OK, respone.StatusCode);
-            Assert.NotEmpty(await respone.Content.ReadAsStringAsync());
+            devices.ForEach(async device =>
+            {
+                var result = await this.controller.OnGetAsync(device);
+                var jsonResult = Assert.IsType<JsonResult>(result);
+                var response = Assert.IsAssignableFrom<GetPowerResponse>(jsonResult.Value);
+
+                Assert.NotNull(response);
+            });
         }
 
         [Fact]
-        public async void OnGetAsync202AcceptedTest()
+        public async Task OnGetAsync404NotFoundTest()
         {
-            var client = this.factory.CreateClient();
-            var respone = await client.GetAsync($"{Routes.PowerRoute}?id=00000000-0000-0000-0000-000000000002");
+            var result = await this.controller.OnGetAsync(Mocks.NotExisting.Id);
+            var jsonResult = Assert.IsType<JsonResult>(result);
+            var response = Assert.IsAssignableFrom<ErrorResponse>(jsonResult.Value);
 
-            Assert.Equal(HttpStatusCode.Accepted, respone.StatusCode);
-            Assert.Empty(await respone.Content.ReadAsStringAsync());
-        }
-
-        [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        [InlineData("fdasdf")]
-        [InlineData("00000000-0000-0000-/)(/-000000000002")]
-        public async void OnGetAsync400BadRequest(string? id)
-        {
-            var client = this.factory.CreateClient();
-            var respone = await client.GetAsync($"{Routes.PowerRoute}?id={id}");
-
-            Assert.Equal(HttpStatusCode.BadRequest, respone.StatusCode);
-            Assert.Empty(await respone.Content.ReadAsStringAsync());
+            Assert.NotNull(response);
+            Assert.Equal(StatusCodes.Status404NotFound, response.StatusCode);
+            Assert.Contains(ErrorMessages.DeviceNotFound, response.Messages);
         }
 
         [Fact]
-        public async void OnGetAsync401Unauthorized()
+        public async Task OnGetAsync410GoneTest()
         {
-            var client = this.factory.CreateClient();
-            var respone = await client.GetAsync($"{Routes.PowerRoute}?id=00000000-0000-0000-0000-000000000001");
+            var result = await this.controller.OnGetAsync(Mocks.Archived.Id);
+            var jsonResult = Assert.IsType<JsonResult>(result);
+            var response = Assert.IsAssignableFrom<ErrorResponse>(jsonResult.Value);
 
-            Assert.Equal(HttpStatusCode.Unauthorized, respone.StatusCode);
-            Assert.Empty(await respone.Content.ReadAsStringAsync());
+            Assert.NotNull(response);
+            Assert.Equal(StatusCodes.Status410Gone, response.StatusCode);
+            Assert.Contains(ErrorMessages.DeviceIsArchived, response.Messages);
+        }
+
+        [Fact]
+        public async Task OnGetAsync424FailedDependencyTest()
+        {
+            var result = await this.controller.OnGetAsync(Mocks.NotReachable.Id);
+            var jsonResult = Assert.IsType<JsonResult>(result);
+            var response = Assert.IsAssignableFrom<ErrorResponse>(jsonResult.Value);
+
+            Assert.NotNull(response);
+            Assert.Equal(StatusCodes.Status424FailedDependency, response.StatusCode);
+            Assert.Contains(ErrorMessages.DeviceIsNotReachable, response.Messages);
         }
     }
 }

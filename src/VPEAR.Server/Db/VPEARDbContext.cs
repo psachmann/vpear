@@ -34,7 +34,7 @@ namespace VPEAR.Server.Db
         /// Gets or sets filters.
         /// </summary>
         /// <value>All filters in the db.</value>
-        public DbSet<Filters>? Filters { get; set; }
+        public DbSet<Filter>? Filters { get; set; }
 
         /// <summary>
         /// Gets or sets firmwares.

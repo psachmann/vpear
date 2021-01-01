@@ -17,7 +17,7 @@ namespace VPEAR.Server.Controllers
     public class BaseController : Controller
     {
         /// <summary>
-        /// Returns Http Status 200, if the server is availble.
+        /// Returns Http Status 200, if the server is available.
         /// </summary>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]

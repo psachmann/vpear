@@ -20,7 +20,7 @@ namespace VPEAR.Core.Abstractions
         /// </summary>
         /// <param name="id">The device id.</param>
         /// <returns>Http status code and device firmware information.</returns>
-        Task<Response> GetAsync(Guid id);
+        Task<Result<GetFirmwareResponse>> GetAsync(Guid id);
 
         /// <summary>
         /// Updates the device firmware information.
@@ -28,6 +28,6 @@ namespace VPEAR.Core.Abstractions
         /// <param name="id">The device id.</param>
         /// <param name="request">The request data.</param>
         /// <returns>Http status code.</returns>
-        Task<Response> PutAsync(Guid id, PutFirmwareRequest request);
+        Task<Result<Null>> PutAsync(Guid id, PutFirmwareRequest request);
     }
 }

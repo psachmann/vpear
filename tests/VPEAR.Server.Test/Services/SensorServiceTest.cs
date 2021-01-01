@@ -1,95 +1,98 @@
+// <copyright file="SensorServiceTest.cs" company="Patrick Sachmann">
+// Copyright (c) Patrick Sachmann. All rights reserved.
+// Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
+// </copyright>
+
+using Autofac;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using VPEAR.Core.Abstractions;
-using VPEAR.Core.Models;
-using VPEAR.Server.Controllers;
-using VPEAR.Server.Db;
-using VPEAR.Server.Services;
 using Xunit;
+using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Test.Services
 {
-    public class SensorServiceTest : IClassFixture<VPEARDbContextFixture>
+    public class SensorServiceTest : IClassFixture<AutofacFixture>
     {
-        private readonly Guid stoppedDevice = DbSeed.Devices[0].Id;
-        private readonly Guid recordingDevice = DbSeed.Devices[1].Id;
-        private readonly Guid archivedDevice = DbSeed.Devices[2].Id;
-        private readonly Guid notReachableDevice = DbSeed.Devices[3].Id;
-        private readonly Guid notExistingDevice = new Guid();
         private readonly ISensorService service;
 
-        public SensorServiceTest(VPEARDbContextFixture fixture)
+        public SensorServiceTest(AutofacFixture fixture)
         {
-            this.service = new SensorService(
-                Mocks.CreateLogger<SensorController>(),
-                Mocks.CreateRepository<Frame, Guid>(fixture.Context),
-                Mocks.CreateRepository<Sensor, Guid>(fixture.Context));
+            this.service = fixture.Container.Resolve<ISensorService>();
         }
 
         [Theory]
-        [InlineData(StatusCodes.Status200OK, null, null)]
-        [InlineData(StatusCodes.Status200OK, uint.MinValue, null)]
-        [InlineData(StatusCodes.Status204NoContent, uint.MaxValue, uint.MinValue)]
-        [InlineData(StatusCodes.Status206PartialContent, uint.MinValue, uint.MaxValue)]
-        public async Task GetFramesAsync2XXTest(int expectedStatus, uint? start, uint? stop)
+        [InlineData(StatusCodes.Status200OK, 0, 0)]
+        [InlineData(StatusCodes.Status206PartialContent, 0, int.MaxValue)]
+        public void GetFramesAsync2XXTest(int expectedStatus, int start, int stop)
         {
             var devices = new List<Guid>()
             {
-                this.archivedDevice,
-                this.notReachableDevice,
-                this.stoppedDevice,
-                this.recordingDevice,
+                Mocks.Archived.Id,
+                Mocks.NotReachable.Id,
+                Mocks.Stopped.Id,
+                Mocks.Recording.Id,
             };
 
-            foreach (var device in devices)
+            devices.ForEach(async device =>
             {
-                var response = await this.service.GetFramesAsync(device, start, stop);
+                var result = await this.service.GetFramesAsync(device, start, stop);
 
-                Assert.NotNull(response.Payload);
-                Assert.Equal(expectedStatus, response.StatusCode);
-            }
+                Assert.NotNull(result.Value);
+                Assert.Equal(expectedStatus, result.StatusCode);
+            });
         }
 
         [Fact]
-        public async Task GetFramesAsync404NotFoundTest()
+        public async Task GetFramesAsync400BadRequestTest()
         {
-            var response = await this.service.GetFramesAsync(this.notExistingDevice, null, null);
+            var result = await this.service.GetFramesAsync(Mocks.Archived.Id, int.MaxValue, int.MinValue);
 
-            Assert.Null(response.Payload);
-            Assert.Equal(StatusCodes.Status404NotFound, response.StatusCode);
+            Assert.Equal(StatusCodes.Status400BadRequest, result.StatusCode);
+            Assert.NotNull(result.Error);
+            Assert.Contains(ErrorMessages.BadRequest, result.Error!.Messages);
         }
 
         [Fact]
-        public async Task GetSensorsAsync200OKTest()
+        public async Task GetFramesAsnyc404NotFoundTest()
+        {
+            var result = await this.service.GetFramesAsync(Mocks.NotExisting.Id, 0, 0);
+
+            Assert.Equal(StatusCodes.Status404NotFound, result.StatusCode);
+            Assert.NotNull(result.Error);
+            Assert.Contains(ErrorMessages.FramesNotFound, result.Error!.Messages);
+        }
+
+        [Fact]
+        public void GetSensorsAsync200OKTest()
         {
             var devices = new List<Guid>()
             {
-                this.archivedDevice,
-                this.notReachableDevice,
-                this.stoppedDevice,
-                this.recordingDevice,
+                Mocks.Archived.Id,
+                Mocks.NotReachable.Id,
+                Mocks.Stopped.Id,
+                Mocks.Recording.Id,
             };
 
-            foreach (var device in devices)
+            devices.ForEach(async device =>
             {
-                var response = await this.service.GetSensorsAsync(device);
+                var result = await this.service.GetSensorsAsync(device);
 
-                Assert.NotNull(response.Payload);
-                Assert.Equal(StatusCodes.Status200OK, response.StatusCode);
-            }
+                Assert.NotNull(result.Value);
+                Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
+            });
         }
 
         [Fact]
         public async Task GetSensorsAsync404NotFoundTest()
         {
-            var response = await this.service.GetSensorsAsync(this.notExistingDevice);
+            var result = await this.service.GetSensorsAsync(Mocks.NotExisting.Id);
 
-            Assert.Null(response.Payload);
-            Assert.Equal(StatusCodes.Status404NotFound, response.StatusCode);
+            Assert.NotNull(result.Error);
+            Assert.Equal(StatusCodes.Status404NotFound, result.StatusCode);
+            Assert.Contains(ErrorMessages.SensorsNotFound, result.Error!.Messages);
         }
     }
 }

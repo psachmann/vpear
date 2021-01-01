@@ -11,14 +11,10 @@ using VPEAR.Core.Models;
 
 namespace VPEAR.Server.Db
 {
-    /// <summary>
-    /// Seed data for the database.
-    /// NOTE: Only for testing.
-    /// </summary>
-    public static class DbSeed
+    internal static class DbSeed
     {
         private static IList<Device> devices = new List<Device>();
-        private static IList<Filters> filters = new List<Filters>();
+        private static IList<Filter> filters = new List<Filter>();
         private static IList<Firmware> firmwares = new List<Firmware>();
         private static IList<Frame> frames = new List<Frame>();
         private static IList<Sensor> sensors = new List<Sensor>();
@@ -42,11 +38,11 @@ namespace VPEAR.Server.Db
                     Id = new Guid($"00000000-0000-0000-0000-00000000000{i}"),
                     Name = $"name_{i}",
                     RequiredSensors = (uint)i,
-                    SampleFrequency = (uint)i,
+                    Frequency = (uint)i,
                     Status = (DeviceStatus)((i - 1) % 4),
                 };
 
-                var filter = new Filters()
+                var filter = new Filter()
                 {
                     DeviceForeignKey = device.Id,
                     Id = device.Id,
@@ -83,7 +79,6 @@ namespace VPEAR.Server.Db
                     Id = device.Id,
                     Mode = $"mode_{i}",
                     Neighbors = { $"neighbors_{i}" },
-                    Password = $"password_{i}",
                     Ssid = $"ssid_{i}",
                 };
 
@@ -101,7 +96,7 @@ namespace VPEAR.Server.Db
             get { return devices.Clone()!; }
         }
 
-        public static IList<Filters> Filters
+        public static IList<Filter> Filters
         {
             get { return filters.Clone()!; }
         }
