@@ -50,10 +50,29 @@ namespace VPEAR.Core
             get { return this.status; }
         }
 
+        public async Task<bool> IsReachableAsync()
+        {
+            try
+            {
+                _ = await this.client.GetAsync("api");
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         /// <inheritdoc/>
         public void Dispose()
         {
             this.client.Dispose();
+        }
+
+        public Task<ApiResponse> GetAsync()
+        {
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
@@ -161,14 +180,14 @@ namespace VPEAR.Core
         }
 
         /// <inheritdoc/>
-        public async Task<SensorResponse?> GetSensorsAsync()
+        public async Task<GetSensorResponse?> GetSensorsAsync()
         {
             var response = await this.client.GetAsync("api/sensors");
             var json = await response.Content.ReadAsStringAsync();
 
             this.status = response.StatusCode;
 
-            return JsonSerializer.Deserialize<SensorResponse>(json);
+            return JsonSerializer.Deserialize<GetSensorResponse>(json);
         }
 
         /// <inheritdoc/>

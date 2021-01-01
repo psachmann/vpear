@@ -6,6 +6,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using VPEAR.Core;
@@ -13,6 +14,7 @@ using VPEAR.Core.Abstractions;
 using VPEAR.Core.Models;
 using VPEAR.Core.Wrappers;
 using VPEAR.Server.Controllers;
+using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Services
 {
@@ -21,83 +23,115 @@ namespace VPEAR.Server.Services
     /// </summary>
     public class WifiService : IWifiService
     {
-        private readonly ILogger<WifiController> logger;
         private readonly IRepository<Device, Guid> devices;
         private readonly IRepository<Wifi, Guid> wifis;
+        private readonly IDeviceClient.Factory factory;
+        private readonly ILogger<WifiController> logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WifiService"/> class.
         /// </summary>
-        /// <param name="logger">The service logger.</param>
         /// <param name="devices">The device repository for db access.</param>
-        /// <param name="wifis">The wifi repositroy for db access.</param>
+        /// <param name="wifis">The wifi repository for db access.</param>
+        /// <param name="factory">The factory to create a device client.</param>
+        /// <param name="logger">The service logger.</param>
         public WifiService(
-            ILogger<WifiController> logger,
             IRepository<Device, Guid> devices,
-            IRepository<Wifi, Guid> wifis)
+            IRepository<Wifi, Guid> wifis,
+            IDeviceClient.Factory factory,
+            ILogger<WifiController> logger)
         {
             this.logger = logger;
             this.devices = devices;
             this.wifis = wifis;
+            this.factory = factory;
         }
 
         /// <inheritdoc/>
-        public async Task<Response> GetAsync(Guid id)
+        public async Task<Result<GetWifiResponse>> GetAsync(Guid id)
         {
+            var status = HttpStatusCode.InternalServerError;
+            var message = ErrorMessages.InternalServerError;
             var wifi = await this.wifis.Get()
                 .FirstOrDefaultAsync(w => w.DeviceForeignKey.Equals(id));
 
             if (wifi == null)
             {
-                return new Response(HttpStatusCode.NotFound);
+                status = HttpStatusCode.NotFound;
+                message = ErrorMessages.DeviceNotFound;
+            }
+            else
+            {
+                status = HttpStatusCode.OK;
+                var payload = new GetWifiResponse()
+                {
+                    Mode = wifi.Mode,
+                    Neighbors = wifi.Neighbors,
+                    Ssid = wifi.Ssid,
+                };
+
+                return new Result<GetWifiResponse>(status, payload);
             }
 
-            var payload = new GetWifiResponse()
-            {
-                Mode = wifi.Mode,
-                Neighbors = wifi.Neighbors,
-                Ssid = wifi.Ssid,
-            };
-
-            return new Response(HttpStatusCode.OK, payload);
+            return new Result<GetWifiResponse>(status, message);
         }
 
         /// <inheritdoc/>
-        public async Task<Response> PutAsync(Guid id, PutWifiRequest request)
+        public async Task<Result<Null>> PutAsync(Guid id, PutWifiRequest request)
         {
+            var status = HttpStatusCode.InternalServerError;
+            var message = ErrorMessages.InternalServerError;
             var device = await this.devices.GetAsync(id);
-            var wifi = await this.wifis.Get()
-                .FirstOrDefaultAsync(w => w.DeviceForeignKey.Equals(id));
+            var wifi = this.wifis.Get()
+                .FirstOrDefault(w => w.DeviceForeignKey.Equals(id));
 
             if (device == null || wifi == null)
             {
-                return new Response(HttpStatusCode.NotFound);
+                status = HttpStatusCode.NotFound;
+                message = ErrorMessages.DeviceNotFound;
             }
-
-            if (device.Status == DeviceStatus.Recording || device.Status == DeviceStatus.Stopped)
+            else if (device.Status == DeviceStatus.Archived)
             {
-                // TODO: how to store the password?
-                // TODO: synchro service to publish updates to the device
-                wifi.Mode = request.Mode;
-                wifi.Password = request.Password;
-                wifi.Ssid = request.Ssid;
-
-                await this.wifis.UpdateAsync(wifi);
-
-                return new Response(HttpStatusCode.OK);
+                status = HttpStatusCode.Gone;
+                message = ErrorMessages.DeviceIsArchived;
             }
-
-            if (device.Status == DeviceStatus.Archived)
+            else if (device.Status == DeviceStatus.NotReachable)
             {
-                return new Response(HttpStatusCode.Gone);
+                status = HttpStatusCode.FailedDependency;
+                message = ErrorMessages.DeviceIsNotReachable;
             }
-
-            if (device.Status == DeviceStatus.NotReachable)
+            else if (device.Status == DeviceStatus.Recording || device.Status == DeviceStatus.Stopped)
             {
-                return new Response(HttpStatusCode.FailedDependency);
+                var client = this.factory.Invoke(device.Address);
+
+                if (await client.IsReachableAsync())
+                {
+                    await client.PutWifiAsync(
+                        request.Ssid!,
+                        request.Password!,
+                        request.Mode);
+
+                    wifi.Mode = request.Mode ?? wifi.Mode!;
+                    wifi.Ssid = request.Ssid ?? wifi.Ssid!;
+
+                    if (await this.wifis.UpdateAsync(wifi))
+                    {
+                        return new Result<Null>(HttpStatusCode.OK);
+                    }
+                }
+                else
+                {
+                    device.Status = DeviceStatus.NotReachable;
+
+                    if (await this.devices.UpdateAsync(device))
+                    {
+                        status = HttpStatusCode.FailedDependency;
+                        message = ErrorMessages.DeviceIsNotReachable;
+                    }
+                }
             }
 
-            return new Response(HttpStatusCode.InternalServerError);
+            return new Result<Null>(status, message);
         }
     }
 }

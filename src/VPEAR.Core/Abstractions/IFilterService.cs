@@ -1,4 +1,4 @@
-// <copyright file="IFiltersService.cs" company="Patrick Sachmann">
+// <copyright file="IFilterService.cs" company="Patrick Sachmann">
 // Copyright (c) Patrick Sachmann. All rights reserved.
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
@@ -13,14 +13,14 @@ namespace VPEAR.Core.Abstractions
     /// Service definition and abstraction for dependency
     /// injection and webapi controllers.
     /// </summary>
-    public interface IFiltersService
+    public interface IFilterService
     {
         /// <summary>
         /// Gets the device filters.
         /// </summary>
         /// <param name="id">The device id.</param>
         /// <returns>Https status code and device filters.</returns>
-        Task<Response> GetAsync(Guid id);
+        Task<Result<GetFiltersResponse>> GetAsync(Guid id);
 
         /// <summary>
         /// Updates the device filters.
@@ -28,6 +28,6 @@ namespace VPEAR.Core.Abstractions
         /// <param name="id">The device id.</param>
         /// <param name="request">The request data.</param>
         /// <returns>Http status code.</returns>
-        Task<Response> PutAsync(Guid id, PutFiltersRequest request);
+        Task<Result<Null>> PutAsync(Guid id, PutFilterRequest request);
     }
 }

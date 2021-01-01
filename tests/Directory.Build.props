@@ -5,4 +5,12 @@
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <NoWarn>SA0001,SA1600,CS1591</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="..\..\.stylecop.json" />
+  </ItemGroup>
+
 </Project>

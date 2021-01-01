@@ -8,7 +8,7 @@ namespace VPEAR.Core
     /// <summary>
     /// The current device state.
     /// </summary>
-    public enum DeviceStatus
+    public enum DeviceStatus : byte
     {
         /// <summary>
         /// The device has stopped recording data from a patient.
@@ -29,5 +29,10 @@ namespace VPEAR.Core
         /// The device is currently not reachable (new address, out of energy).
         /// </summary>
         NotReachable,
+
+        /// <summary>
+        /// No valid device state.
+        /// </summary>
+        None,
     }
 }

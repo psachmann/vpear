@@ -50,8 +50,8 @@ namespace VPEAR.Core.Models
         /// <summary>
         /// Gets or sets the frequency.
         /// </summary>
-        /// <value>The sample frequency.</value>
-        public uint SampleFrequency { get; set; }
+        /// <value>The scanning frequency.</value>
+        public uint Frequency { get; set; }
 
         /// <summary>
         /// Gets or sets the required sensors.
@@ -63,7 +63,7 @@ namespace VPEAR.Core.Models
         /// Gets or sets the filters object.
         /// </summary>
         /// <value>The filter details.</value>
-        public Filters? Filters { get; set; }
+        public Filter? Filters { get; set; }
 
         /// <summary>
         /// Gets or sets the wifi object.

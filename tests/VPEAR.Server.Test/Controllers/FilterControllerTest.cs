@@ -1,51 +1,115 @@
-using Microsoft.AspNetCore.Mvc.Testing;
-using System.Net;
+// <copyright file="FilterControllerTest.cs" company="Patrick Sachmann">
+// Copyright (c) Patrick Sachmann. All rights reserved.
+// Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
+// </copyright>
+
+using Autofac;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using VPEAR.Core.Wrappers;
+using VPEAR.Server.Controllers;
 using Xunit;
 using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Test.Controllers
 {
-    public class FilterControllerTest : IClassFixture<WebApplicationFactory<Startup>>
+    public class FilterControllerTest : IClassFixture<AutofacFixture>
     {
-        private readonly WebApplicationFactory<Startup> factory;
+        private readonly FilterController controller;
 
-        public FilterControllerTest(WebApplicationFactory<Startup> factory)
+        public FilterControllerTest(AutofacFixture fixture)
         {
-            this.factory = factory;
+            this.controller = fixture.Container.Resolve<FilterController>();
         }
 
-        [Theory]
-        [InlineData(true, HttpStatusCode.OK, "00000000-0000-0000-0000-000000000001")]
-        [InlineData(false, HttpStatusCode.BadRequest, null)]
-        [InlineData(false, HttpStatusCode.BadRequest, "")]
-        [InlineData(false, HttpStatusCode.Unauthorized, "00000000-0000-0000-0000-000000000001")]
-        [InlineData(false, HttpStatusCode.NotFound, "00000000-0000-0000-0000-000000000010")]
-        public async Task OnGetAsyncTest(
-            bool checkContent,
-            HttpStatusCode expectedStatus,
-            string id)
+        [Fact]
+        public void OnGetAsync200OKTest()
         {
-            var client = this.factory.CreateClient();
-            // client.DefaultRequestHeaders.Add("Authorization: Bearer", token);
-
-            var response = await client.GetAsync($"{Routes.FiltersRoute}?id={id}");
-
-            if (checkContent)
+            var devices = new List<Guid>()
             {
-                Assert.NotEmpty(await response.Content.ReadAsStringAsync());
-            }
-            else
-            {
-                Assert.Empty(await response.Content.ReadAsStringAsync());
-            }
+                Mocks.Archived.Id,
+                Mocks.NotReachable.Id,
+                Mocks.Recording.Id,
+                Mocks.Stopped.Id,
+            };
 
-            Assert.Equal(expectedStatus, response.StatusCode);
+            devices.ForEach(async device =>
+            {
+                var result = await this.controller.OnGetAsync(device);
+                var jsonResult = Assert.IsType<JsonResult>(result);
+                var response = Assert.IsAssignableFrom<GetFiltersResponse>(jsonResult.Value);
+
+                Assert.NotNull(response);
+            });
         }
 
-        public async Task OnPutAsync()
+        [Fact]
+        public async Task OnGetAsync404NotFound()
         {
+            var result = await this.controller.OnGetAsync(Mocks.NotExisting.Id);
+            var jsonResult = Assert.IsType<JsonResult>(result);
+            var response = Assert.IsAssignableFrom<ErrorResponse>(jsonResult.Value);
 
+            Assert.NotNull(response);
+            Assert.Equal(StatusCodes.Status404NotFound, response.StatusCode);
+            Assert.Contains(ErrorMessages.DeviceNotFound, response.Messages);
+        }
+
+        [Fact]
+        public void OnPutAsync200OKTest()
+        {
+            var devices = new List<Guid>()
+            {
+                Mocks.Recording.Id,
+                Mocks.Stopped.Id,
+            };
+
+            devices.ForEach(async device =>
+            {
+                var result = await this.controller.OnPutAsync(device, new PutFilterRequest());
+                var jsonResult = Assert.IsType<JsonResult>(result);
+
+                Assert.Null(jsonResult.Value);
+            });
+        }
+
+        [Fact]
+        public async Task OnPutAsync404NotFoundTest()
+        {
+            var result = await this.controller.OnPutAsync(Mocks.NotExisting.Id, new PutFilterRequest());
+            var jsonResult = Assert.IsType<JsonResult>(result);
+            var response = Assert.IsAssignableFrom<ErrorResponse>(jsonResult.Value);
+
+            Assert.NotNull(response);
+            Assert.Equal(StatusCodes.Status404NotFound, response.StatusCode);
+            Assert.Contains(ErrorMessages.DeviceNotFound, response.Messages);
+        }
+
+        [Fact]
+        public async Task OnPutAsync410GoneTest()
+        {
+            var result = await this.controller.OnPutAsync(Mocks.Archived.Id, new PutFilterRequest());
+            var jsonResult = Assert.IsType<JsonResult>(result);
+            var response = Assert.IsAssignableFrom<ErrorResponse>(jsonResult.Value);
+
+            Assert.NotNull(response);
+            Assert.Equal(StatusCodes.Status410Gone, response.StatusCode);
+            Assert.Contains(ErrorMessages.DeviceIsArchived, response.Messages);
+        }
+
+        [Fact]
+        public async Task OnPutAsync424FailedDependencyTest()
+        {
+            var result = await this.controller.OnPutAsync(Mocks.NotReachable.Id, new PutFilterRequest());
+            var jsonResult = Assert.IsType<JsonResult>(result);
+            var response = Assert.IsAssignableFrom<ErrorResponse>(jsonResult.Value);
+
+            Assert.NotNull(response);
+            Assert.Equal(StatusCodes.Status424FailedDependency, response.StatusCode);
+            Assert.Contains(ErrorMessages.DeviceIsNotReachable, response.Messages);
         }
     }
 }

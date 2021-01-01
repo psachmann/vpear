@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace VPEAR.Core.Wrappers
@@ -12,13 +13,13 @@ namespace VPEAR.Core.Wrappers
     /// </summary>
     public class PutUserRequest
     {
-        [JsonPropertyName("email")]
-        public string? Email { get; set; }
+        [JsonPropertyName("old_password")]
+        public string? OldPassword { get; set; }
 
-        [JsonPropertyName("password")]
-        public string? Password { get; set; }
+        [JsonPropertyName("new_password")]
+        public string? NewPassword { get; set; }
 
-        [JsonPropertyName("role")]
-        public string? Role { get; set; }
+        [JsonPropertyName("is_verified")]
+        public bool IsVerified { get; set; }
     }
 }

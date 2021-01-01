@@ -1,199 +1,195 @@
+// <copyright file="UserServiceTest.cs" company="Patrick Sachmann">
+// Copyright (c) Patrick Sachmann. All rights reserved.
+// Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
+// </copyright>
+
+using Autofac;
 using Microsoft.AspNetCore.Http;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using VPEAR.Core.Wrappers;
 using VPEAR.Core.Abstractions;
-using VPEAR.Server.Services;
+using VPEAR.Core.Wrappers;
+using VPEAR.Server.Internals;
 using Xunit;
 using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Test.Services
 {
-    public class UserServiceTest : IClassFixture<VPEARDbContextFixture>
+    public class UserServiceTest : IClassFixture<AutofacFixture>
     {
-        private readonly Guid admin = new Guid("00000000-0000-0000-0000-000000000001");
-        private readonly Guid user = new Guid("00000000-0000-0000-0000-000000000002");
-        private readonly Guid tester = new Guid("00000000-0000-0000-0000-000000000003");
-        private readonly Guid notVerifiedUser = new Guid("00000000-0000-0000-0000-000000000004");
-        private readonly Guid notExistingUser = new Guid();
         private readonly IUserService service;
 
-        public UserServiceTest(VPEARDbContextFixture fixture)
+        public UserServiceTest(AutofacFixture fixture)
         {
-            this.service = new UserService();
+            this.service = fixture.Container.Resolve<IUserService>();
+
+            Configuration.EnsureLoaded(Environment.GetCommandLineArgs());
         }
 
         [Fact]
         public async Task GetAsync200OKTest()
         {
-            var response = await this.service.GetAsync(id: this.admin);
+            var result = await this.service.GetAsync(Roles.AdminRole);
 
-            Assert.Null(response.Payload);
-            Assert.Equal(StatusCodes.Status200OK, response.StatusCode);
+            Assert.NotNull(result.Value);
+            Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
+            Assert.InRange(result.Value!.Count, 1L, long.MaxValue);
 
-            response = await this.service.GetAsync(role: Roles.AdminRole);
+            result = await this.service.GetAsync(Roles.UserRole);
 
-            Assert.Null(response.Payload);
-            Assert.Equal(StatusCodes.Status200OK, response.StatusCode);
-
-            response = await this.service.GetAsync(id: this.admin, role: Roles.AdminRole);
-
-            Assert.Null(response.Payload);
-            Assert.Equal(StatusCodes.Status200OK, response.StatusCode);
-        }
-
-        [Fact]
-        public async Task GetAsync404NotFoundTest()
-        {
-            var response = await this.service.GetAsync(id: this.notExistingUser);
-
-            Assert.Null(response.Payload);
-            Assert.Equal(StatusCodes.Status404NotFound, response.StatusCode);
+            Assert.NotNull(result.Value);
+            Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
+            Assert.InRange(result.Value!.Count, 1L, long.MaxValue);
         }
 
         [Theory]
-        [InlineData(null, null, null)]
-        [InlineData("new@domain.tld", null, null)]
-        [InlineData("new@domain.tld", "new_password", null)]
-        [InlineData("new@domain.tld", "new_password", Roles.UserRole)]
-        [InlineData(null, "new_password", Roles.UserRole)]
-        [InlineData(null, null, Roles.UserRole)]
+        [InlineData(false, null, null)]
+        [InlineData(true, null, null)]
+        [InlineData(false, "newPassword", "oldPassword")]
+        [InlineData(true, "newPassword", "oldPassword")]
         public async Task PutAsync200OKTest(
-            string? email,
-            string? password,
-            string? role)
+            bool isVerified,
+            string? newPassword,
+            string? oldPassword)
         {
             var request = new PutUserRequest()
             {
-                Email = email,
-                Password = password,
-                Role = role,
+                IsVerified = isVerified,
+                NewPassword = newPassword,
+                OldPassword = oldPassword,
             };
-            var response = await this.service.PutAsync(this.tester, request);
+            var result = await this.service.PutAsync(Mocks.User.Id.ToString(), request);
 
-            Assert.Null(response.Payload);
-            Assert.Equal(StatusCodes.Status404NotFound, response.StatusCode);
+            Assert.Null(result.Value);
+            Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
         }
 
         [Fact]
         public async Task PutAsync404NotFoundTest()
         {
-            var response = await this.service.PutAsync(this.notExistingUser, new PutUserRequest());
+            var result = await this.service.PutAsync(Mocks.NotExisting.Id.ToString(), new PutUserRequest());
 
-            Assert.Null(response.Payload);
-            Assert.Equal(StatusCodes.Status404NotFound, response.StatusCode);
-        }
-
-        [Theory]
-        [InlineData("example1@domain.tld", null)] // email already exists in db
-        [InlineData(null, Roles.UserRole)] // no admin in the db
-        [InlineData("example1@domain.tld", Roles.UserRole)] // cross test
-        public async Task PutAsync409ConflictTest(string? email, string? role)
-        {
-            var request = new PutUserRequest()
-            {
-                Email = email,
-                Password = "password",
-                Role = role,
-            };
-            var response = await this.service.PutAsync(this.admin, request);
-
-            Assert.Null(response.Payload);
-            Assert.Equal(StatusCodes.Status409Conflict, response.StatusCode);
+            Assert.NotNull(result.Error);
+            Assert.Equal(StatusCodes.Status404NotFound, result.StatusCode);
+            Assert.Contains(ErrorMessages.UserNotFound, result.Error!.Messages);
         }
 
         [Fact]
         public async Task DeleteAsync200OKTest()
         {
-            var response = await this.service.DeleteAsync(this.notVerifiedUser);
+            var result = await this.service.DeleteAsync(Mocks.User.Id.ToString());
 
-            Assert.Null(response.Payload);
-            Assert.Equal(StatusCodes.Status404NotFound, response.StatusCode);
+            Assert.Null(result.Value);
+            Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
         }
 
         [Fact]
         public async Task DeleteAsync403ForbiddenTest()
         {
-            var response = await this.service.DeleteAsync(this.admin);
+            var result = await this.service.DeleteAsync(Mocks.Admin.Id.ToString());
 
-            Assert.Null(response.Payload);
-            Assert.Equal(StatusCodes.Status403Forbidden, response.StatusCode);
+            Assert.NotNull(result.Error);
+            Assert.Equal(StatusCodes.Status403Forbidden, result.StatusCode);
+            Assert.Contains(ErrorMessages.LastAdminError, result.Error!.Messages);
         }
 
         [Fact]
         public async Task DeleteAsync404NotFoundTest()
         {
-            var response = await this.service.DeleteAsync(this.notExistingUser);
+            var result = await this.service.DeleteAsync(Mocks.NotExisting.Id.ToString());
 
-            Assert.Null(response.Payload);
-            Assert.Equal(StatusCodes.Status404NotFound, response.StatusCode);
+            Assert.NotNull(result.Error);
+            Assert.Equal(StatusCodes.Status404NotFound, result.StatusCode);
+            Assert.Contains(ErrorMessages.UserNotFound, result.Error!.Messages);
         }
 
         [Fact]
         public async Task PostRegisterAsync200OKTest()
         {
-            var request = new PostRegisterRequest();
-            var response = await this.service.PostRegisterAsync(request);
+            var request = new PostRegisterRequest()
+            {
+                DisplayName = "display_name",
+                Email = Mocks.UnconfirmedEmail,
+                IsAdmin = false,
+                Password = Mocks.ValidPassword,
+            };
+            var result = await this.service.PostRegisterAsync(request);
 
-            Assert.Null(response.Payload);
-            Assert.Equal(StatusCodes.Status200OK, response.StatusCode);
+            Assert.Null(result.Value);
+            Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
+
+            request = new PostRegisterRequest()
+            {
+                DisplayName = "display_name",
+                Email = Mocks.UnconfirmedEmail,
+                IsAdmin = true,
+                Password = Mocks.ValidPassword,
+            };
+            result = await this.service.PostRegisterAsync(request);
+
+            Assert.Null(result.Value);
+            Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
         }
 
         [Fact]
         public async Task PostRegisterAsync409ConflictTest()
         {
-            var request = new PostRegisterRequest();
-            var response = await this.service.PostRegisterAsync(request);
+            var request = new PostRegisterRequest()
+            {
+                DisplayName = "display_name",
+                Email = Mocks.ConfirmedEmail,
+                IsAdmin = false,
+                Password = Mocks.ValidPassword,
+            };
+            var result = await this.service.PostRegisterAsync(request);
 
-            Assert.Null(response.Payload);
-            Assert.Equal(StatusCodes.Status409Conflict, response.StatusCode);
+            Assert.NotNull(result.Error);
+            Assert.Equal(StatusCodes.Status409Conflict, result.StatusCode);
+            Assert.Contains(ErrorMessages.UserEmailAlreadyUsed, result.Error!.Messages);
         }
 
         [Fact]
-        public async Task PutLoginAsync200Test()
+        public async Task PutLoginAsync200OKTest()
         {
-            var request = new PutLoginRequest();
-            var response = await this.service.PutLoginAsync(this.notExistingUser, request);
+            var request = new PutLoginRequest()
+            {
+                Email = Mocks.ConfirmedEmail,
+                Password = Mocks.ValidPassword,
+            };
+            var result = await this.service.PutLoginAsync(request);
 
-            Assert.NotNull(response.Payload);
-            Assert.Equal(StatusCodes.Status404NotFound, response.StatusCode);
+            Assert.NotNull(result.Value);
+            Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
+        }
+
+        [Fact]
+        public async Task PutLoginAsync403ForbiddenTest()
+        {
+            var request = new PutLoginRequest()
+            {
+                Email = Mocks.ConfirmedEmail,
+                Password = Mocks.InvalidPassword,
+            };
+            var result = await this.service.PutLoginAsync(request);
+
+            Assert.NotNull(result.Error);
+            Assert.Equal(StatusCodes.Status403Forbidden, result.StatusCode);
+            Assert.Contains(ErrorMessages.InvalidPassword, result.Error!.Messages);
         }
 
         [Fact]
         public async Task PutLoginAsync404NotFoundTest()
         {
-            var response = await this.service.PutLoginAsync(this.notExistingUser, new PutLoginRequest());
+            var request = new PutLoginRequest()
+            {
+                Email = Mocks.UnconfirmedEmail,
+                Password = Mocks.ValidPassword,
+            };
+            var result = await this.service.PutLoginAsync(request);
 
-            Assert.Null(response.Payload);
-            Assert.Equal(StatusCodes.Status404NotFound, response.StatusCode);
-        }
-
-        [Fact]
-        public async Task PutLoginAsync900NotVerifiedTest()
-        {
-            var response = await this.service.PutLoginAsync(this.notVerifiedUser, new PutLoginRequest());
-
-            Assert.Null(response.Payload);
-            Assert.Equal(900, response.StatusCode);
-        }
-
-        [Fact]
-        public async Task PutLogoutAsync200OKTest()
-        {
-            var response = await this.service.PutLogoutasync(this.notExistingUser);
-
-            Assert.Null(response.Payload);
-            Assert.Equal(StatusCodes.Status200OK, response.StatusCode);
-        }
-
-        [Fact]
-        public async Task PutLogoutAsync404NotFoundTest()
-        {
-            var response = await this.service.PutLogoutasync(this.notExistingUser);
-
-            Assert.Null(response.Payload);
-            Assert.Equal(StatusCodes.Status404NotFound, response.StatusCode);
+            Assert.NotNull(result.Error);
+            Assert.Equal(StatusCodes.Status404NotFound, result.StatusCode);
+            Assert.Contains(ErrorMessages.UserNotFound, result.Error!.Messages);
         }
     }
 }

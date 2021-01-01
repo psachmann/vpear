@@ -3,7 +3,6 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
-using System;
 using System.Threading.Tasks;
 using VPEAR.Core.Wrappers;
 
@@ -11,16 +10,14 @@ namespace VPEAR.Core.Abstractions
 {
     public interface IUserService
     {
-        Task<Response> GetAsync(Guid? id = null, string? role = null);
+        Task<Result<Container<GetUserResponse>>> GetAsync(string? role = null);
 
-        Task<Response> PutAsync(Guid id, PutUserRequest request);
+        Task<Result<Null>> PutAsync(string id, PutUserRequest request);
 
-        Task<Response> DeleteAsync(Guid id);
+        Task<Result<Null>> DeleteAsync(string id);
 
-        Task<Response> PostRegisterAsync(PostRegisterRequest request);
+        Task<Result<Null>> PostRegisterAsync(PostRegisterRequest request);
 
-        Task<Response> PutLoginAsync(Guid id, PutLoginRequest request);
-
-        Task<Response> PutLogoutasync(Guid id);
+        Task<Result<PutLoginResponse>> PutLoginAsync(PutLoginRequest request);
     }
 }

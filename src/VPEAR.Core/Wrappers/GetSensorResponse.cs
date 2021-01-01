@@ -1,4 +1,4 @@
-// <copyright file="SensorResponse.cs" company="Patrick Sachmann">
+// <copyright file="GetSensorResponse.cs" company="Patrick Sachmann">
 // Copyright (c) Patrick Sachmann. All rights reserved.
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
@@ -10,7 +10,7 @@ namespace VPEAR.Core.Wrappers
     /// <summary>
     /// A json wrapper class with json naming conventions.
     /// </summary>
-    public class SensorResponse
+    public class GetSensorResponse
     {
         /// <summary>
         /// Gets or sets the name.

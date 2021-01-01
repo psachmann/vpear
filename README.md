@@ -1,7 +1,5 @@
 # Master Thesis: Visualization of Pressure Effects using an Augmented Reality Android App for Decubitus Prophylaxis
 
-## Status
-
 | Branches | Master | Develop |
 | - | - | - |
 | Build | ![Build Status][1] | ![Build Status][2] |
@@ -9,14 +7,41 @@
 [1]: https://dev.azure.com/psachmann/vpear/_apis/build/status/psachmann.vpear?branchName=master
 [2]: https://dev.azure.com/psachmann/vpear/_apis/build/status/psachmann.vpear?branchName=develop
 
-## Introduction
+---
+## Overview
 
 TODO: write short introduction
 
-## Documentation
+---
+## Progress
 
-TODO: reference to the documentation
+### Server
 
+| Feature | Controller | Service | Validators |
+| :- | :-: | :-: | :-: |
+| Device | Done | Done | Done |
+| Filter | Done | Done | Done |
+| Firmware | Done | Done | Done |
+| Home | Done | - | - |
+| Power | Done | Done | - |
+| Sensor | Done | Done | - |
+| User | Done | Done | Done |
+| Wifi | Done | Done | Done |
+| Reading Device | - | `NotStarted` | - |
+| DeviceClient | - | `InProgress`  | - |
+| VPEARClient | - | `InProgress`  | - |
+
+### Security
+
+| Feature | Status | Description |
+| :- | :-: | :- |
+
+### Client
+
+| Feature | Status | Description |
+| :- | :-: | :- |
+
+---
 ## Wep Api
 
 | Route | Method | Function |

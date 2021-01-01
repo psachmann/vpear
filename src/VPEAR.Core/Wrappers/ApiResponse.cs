@@ -25,7 +25,7 @@ namespace VPEAR.Core.Wrappers
         /// </summary>
         /// <value>The sensor details.</value>
         [JsonPropertyName("sensors")]
-        public IList<SensorResponse> Sensors { get; set; } = new List<SensorResponse>();
+        public IList<GetSensorResponse> Sensors { get; set; } = new List<GetSensorResponse>();
 
         /// <summary>
         /// Gets or sets the frames object.

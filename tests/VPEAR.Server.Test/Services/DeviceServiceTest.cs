@@ -1,170 +1,175 @@
+// <copyright file="DeviceServiceTest.cs" company="Patrick Sachmann">
+// Copyright (c) Patrick Sachmann. All rights reserved.
+// Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
+// </copyright>
+
+using Autofac;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using VPEAR.Core;
 using VPEAR.Core.Abstractions;
-using VPEAR.Core.Models;
 using VPEAR.Core.Wrappers;
-using VPEAR.Server.Controllers;
-using VPEAR.Server.Db;
-using VPEAR.Server.Services;
 using Xunit;
+using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Test.Services
 {
-    public class DeviceServiceTest : IClassFixture<VPEARDbContextFixture>
+    public class DeviceServiceTest : IClassFixture<AutofacFixture>
     {
-        private readonly Guid stoppedDevice = DbSeed.Devices[0].Id;
-        private readonly Guid recordingDevice = DbSeed.Devices[1].Id;
-        private readonly Guid archivedDevice = DbSeed.Devices[2].Id;
-        private readonly Guid notReachableDevice = DbSeed.Devices[3].Id;
-        private readonly Guid notExistingDevice = new Guid();
         private readonly IDeviceService service;
 
-        public DeviceServiceTest(VPEARDbContextFixture fixture)
+        public DeviceServiceTest(AutofacFixture fixture)
         {
-            this.service = new DeviceService(
-                Mocks.CreateLogger<DeviceController>(),
-                Mocks.CreateRepository<Device, Guid>(fixture.Context));
+            this.service = fixture.Container.Resolve<IDeviceService>();
         }
 
         [Fact]
-        public async Task GetAsync200OKTest()
+        public void GetAsync200OKTest()
         {
-            var devices = new List<Guid>()
+            var statuses = new List<DeviceStatus>()
             {
-                this.archivedDevice,
-                this.notReachableDevice,
-                this.stoppedDevice,
-                this.recordingDevice,
+                DeviceStatus.Archived,
+                DeviceStatus.NotReachable,
+                DeviceStatus.Recording,
+                DeviceStatus.Stopped,
             };
 
-            foreach (var device in devices)
+            statuses.ForEach(async status =>
             {
-                var response = await this.service.GetAsync(device);
+                var result = await this.service.GetAsync(status);
 
-                Assert.NotNull(response.Payload);
-                Assert.Equal(StatusCodes.Status200OK, response.StatusCode);
-            }
+                Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
+                Assert.NotNull(result.Value);
+                Assert.InRange(result.Value!.Count, 1, int.MaxValue);
+            });
         }
 
         [Fact]
         public async Task GetAsync404NotFoundTest()
         {
-            var response = await this.service.GetAsync(this.notExistingDevice);
+            var result = await this.service.GetAsync(DeviceStatus.None);
 
-            Assert.Null(response.Payload);
-            Assert.Equal(StatusCodes.Status404NotFound, response.StatusCode);
+            Assert.NotNull(result.Error);
+            Assert.Equal(StatusCodes.Status404NotFound, result.StatusCode);
+            Assert.Contains(ErrorMessages.DeviceNotFound, result.Error!.Messages);
         }
 
         [Fact]
-        public async Task PutAsync200OKTest()
+        public void PutAsync200OKTest()
         {
-            var response = await this.service.PutAsync(this.stoppedDevice, new PutDeviceRequest());
+            var devices = new List<Guid>()
+            {
+                Mocks.Stopped.Id,
+                Mocks.Recording.Id,
+            };
 
-            Assert.Null(response.Payload);
-            Assert.Equal(StatusCodes.Status200OK, response.StatusCode);
-        }
+            devices.ForEach(async device =>
+            {
+                var result = await this.service.PutAsync(device, new PutDeviceRequest());
 
-        [Fact]
-        public async Task PutAsync202AcceptedTest()
-        {
-            var response = await this.service.PutAsync(this.recordingDevice, new PutDeviceRequest());
-
-            Assert.Null(response.Payload);
-            Assert.Equal(StatusCodes.Status202Accepted, response.StatusCode);
+                Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
+                Assert.Null(result.Value);
+            });
         }
 
         [Fact]
         public async Task PutAsync404NotFoundTest()
         {
-            var response = await this.service.PutAsync(this.notExistingDevice, new PutDeviceRequest());
+            var result = await this.service.PutAsync(Mocks.NotExisting.Id, new PutDeviceRequest());
 
-            Assert.Null(response.Payload);
-            Assert.Equal(StatusCodes.Status404NotFound, response.StatusCode);
+            Assert.NotNull(result.Error);
+            Assert.Equal(StatusCodes.Status404NotFound, result.StatusCode);
+            Assert.Contains(ErrorMessages.DeviceNotFound, result.Error!.Messages);
         }
 
         [Fact]
         public async Task PutAsync410GoneTest()
         {
-            var response = await this.service.PutAsync(this.archivedDevice, new PutDeviceRequest());
+            var result = await this.service.PutAsync(Mocks.Archived.Id, new PutDeviceRequest());
 
-            Assert.Null(response.Payload);
-            Assert.Equal(StatusCodes.Status410Gone, response.StatusCode);
+            Assert.NotNull(result.Error);
+            Assert.Equal(StatusCodes.Status410Gone, result.StatusCode);
+            Assert.Contains(ErrorMessages.DeviceIsArchived, result.Error!.Messages);
         }
 
         [Fact]
         public async Task PutAsync424FailedDependencyTest()
         {
-            var response = await this.service.PutAsync(this.notReachableDevice, new PutDeviceRequest());
+            var result = await this.service.PutAsync(Mocks.NotReachable.Id, new PutDeviceRequest());
 
-            Assert.Null(response.Payload);
-            Assert.Equal(StatusCodes.Status424FailedDependency, response.StatusCode);
+            Assert.NotNull(result.Error);
+            Assert.Equal(StatusCodes.Status424FailedDependency, result.StatusCode);
+            Assert.Contains(ErrorMessages.DeviceIsNotReachable, result.Error!.Messages);
         }
 
         [Fact]
-        public async Task PostAsync200OKTest()
+        public async Task PostAsync102ProcessingTest()
         {
             var request = new PostDeviceRequest()
             {
-                StartIP = "0.0.0.0",
-                StopIP = "255.255.255.255",
+                Address = "192.168.178.33",
+                SubnetMask = "255.255.255.0",
             };
-            var response = await this.service.PostAsync(request);
+            var result = await this.service.PostAsync(request);
 
-            Assert.NotNull(response.Payload);
-            Assert.Equal(StatusCodes.Status200OK, response.StatusCode);
+            Assert.Null(result.Value);
+            Assert.Equal(StatusCodes.Status102Processing, result.StatusCode);
         }
 
         [Fact]
-        public async Task PostAsync404Test()
+        public async Task PostAsync400BadRequestTest()
         {
             var request = new PostDeviceRequest()
             {
-                StartIP = "0.0.0.0",
-                StopIP = "0.0.0.0",
+                Address = "192.168.178.33",
+                SubnetMask = "255::0",
             };
-            var response = await this.service.PostAsync(request);
+            var result = await this.service.PostAsync(request);
 
-            Assert.Null(response.Payload);
-            Assert.Equal(StatusCodes.Status404NotFound, response.StatusCode);
+            Assert.NotNull(result.Error);
+            Assert.Equal(StatusCodes.Status400BadRequest, result.StatusCode);
+            Assert.Contains(ErrorMessages.BadRequest, result.Error!.Messages);
         }
 
         [Fact]
-        public async Task DeleteAsync200OKTest()
+        public void DeleteAsync200OKTest()
         {
             var devices = new List<Guid>()
             {
-                this.archivedDevice,
-                this.notReachableDevice,
-                this.stoppedDevice,
+                Mocks.Archived.Id,
+                Mocks.NotReachable.Id,
+                Mocks.Stopped.Id,
             };
 
-            foreach (var device in devices)
+            devices.ForEach(async device =>
             {
-                var response = await this.service.GetAsync(device);
+                var result = await this.service.DeleteAsync(device);
 
-                Assert.Null(response.Payload);
-                Assert.Equal(StatusCodes.Status200OK, response.StatusCode);
-            }
+                Assert.Null(result.Value);
+                Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
+            });
         }
 
         [Fact]
         public async Task DeleteAsync404NotFoundTest()
         {
-            var response = await this.service.DeleteAsync(this.notExistingDevice);
+            var result = await this.service.DeleteAsync(Mocks.NotExisting.Id);
 
-            Assert.Null(response.Payload);
-            Assert.Equal(StatusCodes.Status404NotFound, response.StatusCode);
+            Assert.NotNull(result.Error);
+            Assert.Equal(StatusCodes.Status404NotFound, result.StatusCode);
+            Assert.Contains(ErrorMessages.DeviceNotFound, result.Error!.Messages);
         }
 
         [Fact]
         public async Task DeleteAsync409ConflictTest()
         {
-            var response = await this.service.DeleteAsync(this.recordingDevice);
+            var result = await this.service.DeleteAsync(Mocks.Recording.Id);
 
-            Assert.Null(response.Payload);
-            Assert.Equal(StatusCodes.Status409Conflict, response.StatusCode);
+            Assert.NotNull(result.Error);
+            Assert.Equal(StatusCodes.Status409Conflict, result.StatusCode);
+            Assert.Contains(ErrorMessages.DeviceIsRecording, result.Error!.Messages);
         }
     }
 }

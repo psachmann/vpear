@@ -15,8 +15,8 @@ namespace VPEAR.Core.Wrappers
         [JsonPropertyName("display_name")]
         public string? DisplayName { get; set; }
 
-        [JsonPropertyName("sample_frequency")]
-        public uint? SampleFrequency { get; set; }
+        [JsonPropertyName("frequency")]
+        public uint? Frequency { get; set; }
 
         [JsonPropertyName("required_sensors")]
         public uint? RequiredSensors { get; set; }

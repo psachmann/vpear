@@ -1,46 +1,36 @@
-// <copyright file="Filters.cs" company="Patrick Sachmann">
+// <copyright file="PutFilterRequest.cs" company="Patrick Sachmann">
 // Copyright (c) Patrick Sachmann. All rights reserved.
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
-using System;
-using VPEAR.Core.Abstractions;
+using System.Text.Json.Serialization;
 
-namespace VPEAR.Core.Models
+namespace VPEAR.Core.Wrappers
 {
     /// <summary>
-    /// Db data model for entity framework.
+    /// A json wrapper class with json naming conventions.
     /// </summary>
-    public class Filters : EntityBase<Guid>
+    public class PutFilterRequest
     {
         /// <summary>
         /// Gets or sets a value indicating whether spot is used.
         /// </summary>
         /// <value>Indicates, if the spot filter is used.</value>
-        public bool Spot { get; set; }
+        [JsonPropertyName("spot")]
+        public bool? Spot { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether smooth is used.
         /// </summary>
         /// <value>Indicates, if the smooth filter is used.</value>
-        public bool Smooth { get; set; }
+        [JsonPropertyName("smooth")]
+        public bool? Smooth { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether noise is used.
         /// </summary>
         /// <value>Indicates, if the noise filter is used.</value>
-        public bool Noise { get; set; }
-
-        /// <summary>
-        /// Gets or sets the foreign key.
-        /// </summary>
-        /// <value>The foreign key.</value>
-        public Guid DeviceForeignKey { get; set; }
-
-        /// <summary>
-        /// Gets or sets the device.
-        /// </summary>
-        /// <value>The navigation property.</value>
-        public Device? Device { get; set; }
+        [JsonPropertyName("noise")]
+        public bool? Noise { get; set; }
     }
 }
