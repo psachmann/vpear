@@ -2,12 +2,13 @@
 
 ## Status
 
-| Branches | Master | Develop |
-| - | - | - |
-| Build | ![Build Status][1] | ![Build Status][2] |
+| Branches | Develop |
+| - | - |
+| Build | ![Build Status][build-status] |
+| Coverage | ![Coverage Status][coverage-status] |
 
-[1]: https://dev.azure.com/psachmann/vpear/_apis/build/status/psachmann.vpear?branchName=master
-[2]: https://dev.azure.com/psachmann/vpear/_apis/build/status/psachmann.vpear?branchName=develop
+[build-status]: https://github.com/psachmann/vpear/workflows/VPEAR%20CI/badge.svg
+[coverage-status]: https://raw.githubusercontent.com/psachmann/vpear-docs/main/report/badge_combined.svg
 
 ## Introduction
 
