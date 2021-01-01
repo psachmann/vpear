@@ -2,9 +2,9 @@
 
 ## Status
 
-| Branches | Develop |
+| Service | Status |
 | - | - |
-| Build | ![Build Status][build-status] |
+| GitHub | ![Build Status][build-status] |
 | Coverage | ![Coverage Status][coverage-status] |
 
 [build-status]: https://github.com/psachmann/vpear/workflows/VPEAR%20CI/badge.svg
