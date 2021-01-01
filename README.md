@@ -36,3 +36,9 @@ TODO: reference to the documentation
 | /api/v1/device/firmware?id={id} | GET | gets the device firmware details |
 | /api/v1/device/firmware?id={id} | PUT | sets the device firmware details |
 | /api/v1/device/sse |||
+
+## License
+
+This repository is licensed under the [MIT][license] license.
+
+[license]: ./LICENSE.md
