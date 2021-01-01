@@ -1,0 +1,27 @@
+name: VPEAR CI
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+      - hotfix/**
+  pull_request:
+    branches:
+      - master
+      - develop
+      - hotfix/**
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.100
+    - name: Install Cake
+      run: dotnet tool install Cake.Tool --tool-path ./tools
+    - name: Build and Test
+      run: ./tools/dotnet-cake -target=test -config=debug
