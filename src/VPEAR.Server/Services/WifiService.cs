@@ -50,19 +50,15 @@ namespace VPEAR.Server.Services
         /// <inheritdoc/>
         public async Task<Result<GetWifiResponse>> GetAsync(Guid id)
         {
-            var status = HttpStatusCode.InternalServerError;
-            var message = ErrorMessages.InternalServerError;
             var wifi = await this.wifis.Get()
                 .FirstOrDefaultAsync(w => w.DeviceForeignKey.Equals(id));
 
             if (wifi == null)
             {
-                status = HttpStatusCode.NotFound;
-                message = ErrorMessages.DeviceNotFound;
+                return new Result<GetWifiResponse>(HttpStatusCode.NotFound, ErrorMessages.DeviceNotFound);
             }
             else
             {
-                status = HttpStatusCode.OK;
                 var payload = new GetWifiResponse()
                 {
                     Mode = wifi.Mode,
@@ -70,68 +66,50 @@ namespace VPEAR.Server.Services
                     Ssid = wifi.Ssid,
                 };
 
-                return new Result<GetWifiResponse>(status, payload);
+                return new Result<GetWifiResponse>(HttpStatusCode.OK, payload);
             }
-
-            return new Result<GetWifiResponse>(status, message);
         }
 
         /// <inheritdoc/>
         public async Task<Result<Null>> PutAsync(Guid id, PutWifiRequest request)
         {
-            var status = HttpStatusCode.InternalServerError;
-            var message = ErrorMessages.InternalServerError;
             var device = await this.devices.GetAsync(id);
             var wifi = this.wifis.Get()
                 .FirstOrDefault(w => w.DeviceForeignKey.Equals(id));
 
             if (device == null || wifi == null)
             {
-                status = HttpStatusCode.NotFound;
-                message = ErrorMessages.DeviceNotFound;
+                return new Result<Null>(HttpStatusCode.NotFound, ErrorMessages.DeviceNotFound);
             }
-            else if (device.Status == DeviceStatus.Archived)
+
+            if (device.Status == DeviceStatus.Archived)
             {
-                status = HttpStatusCode.Gone;
-                message = ErrorMessages.DeviceIsArchived;
+                return new Result<Null>(HttpStatusCode.Gone, ErrorMessages.DeviceIsArchived);
             }
-            else if (device.Status == DeviceStatus.NotReachable)
+
+            var client = this.factory.Invoke(device.Address);
+
+            if (device.Status == DeviceStatus.NotReachable || !await client.IsReachableAsync())
             {
-                status = HttpStatusCode.FailedDependency;
-                message = ErrorMessages.DeviceIsNotReachable;
+                device.Status = DeviceStatus.NotReachable;
+                await this.devices.UpdateAsync(device);
+
+                return new Result<Null>(HttpStatusCode.FailedDependency, ErrorMessages.DeviceIsNotReachable);
             }
-            else if (device.Status == DeviceStatus.Recording || device.Status == DeviceStatus.Stopped)
+            else
             {
-                var client = this.factory.Invoke(device.Address);
+                await client.PutWifiAsync(
+                    request.Ssid!,
+                    request.Password!,
+                    request.Mode);
 
-                if (await client.IsReachableAsync())
-                {
-                    await client.PutWifiAsync(
-                        request.Ssid!,
-                        request.Password!,
-                        request.Mode);
+                wifi.Mode = request.Mode ?? wifi.Mode;
+                wifi.Ssid = request.Ssid ?? wifi.Ssid;
 
-                    wifi.Mode = request.Mode ?? wifi.Mode!;
-                    wifi.Ssid = request.Ssid ?? wifi.Ssid!;
+                await this.wifis.UpdateAsync(wifi);
 
-                    if (await this.wifis.UpdateAsync(wifi))
-                    {
-                        return new Result<Null>(HttpStatusCode.OK);
-                    }
-                }
-                else
-                {
-                    device.Status = DeviceStatus.NotReachable;
-
-                    if (await this.devices.UpdateAsync(device))
-                    {
-                        status = HttpStatusCode.FailedDependency;
-                        message = ErrorMessages.DeviceIsNotReachable;
-                    }
-                }
+                return new Result<Null>(HttpStatusCode.OK);
             }
-
-            return new Result<Null>(status, message);
         }
     }
 }

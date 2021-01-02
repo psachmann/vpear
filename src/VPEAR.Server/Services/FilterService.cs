@@ -50,15 +50,12 @@ namespace VPEAR.Server.Services
         /// <inheritdoc/>
         public async Task<Result<GetFiltersResponse>> GetAsync(Guid id)
         {
-            var status = HttpStatusCode.InternalServerError;
-            var message = ErrorMessages.InternalServerError;
             var filter = await this.filters.Get()
                 .FirstOrDefaultAsync(f => f.DeviceForeignKey.Equals(id));
 
             if (filter == null)
             {
-                status = HttpStatusCode.NotFound;
-                message = ErrorMessages.DeviceNotFound;
+                return new Result<GetFiltersResponse>(HttpStatusCode.NotFound, ErrorMessages.DeviceNotFound);
             }
             else
             {
@@ -69,73 +66,55 @@ namespace VPEAR.Server.Services
                     Spot = filter.Noise,
                 });
             }
-
-            return new Result<GetFiltersResponse>(status, message);
         }
 
         /// <inheritdoc/>
         public async Task<Result<Null>> PutAsync(Guid id, PutFilterRequest request)
         {
-            var status = HttpStatusCode.InternalServerError;
-            var message = ErrorMessages.InternalServerError;
             var device = await this.devices.GetAsync(id);
             var filter = this.filters.Get()
                 .FirstOrDefault(f => f.DeviceForeignKey.Equals(id));
 
             if (device == null || filter == null)
             {
-                status = HttpStatusCode.NotFound;
-                message = ErrorMessages.DeviceNotFound;
+                return new Result<Null>(HttpStatusCode.NotFound, ErrorMessages.DeviceNotFound);
             }
-            else if (device.Status == DeviceStatus.Archived)
-            {
-                status = HttpStatusCode.Gone;
-                message = ErrorMessages.DeviceIsArchived;
-            }
-            else if (device.Status == DeviceStatus.NotReachable)
-            {
-                status = HttpStatusCode.FailedDependency;
-                message = ErrorMessages.DeviceIsNotReachable;
-            }
-            else if (device.Status == DeviceStatus.Recording || device.Status == DeviceStatus.Stopped)
-            {
-                var client = this.factory.Invoke(device.Address);
 
-                if (await client.IsReachableAsync())
+            if (device.Status == DeviceStatus.Archived)
+            {
+                return new Result<Null>(HttpStatusCode.Gone, ErrorMessages.DeviceIsArchived);
+            }
+
+            var client = this.factory.Invoke(device.Address);
+
+            if (device.Status == DeviceStatus.NotReachable || !await client.IsReachableAsync())
+            {
+                device.Status = DeviceStatus.NotReachable;
+                await this.devices.UpdateAsync(device);
+
+                return new Result<Null>(HttpStatusCode.FailedDependency, ErrorMessages.DeviceIsNotReachable);
+            }
+            else
+            {
+                await client.PutFiltersAsync(
+                    request.Spot ?? filter.Spot,
+                    request.Smooth ?? filter.Smooth,
+                    request.Noise ?? filter.Noise);
+
+                var newFilter = new Filter()
                 {
-                    await client.PutFiltersAsync(
-                        request.Spot ?? filter.Spot,
-                        request.Smooth ?? filter.Smooth,
-                        request.Noise ?? filter.Noise);
+                    Noise = request.Noise ?? filter.Noise,
+                    Smooth = request.Smooth ?? filter.Smooth,
+                    Spot = request.Spot ?? filter.Spot,
+                };
 
-                    var newFilter = new Filter()
-                    {
-                        Noise = request.Noise ?? filter.Noise,
-                        Smooth = request.Smooth ?? filter.Smooth,
-                        Spot = request.Spot ?? filter.Spot,
-                    };
+                device.Filters = newFilter;
 
-                    device.Filters = newFilter;
+                await this.filters.CreateAsync(filter);
+                await this.devices.UpdateAsync(device);
 
-                    if (await this.filters.CreateAsync(filter)
-                        && await this.devices.UpdateAsync(device))
-                    {
-                        return new Result<Null>(HttpStatusCode.OK);
-                    }
-                }
-                else
-                {
-                    device.Status = DeviceStatus.NotReachable;
-
-                    if (await this.devices.UpdateAsync(device))
-                    {
-                        status = HttpStatusCode.FailedDependency;
-                        message = ErrorMessages.DeviceIsNotReachable;
-                    }
-                }
+                return new Result<Null>(HttpStatusCode.OK);
             }
-
-            return new Result<Null>(status, message);
         }
     }
 }

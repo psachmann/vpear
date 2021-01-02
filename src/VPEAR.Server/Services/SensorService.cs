@@ -40,8 +40,6 @@ namespace VPEAR.Server.Services
         /// <inheritdoc/>
         public async Task<Result<Container<GetFrameResponse>>> GetFramesAsync(Guid id, int start, int stop)
         {
-            var status = HttpStatusCode.InternalServerError;
-            var message = ErrorMessages.InternalServerError;
             var frames = await this.frames.Get()
                 .Where(f => f.DeviceForeignKey.Equals(id))
                 .OrderBy(f => f.CreatedAt)
@@ -49,64 +47,58 @@ namespace VPEAR.Server.Services
 
             if (frames == null || frames.Count == 0)
             {
-                status = HttpStatusCode.NotFound;
-                message = ErrorMessages.FramesNotFound;
+                return new Result<Container<GetFrameResponse>>(HttpStatusCode.NotFound, ErrorMessages.FramesNotFound);
             }
-            else if (start == 0 && stop == 0)
+
+            if (start == 0 && stop == 0)
             {
                 var payload = new Container<GetFrameResponse>();
 
-                frames.ForEach(f =>
+                foreach (var frame in frames)
                 {
                     payload.Items.Add(new GetFrameResponse()
                     {
-                        Readings = f.Readings,
-                        Time = f.CreatedAt.ToString("dd.MM.yyyy hh:mm:ss.ff"),
+                        Readings = frame.Readings,
+                        Time = frame.CreatedAt.ToString("dd.MM.yyyy hh:mm:ss.ff"),
                     });
-                });
+                }
 
                 return new Result<Container<GetFrameResponse>>(HttpStatusCode.OK, payload);
             }
-            else if (start < stop && stop < frames.Count)
+
+            if (start < stop && stop < frames.Count)
             {
                 var payload = new Container<GetFrameResponse>();
 
-                frames.GetRange(start, stop)
-                    .ForEach(f =>
+                foreach (var frame in frames.GetRange(start, stop - start))
+                {
+                    payload.Items.Add(new GetFrameResponse()
                     {
-                        payload.Items.Add(new GetFrameResponse()
-                        {
-                            Readings = f.Readings,
-                            Time = f.CreatedAt.ToString("dd.MM.yyyy hh:mm:ss.ff"),
-                        });
+                        Readings = frame.Readings,
+                        Time = frame.CreatedAt.ToString("dd.MM.yyyy hh:mm:ss.ff"),
                     });
+                }
 
                 return new Result<Container<GetFrameResponse>>(HttpStatusCode.OK, payload);
             }
-            else if (start < stop && stop >= frames.Count)
+
+            if (start < stop && stop >= frames.Count)
             {
                 var payload = new Container<GetFrameResponse>();
 
-                frames.GetRange(start, frames.Count - 1)
-                    .ForEach(f =>
+                foreach (var frame in frames.GetRange(start, frames.Count - start))
+                {
+                    payload.Items.Add(new GetFrameResponse()
                     {
-                        payload.Items.Add(new GetFrameResponse()
-                        {
-                            Readings = f.Readings,
-                            Time = f.CreatedAt.ToString("dd.MM.yyyy hh:mm:ss.ff"),
-                        });
+                        Readings = frame.Readings,
+                        Time = frame.CreatedAt.ToString("dd.MM.yyyy hh:mm:ss.ff"),
                     });
+                }
 
                 return new Result<Container<GetFrameResponse>>(HttpStatusCode.PartialContent, payload);
             }
-            else
-            {
-                // start is grater or equals stop
-                status = HttpStatusCode.BadRequest;
-                message = ErrorMessages.BadRequest;
-            }
 
-            return new Result<Container<GetFrameResponse>>(status, message);
+            return new Result<Container<GetFrameResponse>>(HttpStatusCode.BadRequest, ErrorMessages.BadRequest);
         }
 
         /// <inheritdoc/>

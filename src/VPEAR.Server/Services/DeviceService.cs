@@ -74,38 +74,30 @@ namespace VPEAR.Server.Services
         /// <inheritdoc/>
         public async Task<Result<Null>> PutAsync(Guid id, PutDeviceRequest request)
         {
-            var status = HttpStatusCode.InternalServerError;
-            var message = ErrorMessages.InternalServerError;
             var device = await this.devices.GetAsync(id);
 
             if (device == null)
             {
-                status = HttpStatusCode.NotFound;
-                message = ErrorMessages.DeviceNotFound;
-            }
-            else if (device.Status == DeviceStatus.Archived)
-            {
-                status = HttpStatusCode.Gone;
-                message = ErrorMessages.DeviceIsArchived;
-            }
-            else if (device.Status == DeviceStatus.NotReachable)
-            {
-                status = HttpStatusCode.FailedDependency;
-                message = ErrorMessages.DeviceIsNotReachable;
-            }
-            else
-            {
-                device.DisplayName = request.DisplayName ?? device.DisplayName;
-                device.RequiredSensors = request.RequiredSensors ?? device.RequiredSensors;
-                device.Frequency = request.Frequency ?? device.Frequency;
-
-                if (await this.devices.UpdateAsync(device))
-                {
-                    return new Result<Null>(HttpStatusCode.OK);
-                }
+                return new Result<Null>(HttpStatusCode.NotFound, ErrorMessages.DeviceNotFound);
             }
 
-            return new Result<Null>(status, message);
+            if (device.Status == DeviceStatus.Archived)
+            {
+                return new Result<Null>(HttpStatusCode.Gone, ErrorMessages.DeviceIsArchived);
+            }
+
+            if (device.Status == DeviceStatus.NotReachable)
+            {
+                return new Result<Null>(HttpStatusCode.FailedDependency, ErrorMessages.DeviceIsNotReachable);
+            }
+
+            device.DisplayName = request.DisplayName ?? device.DisplayName;
+            device.RequiredSensors = request.RequiredSensors ?? device.RequiredSensors;
+            device.Frequency = request.Frequency ?? device.Frequency;
+
+            await this.devices.UpdateAsync(device);
+
+            return new Result<Null>(HttpStatusCode.OK);
         }
 
         /// <inheritdoc/>
@@ -129,26 +121,21 @@ namespace VPEAR.Server.Services
         /// <inheritdoc/>
         public async Task<Result<Null>> DeleteAsync(Guid id)
         {
-            var status = HttpStatusCode.InternalServerError;
-            var message = ErrorMessages.InternalServerError;
             var device = await this.devices.GetAsync(id);
 
             if (device == null)
             {
-                status = HttpStatusCode.NotFound;
-                message = ErrorMessages.DeviceNotFound;
-            }
-            else if (device.Status == DeviceStatus.Recording)
-            {
-                status = HttpStatusCode.Conflict;
-                message = ErrorMessages.DeviceIsRecording;
-            }
-            else if (await this.devices.DeleteAsync(device))
-            {
-                return new Result<Null>(HttpStatusCode.OK);
+                return new Result<Null>(HttpStatusCode.NotFound, ErrorMessages.DeviceNotFound);
             }
 
-            return new Result<Null>(status, message);
+            if (device.Status == DeviceStatus.Recording)
+            {
+                return new Result<Null>(HttpStatusCode.Conflict, ErrorMessages.DeviceIsRecording);
+            }
+
+            await this.devices.DeleteAsync(device);
+
+            return new Result<Null>(HttpStatusCode.OK);
         }
     }
 }

@@ -27,7 +27,7 @@ namespace VPEAR.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceClient"/> class.
         /// </summary>
-        /// <param name="baseAddess">The base url for the client to connect to.</param>
+        /// <param name="baseAddess">The base address for the client to connect to.</param>
         public DeviceClient(string baseAddess)
         {
             this.baseAddess = baseAddess;
