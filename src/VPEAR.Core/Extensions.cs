@@ -20,6 +20,11 @@ namespace VPEAR.Core
             return JsonSerializer.Deserialize<T>(json);
         }
 
+        public static string? ToJsonString<T>(this T source)
+        {
+            return JsonSerializer.Serialize(source);
+        }
+
         public static bool IsIPv4(this IPAddress address)
         {
             if (address.AddressFamily == AddressFamily.InterNetwork)
