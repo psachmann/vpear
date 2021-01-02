@@ -20,6 +20,11 @@ namespace VPEAR.Core
             return JsonSerializer.Deserialize<T>(json);
         }
 
+        public static T? FromJsonString<T>(this string source)
+        {
+            return JsonSerializer.Deserialize<T>(source);
+        }
+
         public static string? ToJsonString<T>(this T source)
         {
             return JsonSerializer.Serialize(source);
