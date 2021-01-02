@@ -1,37 +1,16 @@
-// <copyright file="Extensions.cs" company="Patrick Sachmann">
+// <copyright file="IPAddressExtensions.cs" company="Patrick Sachmann">
 // Copyright (c) Patrick Sachmann. All rights reserved.
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
 using System;
 using System.Net;
-using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using System.Text.Json;
 
-namespace VPEAR.Core
+namespace VPEAR.Core.Extensions
 {
-    public static class Extensions
+    public static class IPAddressExtensions
     {
-        public static T? Clone<T>(this T source)
-        {
-            var json = JsonSerializer.Serialize(source);
-
-            return JsonSerializer.Deserialize<T>(json);
-        }
-
-        public static bool IsIPv4(this IPAddress address)
-        {
-            if (address.AddressFamily == AddressFamily.InterNetwork)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
         public static IPAddress GetBroadcastAddress(this IPAddress address, IPAddress subnetMask)
         {
             byte[] adressBytes = address.GetAddressBytes();
@@ -70,23 +49,16 @@ namespace VPEAR.Core
             return new IPAddress(broadcastAddress);
         }
 
-        public static IPAddress? GetSubnetMask(this IPAddress address)
+        public static bool IsIPv4(this IPAddress address)
         {
-            foreach (var adapter in NetworkInterface.GetAllNetworkInterfaces())
+            if (address.AddressFamily == AddressFamily.InterNetwork)
             {
-                foreach (var unicastIPAddressInformation in adapter.GetIPProperties().UnicastAddresses)
-                {
-                    if (unicastIPAddressInformation.Address.AddressFamily == AddressFamily.InterNetwork)
-                    {
-                        if (address.Equals(unicastIPAddressInformation.Address))
-                        {
-                            return unicastIPAddressInformation.IPv4Mask;
-                        }
-                    }
-                }
+                return true;
             }
-
-            return null;
+            else
+            {
+                return false;
+            }
         }
     }
 }

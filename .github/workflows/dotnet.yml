@@ -13,7 +13,7 @@ on:
       - hotfix/**
 
 jobs:
-  ci:
+  VPEAR Server:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
