@@ -4,7 +4,7 @@
 // </copyright>
 
 using System.Net;
-using VPEAR.Core;
+using VPEAR.Core.Extensions;
 using Xunit;
 
 namespace VPEAR.Server.Test
@@ -31,6 +31,22 @@ namespace VPEAR.Server.Test
             var networkAddress = address.GetNetworkAddress(subnetMask);
 
             Assert.True(expectedNetworkAddress.Equals(networkAddress), "The IP address should be equals.");
+        }
+
+        [Fact]
+        public void IsIPv4TrueTest()
+        {
+            var address = IPAddress.Parse("0.0.0.0");
+
+            Assert.True(address.IsIPv4(), "This should be a valid IP v4 address.");
+        }
+
+        [Fact]
+        public void IsIPv4FalseTest()
+        {
+            var address = IPAddress.Parse("0::0");
+
+            Assert.False(address.IsIPv4(), "This should NOT be a valid IP v4 address.");
         }
     }
 }

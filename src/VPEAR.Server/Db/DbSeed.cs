@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using VPEAR.Core;
+using VPEAR.Core.Extensions;
 using VPEAR.Core.Models;
 
 namespace VPEAR.Server.Db
