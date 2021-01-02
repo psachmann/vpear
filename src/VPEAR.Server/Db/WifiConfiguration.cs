@@ -6,7 +6,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
-using VPEAR.Core.Models;
+using System.Collections.Generic;
+using VPEAR.Core.Extensions;
 using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Db
@@ -23,7 +24,7 @@ namespace VPEAR.Server.Db
 
             builder.ToTable(Schemas.WifiSchema);
 
-            builder.HasOne<Device>(w => w.Device)
+            builder.HasOne(w => w.Device)
                 .WithOne(d => d.Wifi)
                 .HasForeignKey<Core.Models.Wifi>(w => w.DeviceForeignKey);
 
@@ -34,8 +35,8 @@ namespace VPEAR.Server.Db
 
             builder.Property(w => w.Neighbors)
                 .HasConversion(
-                    v => string.Join(';', v),
-                    v => v.Split(new[] { ';' }));
+                    value => value.ToJsonString(),
+                    value => value.FromJsonString<IList<string>>());
 
             builder.Property(w => w.Ssid)
                 .HasMaxLength(Limits.MaxStringLength)

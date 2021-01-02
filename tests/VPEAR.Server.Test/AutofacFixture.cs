@@ -5,9 +5,10 @@
 
 using Autofac;
 using FluentValidation;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Net.Http;
+using VPEAR.Core;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Models;
 using VPEAR.Core.Wrappers;
@@ -73,7 +74,7 @@ namespace VPEAR.Server.Test
         private static void RegisterClientFactoties(ContainerBuilder builder)
         {
             builder.Register(context => Mocks.CreateDeviceClientFactory())
-                .As<IDeviceClient.Factory>()
+                .As<DeviceClient.Factory>()
                 .InstancePerDependency();
         }
 

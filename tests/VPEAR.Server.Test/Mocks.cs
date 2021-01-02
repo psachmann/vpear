@@ -10,6 +10,7 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using VPEAR.Core;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Models;
@@ -148,9 +149,9 @@ namespace VPEAR.Server.Test
             return mock.Object;
         }
 
-        public static IDeviceClient.Factory CreateDeviceClientFactory()
+        public static DeviceClient.Factory CreateDeviceClientFactory()
         {
-            var mock = new Mock<IDeviceClient.Factory>();
+            var mock = new Mock<DeviceClient.Factory>();
 
             mock.Setup(m => m.Invoke(It.IsAny<string>()))
                 .Returns(CreateDeviceClient());

@@ -18,7 +18,7 @@ namespace VPEAR.Core
     /// <summary>
     /// Implements the <see cref="IDeviceClient"/> interface.
     /// </summary>
-    public sealed class DeviceClient : IDeviceClient, IDisposable
+    public class DeviceClient : IDeviceClient, IDisposable
     {
         private readonly string baseAddess;
         private readonly HttpClient client;
@@ -36,7 +36,7 @@ namespace VPEAR.Core
             this.client.BaseAddress = new Uri(baseAddess);
         }
 
-        public delegate DeviceClient Factory(string baseAddess);
+        public delegate IDeviceClient Factory(string baseAddess);
 
         /// <inheritdoc/>
         public string BaseAddress
@@ -76,7 +76,7 @@ namespace VPEAR.Core
         }
 
         /// <inheritdoc/>
-        public async Task<DeviceResponse?> GetDeviceAsync()
+        public async Task<DeviceResponse> GetDeviceAsync()
         {
             var response = await this.client.GetAsync("api/device");
             var json = await response.Content.ReadAsStringAsync();
@@ -87,7 +87,7 @@ namespace VPEAR.Core
         }
 
         /// <inheritdoc/>
-        public async Task<GetFiltersResponse?> GetFiltersAsync()
+        public async Task<GetFiltersResponse> GetFiltersAsync()
         {
             var response = await this.client.GetAsync("api/filters");
             var json = await response.Content.ReadAsStringAsync();
@@ -98,7 +98,7 @@ namespace VPEAR.Core
         }
 
         /// <inheritdoc/>
-        public async Task<GetFirmwareResponse?> GetFirmwareAsync()
+        public async Task<GetFirmwareResponse> GetFirmwareAsync()
         {
             var response = await this.client.GetAsync("api/firmware/version");
             var version = await response.Content.ReadAsStringAsync();
@@ -118,13 +118,11 @@ namespace VPEAR.Core
         }
 
         /// <inheritdoc/>
-        public async Task<IList<FrameResponse>?> GetFramesAsync(int? after = null)
+        public async Task<IList<FrameResponse>> GetFramesAsync(int? after = null)
         {
-            var response = after switch
-            {
-                null => await this.client.GetAsync("api/frames"),
-                _ => await this.client.GetAsync($"api/frames?after={after}"),
-            };
+            var uri = after == null ? "api/frames" : $"api/frames?after={after}";
+            var response = await this.client.GetAsync(uri);
+
             var json = await response.Content.ReadAsStringAsync();
 
             this.status = response.StatusCode;
@@ -151,7 +149,7 @@ namespace VPEAR.Core
         }
 
         /// <inheritdoc/>
-        public async Task<GetPowerResponse?> GetPowerAsync()
+        public async Task<GetPowerResponse> GetPowerAsync()
         {
             var response = await this.client.GetAsync("api/power");
             var json = await response.Content.ReadAsStringAsync();
@@ -180,7 +178,7 @@ namespace VPEAR.Core
         }
 
         /// <inheritdoc/>
-        public async Task<GetSensorResponse?> GetSensorsAsync()
+        public async Task<GetSensorResponse> GetSensorsAsync()
         {
             var response = await this.client.GetAsync("api/sensors");
             var json = await response.Content.ReadAsStringAsync();
@@ -218,7 +216,7 @@ namespace VPEAR.Core
         }
 
         /// <inheritdoc/>
-        public async Task<GetWifiResponse?> GetWifiAsync()
+        public async Task<GetWifiResponse> GetWifiAsync()
         {
             var response = await this.client.GetAsync("api/wifi");
             var json = await response.Content.ReadAsStringAsync();
@@ -239,7 +237,7 @@ namespace VPEAR.Core
         }
 
         /// <inheritdoc/>
-        public async Task PutFirmwareAsync(string? source, string? upgrade, bool package = false)
+        public async Task PutFirmwareAsync(string source, string upgrade, bool package = false)
         {
             if (source != null)
             {
@@ -281,7 +279,7 @@ namespace VPEAR.Core
         }
 
         /// <inheritdoc/>
-        public async Task PutWifiAsync(string ssid, string password, string? mode = null)
+        public async Task PutWifiAsync(string ssid, string password, string mode = null)
         {
             var json = $"{{\"ssid\":\"{ssid}\",\"password\":\"{password}\"}}";
             var response = await this.client.PutAsync("api/wifi", new MultipartContent(json));
@@ -294,6 +292,21 @@ namespace VPEAR.Core
 
                 this.status = response.StatusCode;
             }
+        }
+
+        Task<int> IDeviceClient.GetFrequencyAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<int> IDeviceClient.GetRequiredSensorsAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<DateTimeOffset> IDeviceClient.GetTimeAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }

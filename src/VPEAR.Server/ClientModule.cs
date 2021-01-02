@@ -21,6 +21,7 @@ namespace VPEAR.Server
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<DeviceClient>()
+                .AsSelf()
                 .As<IDeviceClient>()
                 .InstancePerDependency();
         }

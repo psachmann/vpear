@@ -25,7 +25,7 @@ namespace VPEAR.Server.Services
     {
         private readonly IRepository<Device, Guid> devices;
         private readonly IRepository<Filter, Guid> filters;
-        private readonly IDeviceClient.Factory factory;
+        private readonly DeviceClient.Factory factory;
         private readonly ILogger<FilterController> logger;
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace VPEAR.Server.Services
         public FilterService(
             IRepository<Device, Guid> devices,
             IRepository<Filter, Guid> filters,
-            IDeviceClient.Factory factory,
+            DeviceClient.Factory factory,
             ILogger<FilterController> logger)
         {
             this.devices = devices;

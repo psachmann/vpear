@@ -25,7 +25,7 @@ namespace VPEAR.Server.Services
     {
         private readonly IRepository<Device, Guid> devices;
         private readonly IRepository<Firmware, Guid> firmwares;
-        private readonly IDeviceClient.Factory factory;
+        private readonly DeviceClient.Factory factory;
         private readonly ILogger<FirmwareController> logger;
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace VPEAR.Server.Services
         public FirmwareService(
             IRepository<Device, Guid> devices,
             IRepository<Firmware, Guid> firmwares,
-            IDeviceClient.Factory factory,
+            DeviceClient.Factory factory,
             ILogger<FirmwareController> logger)
         {
             this.devices = devices;

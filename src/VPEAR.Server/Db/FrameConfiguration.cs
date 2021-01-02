@@ -6,6 +6,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
+using System.Collections.Generic;
+using VPEAR.Core.Extensions;
 using VPEAR.Core.Models;
 using static VPEAR.Server.Constants;
 
@@ -23,9 +25,14 @@ namespace VPEAR.Server.Db
 
             builder.ToTable(Schemas.FrameSchema);
 
-            builder.HasOne(f => f.Device)
-                .WithMany(d => d!.Frames)
-                .HasForeignKey(f => f.DeviceForeignKey);
+            builder.HasOne(frame => frame.Device)
+                .WithMany(devcie => devcie.Frames)
+                .HasForeignKey(frame => frame.DeviceForeignKey);
+
+            builder.Property(frame => frame.Readings)
+                .HasConversion(
+                    value => value.ToJsonString(),
+                    value => value.FromJsonString<IList<IList<int>>>());
 
             builder.Property(f => f.Time)
                 .HasMaxLength(Limits.MaxStringLength)

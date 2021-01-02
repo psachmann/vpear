@@ -25,7 +25,7 @@ namespace VPEAR.Server.Services
     {
         private readonly IRepository<Device, Guid> devices;
         private readonly IRepository<Wifi, Guid> wifis;
-        private readonly IDeviceClient.Factory factory;
+        private readonly DeviceClient.Factory factory;
         private readonly ILogger<WifiController> logger;
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace VPEAR.Server.Services
         public WifiService(
             IRepository<Device, Guid> devices,
             IRepository<Wifi, Guid> wifis,
-            IDeviceClient.Factory factory,
+            DeviceClient.Factory factory,
             ILogger<WifiController> logger)
         {
             this.logger = logger;

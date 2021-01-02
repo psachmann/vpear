@@ -10,7 +10,7 @@ namespace VPEAR.Core.Abstractions
 {
     public interface IUserService
     {
-        Task<Result<Container<GetUserResponse>>> GetAsync(string? role = null);
+        Task<Result<Container<GetUserResponse>>> GetAsync(string role = null);
 
         Task<Result<Null>> PutAsync(string id, PutUserRequest request);
 

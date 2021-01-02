@@ -22,7 +22,7 @@ namespace VPEAR.Server.Services
     public class PowerService : IPowerService
     {
         private readonly IRepository<Device, Guid> devices;
-        private readonly IDeviceClient.Factory factory;
+        private readonly DeviceClient.Factory factory;
         private readonly ILogger<PowerController> logger;
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace VPEAR.Server.Services
         /// <param name="logger">The service logger.</param>
         public PowerService(
             IRepository<Device, Guid> devices,
-            IDeviceClient.Factory factory,
+            DeviceClient.Factory factory,
             ILogger<PowerController> logger)
         {
             this.devices = devices;

@@ -4,7 +4,6 @@
 // </copyright>
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -46,7 +45,7 @@ namespace VPEAR.Core.Abstractions
         /// </summary>
         /// <param name="id">The id from the database entry.</param>
         /// <returns>The complete entity or null, if id not exists.</returns>
-        Task<TEntity?> GetAsync(TKey id);
+        Task<TEntity> GetAsync(TKey id);
 
         /// <summary>
         /// Updates an entry in the database.

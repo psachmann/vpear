@@ -21,12 +21,12 @@ namespace VPEAR.Server.Services
     public class DiscoveryService : IDiscoveryService
     {
         private readonly IRepository<Device, Guid> devices;
-        private readonly IDeviceClient.Factory factory;
+        private readonly DeviceClient.Factory factory;
         private readonly ILogger<DeviceController> logger;
 
         public DiscoveryService(
             IRepository<Device, Guid> devices,
-            IDeviceClient.Factory factory,
+            DeviceClient.Factory factory,
             ILogger<DeviceController> logger)
         {
             this.devices = devices;

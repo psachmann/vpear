@@ -17,8 +17,6 @@ namespace VPEAR.Core.Abstractions
     /// </summary>
     public interface IDeviceClient
     {
-        public delegate IDeviceClient Factory(string baseAddress);
-
         string BaseAddress { get; }
 
         HttpStatusCode ResponseStatusCode { get; }
@@ -27,35 +25,35 @@ namespace VPEAR.Core.Abstractions
 
         Task<ApiResponse> GetAsync();
 
-        Task<DeviceResponse?> GetDeviceAsync();
+        Task<DeviceResponse> GetDeviceAsync();
 
-        Task<GetSensorResponse?> GetSensorsAsync();
+        Task<GetSensorResponse> GetSensorsAsync();
 
-        Task<IList<FrameResponse>?> GetFramesAsync(int? after = null);
+        Task<IList<FrameResponse>> GetFramesAsync(int? after = null);
 
-        Task<int?> GetFrequencyAsync();
+        Task<int> GetFrequencyAsync();
 
         Task PutFrequencyAsync(int frequency);
 
-        Task<int?> GetRequiredSensorsAsync();
+        Task<int> GetRequiredSensorsAsync();
 
         Task PutRequiredSensorsAsync(int requiredSensors);
 
-        Task<GetFiltersResponse?> GetFiltersAsync();
+        Task<GetFiltersResponse> GetFiltersAsync();
 
         Task PutFiltersAsync(bool spot, bool smooth, bool noise);
 
-        Task<GetPowerResponse?> GetPowerAsync();
+        Task<GetPowerResponse> GetPowerAsync();
 
-        Task<DateTimeOffset?> GetTimeAsync();
+        Task<DateTimeOffset> GetTimeAsync();
 
-        Task<GetWifiResponse?> GetWifiAsync();
+        Task<GetWifiResponse> GetWifiAsync();
 
-        Task PutWifiAsync(string ssid, string password, string? mode = null);
+        Task PutWifiAsync(string ssid, string password, string mode = null);
 
-        Task<GetFirmwareResponse?> GetFirmwareAsync();
+        Task<GetFirmwareResponse> GetFirmwareAsync();
 
-        Task PutFirmwareAsync(string? source, string? upgrade, bool package = false);
+        Task PutFirmwareAsync(string source, string upgrade, bool package = false);
 
         Task<dynamic> GetSSEAsync();
     }

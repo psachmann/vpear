@@ -7,6 +7,7 @@ using Autofac;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using System;
+using VPEAR.Core;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Models;
 using VPEAR.Server.Controllers;
@@ -34,7 +35,7 @@ namespace VPEAR.Server
 
             builder.Register(context => new DiscoveryService(
                     context.Resolve<IRepository<Device, Guid>>(),
-                    context.Resolve<IDeviceClient.Factory>(),
+                    context.Resolve<DeviceClient.Factory>(),
                     context.Resolve<ILogger<DeviceController>>()))
                 .As<IDiscoveryService>()
                 .InstancePerLifetimeScope();
@@ -42,7 +43,7 @@ namespace VPEAR.Server
             builder.Register(context => new FilterService(
                     context.Resolve<IRepository<Device, Guid>>(),
                     context.Resolve<IRepository<Filter, Guid>>(),
-                    context.Resolve<IDeviceClient.Factory>(),
+                    context.Resolve<DeviceClient.Factory>(),
                     context.Resolve<ILogger<FilterController>>()))
                 .As<IFilterService>()
                 .InstancePerLifetimeScope();
@@ -50,7 +51,7 @@ namespace VPEAR.Server
             builder.Register(context => new FirmwareService(
                     context.Resolve<IRepository<Device, Guid>>(),
                     context.Resolve<IRepository<Firmware, Guid>>(),
-                    context.Resolve<IDeviceClient.Factory>(),
+                    context.Resolve<DeviceClient.Factory>(),
                     context.Resolve<ILogger<FirmwareController>>()))
                 .As<IFirmwareService>()
                 .InstancePerLifetimeScope();
@@ -64,7 +65,7 @@ namespace VPEAR.Server
 
             builder.Register(context => new PowerService(
                     context.Resolve<IRepository<Device, Guid>>(),
-                    context.Resolve<IDeviceClient.Factory>(),
+                    context.Resolve<DeviceClient.Factory>(),
                     context.Resolve<ILogger<PowerController>>()))
                 .As<IPowerService>()
                 .InstancePerLifetimeScope();
@@ -79,7 +80,7 @@ namespace VPEAR.Server
             builder.Register(context => new WifiService(
                     context.Resolve<IRepository<Device, Guid>>(),
                     context.Resolve<IRepository<Wifi, Guid>>(),
-                    context.Resolve<IDeviceClient.Factory>(),
+                    context.Resolve<DeviceClient.Factory>(),
                     context.Resolve<ILogger<WifiController>>()))
                 .As<IWifiService>()
                 .InstancePerLifetimeScope();
