@@ -14,6 +14,9 @@ namespace VPEAR.Server.Validators
     /// </summary>
     public class PutUserValidator : AbstractValidator<PutUserRequest>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PutUserValidator"/> class.
+        /// </summary>
         public PutUserValidator()
         {
             this.When(request => request.NewPassword != null || request.OldPassword != null, () =>
