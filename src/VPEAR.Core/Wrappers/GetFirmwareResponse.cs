@@ -29,7 +29,7 @@ namespace VPEAR.Core.Wrappers
         /// <summary>
         /// Gets or sets the source.
         /// </summary>
-        /// <value>The firmaver source channel e.g. stable or unstable.</value>
+        /// <value>The firmware source channel e.g. stable or unstable.</value>
         [JsonPropertyName("source")]
         public string Source { get; set; } = string.Empty;
     }

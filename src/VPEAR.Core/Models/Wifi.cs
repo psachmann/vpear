@@ -42,6 +42,6 @@ namespace VPEAR.Core.Models
         /// Gets or sets the device.
         /// </summary>
         /// <value>The navigation property.</value>
-        public Device? Device { get; set; }
+        public Device Device { get; set; }
     }
 }

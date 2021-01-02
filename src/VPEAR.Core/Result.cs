@@ -17,7 +17,7 @@ namespace VPEAR.Core
             this.Value = default;
         }
 
-        public Result(HttpStatusCode statusCode, TSuccess? value)
+        public Result(HttpStatusCode statusCode, TSuccess value)
         {
             this.IsSuccess = true;
             this.StatusCode = (int)statusCode;
@@ -35,8 +35,8 @@ namespace VPEAR.Core
 
         public int StatusCode { get; }
 
-        public ErrorResponse? Error { get; }
+        public ErrorResponse Error { get; }
 
-        public TSuccess? Value { get; }
+        public TSuccess Value { get; }
     }
 }

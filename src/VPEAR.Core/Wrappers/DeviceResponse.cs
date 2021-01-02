@@ -15,7 +15,7 @@ namespace VPEAR.Core.Wrappers
         /// <summary>
         /// Gets or sets the address.
         /// </summary>
-        /// <value>The device ip address.</value>
+        /// <value>The device IP address.</value>
         [JsonPropertyName("address")]
         public string Address { get; set; } = string.Empty;
 

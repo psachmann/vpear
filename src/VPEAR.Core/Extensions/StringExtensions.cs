@@ -9,7 +9,7 @@ namespace VPEAR.Core.Extensions
 {
     public static class StringExtensions
     {
-        public static T? FromJsonString<T>(this string source)
+        public static T FromJsonString<T>(this string source)
         {
             return JsonSerializer.Deserialize<T>(source);
         }

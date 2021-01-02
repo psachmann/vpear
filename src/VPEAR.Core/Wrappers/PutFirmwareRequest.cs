@@ -16,9 +16,9 @@ namespace VPEAR.Core.Wrappers
         public bool Package { get; set; }
 
         [JsonPropertyName("upgrade")]
-        public string? Upgrade { get; set; }
+        public string Upgrade { get; set; }
 
         [JsonPropertyName("source")]
-        public string? Source { get; set; }
+        public string Source { get; set; }
     }
 }

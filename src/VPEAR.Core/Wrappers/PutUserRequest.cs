@@ -14,10 +14,10 @@ namespace VPEAR.Core.Wrappers
     public class PutUserRequest
     {
         [JsonPropertyName("old_password")]
-        public string? OldPassword { get; set; }
+        public string OldPassword { get; set; }
 
         [JsonPropertyName("new_password")]
-        public string? NewPassword { get; set; }
+        public string NewPassword { get; set; }
 
         [JsonPropertyName("is_verified")]
         public bool IsVerified { get; set; }

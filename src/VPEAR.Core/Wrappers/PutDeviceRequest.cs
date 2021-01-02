@@ -13,7 +13,7 @@ namespace VPEAR.Core.Wrappers
     public class PutDeviceRequest
     {
         [JsonPropertyName("display_name")]
-        public string? DisplayName { get; set; }
+        public string DisplayName { get; set; }
 
         [JsonPropertyName("frequency")]
         public uint? Frequency { get; set; }

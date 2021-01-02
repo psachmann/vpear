@@ -12,19 +12,25 @@ namespace VPEAR.Core
 {
     public abstract class AbstractClient : IDisposable
     {
-        private readonly HttpClient client = new HttpClient();
-        private Exception? error;
-        private HttpResponseMessage? response;
+        private readonly HttpClient client;
+        private Exception error;
+        private HttpResponseMessage response;
 
-        protected AbstractClient(string? baseAddress)
+        public AbstractClient(string baseAddress, IHttpClientFactory factory)
         {
-            if (baseAddress == null)
+            if (string.IsNullOrEmpty(baseAddress))
             {
-                throw new ArgumentNullException(nameof(baseAddress));
+                throw new ArgumentException("Is null or empty.", nameof(baseAddress));
+            }
+
+            if (factory == null)
+            {
+                throw new ArgumentNullException(nameof(factory));
             }
 
             if (Uri.TryCreate(baseAddress, UriKind.RelativeOrAbsolute, out var uri))
             {
+                this.client = factory.CreateClient();
                 this.client.BaseAddress = uri;
             }
             else
@@ -33,13 +39,13 @@ namespace VPEAR.Core
             }
         }
 
-        public Exception? Error
+        public Exception Error
         {
             get { return this.error; }
             protected set { this.error = value; }
         }
 
-        public HttpResponseMessage? Response
+        public HttpResponseMessage Response
         {
             get { return this.response; }
             protected set { this.response = value; }
@@ -76,7 +82,7 @@ namespace VPEAR.Core
             return this.SendAsync(HttpMethod.Put, uri, payload);
         }
 
-        protected async virtual Task<bool> SendAsync(HttpMethod method, string uri, object? payload = null)
+        protected async virtual Task<bool> SendAsync(HttpMethod method, string uri, object payload = null)
         {
             var message = new HttpRequestMessage()
             {

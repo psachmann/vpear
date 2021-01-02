@@ -9,14 +9,14 @@ namespace VPEAR.Core.Extensions
 {
     public static class TypeExtensions
     {
-        public static T? Clone<T>(this T source)
+        public static T Clone<T>(this T source)
         {
             var json = JsonSerializer.Serialize(source);
 
             return JsonSerializer.Deserialize<T>(json);
         }
 
-        public static string? ToJsonString<T>(this T source)
+        public static string ToJsonString<T>(this T source)
         {
             return JsonSerializer.Serialize(source);
         }

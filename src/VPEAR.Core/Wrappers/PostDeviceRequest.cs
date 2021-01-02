@@ -13,9 +13,9 @@ namespace VPEAR.Core.Wrappers
     public class PostDeviceRequest
     {
         [JsonPropertyName("address")]
-        public string? Address { get; set; }
+        public string Address { get; set; }
 
         [JsonPropertyName("subent_mask")]
-        public string? SubnetMask { get; set; }
+        public string SubnetMask { get; set; }
     }
 }

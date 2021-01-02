@@ -5,7 +5,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using VPEAR.Core.Abstractions;
 
 namespace VPEAR.Core.Models
@@ -32,7 +31,6 @@ namespace VPEAR.Core.Models
         /// </summary>
         /// <value>The frame sensor values.</value>
         /// TODO: translate into a valid database type
-        [NotMapped]
         public IList<IList<int>> Readings { get; set; } = new List<IList<int>>();
 
         /// <summary>
@@ -45,6 +43,6 @@ namespace VPEAR.Core.Models
         /// Gets or sets the device.
         /// </summary>
         /// <value>The navigation property.</value>
-        public Device? Device { get; set; }
+        public Device Device { get; set; }
     }
 }

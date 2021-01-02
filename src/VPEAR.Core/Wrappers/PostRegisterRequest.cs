@@ -13,13 +13,13 @@ namespace VPEAR.Core.Wrappers
     public class PostRegisterRequest
     {
         [JsonPropertyName("display_name")]
-        public string? DisplayName { get; set; }
+        public string DisplayName { get; set; }
 
         [JsonPropertyName("email")]
-        public string? Email { get; set; }
+        public string Email { get; set; }
 
         [JsonPropertyName("password")]
-        public string? Password { get; set; }
+        public string Password { get; set; }
 
         [JsonPropertyName("is_admin")]
         public bool IsAdmin { get; set; }

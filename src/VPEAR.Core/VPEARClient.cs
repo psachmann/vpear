@@ -4,7 +4,6 @@
 // </copyright>
 
 using System;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
@@ -20,22 +19,24 @@ namespace VPEAR.Core
         private string token = string.Empty;
         private DateTimeOffset expiresAt;
 
-        public VPEARClient(string? baseAddress)
-            : base(baseAddress)
+        public VPEARClient(string baseAddress, IHttpClientFactory factory)
+            : base(baseAddress, factory)
         {
         }
 
-        public Task LoginAsync(string? email, string? password)
+        public delegate VPEARClient Factory(string baseAddress);
+
+        public Task LoginAsync(string email, string password)
         {
             throw new NotImplementedException();
         }
 
-        public Task RegisterAsync(string? email, string? password)
+        public Task RegisterAsync(string email, string password)
         {
             return this.RegisterAsync(null, email, password);
         }
 
-        public Task RegisterAsync(string? name, string? email, string? password)
+        public Task RegisterAsync(string name, string email, string password)
         {
             Func<string> uri = () => $"{BaseRoute}/user/register";
 
@@ -52,7 +53,7 @@ namespace VPEAR.Core
             throw new NotImplementedException();
         }
 
-        public async Task<GetFiltersResponse?> GetFiltersAsync(Guid id)
+        public async Task<GetFiltersResponse> GetFiltersAsync(Guid id)
         {
             var uri = $"{BaseRoute}/filter?id={id}";
 
@@ -70,7 +71,7 @@ namespace VPEAR.Core
             }
         }
 
-        protected override async Task<bool> SendAsync(HttpMethod method, string uri, object? payload = null)
+        protected override async Task<bool> SendAsync(HttpMethod method, string uri, object payload = null)
         {
             var message = new HttpRequestMessage()
             {
