@@ -26,7 +26,7 @@ namespace VPEAR.Core
         {
         }
 
-        public delegate VPEARClient Factory(string baseAddress);
+        public delegate IVPEARClient Factory(string baseAddress);
 
         public override async Task<bool> CanConnectAsync()
         {

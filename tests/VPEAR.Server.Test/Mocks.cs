@@ -252,14 +252,14 @@ namespace VPEAR.Server.Test
         {
             var mock = new Mock<IDeviceClient>();
 
-            mock.Setup(mock => mock.IsReachableAsync())
+            mock.Setup(mock => mock.CanConnectAsync())
                 .ReturnsAsync(true);
 
             mock.Setup(mock => mock.GetPowerAsync())
-                .ReturnsAsync(new GetPowerResponse());
+                .ReturnsAsync(new PowerResponse());
 
             mock.Setup(mock => mock.GetFirmwareAsync())
-                .ReturnsAsync(new GetFirmwareResponse());
+                .ReturnsAsync(new FirmwareResponse());
 
             return mock.Object;
         }

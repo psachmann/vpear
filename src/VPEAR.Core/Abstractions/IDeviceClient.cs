@@ -17,44 +17,40 @@ namespace VPEAR.Core.Abstractions
     /// </summary>
     public interface IDeviceClient
     {
-        string BaseAddress { get; }
-
-        HttpStatusCode ResponseStatusCode { get; }
-
-        Task<bool> IsReachableAsync();
+        Task<bool> CanConnectAsync();
 
         Task<ApiResponse> GetAsync();
 
         Task<DeviceResponse> GetDeviceAsync();
 
-        Task<GetSensorResponse> GetSensorsAsync();
+        Task<IList<SensorResponse>> GetSensorsAsync();
 
         Task<IList<FrameResponse>> GetFramesAsync(int? after = null);
 
-        Task<int> GetFrequencyAsync();
+        Task<uint?> GetFrequencyAsync();
 
-        Task PutFrequencyAsync(int frequency);
+        Task<bool> PutFrequencyAsync(uint frequency);
 
-        Task<int> GetRequiredSensorsAsync();
+        Task<uint?> GetRequiredSensorsAsync();
 
-        Task PutRequiredSensorsAsync(int requiredSensors);
+        Task<bool> PutRequiredSensorsAsync(int requiredSensors);
 
-        Task<GetFiltersResponse> GetFiltersAsync();
+        Task<FiltersResponse> GetFiltersAsync();
 
-        Task PutFiltersAsync(bool spot, bool smooth, bool noise);
+        Task<bool> PutFiltersAsync(bool? spot, bool? smooth, bool? noise);
 
-        Task<GetPowerResponse> GetPowerAsync();
+        Task<PowerResponse> GetPowerAsync();
 
-        Task<DateTimeOffset> GetTimeAsync();
+        Task<DateTimeOffset?> GetTimeAsync();
 
-        Task<GetWifiResponse> GetWifiAsync();
+        Task<bool> PutTimeAsync(DateTimeOffset time);
 
-        Task PutWifiAsync(string ssid, string password, string mode = null);
+        Task<WifiResponse> GetWifiAsync();
 
-        Task<GetFirmwareResponse> GetFirmwareAsync();
+        Task<bool> PutWifiAsync(string ssid, string password = null, string mode = null);
 
-        Task PutFirmwareAsync(string source, string upgrade, bool package = false);
+        Task<FirmwareResponse> GetFirmwareAsync();
 
-        Task<dynamic> GetSSEAsync();
+        Task<bool> PutFirmwareAsync(string source = null, string upgrade = null, bool package = false);
     }
 }

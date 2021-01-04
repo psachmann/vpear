@@ -16,8 +16,6 @@ namespace VPEAR.Core.Abstractions
 
         HttpResponseMessage Response { get; }
 
-        /* IList<string> Roles { get; } */
-
         Task<bool> CanConnectAsync();
 
         Task<bool> DeleteDeviceAsync(string deviceId);

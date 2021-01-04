@@ -58,7 +58,7 @@ namespace VPEAR.Server.Services
 
             var client = this.factory.Invoke(device.Address);
 
-            if (device.Status == DeviceStatus.NotReachable || !await client.IsReachableAsync())
+            if (device.Status == DeviceStatus.NotReachable || !await client.CanConnectAsync())
             {
                 device.Status = DeviceStatus.NotReachable;
                 await this.devices.UpdateAsync(device);
@@ -67,7 +67,12 @@ namespace VPEAR.Server.Services
             }
             else
             {
-                var payload = await client.GetPowerAsync();
+                var response = await client.GetPowerAsync();
+                var payload = new GetPowerResponse()
+                {
+                    Level = response.Level,
+                    State = response.State,
+                };
 
                 return new Result<GetPowerResponse>(HttpStatusCode.OK, payload);
             }

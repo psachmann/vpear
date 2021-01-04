@@ -87,7 +87,7 @@ namespace VPEAR.Server.Services
 
             var client = this.factory.Invoke(device.Address);
 
-            if (device.Status == DeviceStatus.NotReachable || !await client.IsReachableAsync())
+            if (device.Status == DeviceStatus.NotReachable || !await client.CanConnectAsync())
             {
                 device.Status = DeviceStatus.NotReachable;
                 await this.devices.UpdateAsync(device);

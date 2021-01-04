@@ -18,7 +18,7 @@ namespace VPEAR.Core.Wrappers
         /// </summary>
         /// <value>The frame id.</value>
         [JsonPropertyName("id")]
-        public int? Id { get; set; }
+        public int Id { get; set; }
 
         /// <summary>
         /// Gets or sets the time.

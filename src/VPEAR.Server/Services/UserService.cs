@@ -233,7 +233,7 @@ namespace VPEAR.Server.Services
 
                 var payload = new PutLoginResponse()
                 {
-                    ExpiresAt = token.ValidTo.ToString(Schemas.TimeSchema),
+                    ExpiresAt = token.ValidTo,
                     Token = new JwtSecurityTokenHandler().WriteToken(token),
                 };
 
