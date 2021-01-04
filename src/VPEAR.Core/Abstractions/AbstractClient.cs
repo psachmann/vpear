@@ -8,7 +8,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace VPEAR.Core
+namespace VPEAR.Core.Abstractions
 {
     public abstract class AbstractClient : IDisposable
     {
@@ -16,7 +16,7 @@ namespace VPEAR.Core
         private Exception error;
         private HttpResponseMessage response;
 
-        public AbstractClient(string baseAddress, IHttpClientFactory factory)
+        protected AbstractClient(string baseAddress, IHttpClientFactory factory)
         {
             if (string.IsNullOrEmpty(baseAddress))
             {
@@ -56,43 +56,50 @@ namespace VPEAR.Core
             get { return this.client; }
         }
 
+        public abstract Task<bool> CanConnectAsync();
+
         public void Dispose()
         {
             this.client.Dispose();
             GC.SuppressFinalize(this);
         }
 
+        public bool IsSuccessResponse()
+        {
+            return this.response != null && this.response.IsSuccessStatusCode;
+        }
+
         protected Task<bool> DeleteAsync(string uri)
         {
-            return this.SendAsync(HttpMethod.Delete, uri);
+            return this.SendAsync<Null>(HttpMethod.Delete, uri);
         }
 
         protected Task<bool> GetAsync(string uri)
         {
-            return this.SendAsync(HttpMethod.Get, uri);
+            return this.SendAsync<Null>(HttpMethod.Get, uri);
         }
 
-        protected Task<bool> PostAsync(string uri, object payload)
+        protected Task<bool> PostAsync<TPayload>(string uri, TPayload payload)
         {
             return this.SendAsync(HttpMethod.Post, uri, payload);
         }
 
-        protected Task<bool> PutAsync(string uri, object payload)
+        protected Task<bool> PutAsync<TPayload>(string uri, TPayload payload)
         {
             return this.SendAsync(HttpMethod.Put, uri, payload);
         }
 
-        protected async virtual Task<bool> SendAsync(HttpMethod method, string uri, object payload = null)
+        protected virtual async Task<bool> SendAsync<TPayload>(HttpMethod method, string uri, TPayload payload = default)
         {
-            var message = new HttpRequestMessage()
-            {
-                Content = new StringContent(JsonSerializer.Serialize(payload)),
-                Method = method,
-                RequestUri = new Uri(uri),
-            };
-
             try
             {
+                var message = new HttpRequestMessage()
+                {
+                    Content = new StringContent(JsonSerializer.Serialize(payload)),
+                    Method = method,
+                    RequestUri = new Uri(uri),
+                };
+
                 this.response = await this.client.SendAsync(message);
                 this.error = null;
 

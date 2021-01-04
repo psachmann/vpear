@@ -185,7 +185,7 @@ namespace VPEAR.Server
             /// <summary>
             /// The filters endpoint route.
             /// </summary>
-            public const string FilterRoute = BaseRoute + "device/filters";
+            public const string FilterRoute = BaseRoute + "device/filter";
 
             /// <summary>
             /// The power endpoint route.
