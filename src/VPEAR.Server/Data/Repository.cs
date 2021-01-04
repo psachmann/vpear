@@ -10,7 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using VPEAR.Core.Abstractions;
 
-namespace VPEAR.Server.Db
+namespace VPEAR.Server.Data
 {
     /// <summary>
     /// Implements IRepository{TEntity, TKey} interface.

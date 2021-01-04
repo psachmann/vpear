@@ -5,7 +5,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using System;
-using VPEAR.Server.Db;
+using VPEAR.Server.Data;
 using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Test

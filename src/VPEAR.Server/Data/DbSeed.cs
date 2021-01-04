@@ -10,7 +10,7 @@ using VPEAR.Core;
 using VPEAR.Core.Extensions;
 using VPEAR.Core.Models;
 
-namespace VPEAR.Server.Db
+namespace VPEAR.Server.Data
 {
     internal static class DbSeed
     {

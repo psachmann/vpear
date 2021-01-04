@@ -7,7 +7,7 @@ using System;
 using System.Threading.Tasks;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Models;
-using VPEAR.Server.Db;
+using VPEAR.Server.Data;
 using Xunit;
 
 namespace VPEAR.Server.Test

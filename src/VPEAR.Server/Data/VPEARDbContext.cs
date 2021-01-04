@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using VPEAR.Core.Models;
 
-namespace VPEAR.Server.Db
+namespace VPEAR.Server.Data
 {
     /// <summary>
     /// The db context for the server.

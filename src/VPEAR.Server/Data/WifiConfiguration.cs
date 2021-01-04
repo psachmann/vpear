@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using VPEAR.Core.Extensions;
 using static VPEAR.Server.Constants;
 
-namespace VPEAR.Server.Db
+namespace VPEAR.Server.Data
 {
     /// <summary>
     /// The entity framework configuration for the <see cref="Core.Models.Wifi"/> class.

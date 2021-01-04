@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Models;
-using VPEAR.Server.Db;
+using VPEAR.Server.Data;
 
 namespace VPEAR.Server
 {
