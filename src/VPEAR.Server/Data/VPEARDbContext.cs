@@ -6,6 +6,10 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using VPEAR.Core.Abstractions;
 using VPEAR.Core.Models;
 
 namespace VPEAR.Server.Data
@@ -15,6 +19,8 @@ namespace VPEAR.Server.Data
     /// </summary>
     public class VPEARDbContext : IdentityDbContext<IdentityUser>
     {
+        private readonly IEnumerable<IEventDetector<VPEARDbContext>> eventDetectors;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="VPEARDbContext"/> class.
         /// </summary>
@@ -22,6 +28,18 @@ namespace VPEAR.Server.Data
         public VPEARDbContext(DbContextOptions<VPEARDbContext> options)
             : base(options)
         {
+            this.eventDetectors = new List<IEventDetector<VPEARDbContext>>();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VPEARDbContext"/> class.
+        /// </summary>
+        /// <param name="options">The options for the db context.</param>
+        /// <param name="eventDetectors">The event detectors for the db context.</param>
+        public VPEARDbContext(DbContextOptions<VPEARDbContext> options, IEnumerable<IEventDetector<VPEARDbContext>> eventDetectors)
+            : base(options)
+        {
+            this.eventDetectors = eventDetectors;
         }
 
         /// <summary>
@@ -59,6 +77,17 @@ namespace VPEAR.Server.Data
         /// </summary>
         /// <value>All wifis in the db.</value>
         public DbSet<Wifi>? Wifis { get; set; }
+
+        /// <inheritdoc/>
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            foreach (var detector in this.eventDetectors)
+            {
+                await detector.DetectAsync(this);
+            }
+
+            return await base.SaveChangesAsync(cancellationToken);
+        }
 
         /// <summary>
         /// Creates and configures the db model for the entities.

@@ -74,6 +74,7 @@ namespace VPEAR.Server
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder.RegisterModule(new ClientModule());
+            builder.RegisterModule(new EventDetectorModule());
             builder.RegisterModule(new RepositoryModule());
             builder.RegisterModule(new ServiceModule());
             builder.RegisterModule(new ValidatorModule());
