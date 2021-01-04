@@ -38,40 +38,38 @@ namespace VPEAR.Server.Db
         }
 
         /// <inheritdoc/>
-        public async Task<bool> CreateAsync(TEntity entity)
+        public async Task<TEntity> CreateAsync(TEntity entity)
         {
             try
             {
-                await this.context.Set<TEntity>().AddAsync(entity);
+                var result = await this.context.Set<TEntity>().AddAsync(entity);
                 await this.context.SaveChangesAsync();
 
-                return true;
+                return result.Entity;
             }
             catch (Exception exception)
             {
                 this.logger.LogError("Message: \"{@Error}\"", exception.Message);
                 this.logger.LogDebug("Exception: \"{@Debug}\"", exception);
 
-                return false;
+                throw;
             }
         }
 
         /// <inheritdoc/>
-        public async Task<bool> DeleteAsync(TEntity entity)
+        public async Task DeleteAsync(TEntity entity)
         {
             try
             {
                 this.context.Set<TEntity>().Remove(entity);
                 await this.context.SaveChangesAsync();
-
-                return true;
             }
             catch (Exception exception)
             {
                 this.logger.LogError("Message: \"{@Error}\"", exception.Message);
                 this.logger.LogDebug("Exception: \"{@Debug}\"", exception);
 
-                return false;
+                throw;
             }
         }
 
@@ -82,7 +80,7 @@ namespace VPEAR.Server.Db
         }
 
         /// <inheritdoc/>
-        public async Task<TEntity?> GetAsync(TKey id)
+        public async Task<TEntity> GetAsync(TKey id)
         {
             try
             {
@@ -95,26 +93,26 @@ namespace VPEAR.Server.Db
                 this.logger.LogError("Message: \"{@Error}\"", exception.Message);
                 this.logger.LogDebug("Exception: \"{@Debug}\"", exception);
 
-                return null;
+                throw;
             }
         }
 
         /// <inheritdoc/>
-        public async Task<bool> UpdateAsync(TEntity entity)
+        public async Task<TEntity> UpdateAsync(TEntity entity)
         {
             try
             {
-                this.context.Set<TEntity>().Update(entity);
+                var result = this.context.Set<TEntity>().Update(entity);
                 await this.context.SaveChangesAsync();
 
-                return true;
+                return result.Entity;
             }
             catch (Exception exception)
             {
                 this.logger.LogError("Message: \"{@Error}\"", exception.Message);
                 this.logger.LogDebug("Exception: \"{@Debug}\"", exception);
 
-                return false;
+                throw;
             }
         }
     }

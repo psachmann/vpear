@@ -32,7 +32,7 @@ namespace VPEAR.Server.Test
         {
             var device = new Device();
 
-            Assert.False(await this.devices.CreateAsync(device));
+            await Assert.ThrowsAnyAsync<Exception>(async () => await this.devices.CreateAsync(device));
         }
 
         [Fact]
@@ -40,7 +40,7 @@ namespace VPEAR.Server.Test
         {
             var device = new Device();
 
-            Assert.False(await this.devices.DeleteAsync(device));
+            await Assert.ThrowsAnyAsync<Exception>(async () => await this.devices.DeleteAsync(device));
         }
 
         [Fact]
@@ -64,7 +64,7 @@ namespace VPEAR.Server.Test
         {
             var device = new Device();
 
-            Assert.False(await this.devices.UpdateAsync(device));
+            await Assert.ThrowsAnyAsync<Exception>(async () => await this.devices.UpdateAsync(device));
         }
     }
 }

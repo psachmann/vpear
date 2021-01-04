@@ -37,7 +37,7 @@ namespace VPEAR.Server.Test
 
             var result = await this.devices.CreateAsync(device);
 
-            Assert.True(result, "Device was not created.");
+            Assert.NotNull(result);
 
             var newCount = this.devices.Get()
                 .ToList()
@@ -58,9 +58,7 @@ namespace VPEAR.Server.Test
                 .ToList()
                 .Count;
 
-            var result = await this.devices.DeleteAsync(deviceToDelete!);
-
-            Assert.True(result, "Device was not deleted.");
+            await this.devices.DeleteAsync(deviceToDelete!);
 
             var newCount = this.devices.Get()
                 .ToList()
@@ -102,7 +100,7 @@ namespace VPEAR.Server.Test
 
             var result = await this.devices.UpdateAsync(device);
 
-            Assert.True(result, "Device was not updated.");
+            Assert.NotNull(result);
 
             device = await this.devices.GetAsync(device.Id);
 

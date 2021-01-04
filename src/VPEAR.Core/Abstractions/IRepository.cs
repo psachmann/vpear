@@ -23,15 +23,15 @@ namespace VPEAR.Core.Abstractions
         /// Creates a new database entry.
         /// </summary>
         /// <param name="entity">The entity to save in the database.</param>
-        /// <returns>The success of the operation.</returns>
-        Task<bool> CreateAsync(TEntity entity);
+        /// <returns>The created entity.</returns>
+        Task<TEntity> CreateAsync(TEntity entity);
 
         /// <summary>
         /// Deletes an entry from the database.
         /// </summary>
         /// <param name="entity">The entry to delete.</param>
-        /// <returns>The success of the operation.</returns>
-        Task<bool> DeleteAsync(TEntity entity);
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task DeleteAsync(TEntity entity);
 
         /// <summary>
         /// Gets all entries from the database table.
@@ -51,7 +51,7 @@ namespace VPEAR.Core.Abstractions
         /// Updates an entry in the database.
         /// </summary>
         /// <param name="entity">The entity to update.</param>
-        /// <returns>The success of the operation.</returns>
-        Task<bool> UpdateAsync(TEntity entity);
+        /// <returns>The updated entity.</returns>
+        Task<TEntity> UpdateAsync(TEntity entity);
     }
 }

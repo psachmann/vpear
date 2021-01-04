@@ -10,7 +10,7 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
+using System.Threading.Tasks;
 using VPEAR.Core;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Models;
@@ -90,22 +90,11 @@ namespace VPEAR.Server.Test
             });
 
             mock.Setup(repository => repository.CreateAsync(It.IsAny<TEntity>()))
-                .ReturnsAsync(true);
+                .ReturnsAsync(Activator.CreateInstance<TEntity>());
 
-            mock.Setup(repository => repository.DeleteAsync(notExistingEntity))
-                .ReturnsAsync(false);
-
-            mock.Setup(repository => repository.DeleteAsync(archivedEntity))
-                .ReturnsAsync(true);
-
-            mock.Setup(repository => repository.DeleteAsync(notReachableEntity))
-                .ReturnsAsync(true);
-
-            mock.Setup(repository => repository.DeleteAsync(recordingEntity))
-                .ReturnsAsync(true);
-
-            mock.Setup(repository => repository.DeleteAsync(stoppedEntity))
-                .ReturnsAsync(true);
+            // TODO: wie verhält sich ef core bei einer nicht existierenden entität
+            mock.Setup(repository => repository.DeleteAsync(It.IsAny<TEntity>()))
+                .Returns(Task.CompletedTask);
 
             mock.Setup(repository => repository.GetAsync(Archived.Id))
                     .ReturnsAsync(archivedEntity);
@@ -132,19 +121,19 @@ namespace VPEAR.Server.Test
                 .Object);
 
             mock.Setup(repository => repository.UpdateAsync(notExistingEntity))
-                .ReturnsAsync(false);
+                .ReturnsAsync(notExistingEntity);
 
             mock.Setup(repository => repository.UpdateAsync(archivedEntity))
-                .ReturnsAsync(true);
+                .ReturnsAsync(archivedEntity);
 
             mock.Setup(repository => repository.UpdateAsync(notReachableEntity))
-                .ReturnsAsync(true);
+                .ReturnsAsync(notReachableEntity);
 
             mock.Setup(repository => repository.UpdateAsync(recordingEntity))
-                .ReturnsAsync(true);
+                .ReturnsAsync(recordingEntity);
 
             mock.Setup(repository => repository.UpdateAsync(stoppedEntity))
-                .ReturnsAsync(true);
+                .ReturnsAsync(stoppedEntity);
 
             return mock.Object;
         }
