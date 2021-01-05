@@ -4,6 +4,7 @@
 // </copyright>
 
 using System;
+using System.Collections.Generic;
 using VPEAR.Core.Abstractions;
 
 namespace VPEAR.Core.Models
@@ -34,13 +35,19 @@ namespace VPEAR.Core.Models
         /// <summary>
         /// Gets or sets the foreign key.
         /// </summary>
-        /// <value>The foreign key.</value>
+        /// <value>The device foreign key.</value>
         public Guid DeviceForeignKey { get; set; }
 
         /// <summary>
         /// Gets or sets the device.
         /// </summary>
-        /// <value>The navigation property.</value>
+        /// <value>The device navigation property.</value>
         public Device Device { get; set; }
+
+        /// <summary>
+        /// Gets or sets the frames.
+        /// </summary>
+        /// <value>The frames navigation property.</value>
+        public IList<Frame> Frames { get; set; }
     }
 }

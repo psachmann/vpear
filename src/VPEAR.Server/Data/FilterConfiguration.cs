@@ -1,4 +1,4 @@
-// <copyright file="FiltersConfiguration.cs" company="Patrick Sachmann">
+// <copyright file="FilterConfiguration.cs" company="Patrick Sachmann">
 // Copyright (c) Patrick Sachmann. All rights reserved.
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
@@ -14,7 +14,7 @@ namespace VPEAR.Server.Data
     /// <summary>
     /// The entity framework configuration for the <see cref="Filter"/> class.
     /// </summary>
-    public class FiltersConfiguration : EntityBaseConfiguration<Filter, Guid>
+    public class FilterConfiguration : EntityBaseConfiguration<Filter, Guid>
     {
         /// <inheritdoc/>
         public override void Configure(EntityTypeBuilder<Filter> builder)
@@ -23,9 +23,12 @@ namespace VPEAR.Server.Data
 
             builder.ToTable(Schemas.FilterSchema);
 
-            builder.HasOne(f => f.Device)
-                .WithOne(d => d.Filters)
-                .HasForeignKey<Filter>(f => f.DeviceForeignKey);
+            builder.HasOne(filter => filter.Device)
+                .WithOne(device => device.Filters)
+                .HasForeignKey<Filter>(filter => filter.DeviceForeignKey);
+
+            builder.HasMany(filter => filter.Frames)
+                .WithOne(frame => frame.Filter);
 #if DEBUG
             builder.HasData(DbSeed.Filters);
 #endif

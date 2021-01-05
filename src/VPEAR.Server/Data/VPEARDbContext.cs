@@ -89,7 +89,7 @@ namespace VPEAR.Server.Data
             base.OnModelCreating(builder);
 
             builder.ApplyConfiguration(new DeviceConfiguration());
-            builder.ApplyConfiguration(new FiltersConfiguration());
+            builder.ApplyConfiguration(new FilterConfiguration());
             builder.ApplyConfiguration(new FirmwareConfiguration());
             builder.ApplyConfiguration(new FrameConfiguration());
             builder.ApplyConfiguration(new SensorConfiguration());

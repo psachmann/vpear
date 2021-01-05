@@ -233,7 +233,7 @@ namespace VPEAR.Server.Services
                     Token = tokenString,
                 };
 
-                await this.users.SetAuthenticationTokenAsync(user, JwtBearerDefaults.AuthenticationScheme, "Access Token", tokenString);
+                await this.users.SetAuthenticationTokenAsync(user, JwtBearerDefaults.AuthenticationScheme, string.Empty, tokenString);
 
                 return new Result<PutLoginResponse>(HttpStatusCode.OK, payload);
             }

@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -18,7 +19,7 @@ namespace VPEAR.Core.Wrappers
         /// </summary>
         /// <value>The frame time stamp.</value>
         [JsonPropertyName("time")]
-        public string Time { get; set; } = string.Empty;
+        public DateTimeOffset Time { get; set; }
 
         /// <summary>
         /// Gets or sets the readings.
@@ -26,5 +27,12 @@ namespace VPEAR.Core.Wrappers
         /// <value>The frame sensor values.</value>
         [JsonPropertyName("readings")]
         public IList<IList<int>> Readings { get; set; } = new List<IList<int>>();
+
+        /// <summary>
+        /// Gets or sets the filters.
+        /// </summary>
+        /// <value>The filters applied to the readings.</value>
+        [JsonPropertyName("filter")]
+        public GetFiltersResponse Filter { get; set; } = new GetFiltersResponse();
     }
 }

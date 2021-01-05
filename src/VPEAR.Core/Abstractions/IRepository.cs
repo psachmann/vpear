@@ -4,7 +4,9 @@
 // </copyright>
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace VPEAR.Core.Abstractions
@@ -19,6 +21,8 @@ namespace VPEAR.Core.Abstractions
         where TEntity : class
         where TKey : struct, IEquatable<TKey>
     {
+        dynamic Context { get; }
+
         /// <summary>
         /// Creates a new database entry.
         /// </summary>
@@ -46,6 +50,18 @@ namespace VPEAR.Core.Abstractions
         /// <param name="id">The id from the database entry.</param>
         /// <returns>The complete entity or null, if id not exists.</returns>
         Task<TEntity> GetAsync(TKey id);
+
+        void GetReference<TProperty>(TEntity entity, Expression<Func<TEntity, TProperty>> expression)
+            where TProperty : class;
+
+        Task GetReferenceAsync<TProperty>(TEntity entity, Expression<Func<TEntity, TProperty>> expression)
+            where TProperty : class;
+
+        void GetCollection<TProperty>(TEntity entity, Expression<Func<TEntity, IEnumerable<TProperty>>> expression)
+            where TProperty : class;
+
+        Task GetCollectionAsync<TProperty>(TEntity entity, Expression<Func<TEntity, IEnumerable<TProperty>>> expression)
+            where TProperty : class;
 
         /// <summary>
         /// Updates an entry in the database.

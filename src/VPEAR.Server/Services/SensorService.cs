@@ -23,15 +23,18 @@ namespace VPEAR.Server.Services
     /// </summary>
     public class SensorService : ISensorService
     {
+        private readonly IRepository<Filter, Guid> filters;
         private readonly IRepository<Frame, Guid> frames;
         private readonly IRepository<Sensor, Guid> sensors;
         private readonly ILogger<SensorController> logger;
 
         public SensorService(
+            IRepository<Filter, Guid> filters,
             IRepository<Frame, Guid> frames,
             IRepository<Sensor, Guid> sensors,
             ILogger<SensorController> logger)
         {
+            this.filters = filters;
             this.frames = frames;
             this.sensors = sensors;
             this.logger = logger;
@@ -45,11 +48,12 @@ namespace VPEAR.Server.Services
                 .OrderBy(f => f.CreatedAt)
                 .ToListAsync();
 
-            if (frames == null || frames.Count == 0)
+            if (frames.Count == 0)
             {
                 return new Result<Container<GetFrameResponse>>(HttpStatusCode.NotFound, ErrorMessages.FramesNotFound);
             }
 
+            // TODO: load the filter and put it in the response
             if (start == 0 && stop == 0)
             {
                 var payload = new Container<GetFrameResponse>();
@@ -59,7 +63,7 @@ namespace VPEAR.Server.Services
                     payload.Items.Add(new GetFrameResponse()
                     {
                         Readings = frame.Readings,
-                        Time = frame.CreatedAt.ToString("dd.MM.yyyy hh:mm:ss.ff"),
+                        Time = frame.CreatedAt,
                     });
                 }
 
@@ -75,7 +79,7 @@ namespace VPEAR.Server.Services
                     payload.Items.Add(new GetFrameResponse()
                     {
                         Readings = frame.Readings,
-                        Time = frame.CreatedAt.ToString("dd.MM.yyyy hh:mm:ss.ff"),
+                        Time = frame.CreatedAt,
                     });
                 }
 
@@ -91,7 +95,7 @@ namespace VPEAR.Server.Services
                     payload.Items.Add(new GetFrameResponse()
                     {
                         Readings = frame.Readings,
-                        Time = frame.CreatedAt.ToString("dd.MM.yyyy hh:mm:ss.ff"),
+                        Time = frame.CreatedAt,
                     });
                 }
 

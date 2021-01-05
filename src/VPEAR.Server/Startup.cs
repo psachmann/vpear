@@ -161,6 +161,7 @@ namespace VPEAR.Server
             services.AddDbContext<VPEARDbContext>(options =>
             {
                 options.UseInMemoryDatabase(Schemas.DbSchema);
+                options.UseLazyLoadingProxies();
                 options.EnableSensitiveDataLogging();
             });
 #else

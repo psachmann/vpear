@@ -34,10 +34,13 @@ namespace VPEAR.Server.Data
                     value => value.ToJsonString(),
                     value => value.FromJsonString<IList<IList<int>>>());
 
-            builder.Property(f => f.Time)
+            builder.Property(frame => frame.Time)
                 .HasMaxLength(Limits.MaxStringLength)
                 .IsRequired()
                 .IsUnicode();
+
+            builder.HasOne(frame => frame.Filter)
+                .WithMany(filter => filter.Frames);
 #if DEBUG
             builder.HasData(DbSeed.Frames);
 #endif

@@ -6,7 +6,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using VPEAR.Core.Abstractions;
 
@@ -38,6 +40,14 @@ namespace VPEAR.Server.Data
 #if DEBUG
             this.context.Database.EnsureCreated();
 #endif
+        }
+
+        public dynamic Context
+        {
+            get
+            {
+                return this.context;
+            }
         }
 
         /// <inheritdoc/>
@@ -80,6 +90,42 @@ namespace VPEAR.Server.Data
         public IQueryable<TEntity> Get()
         {
             return this.context.Set<TEntity>().AsNoTracking();
+        }
+
+        /// <inheritdoc/>
+        public void GetReference<TProperty>(TEntity entity, Expression<Func<TEntity, TProperty>> expression)
+            where TProperty : class
+        {
+            this.context.Entry(entity)
+                .Reference(expression)
+                .Load();
+        }
+
+        /// <inheritdoc/>
+        public async Task GetReferenceAsync<TProperty>(TEntity entity, Expression<Func<TEntity, TProperty>> expression)
+            where TProperty : class
+        {
+            await this.context.Entry(entity)
+                .Reference(expression)
+                .LoadAsync();
+        }
+
+        /// <inheritdoc/>
+        public void GetCollection<TProperty>(TEntity entity, Expression<Func<TEntity, IEnumerable<TProperty>>> expression)
+            where TProperty : class
+        {
+            this.context.Entry(entity)
+                .Collection(expression)
+                .Load();
+        }
+
+        /// <inheritdoc/>
+        public async Task GetCollectionAsync<TProperty>(TEntity entity, Expression<Func<TEntity, IEnumerable<TProperty>>> expression)
+            where TProperty : class
+        {
+            await this.context.Entry(entity)
+                .Collection(expression)
+                .LoadAsync();
         }
 
         /// <inheritdoc/>

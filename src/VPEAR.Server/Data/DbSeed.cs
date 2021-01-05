@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using VPEAR.Core;
-using VPEAR.Core.Extensions;
 using VPEAR.Core.Models;
 
 namespace VPEAR.Server.Data
@@ -94,32 +93,32 @@ namespace VPEAR.Server.Data
 
         public static IList<Device> Devices
         {
-            get { return devices.Clone()!; }
+            get { return devices; }
         }
 
         public static IList<Filter> Filters
         {
-            get { return filters.Clone()!; }
+            get { return filters; }
         }
 
         public static IList<Firmware> Firmwares
         {
-            get { return firmwares.Clone()!; }
+            get { return firmwares; }
         }
 
         public static IList<Frame> Frames
         {
-            get { return frames.Clone()!; }
+            get { return frames; }
         }
 
         public static IList<Sensor> Sensors
         {
-            get { return sensors.Clone()!; }
+            get { return sensors; }
         }
 
         public static IList<Wifi> Wifis
         {
-            get { return wifis.Clone()!; }
+            get { return wifis; }
         }
     }
 }
