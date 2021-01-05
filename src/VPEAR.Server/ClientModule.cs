@@ -20,6 +20,8 @@ namespace VPEAR.Server
         /// <param name="builder">The container builder to build the Autofac container.</param>
         protected override void Load(ContainerBuilder builder)
         {
+            base.Load(builder);
+
             builder.RegisterType<DeviceClient>()
                 .AsSelf()
                 .As<IDeviceClient>()

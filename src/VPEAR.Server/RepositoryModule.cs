@@ -23,6 +23,8 @@ namespace VPEAR.Server
         /// <param name="builder">The container builder to build the Autofac container.</param>
         protected override void Load(ContainerBuilder builder)
         {
+            base.Load(builder);
+
             builder.Register(context => new Repository<VPEARDbContext, Device, Guid>(
                     context.Resolve<VPEARDbContext>(),
                     context.Resolve<ILogger<IRepository<Device, Guid>>>()))
