@@ -53,7 +53,7 @@ namespace VPEAR.Server.Controllers
         [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(ErrorResponse))]
         [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", typeof(Null))]
         [SwaggerResponse(StatusCodes.Status404NotFound, "Id not found.", typeof(ErrorResponse))]
-        public async Task<IActionResult> OnGetAsync([FromQuery, Required] DeviceStatus status)
+        public async Task<IActionResult> OnGetAsync([FromQuery] DeviceStatus? status)
         {
             this.logger.LogDebug("{@Status}", status);
 

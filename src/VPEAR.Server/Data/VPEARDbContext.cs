@@ -25,16 +25,6 @@ namespace VPEAR.Server.Data
         /// Initializes a new instance of the <see cref="VPEARDbContext"/> class.
         /// </summary>
         /// <param name="options">The options for the db context.</param>
-        public VPEARDbContext(DbContextOptions<VPEARDbContext> options)
-            : base(options)
-        {
-            this.eventDetectors = new List<IEventDetector<VPEARDbContext>>();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VPEARDbContext"/> class.
-        /// </summary>
-        /// <param name="options">The options for the db context.</param>
         /// <param name="eventDetectors">The event detectors for the db context.</param>
         public VPEARDbContext(DbContextOptions<VPEARDbContext> options, IEnumerable<IEventDetector<VPEARDbContext>> eventDetectors)
             : base(options)

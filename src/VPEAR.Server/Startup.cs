@@ -60,7 +60,7 @@ namespace VPEAR.Server
             app.UseHttpsRedirection();
 #endif
             app.UseRouting();
-            app.UseAuthorization();
+            // app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -75,6 +75,7 @@ namespace VPEAR.Server
         {
             builder.RegisterModule(new ClientModule());
             builder.RegisterModule(new EventDetectorModule());
+            builder.RegisterModule(new JobModule());
             builder.RegisterModule(new RepositoryModule());
             builder.RegisterModule(new ServiceModule());
             builder.RegisterModule(new ValidatorModule());
@@ -114,7 +115,7 @@ namespace VPEAR.Server
                                 errors.AppendJoin(' ', error.ErrorMessage);
                             });
 
-                            messages.Add($"{key}: {errors}.");
+                            messages.Add($"{key}: {errors}");
                         });
 
                         return new JsonResult(new ErrorResponse(status, messages));
@@ -160,6 +161,7 @@ namespace VPEAR.Server
             services.AddDbContext<VPEARDbContext>(options =>
             {
                 options.UseInMemoryDatabase(Schemas.DbSchema);
+                options.EnableSensitiveDataLogging();
             });
 #else
             services.AddDbContextPool<VPEARDbContext>(builder =>
@@ -177,7 +179,16 @@ namespace VPEAR.Server
 
         private void ConfigureQuartz(IServiceCollection services)
         {
+            services.AddQuartz(options =>
+            {
+                options.SchedulerName = "Quartz Scheduler";
+                options.UseMicrosoftDependencyInjectionScopedJobFactory();
+            });
 
+            services.AddQuartzServer(options =>
+            {
+                options.WaitForJobsToComplete = true;
+            });
         }
 
         private void ConfigureSwagger(IServiceCollection services)

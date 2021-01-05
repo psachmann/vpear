@@ -35,6 +35,9 @@ namespace VPEAR.Server.Data
         {
             this.context = context;
             this.logger = logger;
+#if DEBUG
+            this.context.Database.EnsureCreated();
+#endif
         }
 
         /// <inheritdoc/>

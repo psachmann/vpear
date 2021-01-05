@@ -29,7 +29,7 @@ namespace VPEAR.Server
                     context.Resolve<ISchedulerFactory>(),
                     context.Resolve<ILogger<DeviceStatusChangedEventDetector>>()))
                 .As<IEventDetector<VPEARDbContext>>()
-                .InstancePerRequest();
+                .InstancePerDependency();
         }
     }
 }

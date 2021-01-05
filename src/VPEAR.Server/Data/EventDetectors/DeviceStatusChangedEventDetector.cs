@@ -35,15 +35,19 @@ namespace VPEAR.Server.Data.EventDetectors
 
         public async Task DetectAsync(VPEARDbContext context)
         {
+            this.logger.LogDebug("Detecting changes...");
+
             var name = nameof(Device.Status);
             var changes = context.ChangeTracker.Entries<Device>()
                 .Where(device =>
                     device.State == EntityState.Modified
-                    && device.OriginalValues.GetValue<DeviceStatus>(name)
-                    != device.CurrentValues.GetValue<DeviceStatus>(name))
+                    && (device.OriginalValues.GetValue<DeviceStatus>(name)
+                    != device.CurrentValues.GetValue<DeviceStatus>(name)))
                 .ToList();
-            var scheduler = await this.factory.GetScheduler();
 
+            this.logger.LogDebug("Detected changes {@Cahnges}", changes);
+
+            var scheduler = await this.factory.GetScheduler();
             foreach (var change in changes)
             {
                 // TODO: trigger or terminate poll frames job
@@ -54,18 +58,24 @@ namespace VPEAR.Server.Data.EventDetectors
                         .Build();
 
                     var trigger = TriggerBuilder.Create()
-                        .WithIdentity($"{change.Entity.Id}-Trigger")
+                        .WithIdentity($"{change.Entity.Id}-Trigger", "Poll-Frames")
                         .WithSimpleSchedule(builder => builder
-                            .WithIntervalInSeconds(5)
+                            .WithIntervalInSeconds((int)change.Entity.Frequency)
                             .RepeatForever())
                         .StartNow()
                         .Build();
 
                     await scheduler.ScheduleJob(job, trigger);
+
+                    this.logger.LogInformation("Created new {@Job} with {@Trigger}", job, trigger);
                 }
                 else
                 {
-                    await scheduler.DeleteJob(new JobKey($"{change.Entity.Id}-Job"));
+                    var job = new JobKey($"{change.Entity.Id}-Job");
+
+                    await scheduler.DeleteJob(job);
+
+                    this.logger.LogInformation("Deleted {@Job}", job);
                 }
 
                 this.logger.LogInformation("DeviceStatusChangedEvent - {@DeviceStatus}", change.Entity.Status);

@@ -6,6 +6,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using VPEAR.Core.Abstractions;
 using VPEAR.Server.Data;
 using static VPEAR.Server.Constants;
 
@@ -19,7 +20,7 @@ namespace VPEAR.Server.Test
                 .UseInMemoryDatabase(Schemas.DbSchema)
                 .Options;
 
-            this.Context = new VPEARDbContext(options);
+            this.Context = new VPEARDbContext(options, new List<IEventDetector<VPEARDbContext>>());
             this.Seed();
         }
 

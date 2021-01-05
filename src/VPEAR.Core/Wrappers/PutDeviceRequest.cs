@@ -20,5 +20,9 @@ namespace VPEAR.Core.Wrappers
 
         [JsonPropertyName("required_sensors")]
         public uint? RequiredSensors { get; set; }
+
+        [JsonPropertyName("status")]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public DeviceStatus? Status { get; set; }
     }
 }

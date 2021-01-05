@@ -40,13 +40,18 @@ namespace VPEAR.Server.Services
         }
 
         /// <inheritdoc/>
-        public async Task<Result<Container<GetDeviceResponse>>> GetAsync(DeviceStatus deviceStatus)
+        public async Task<Result<Container<GetDeviceResponse>>> GetAsync(DeviceStatus? deviceStatus)
         {
-            var devices = await this.devices.Get()
-                .Where(d => d.Status.Equals(deviceStatus))
-                .ToListAsync();
+            var devices = deviceStatus switch
+            {
+                null => await this.devices.Get()
+                    .ToListAsync(),
+                _ => await this.devices.Get()
+                    .Where(d => d.Status.Equals(deviceStatus))
+                    .ToListAsync(),
+            };
 
-            if (devices == null || devices.Count == 0)
+            if (devices.Count == 0)
             {
                 return new Result<Container<GetDeviceResponse>>(HttpStatusCode.NotFound, ErrorMessages.DeviceNotFound);
             }
@@ -92,8 +97,9 @@ namespace VPEAR.Server.Services
             }
 
             device.DisplayName = request.DisplayName ?? device.DisplayName;
-            device.RequiredSensors = request.RequiredSensors ?? device.RequiredSensors;
             device.Frequency = request.Frequency ?? device.Frequency;
+            device.RequiredSensors = request.RequiredSensors ?? device.RequiredSensors;
+            device.Status = request.Status ?? device.Status;
 
             await this.devices.UpdateAsync(device);
 
