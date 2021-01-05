@@ -20,17 +20,12 @@ namespace VPEAR.Server.Test.Validators
         }
 
         [Theory]
-        [InlineData(null, "example@email.tld", "password")]
-        [InlineData("display_name", "example@email.tld", "password")]
-        public void ValidateSuccessTest(
-            string? displayName,
-            string? email,
-            string? password)
+        [InlineData("user_name", "password")]
+        public void ValidateSuccessTest(string? name, string? password)
         {
             var request = new PostRegisterRequest()
             {
-                DisplayName = displayName,
-                Email = email,
+                Name = name,
                 Password = password,
             };
             var result = this.validator.Validate(request);
@@ -39,22 +34,18 @@ namespace VPEAR.Server.Test.Validators
         }
 
         [Theory]
-        [InlineData(null, null, null)]
-        [InlineData("", "", "")]
-        [InlineData(null, "example@email.tld", null)]
-        [InlineData(null, null, "password")]
-        [InlineData(null, "example@email.tld", "")]
-        [InlineData(null, "", "password")]
-        [InlineData(null, "example@domain.tld", "short")]
-        public void ValidateFailureTest(
-            string? displayName,
-            string email,
-            string password)
+        [InlineData(null, null)]
+        [InlineData("", "")]
+        [InlineData("example@email.tld", null)]
+        [InlineData(null, "password")]
+        [InlineData("example@email.tld", "")]
+        [InlineData("", "password")]
+        [InlineData("example@domain.tld", "short")]
+        public void ValidateFailureTest(string name, string password)
         {
             var request = new PostRegisterRequest()
             {
-                DisplayName = displayName,
-                Email = email,
+                Name = name,
                 Password = password,
             };
             var result = this.validator.Validate(request);

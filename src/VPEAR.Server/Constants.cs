@@ -79,7 +79,7 @@ namespace VPEAR.Server
 
         public static class ErrorMessages
         {
-            public const string UserEmailAlreadyUsed = "The email address is already used.";
+            public const string UserNameAlreadyUsed = "The user name is already used.";
 
             public const string InternalServerError = "An internal server error occurred.";
 

@@ -19,22 +19,11 @@ namespace VPEAR.Server.Validators
         /// </summary>
         public PostRegisterValidator()
         {
-            this.When(request => request.DisplayName != null, () =>
-            {
-                this.RuleFor(request => request.DisplayName)
-                    .NotNull()
-                    .NotEmpty()
-                    .MinimumLength(Limits.MinStringLength)
-                    .MaximumLength(Limits.MaxStringLength)
-                    .OverridePropertyName("display_name");
-            });
-
-            this.RuleFor(request => request.Email)
+            this.RuleFor(request => request.Name)
                 .NotNull()
                 .NotEmpty()
                 .MaximumLength(Limits.MaxStringLength)
-                .EmailAddress()
-                .OverridePropertyName("email");
+                .OverridePropertyName("name");
 
             this.RuleFor(request => request.Password)
                 .NotNull()

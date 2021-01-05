@@ -245,7 +245,7 @@ namespace VPEAR.Core
             var uri = $"{ApiPrefix}/user/login";
             var payload = new PutLoginRequest()
             {
-                Email = name,
+                Name = name,
                 Password = password,
             };
 
@@ -278,7 +278,7 @@ namespace VPEAR.Core
             var uri = $"{ApiPrefix}/user/register";
             var payload = new PostRegisterRequest()
             {
-                Email = name,
+                Name = name,
                 Password = password,
                 IsAdmin = isAdmin,
             };

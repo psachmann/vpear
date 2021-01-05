@@ -82,8 +82,7 @@ namespace VPEAR.Server.Services
                 {
                     payload.Items.Add(new GetUserResponse()
                     {
-                        DisplayName = admin.UserName,
-                        Email = admin.Email,
+                        Name = admin.UserName,
                         Id = admin.Id,
                         IsVerified = admin.EmailConfirmed,
                         Roles = Roles.AllRoles,
@@ -94,8 +93,7 @@ namespace VPEAR.Server.Services
                 {
                     payload.Items.Add(new GetUserResponse()
                     {
-                        DisplayName = user.UserName,
-                        Email = user.Email,
+                        Name = user.UserName,
                         Id = user.Id,
                         IsVerified = user.EmailConfirmed,
                         Roles = new List<string>() { Roles.UserRole, },
@@ -113,8 +111,7 @@ namespace VPEAR.Server.Services
                 {
                     payload.Items.Add(new GetUserResponse()
                     {
-                        DisplayName = user.UserName,
-                        Email = user.Email,
+                        Name = user.UserName,
                         Id = user.Id,
                         IsVerified = user.EmailConfirmed,
                         Roles = await this.users.GetRolesAsync(user),
@@ -130,15 +127,14 @@ namespace VPEAR.Server.Services
         {
             var status = HttpStatusCode.InternalServerError;
             var message = ErrorMessages.InternalServerError;
-            var existingUser = await this.users.FindByEmailAsync(request.Email);
+            var existingUser = await this.users.FindByNameAsync(request.Name);
 
             if (existingUser == null)
             {
                 var user = new IdentityUser()
                 {
-                    Email = request.Email,
+                    UserName = request.Name,
                     SecurityStamp = DateTimeOffset.UtcNow.ToString(),
-                    UserName = request.DisplayName ?? request.Email,
                 };
 
                 if (request.IsAdmin)
@@ -154,7 +150,7 @@ namespace VPEAR.Server.Services
             else
             {
                 status = HttpStatusCode.Conflict;
-                message = ErrorMessages.UserEmailAlreadyUsed;
+                message = ErrorMessages.UserNameAlreadyUsed;
             }
 
             return new Result<Null>(status, message);
@@ -192,7 +188,7 @@ namespace VPEAR.Server.Services
         /// <inheritdoc/>
         public async Task<Result<PutLoginResponse>> PutLoginAsync(PutLoginRequest request)
         {
-            var user = await this.users.FindByEmailAsync(request.Email);
+            var user = await this.users.FindByNameAsync(request.Name);
 
             if (user == null)
             {

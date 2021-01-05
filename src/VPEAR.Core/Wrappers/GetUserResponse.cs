@@ -13,11 +13,8 @@ namespace VPEAR.Core.Wrappers
         [JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
 
-        [JsonPropertyName("display_name")]
-        public string DisplayName { get; set; } = string.Empty;
-
-        [JsonPropertyName("email")]
-        public string Email { get; set; } = string.Empty;
+        [JsonPropertyName("name")]
+        public string Name { get; set; } = string.Empty;
 
         [JsonPropertyName("roles")]
         public IList<string> Roles { get; set; } = new List<string>();

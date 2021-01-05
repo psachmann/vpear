@@ -19,14 +19,13 @@ namespace VPEAR.Server.Validators
         /// </summary>
         public PutLoginValidator()
         {
-            this.RuleFor(r => r.Email)
+            this.RuleFor(request => request.Name)
                 .NotNull()
                 .NotEmpty()
                 .MaximumLength(Limits.MaxStringLength)
-                .EmailAddress()
-                .OverridePropertyName("email");
+                .OverridePropertyName("name");
 
-            this.RuleFor(r => r.Password)
+            this.RuleFor(request => request.Password)
                 .NotNull()
                 .NotEmpty()
                 .MinimumLength(Limits.MinPasswordLength)

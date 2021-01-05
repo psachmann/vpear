@@ -21,8 +21,8 @@ namespace VPEAR.Server.Test
 {
     public static class Mocks
     {
-        public const string ConfirmedEmail = "confirmed@email.tld";
-        public const string UnconfirmedEmail = "unconfirmed@email.tld";
+        public const string ConfirmedUser = "confirmed_user";
+        public const string UnconfirmedUser = "unconfirmed_user";
         public const string ValidPassword = "valid_password";
         public const string InvalidPassword = "invalid_password";
         public static readonly (Guid Id, string Role) Admin = (new Guid("00000000000000000000000000000001"), Roles.AdminRole);
@@ -160,7 +160,7 @@ namespace VPEAR.Server.Test
                 .ReturnsAsync(false);
 
             mock.Setup(mock => mock.CreateAsync(It.IsAny<IdentityRole>()))
-                .ReturnsAsync(new IdentityResult());
+                .ReturnsAsync(IdentityResult.Success);
 
             return mock.Object;
         }
@@ -236,7 +236,7 @@ namespace VPEAR.Server.Test
             mock.Setup(mock => mock.GetUsersInRoleAsync(Roles.None))
                 .ReturnsAsync(new List<IdentityUser>());
 
-            mock.Setup(mock => mock.FindByEmailAsync(ConfirmedEmail))
+            mock.Setup(mock => mock.FindByNameAsync(ConfirmedUser))
                 .ReturnsAsync(user);
 
             mock.Setup(mock => mock.FindByIdAsync(admin.Id))

@@ -20,12 +20,12 @@ namespace VPEAR.Server.Test.Validators
         }
 
         [Theory]
-        [InlineData("example@domain.tld", "password")]
-        public void ValidateSuccessTest(string? email, string? password)
+        [InlineData("name", "password")]
+        public void ValidateSuccessTest(string? name, string? password)
         {
             var request = new PutLoginRequest()
             {
-                Email = email,
+                Name = name,
                 Password = password,
             };
             var result = this.validator.Validate(request);
@@ -37,13 +37,12 @@ namespace VPEAR.Server.Test.Validators
         [InlineData(null, null)]
         [InlineData(null, "")]
         [InlineData("", null)]
-        [InlineData("example@domain.tld", "short")]
-        [InlineData("exampledomain.tld", "password")]
-        public void ValidateFailureTest(string? email, string? password)
+        [InlineData("name", "short")]
+        public void ValidateFailureTest(string? name, string? password)
         {
             var request = new PutLoginRequest()
             {
-                Email = email,
+                Name = name,
                 Password = password,
             };
             var result = this.validator.Validate(request);

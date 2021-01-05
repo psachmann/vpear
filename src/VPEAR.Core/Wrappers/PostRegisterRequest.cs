@@ -12,11 +12,8 @@ namespace VPEAR.Core.Wrappers
     /// </summary>
     public class PostRegisterRequest
     {
-        [JsonPropertyName("display_name")]
-        public string DisplayName { get; set; }
-
-        [JsonPropertyName("email")]
-        public string Email { get; set; }
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
 
         [JsonPropertyName("password")]
         public string Password { get; set; }

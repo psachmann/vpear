@@ -108,8 +108,7 @@ namespace VPEAR.Server.Test.Services
         {
             var request = new PostRegisterRequest()
             {
-                DisplayName = "display_name",
-                Email = Mocks.UnconfirmedEmail,
+                Name = Mocks.UnconfirmedUser,
                 IsAdmin = false,
                 Password = Mocks.ValidPassword,
             };
@@ -120,8 +119,7 @@ namespace VPEAR.Server.Test.Services
 
             request = new PostRegisterRequest()
             {
-                DisplayName = "display_name",
-                Email = Mocks.UnconfirmedEmail,
+                Name = Mocks.UnconfirmedUser,
                 IsAdmin = true,
                 Password = Mocks.ValidPassword,
             };
@@ -136,8 +134,7 @@ namespace VPEAR.Server.Test.Services
         {
             var request = new PostRegisterRequest()
             {
-                DisplayName = "display_name",
-                Email = Mocks.ConfirmedEmail,
+                Name = Mocks.ConfirmedUser,
                 IsAdmin = false,
                 Password = Mocks.ValidPassword,
             };
@@ -145,7 +142,7 @@ namespace VPEAR.Server.Test.Services
 
             Assert.NotNull(result.Error);
             Assert.Equal(StatusCodes.Status409Conflict, result.StatusCode);
-            Assert.Contains(ErrorMessages.UserEmailAlreadyUsed, result.Error!.Messages);
+            Assert.Contains(ErrorMessages.UserNameAlreadyUsed, result.Error!.Messages);
         }
 
         [Fact]
@@ -153,7 +150,7 @@ namespace VPEAR.Server.Test.Services
         {
             var request = new PutLoginRequest()
             {
-                Email = Mocks.ConfirmedEmail,
+                Name = Mocks.ConfirmedUser,
                 Password = Mocks.ValidPassword,
             };
             var result = await this.service.PutLoginAsync(request);
@@ -167,7 +164,7 @@ namespace VPEAR.Server.Test.Services
         {
             var request = new PutLoginRequest()
             {
-                Email = Mocks.ConfirmedEmail,
+                Name = Mocks.ConfirmedUser,
                 Password = Mocks.InvalidPassword,
             };
             var result = await this.service.PutLoginAsync(request);
@@ -182,7 +179,7 @@ namespace VPEAR.Server.Test.Services
         {
             var request = new PutLoginRequest()
             {
-                Email = Mocks.UnconfirmedEmail,
+                Name = Mocks.UnconfirmedUser,
                 Password = Mocks.ValidPassword,
             };
             var result = await this.service.PutLoginAsync(request);

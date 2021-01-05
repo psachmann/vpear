@@ -12,8 +12,8 @@ namespace VPEAR.Core.Wrappers
     /// </summary>
     public class PutLoginRequest
     {
-        [JsonPropertyName("email")]
-        public string Email { get; set; }
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
 
         [JsonPropertyName("password")]
         public string Password { get; set; }

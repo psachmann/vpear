@@ -60,7 +60,7 @@ namespace VPEAR.Server
             app.UseHttpsRedirection();
 #endif
             app.UseRouting();
-            // app.UseAuthorization();
+            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
