@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
@@ -194,15 +195,13 @@ namespace VPEAR.Server.Services
             {
                 return new Result<PutLoginResponse>(HttpStatusCode.NotFound, ErrorMessages.UserNotFound);
             }
-            else if (!user.EmailConfirmed)
+
+            if (!user.EmailConfirmed)
             {
                 return new Result<PutLoginResponse>(HttpStatusCode.Forbidden, ErrorMessages.UserNotVerfied);
             }
-            else if (!await this.users.CheckPasswordAsync(user, request.Password))
-            {
-                return new Result<PutLoginResponse>(HttpStatusCode.Forbidden, ErrorMessages.InvalidPassword);
-            }
-            else
+
+            if (await this.users.CheckPasswordAsync(user, request.Password))
             {
                 var userRoles = await this.users.GetRolesAsync(user);
 
@@ -226,14 +225,21 @@ namespace VPEAR.Server.Services
                     expires: DateTime.Now.AddHours(24),
                     claims: authClaims,
                     signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256));
+                var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
 
                 var payload = new PutLoginResponse()
                 {
                     ExpiresAt = token.ValidTo,
-                    Token = new JwtSecurityTokenHandler().WriteToken(token),
+                    Token = tokenString,
                 };
 
+                await this.users.SetAuthenticationTokenAsync(user, JwtBearerDefaults.AuthenticationScheme, "Access Token", tokenString);
+
                 return new Result<PutLoginResponse>(HttpStatusCode.OK, payload);
+            }
+            else
+            {
+                return new Result<PutLoginResponse>(HttpStatusCode.Forbidden, ErrorMessages.InvalidPassword);
             }
         }
 

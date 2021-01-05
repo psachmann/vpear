@@ -245,6 +245,9 @@ namespace VPEAR.Server.Test
             mock.Setup(mock => mock.FindByIdAsync(user.Id))
                 .ReturnsAsync(user);
 
+            mock.Setup(mock => mock.SetAuthenticationTokenAsync(It.IsAny<IdentityUser>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(IdentityResult.Success);
+
             return mock.Object;
         }
 

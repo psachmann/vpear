@@ -18,6 +18,8 @@ namespace VPEAR.Core
         private const string AuthenticationScheme = "Bearer";
         private const string ApiPrefix = "/api/v1";
         private bool isSignedIn = false;
+        private string name = string.Empty;
+        private string password = string.Empty;
         private string token = string.Empty;
         private DateTimeOffset expiresAt = default;
 
@@ -255,6 +257,8 @@ namespace VPEAR.Core
                 var response = json.FromJsonString<PutLoginResponse>();
 
                 this.isSignedIn = true;
+                this.name = name;
+                this.password = password;
                 this.token = response.Token;
                 this.expiresAt = response.ExpiresAt;
 
@@ -269,6 +273,8 @@ namespace VPEAR.Core
         public void Logout()
         {
             this.isSignedIn = false;
+            this.name = string.Empty;
+            this.password = string.Empty;
             this.token = string.Empty;
             this.expiresAt = default;
         }
@@ -356,7 +362,7 @@ namespace VPEAR.Core
 
             if (this.IsTokenExpired())
             {
-                await this.RenewTokenAsync();
+                await this.LoginAsync(this.name, this.password);
             }
         }
 
@@ -369,30 +375,6 @@ namespace VPEAR.Core
             else
             {
                 return true;
-            }
-        }
-
-        private async Task RenewTokenAsync()
-        {
-            var uri = $"{ApiPrefix}/user/token";
-            var payload = new PutTokenRequest()
-            {
-                OldToken = this.token,
-            };
-
-            if (await this.CanConnectAsync()
-                && await this.PutAsync(uri, payload)
-                && this.IsSuccessResponse())
-            {
-                var json = await this.Response.Content.ReadAsStringAsync();
-                var respone = json.FromJsonString<PutTokenResponse>();
-
-                this.token = respone.NewToken;
-                this.expiresAt = respone.ExpiresAt;
-            }
-            else
-            {
-                throw new ApplicationException("The token could NOT be renewed.");
             }
         }
     }

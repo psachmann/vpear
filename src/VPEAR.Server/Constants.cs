@@ -209,6 +209,8 @@ namespace VPEAR.Server
             public const string LoginRoute = BaseRoute + "user/login";
 
             public const string LogoutRoute = BaseRoute + "user/logout";
+
+            public const string TokenRoute = BaseRoute + "user/token";
         }
     }
 }
