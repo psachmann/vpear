@@ -41,32 +41,51 @@ namespace VPEAR.Core.Abstractions
 
         public Exception Error
         {
-            get { return this.error; }
-            protected set { this.error = value; }
+            get
+            {
+                return this.error;
+            }
+
+            protected set
+            {
+                this.error = value;
+            }
         }
 
         public HttpResponseMessage Response
         {
-            get { return this.response; }
-            protected set { this.response = value; }
+            get
+            {
+                return this.response;
+            }
+
+            protected set
+            {
+                this.response?.Dispose();
+                this.response = value;
+            }
         }
 
         protected HttpClient Client
         {
-            get { return this.client; }
+            get
+            {
+                return this.client;
+            }
         }
 
         public abstract Task<bool> CanConnectAsync();
 
         public void Dispose()
         {
-            this.client.Dispose();
+            this.Client.Dispose();
+            this.Response?.Dispose();
             GC.SuppressFinalize(this);
         }
 
         public bool IsSuccessResponse()
         {
-            return this.response != null && this.response.IsSuccessStatusCode;
+            return this.Response != null && this.Response.IsSuccessStatusCode;
         }
 
         protected Task<bool> DeleteAsync(string uri)
@@ -100,15 +119,15 @@ namespace VPEAR.Core.Abstractions
                     RequestUri = new Uri(uri),
                 };
 
-                this.response = await this.client.SendAsync(message);
-                this.error = null;
+                this.Response = await this.Client.SendAsync(message);
+                this.Error = null;
 
                 return true;
             }
             catch (Exception exception)
             {
-                this.error = exception;
-                this.response = null;
+                this.Error = exception;
+                this.Response = null;
 
                 return false;
             }

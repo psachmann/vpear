@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using Quartz;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -58,7 +59,6 @@ namespace VPEAR.Server
             env.EnvironmentName = "Production";
             app.UseHttpsRedirection();
 #endif
-
             app.UseRouting();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
@@ -147,7 +147,10 @@ namespace VPEAR.Server
                     };
                 });
 
+            services.AddHttpClient();
+
             this.ConfigureDatabase(services);
+            this.ConfigureQuartz(services);
             this.ConfigureSwagger(services);
         }
 
@@ -172,11 +175,16 @@ namespace VPEAR.Server
 #endif
         }
 
+        private void ConfigureQuartz(IServiceCollection services)
+        {
+
+        }
+
         private void ConfigureSwagger(IServiceCollection services)
         {
-            services.AddSwaggerGen(c =>
+            services.AddSwaggerGen(options =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo()
+                options.SwaggerDoc("v1", new OpenApiInfo()
                 {
                     Title = "VPEAR API",
                     Version = "v1",
@@ -184,8 +192,8 @@ namespace VPEAR.Server
 
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                c.IncludeXmlComments(xmlPath);
-                c.EnableAnnotations();
+                options.IncludeXmlComments(xmlPath);
+                options.EnableAnnotations();
             });
         }
     }
