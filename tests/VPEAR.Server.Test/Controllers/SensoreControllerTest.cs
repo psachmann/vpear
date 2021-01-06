@@ -57,7 +57,7 @@ namespace VPEAR.Server.Test.Controllers
 
             Assert.NotNull(response);
             Assert.Equal(StatusCodes.Status404NotFound, response.StatusCode);
-            Assert.Contains(ErrorMessages.FramesNotFound, response.Messages);
+            Assert.Contains(ErrorMessages.DeviceNotFound, response.Messages);
         }
 
         [Fact]
@@ -90,7 +90,7 @@ namespace VPEAR.Server.Test.Controllers
 
             Assert.NotNull(response);
             Assert.Equal(StatusCodes.Status404NotFound, response.StatusCode);
-            Assert.Contains(ErrorMessages.SensorsNotFound, response.Messages);
+            Assert.Contains(ErrorMessages.DeviceNotFound, response.Messages);
         }
     }
 }

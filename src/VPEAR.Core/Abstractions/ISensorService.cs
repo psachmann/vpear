@@ -17,6 +17,6 @@ namespace VPEAR.Core.Abstractions
     {
         Task<Result<Container<GetSensorResponse>>> GetSensorsAsync(Guid id);
 
-        Task<Result<Container<GetFrameResponse>>> GetFramesAsync(Guid id, int start, int stop);
+        Task<Result<Container<GetFrameResponse>>> GetFramesAsync(Guid id, int start, int count);
     }
 }

@@ -3,7 +3,6 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
@@ -23,79 +22,93 @@ namespace VPEAR.Server.Services
     /// </summary>
     public class SensorService : ISensorService
     {
-        private readonly IRepository<Filter, Guid> filters;
+        private readonly IRepository<Device, Guid> devices;
         private readonly IRepository<Frame, Guid> frames;
-        private readonly IRepository<Sensor, Guid> sensors;
         private readonly ILogger<SensorController> logger;
 
         public SensorService(
-            IRepository<Filter, Guid> filters,
+            IRepository<Device, Guid> devices,
             IRepository<Frame, Guid> frames,
-            IRepository<Sensor, Guid> sensors,
             ILogger<SensorController> logger)
         {
-            this.filters = filters;
+            this.devices = devices;
             this.frames = frames;
-            this.sensors = sensors;
             this.logger = logger;
         }
 
         /// <inheritdoc/>
-        public async Task<Result<Container<GetFrameResponse>>> GetFramesAsync(Guid id, int start, int stop)
+        public async Task<Result<Container<GetFrameResponse>>> GetFramesAsync(Guid id, int start, int count)
         {
-            var frames = await this.frames.Get()
-                .Where(f => f.DeviceForeignKey.Equals(id))
-                .OrderBy(f => f.CreatedAt)
-                .ToListAsync();
+            var device = await this.devices.GetAsync(id);
+            var payload = new Container<GetFrameResponse>();
 
-            if (frames.Count == 0)
+            if (device == null)
             {
-                return new Result<Container<GetFrameResponse>>(HttpStatusCode.NotFound, ErrorMessages.FramesNotFound);
+                return new Result<Container<GetFrameResponse>>(HttpStatusCode.NotFound, ErrorMessages.DeviceNotFound);
             }
 
-            // TODO: load the filter and put it in the response
-            if (start == 0 && stop == 0)
-            {
-                var payload = new Container<GetFrameResponse>();
+            await this.devices.GetCollectionAsync(device, device => device.Frames.OrderBy(frame => frame.CreatedAt));
 
-                foreach (var frame in frames)
+            if (start == 0 && count == 0)
+            {
+                foreach (var frame in device.Frames)
                 {
+                    await this.frames.GetReferenceAsync(frame, frame => frame.Filter);
+
                     payload.Items.Add(new GetFrameResponse()
                     {
                         Readings = frame.Readings,
                         Time = frame.CreatedAt,
+                        Filter = new GetFiltersResponse()
+                        {
+                            Noise = frame.Filter.Noise,
+                            Smooth = frame.Filter.Smooth,
+                            Spot = frame.Filter.Spot,
+                        },
                     });
                 }
 
                 return new Result<Container<GetFrameResponse>>(HttpStatusCode.OK, payload);
             }
 
-            if (start < stop && stop < frames.Count)
+            if (start < count && count < device.Frames.Count)
             {
-                var payload = new Container<GetFrameResponse>();
-
-                foreach (var frame in frames.GetRange(start, stop - start))
+                foreach (var frame in device.Frames.ToList().GetRange(start, count))
                 {
+                    await this.frames.GetReferenceAsync(frame, frame => frame.Filter);
+
                     payload.Items.Add(new GetFrameResponse()
                     {
                         Readings = frame.Readings,
                         Time = frame.CreatedAt,
+                        Filter = new GetFiltersResponse()
+                        {
+                            Noise = frame.Filter.Noise,
+                            Smooth = frame.Filter.Smooth,
+                            Spot = frame.Filter.Spot,
+                        },
                     });
                 }
 
                 return new Result<Container<GetFrameResponse>>(HttpStatusCode.OK, payload);
             }
 
-            if (start < stop && stop >= frames.Count)
+            if (start < count && count >= device.Frames.Count)
             {
-                var payload = new Container<GetFrameResponse>();
-
-                foreach (var frame in frames.GetRange(start, frames.Count - start))
+                foreach (var frame in device.Frames.ToList().GetRange(start, device.Frames.Count - start))
                 {
+                    await this.frames.GetReferenceAsync(frame, frame => frame.Filter);
+
                     payload.Items.Add(new GetFrameResponse()
                     {
                         Readings = frame.Readings,
                         Time = frame.CreatedAt,
+                        Filter = new GetFiltersResponse()
+                        {
+                            Noise = frame.Filter.Noise,
+                            Smooth = frame.Filter.Smooth,
+                            Spot = frame.Filter.Spot,
+                        },
                     });
                 }
 
@@ -108,32 +121,32 @@ namespace VPEAR.Server.Services
         /// <inheritdoc/>
         public async Task<Result<Container<GetSensorResponse>>> GetSensorsAsync(Guid id)
         {
-            var sensors = await this.sensors.Get()
-                .Where(s => s.DeviceForeignKey.Equals(id))
-                .ToListAsync();
+            var device = await this.devices.GetAsync(id);
 
-            if (sensors == null || sensors.Count == 0)
+            if (device == null)
             {
-                return new Result<Container<GetSensorResponse>>(HttpStatusCode.NotFound, ErrorMessages.SensorsNotFound);
+                return new Result<Container<GetSensorResponse>>(HttpStatusCode.NotFound, ErrorMessages.DeviceNotFound);
             }
             else
             {
                 var payload = new Container<GetSensorResponse>();
 
-                sensors.ForEach(s =>
+                await this.devices.GetCollectionAsync(device, device => device.Sensors);
+
+                foreach (var sensor in device.Sensors)
                 {
                     payload.Items.Add(new GetSensorResponse()
                     {
-                        Columns = s.Columns,
-                        Height = s.Height,
-                        Maximum = s.Maximum,
-                        Minimum = s.Minimum,
-                        Name = s.Name,
-                        Rows = s.Rows,
-                        Units = s.Units,
-                        Width = s.Width,
+                        Columns = sensor.Columns,
+                        Height = sensor.Height,
+                        Maximum = sensor.Maximum,
+                        Minimum = sensor.Minimum,
+                        Name = sensor.Name,
+                        Rows = sensor.Rows,
+                        Units = sensor.Units,
+                        Width = sensor.Width,
                     });
-                });
+                }
 
                 return new Result<Container<GetSensorResponse>>(HttpStatusCode.OK, payload);
             }
