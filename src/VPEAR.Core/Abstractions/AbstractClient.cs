@@ -18,9 +18,9 @@ namespace VPEAR.Core.Abstractions
 
         protected AbstractClient(string baseAddress, IHttpClientFactory factory)
         {
-            if (string.IsNullOrEmpty(baseAddress))
+            if (baseAddress == null)
             {
-                throw new ArgumentException("Is null or empty.", nameof(baseAddress));
+                throw new ArgumentNullException(nameof(baseAddress));
             }
 
             if (factory == null)
@@ -31,6 +31,29 @@ namespace VPEAR.Core.Abstractions
             if (Uri.TryCreate(baseAddress, UriKind.RelativeOrAbsolute, out var uri))
             {
                 this.client = factory.CreateClient();
+                this.client.BaseAddress = uri;
+            }
+            else
+            {
+                throw new ArgumentException("Is not a valid Uri.", nameof(baseAddress));
+            }
+        }
+
+        protected AbstractClient(string baseAddress, HttpClient client)
+        {
+            if (baseAddress == null)
+            {
+                throw new ArgumentNullException(nameof(baseAddress));
+            }
+
+            if (client == null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+
+            if (Uri.TryCreate(baseAddress, UriKind.RelativeOrAbsolute, out var uri))
+            {
+                this.client = client;
                 this.client.BaseAddress = uri;
             }
             else

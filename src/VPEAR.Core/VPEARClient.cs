@@ -28,6 +28,11 @@ namespace VPEAR.Core
         {
         }
 
+        internal VPEARClient(string baseAddress, HttpClient client)
+            : base(baseAddress, client)
+        {
+        }
+
         public delegate IVPEARClient Factory(string baseAddress);
 
         public override async Task<bool> CanConnectAsync()

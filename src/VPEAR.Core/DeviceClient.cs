@@ -26,6 +26,11 @@ namespace VPEAR.Core
         {
         }
 
+        internal DeviceClient(string baseAddress, HttpClient client)
+            : base(baseAddress, client)
+        {
+        }
+
         public delegate IDeviceClient Factory(string baseAddess);
 
         public override async Task<bool> CanConnectAsync()

@@ -4,6 +4,9 @@
 // </copyright>
 
 using System;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("VPEAR.Server.Test")]
 
 namespace VPEAR.Core
 {
