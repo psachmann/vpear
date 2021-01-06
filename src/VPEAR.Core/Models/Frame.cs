@@ -31,7 +31,7 @@ namespace VPEAR.Core.Models
         /// </summary>
         /// <value>The frame sensor values.</value>
         /// TODO: translate into a valid database type
-        public IList<IList<int>> Readings { get; set; } = new List<IList<int>>();
+        public virtual IList<IList<int>> Readings { get; set; } = new List<IList<int>>();
 
         /// <summary>
         /// Gets or sets the foreign key.
@@ -43,7 +43,7 @@ namespace VPEAR.Core.Models
         /// Gets or sets the device.
         /// </summary>
         /// <value>The device navigation property.</value>
-        public Device Device { get; set; }
+        public virtual Device Device { get; set; }
 
         /// <summary>
         /// Gets or sets the foreign key.
@@ -55,6 +55,6 @@ namespace VPEAR.Core.Models
         /// Gets or sets the filter.
         /// </summary>
         /// <value>The filter navigation property.</value>
-        public Filter Filter { get; set; }
+        public virtual Filter Filter { get; set; }
     }
 }

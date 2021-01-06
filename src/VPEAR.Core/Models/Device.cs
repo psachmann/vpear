@@ -42,13 +42,13 @@ namespace VPEAR.Core.Models
         /// Gets or sets the sensors object.
         /// </summary>
         /// <value>The sensor details.</value>
-        public IList<Sensor> Sensors { get; set; }
+        public virtual IList<Sensor> Sensors { get; set; }
 
         /// <summary>
         /// Gets or sets the frames object.
         /// </summary>
         /// <value>A list of frames.</value>
-        public IList<Frame> Frames { get; set; }
+        public virtual IList<Frame> Frames { get; set; }
 
         /// <summary>
         /// Gets or sets the frequency.
@@ -66,19 +66,19 @@ namespace VPEAR.Core.Models
         /// Gets or sets the filters object.
         /// </summary>
         /// <value>The filter details.</value>
-        public Filter Filter { get; set; }
+        public virtual Filter Filter { get; set; }
 
         /// <summary>
         /// Gets or sets the wifi object.
         /// </summary>
         /// <value>The wifi details.</value>
-        public Wifi Wifi { get; set; }
+        public virtual Wifi Wifi { get; set; }
 
         /// <summary>
         /// Gets or sets the firmware object.
         /// </summary>
         /// <value>The firmware details.</value>
-        public Firmware Firmware { get; set; }
+        public virtual Firmware Firmware { get; set; }
 
         /// <summary>
         /// Gets or sets the status.

@@ -42,12 +42,12 @@ namespace VPEAR.Core.Models
         /// Gets or sets the device.
         /// </summary>
         /// <value>The device navigation property.</value>
-        public Device Device { get; set; }
+        public virtual Device Device { get; set; }
 
         /// <summary>
         /// Gets or sets the frames.
         /// </summary>
         /// <value>The frames navigation property.</value>
-        public IList<Frame> Frames { get; set; }
+        public virtual IList<Frame> Frames { get; set; }
     }
 }

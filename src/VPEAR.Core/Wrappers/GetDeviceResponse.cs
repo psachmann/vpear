@@ -25,6 +25,7 @@ namespace VPEAR.Core.Wrappers
         public double SampleFrequency { get; set; }
 
         [JsonPropertyName("status")]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public DeviceStatus Status { get; set; }
     }
 }
