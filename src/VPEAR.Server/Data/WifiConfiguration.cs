@@ -24,21 +24,21 @@ namespace VPEAR.Server.Data
 
             builder.ToTable(Schemas.WifiSchema);
 
-            builder.HasOne(w => w.Device)
-                .WithOne(d => d.Wifi)
-                .HasForeignKey<Core.Models.Wifi>(w => w.DeviceForeignKey);
+            builder.HasOne(wifi => wifi.Device)
+                .WithOne(device => device.Wifi)
+                .HasForeignKey<Core.Models.Wifi>(wifi => wifi.DeviceForeignKey);
 
-            builder.Property(w => w.Mode)
+            builder.Property(wifi => wifi.Mode)
                 .HasMaxLength(Limits.MaxStringLength)
                 .IsRequired()
                 .IsUnicode();
 
-            builder.Property(w => w.Neighbors)
+            builder.Property(wifi => wifi.Neighbors)
                 .HasConversion(
                     value => value.ToJsonString(),
                     value => value.FromJsonString<IList<string>>());
 
-            builder.Property(w => w.Ssid)
+            builder.Property(wifi => wifi.Ssid)
                 .HasMaxLength(Limits.MaxStringLength)
                 .IsRequired()
                 .IsUnicode();

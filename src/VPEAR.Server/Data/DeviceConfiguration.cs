@@ -23,34 +23,34 @@ namespace VPEAR.Server.Data
 
             builder.ToTable(Schemas.DeviceSchema);
 
-            builder.Property(d => d.Address)
+            builder.Property(device => device.Address)
                 .HasMaxLength(Limits.MaxStringLength)
                 .IsRequired()
                 .IsUnicode();
 
-            builder.Property(d => d.Class)
+            builder.Property(device => device.Class)
                 .HasMaxLength(Limits.MaxStringLength)
                 .IsRequired()
                 .IsUnicode();
 
-            builder.HasOne(d => d.Filter)
+            builder.HasOne(device => device.Filter)
                 .WithOne();
 
-            builder.HasOne(d => d.Firmware)
+            builder.HasOne(device => device.Firmware)
                 .WithOne();
 
-            builder.HasMany(d => d.Frames)
+            builder.HasMany(device => device.Frames)
                 .WithOne();
 
-            builder.Property(d => d.Name)
+            builder.Property(device => device.Name)
                 .HasMaxLength(Limits.MaxStringLength)
                 .IsRequired()
                 .IsUnicode();
 
-            builder.HasMany(d => d.Sensors)
+            builder.HasMany(device => device.Sensors)
                 .WithOne();
 
-            builder.HasOne(d => d.Wifi)
+            builder.HasOne(device => device.Wifi)
                 .WithOne();
 #if DEBUG
             builder.HasData(DbSeed.Devices);

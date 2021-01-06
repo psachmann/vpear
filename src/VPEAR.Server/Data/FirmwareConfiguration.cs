@@ -23,21 +23,21 @@ namespace VPEAR.Server.Data
 
             builder.ToTable(Schemas.FilterSchema);
 
-            builder.HasOne(f => f.Device)
-                .WithOne(d => d.Firmware)
-                .HasForeignKey<Firmware>(f => f.DeviceForeignKey);
+            builder.HasOne(firmware => firmware.Device)
+                .WithOne(device => device.Firmware)
+                .HasForeignKey<Firmware>(firmware => firmware.DeviceForeignKey);
 
-            builder.Property(f => f.Source)
+            builder.Property(firmware => firmware.Source)
                 .HasMaxLength(Limits.MaxStringLength)
                 .IsRequired()
                 .IsUnicode();
 
-            builder.Property(f => f.Upgrade)
+            builder.Property(firmware => firmware.Upgrade)
                 .HasMaxLength(Limits.MaxStringLength)
                 .IsRequired()
                 .IsUnicode();
 
-            builder.Property(f => f.Version)
+            builder.Property(firmware => firmware.Version)
                 .HasMaxLength(Limits.MaxStringLength)
                 .IsRequired()
                 .IsUnicode();

@@ -26,17 +26,17 @@ namespace VPEAR.Server.Data
         /// <param name="builder">The builder to be used to configure the entity type.</param>
         public virtual void Configure(EntityTypeBuilder<TEntity> builder)
         {
-            builder.HasKey(e => e.Id);
+            builder.HasKey(entity => entity.Id);
 
-            builder.Property(e => e.CreatedAt)
+            builder.Property(entity => entity.CreatedAt)
                 .IsRequired()
                 .ValueGeneratedOnAdd();
 
-            builder.Property(e => e.Id)
+            builder.Property(entity => entity.Id)
                 .IsRequired()
                 .ValueGeneratedOnAdd();
 
-            builder.Property(e => e.ModifiedAt)
+            builder.Property(entity => entity.ModifiedAt)
                 .IsConcurrencyToken()
                 .IsRequired()
                 .IsRowVersion()

@@ -23,16 +23,16 @@ namespace VPEAR.Server.Data
 
             builder.ToTable(Schemas.SensorSchema);
 
-            builder.HasOne(s => s.Device)
-                .WithMany(d => d!.Sensors)
-                .HasForeignKey(s => s.DeviceForeignKey);
+            builder.HasOne(sensor => sensor.Device)
+                .WithMany(device => device.Sensors)
+                .HasForeignKey(sensor => sensor.DeviceForeignKey);
 
-            builder.Property(s => s.Name)
+            builder.Property(sensor => sensor.Name)
                 .HasMaxLength(Limits.MaxStringLength)
                 .IsRequired()
                 .IsUnicode();
 
-            builder.Property(s => s.Units)
+            builder.Property(sensor => sensor.Units)
                 .HasMaxLength(Limits.MaxStringLength)
                 .IsRequired()
                 .IsUnicode();
