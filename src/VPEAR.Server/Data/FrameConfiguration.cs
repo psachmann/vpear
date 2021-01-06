@@ -43,7 +43,7 @@ namespace VPEAR.Server.Data
                 .WithMany(filter => filter.Frames)
                 .HasForeignKey(frame => frame.FilterForeignKey);
 #if DEBUG
-            builder.HasData(DbSeed.Frames);
+            builder.HasData(SeedData.Frames);
 #endif
         }
     }

@@ -11,7 +11,7 @@ using VPEAR.Core.Models;
 
 namespace VPEAR.Server.Data
 {
-    internal static class DbSeed
+    internal static class SeedData
     {
         private static IList<Device> devices = new List<Device>();
         private static IList<Filter> filters = new List<Filter>();
@@ -20,7 +20,7 @@ namespace VPEAR.Server.Data
         private static IList<Sensor> sensors = new List<Sensor>();
         private static IList<Wifi> wifis = new List<Wifi>();
 
-        static DbSeed()
+        static SeedData()
         {
             devices.Clear();
             filters.Clear();

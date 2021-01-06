@@ -43,7 +43,7 @@ namespace VPEAR.Server.Data
                 .IsRequired()
                 .IsUnicode();
 #if DEBUG
-            builder.HasData(DbSeed.Wifis);
+            builder.HasData(SeedData.Wifis);
 #endif
         }
     }

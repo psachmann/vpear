@@ -37,7 +37,7 @@ namespace VPEAR.Server.Data
                 .IsRequired()
                 .IsUnicode();
 #if DEBUG
-            builder.HasData(DbSeed.Sensors);
+            builder.HasData(SeedData.Sensors);
 #endif
         }
     }

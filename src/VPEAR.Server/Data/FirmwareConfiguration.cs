@@ -42,7 +42,7 @@ namespace VPEAR.Server.Data
                 .IsRequired()
                 .IsUnicode();
 #if DEBUG
-            builder.HasData(DbSeed.Firmwares);
+            builder.HasData(SeedData.Firmwares);
 #endif
         }
     }
