@@ -56,16 +56,14 @@ namespace VPEAR.Server.Services
                 return new Result<GetPowerResponse>(HttpStatusCode.Gone, ErrorMessages.DeviceIsArchived);
             }
 
-            var client = this.factory.Invoke(device.Address);
-
-            if (device.Status == DeviceStatus.NotReachable || !await client.CanConnectAsync())
+            if (device.Status == DeviceStatus.NotReachable)
             {
-                device.Status = DeviceStatus.NotReachable;
-                await this.devices.UpdateAsync(device);
-
                 return new Result<GetPowerResponse>(HttpStatusCode.FailedDependency, ErrorMessages.DeviceIsNotReachable);
             }
-            else
+
+            var client = this.factory.Invoke(device.Address);
+
+            if (await client.CanConnectAsync())
             {
                 var response = await client.GetPowerAsync();
                 var payload = new GetPowerResponse()
@@ -75,6 +73,14 @@ namespace VPEAR.Server.Services
                 };
 
                 return new Result<GetPowerResponse>(HttpStatusCode.OK, payload);
+            }
+            else
+            {
+                device.Status = DeviceStatus.NotReachable;
+
+                await this.devices.UpdateAsync(device);
+
+                return new Result<GetPowerResponse>(HttpStatusCode.FailedDependency, ErrorMessages.DeviceIsNotReachable);
             }
         }
     }
