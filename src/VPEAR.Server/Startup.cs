@@ -161,15 +161,14 @@ namespace VPEAR.Server
             services.AddDbContext<VPEARDbContext>(options =>
             {
                 options.UseInMemoryDatabase(Schemas.DbSchema);
-                options.UseLazyLoadingProxies();
                 options.EnableSensitiveDataLogging();
             });
 #else
             services.AddDbContextPool<VPEARDbContext>(builder =>
             {
                 builder.UseMySql(
-                    Program.Configuration.DbConnection,
-                    new MySqlServerVersion(new Version(Program.Configuration.DbVersion)),
+                    Startup.Config!.DbConnection,
+                    new MySqlServerVersion(new Version(Startup.Config.DbVersion)),
                     options =>
                     {
                         options.CharSetBehavior(CharSetBehavior.NeverAppend);
