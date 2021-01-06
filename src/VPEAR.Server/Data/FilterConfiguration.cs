@@ -24,7 +24,7 @@ namespace VPEAR.Server.Data
             builder.ToTable(Schemas.FilterSchema);
 
             builder.HasOne(filter => filter.Device)
-                .WithOne(device => device.Filters)
+                .WithOne(device => device.Filter)
                 .HasForeignKey<Filter>(filter => filter.DeviceForeignKey);
 
             builder.HasMany(filter => filter.Frames)

@@ -228,7 +228,7 @@ namespace VPEAR.Server.Test
                     Ssid = "ssid",
                 };
 
-                device.Filters = filter;
+                device.Filter = filter;
                 device.Firmware = firmware;
                 device.Frames.Add(frame);
                 device.Sensors.Add(sensor);

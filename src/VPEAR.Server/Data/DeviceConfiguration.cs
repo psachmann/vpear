@@ -33,7 +33,7 @@ namespace VPEAR.Server.Data
                 .IsRequired()
                 .IsUnicode();
 
-            builder.HasOne(d => d.Filters)
+            builder.HasOne(d => d.Filter)
                 .WithOne();
 
             builder.HasOne(d => d.Firmware)

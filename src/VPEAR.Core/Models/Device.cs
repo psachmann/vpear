@@ -63,7 +63,7 @@ namespace VPEAR.Core.Models
         /// Gets or sets the filters object.
         /// </summary>
         /// <value>The filter details.</value>
-        public Filter Filters { get; set; }
+        public Filter Filter { get; set; }
 
         /// <summary>
         /// Gets or sets the wifi object.

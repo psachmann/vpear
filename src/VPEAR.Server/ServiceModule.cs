@@ -44,7 +44,6 @@ namespace VPEAR.Server
 
             builder.Register(context => new FilterService(
                     context.Resolve<IRepository<Device, Guid>>(),
-                    context.Resolve<IRepository<Filter, Guid>>(),
                     context.Resolve<DeviceClient.Factory>(),
                     context.Resolve<ILogger<FilterController>>()))
                 .As<IFilterService>()
@@ -52,7 +51,6 @@ namespace VPEAR.Server
 
             builder.Register(context => new FirmwareService(
                     context.Resolve<IRepository<Device, Guid>>(),
-                    context.Resolve<IRepository<Firmware, Guid>>(),
                     context.Resolve<DeviceClient.Factory>(),
                     context.Resolve<ILogger<FirmwareController>>()))
                 .As<IFirmwareService>()

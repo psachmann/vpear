@@ -88,7 +88,7 @@ namespace VPEAR.Server.Services
                     Address = response.Device.Address,
                     Class = response.Device.Class,
                     DisplayName = string.Empty,
-                    Filters = new Filter()
+                    Filter = new Filter()
                     {
                         Noise = response.Filters.Noise,
                         Smooth = response.Filters.Smooth,

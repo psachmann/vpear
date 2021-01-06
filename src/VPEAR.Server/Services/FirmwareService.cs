@@ -91,9 +91,9 @@ namespace VPEAR.Server.Services
 
                 await this.devices.GetReferenceAsync(device, device => device.Firmware);
 
-                device.Firmware.Source = response.Source;
-                device.Firmware.Upgrade = response.Upgrade;
-                device.Firmware.Version = response.Version;
+                device.Firmware.Source = response.Source ?? device.Firmware.Source;
+                device.Firmware.Upgrade = response.Upgrade ?? device.Firmware.Upgrade;
+                device.Firmware.Version = response.Version ?? device.Firmware.Version;
 
                 await this.devices.UpdateAsync(device);
 
