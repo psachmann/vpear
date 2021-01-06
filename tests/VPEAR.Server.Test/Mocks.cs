@@ -93,7 +93,6 @@ namespace VPEAR.Server.Test
             mock.Setup(repository => repository.CreateAsync(It.IsAny<TEntity>()))
                 .ReturnsAsync(Activator.CreateInstance<TEntity>());
 
-            // TODO: wie verhält sich ef core bei einer nicht existierenden entität
             mock.Setup(repository => repository.DeleteAsync(It.IsAny<TEntity>()))
                 .Returns(Task.CompletedTask);
 

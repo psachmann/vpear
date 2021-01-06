@@ -24,7 +24,6 @@ namespace VPEAR.Server.Services
     public class WifiService : IWifiService
     {
         private readonly IRepository<Device, Guid> devices;
-        private readonly IRepository<Wifi, Guid> wifis;
         private readonly DeviceClient.Factory factory;
         private readonly ILogger<WifiController> logger;
 
@@ -32,38 +31,36 @@ namespace VPEAR.Server.Services
         /// Initializes a new instance of the <see cref="WifiService"/> class.
         /// </summary>
         /// <param name="devices">The device repository for db access.</param>
-        /// <param name="wifis">The wifi repository for db access.</param>
         /// <param name="factory">The factory to create a device client.</param>
         /// <param name="logger">The service logger.</param>
         public WifiService(
             IRepository<Device, Guid> devices,
-            IRepository<Wifi, Guid> wifis,
             DeviceClient.Factory factory,
             ILogger<WifiController> logger)
         {
             this.logger = logger;
             this.devices = devices;
-            this.wifis = wifis;
             this.factory = factory;
         }
 
         /// <inheritdoc/>
         public async Task<Result<GetWifiResponse>> GetAsync(Guid id)
         {
-            var wifi = await this.wifis.Get()
-                .FirstOrDefaultAsync(w => w.DeviceForeignKey.Equals(id));
+            var device = await this.devices.GetAsync(id);
 
-            if (wifi == null)
+            if (device == null)
             {
                 return new Result<GetWifiResponse>(HttpStatusCode.NotFound, ErrorMessages.DeviceNotFound);
             }
             else
             {
+                await this.devices.GetReferenceAsync(device, device => device.Wifi);
+
                 var payload = new GetWifiResponse()
                 {
-                    Mode = wifi.Mode,
-                    Neighbors = wifi.Neighbors,
-                    Ssid = wifi.Ssid,
+                    Mode = device.Wifi.Mode,
+                    Neighbors = device.Wifi.Neighbors,
+                    Ssid = device.Wifi.Ssid,
                 };
 
                 return new Result<GetWifiResponse>(HttpStatusCode.OK, payload);
@@ -74,10 +71,8 @@ namespace VPEAR.Server.Services
         public async Task<Result<Null>> PutAsync(Guid id, PutWifiRequest request)
         {
             var device = await this.devices.GetAsync(id);
-            var wifi = this.wifis.Get()
-                .FirstOrDefault(w => w.DeviceForeignKey.Equals(id));
 
-            if (device == null || wifi == null)
+            if (device == null)
             {
                 return new Result<Null>(HttpStatusCode.NotFound, ErrorMessages.DeviceNotFound);
             }
@@ -87,28 +82,31 @@ namespace VPEAR.Server.Services
                 return new Result<Null>(HttpStatusCode.Gone, ErrorMessages.DeviceIsArchived);
             }
 
+            if (device.Status == DeviceStatus.NotReachable)
+            {
+                return new Result<Null>(HttpStatusCode.FailedDependency, ErrorMessages.DeviceIsNotReachable);
+            }
+
             var client = this.factory.Invoke(device.Address);
 
-            if (device.Status == DeviceStatus.NotReachable || !await client.CanConnectAsync())
+            if (await client.PutWifiAsync(request.Ssid, request.Password, request.Mode))
             {
-                device.Status = DeviceStatus.NotReachable;
+                await this.devices.GetReferenceAsync(device, device => device.Wifi);
+
+                device.Wifi.Mode = request.Mode ?? device.Wifi.Mode;
+                device.Wifi.Ssid = request.Ssid ?? device.Wifi.Ssid;
+
                 await this.devices.UpdateAsync(device);
 
-                return new Result<Null>(HttpStatusCode.FailedDependency, ErrorMessages.DeviceIsNotReachable);
+                return new Result<Null>(HttpStatusCode.OK);
             }
             else
             {
-                await client.PutWifiAsync(
-                    request.Ssid!,
-                    request.Password!,
-                    request.Mode);
+                device.Status = DeviceStatus.NotReachable;
 
-                wifi.Mode = request.Mode ?? wifi.Mode;
-                wifi.Ssid = request.Ssid ?? wifi.Ssid;
+                await this.devices.UpdateAsync(device);
 
-                await this.wifis.UpdateAsync(wifi);
-
-                return new Result<Null>(HttpStatusCode.OK);
+                return new Result<Null>(HttpStatusCode.FailedDependency, ErrorMessages.DeviceIsNotReachable);
             }
         }
     }

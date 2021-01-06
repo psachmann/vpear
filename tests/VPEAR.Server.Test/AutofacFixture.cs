@@ -146,24 +146,8 @@ namespace VPEAR.Server.Test
                 .As<IRepository<Device, Guid>>()
                 .InstancePerDependency();
 
-            builder.Register(context => Mocks.CreateRepository<Filter>())
-                .As<IRepository<Filter, Guid>>()
-                .InstancePerDependency();
-
-            builder.Register(context => Mocks.CreateRepository<Firmware>())
-                .As<IRepository<Firmware, Guid>>()
-                .InstancePerDependency();
-
             builder.Register(context => Mocks.CreateRepository<Frame>())
                 .As<IRepository<Frame, Guid>>()
-                .InstancePerDependency();
-
-            builder.Register(context => Mocks.CreateRepository<Sensor>())
-                .As<IRepository<Sensor, Guid>>()
-                .InstancePerDependency();
-
-            builder.Register(context => Mocks.CreateRepository<Wifi>())
-                .As<IRepository<Wifi, Guid>>()
                 .InstancePerDependency();
         }
 

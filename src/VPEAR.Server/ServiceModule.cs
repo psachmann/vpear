@@ -79,7 +79,6 @@ namespace VPEAR.Server
 
             builder.Register(context => new WifiService(
                     context.Resolve<IRepository<Device, Guid>>(),
-                    context.Resolve<IRepository<Wifi, Guid>>(),
                     context.Resolve<DeviceClient.Factory>(),
                     context.Resolve<ILogger<WifiController>>()))
                 .As<IWifiService>()
