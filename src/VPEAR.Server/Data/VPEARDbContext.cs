@@ -69,6 +69,17 @@ namespace VPEAR.Server.Data
         public DbSet<Wifi>? Wifis { get; set; }
 
         /// <inheritdoc/>
+        public override int SaveChanges()
+        {
+            foreach (var detector in this.eventDetectors)
+            {
+                detector.Detect(this);
+            }
+
+            return base.SaveChanges();
+        }
+
+        /// <inheritdoc/>
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             foreach (var detector in this.eventDetectors)

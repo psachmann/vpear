@@ -30,19 +30,16 @@ namespace VPEAR.Server.Data.EventDetectors
 
         public void Detect(VPEARDbContext context)
         {
-            throw new System.NotImplementedException();
+            return;
         }
 
         public async Task DetectAsync(VPEARDbContext context)
         {
-            this.logger.LogDebug("Detecting changes...");
-
             var name = nameof(Device.Status);
             var changes = context.ChangeTracker.Entries<Device>()
-                .Where(device =>
-                    device.State == EntityState.Modified
-                    && (device.OriginalValues.GetValue<DeviceStatus>(name)
-                    != device.CurrentValues.GetValue<DeviceStatus>(name)))
+                .Where(entity => entity.State == EntityState.Modified
+                    && (entity.OriginalValues.GetValue<DeviceStatus>(name)
+                    != entity.CurrentValues.GetValue<DeviceStatus>(name)))
                 .ToList();
 
             this.logger.LogDebug("Detected changes {@Cahnges}", changes);
@@ -77,8 +74,6 @@ namespace VPEAR.Server.Data.EventDetectors
 
                     this.logger.LogInformation("Deleted {@Job}", job);
                 }
-
-                this.logger.LogInformation("DeviceStatusChangedEvent - {@DeviceStatus}", change.Entity.Status);
             }
         }
     }
