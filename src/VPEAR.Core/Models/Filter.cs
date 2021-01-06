@@ -12,7 +12,7 @@ namespace VPEAR.Core.Models
     /// <summary>
     /// Db data model for entity framework.
     /// </summary>
-    public class Filter : EntityBase<Guid>
+    public class Filter : AbstractEntity<Guid>
     {
         /// <summary>
         /// Gets or sets a value indicating whether spot is used.

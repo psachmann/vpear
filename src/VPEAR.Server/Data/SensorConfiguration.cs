@@ -14,7 +14,7 @@ namespace VPEAR.Server.Data
     /// <summary>
     /// The entity framework configuration for the <see cref="Sensor"/> class.
     /// </summary>
-    public class SensorConfiguration : EntityBaseConfiguration<Sensor, Guid>
+    public class SensorConfiguration : AbstractEntityConfiguration<Sensor, Guid>
     {
         /// <inheritdoc/>
         public override void Configure(EntityTypeBuilder<Sensor> builder)

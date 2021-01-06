@@ -12,12 +12,12 @@ namespace VPEAR.Core.Models
     /// <summary>
     /// Db data model for entity framework.
     /// </summary>
-    public class Device : EntityBase<Guid>
+    public class Device : AbstractEntity<Guid>
     {
         /// <summary>
         /// Gets or sets the address.
         /// </summary>
-        /// <value>The device ip address.</value>
+        /// <value>The device IP address.</value>
         public string Address { get; set; } = string.Empty;
 
         /// <summary>
@@ -26,7 +26,10 @@ namespace VPEAR.Core.Models
         /// <value>The device class.</value>
         public string Class { get; set; } = string.Empty;
 
-        // TODO: configure ef core
+        /// <summary>
+        /// Gets or sets the display name.
+        /// </summary>
+        /// <value>A name for better recognition.</value>
         public string DisplayName { get; set; } = string.Empty;
 
         /// <summary>

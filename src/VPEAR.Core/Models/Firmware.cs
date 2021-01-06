@@ -11,7 +11,7 @@ namespace VPEAR.Core.Models
     /// <summary>
     /// Db data model for entity framework.
     /// </summary>
-    public class Firmware : EntityBase<Guid>
+    public class Firmware : AbstractEntity<Guid>
     {
         /// <summary>
         /// Gets or sets the version.

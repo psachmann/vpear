@@ -14,7 +14,7 @@ namespace VPEAR.Server.Data
     /// <summary>
     /// The entity framework configuration for the <see cref="Firmware"/> class.
     /// </summary>
-    public class FirmwareConfiguration : EntityBaseConfiguration<Firmware, Guid>
+    public class FirmwareConfiguration : AbstractEntityConfiguration<Firmware, Guid>
     {
         /// <inheritdoc/>
         public override void Configure(EntityTypeBuilder<Firmware> builder)

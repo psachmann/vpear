@@ -16,7 +16,7 @@ namespace VPEAR.Server.Data
     /// <summary>
     /// The entity framework configuration for the <see cref="Frame"/> class.
     /// </summary>
-    public class FrameConfiguration : EntityBaseConfiguration<Frame, Guid>
+    public class FrameConfiguration : AbstractEntityConfiguration<Frame, Guid>
     {
         /// <inheritdoc/>
         public override void Configure(EntityTypeBuilder<Frame> builder)

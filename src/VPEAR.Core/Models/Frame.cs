@@ -12,7 +12,7 @@ namespace VPEAR.Core.Models
     /// <summary>
     /// Db data model for entity framework.
     /// </summary>
-    public class Frame : EntityBase<Guid>
+    public class Frame : AbstractEntity<Guid>
     {
         /// <summary>
         /// Gets or sets the index.

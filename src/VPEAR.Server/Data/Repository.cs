@@ -22,7 +22,7 @@ namespace VPEAR.Server.Data
     /// <typeparam name="TKey">Type of the db id.</typeparam>
     public class Repository<TDbContext, TEntity, TKey> : IRepository<TEntity, TKey>
         where TDbContext : DbContext
-        where TEntity : EntityBase<TKey>
+        where TEntity : AbstractEntity<TKey>
         where TKey : struct, IEquatable<TKey>
     {
         private readonly TDbContext context;

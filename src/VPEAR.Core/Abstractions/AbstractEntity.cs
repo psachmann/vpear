@@ -1,4 +1,4 @@
-// <copyright file="EntityBase.cs" company="Patrick Sachmann">
+// <copyright file=" AbstractEntity.cs" company="Patrick Sachmann">
 // Copyright (c) Patrick Sachmann. All rights reserved.
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
@@ -12,7 +12,7 @@ namespace VPEAR.Core.Abstractions
     /// NOTE: All db entities should derive from this class.
     /// </summary>
     /// <typeparam name="TKey">Type of the db id.</typeparam>
-    public abstract class EntityBase<TKey>
+    public abstract class AbstractEntity<TKey>
         where TKey : struct, IEquatable<TKey>
     {
         /// <summary>

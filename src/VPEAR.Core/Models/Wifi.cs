@@ -12,7 +12,7 @@ namespace VPEAR.Core.Models
     /// <summary>
     /// Db data model for entity framework.
     /// </summary>
-    public class Wifi : EntityBase<Guid>
+    public class Wifi : AbstractEntity<Guid>
     {
         /// <summary>
         /// Gets or sets the ssid.

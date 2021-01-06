@@ -11,7 +11,7 @@ namespace VPEAR.Core.Models
     /// <summary>
     /// Db data model for entity framework.
     /// </summary>
-    public class Sensor : EntityBase<Guid>
+    public class Sensor : AbstractEntity<Guid>
     {
         /// <summary>
         /// Gets or sets the name.

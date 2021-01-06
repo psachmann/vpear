@@ -14,7 +14,7 @@ namespace VPEAR.Server.Data
     /// <summary>
     /// The entity framework configuration for the <see cref="Filter"/> class.
     /// </summary>
-    public class FilterConfiguration : EntityBaseConfiguration<Filter, Guid>
+    public class FilterConfiguration : AbstractEntityConfiguration<Filter, Guid>
     {
         /// <inheritdoc/>
         public override void Configure(EntityTypeBuilder<Filter> builder)

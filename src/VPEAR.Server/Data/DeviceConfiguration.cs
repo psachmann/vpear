@@ -14,7 +14,7 @@ namespace VPEAR.Server.Data
     /// <summary>
     /// The entity framework configuration for the <see cref="Device"/> class.
     /// </summary>
-    public class DeviceConfiguration : EntityBaseConfiguration<Device, Guid>
+    public class DeviceConfiguration : AbstractEntityConfiguration<Device, Guid>
     {
         /// <inheritdoc/>
         public override void Configure(EntityTypeBuilder<Device> builder)
@@ -31,6 +31,10 @@ namespace VPEAR.Server.Data
             builder.Property(device => device.Class)
                 .HasMaxLength(Limits.MaxStringLength)
                 .IsRequired()
+                .IsUnicode();
+
+            builder.Property(device => device.DisplayName)
+                .HasMaxLength(Limits.MaxStringLength)
                 .IsUnicode();
 
             builder.HasOne(device => device.Filter)

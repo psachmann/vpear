@@ -1,4 +1,4 @@
-// <copyright file="EntityBaseConfiguration.cs" company="Patrick Sachmann">
+// <copyright file="AbstractEntityConfiguration.cs" company="Patrick Sachmann">
 // Copyright (c) Patrick Sachmann. All rights reserved.
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
@@ -12,12 +12,12 @@ namespace VPEAR.Server.Data
 {
     /// <summary>
     /// Base class for all db entity configuration classes.
-    /// Configure all properties from <see cref="EntityBase{TKey}"/>.
+    /// Configure all properties from <see cref="AbstractEntity{TKey}"/>.
     /// </summary>
     /// <typeparam name="TEntity">Type of the db entity to configure.</typeparam>
     /// <typeparam name="TKey">Type of the db key for db entity to configure.</typeparam>
-    public abstract class EntityBaseConfiguration<TEntity, TKey> : EntityBase<TKey>, IEntityTypeConfiguration<TEntity>
-        where TEntity : EntityBase<TKey>
+    public abstract class AbstractEntityConfiguration<TEntity, TKey> : AbstractEntity<TKey>, IEntityTypeConfiguration<TEntity>
+        where TEntity : AbstractEntity<TKey>
         where TKey : struct, IEquatable<TKey>
     {
         /// <summary>

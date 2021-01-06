@@ -42,7 +42,7 @@ namespace VPEAR.Server.Test
         }
 
         public static IRepository<TEntity, Guid> CreateRepository<TEntity>()
-            where TEntity : EntityBase<Guid>
+            where TEntity : AbstractEntity<Guid>
         {
             var mock = new Mock<IRepository<TEntity, Guid>>();
             var notExistingEntity = Activator.CreateInstance<TEntity>();

@@ -15,7 +15,7 @@ namespace VPEAR.Server.Data
     /// <summary>
     /// The entity framework configuration for the <see cref="Core.Models.Wifi"/> class.
     /// </summary>
-    public class WifiConfiguration : EntityBaseConfiguration<Core.Models.Wifi, Guid>
+    public class WifiConfiguration : AbstractEntityConfiguration<Core.Models.Wifi, Guid>
     {
         /// <inheritdoc/>
         public override void Configure(EntityTypeBuilder<Core.Models.Wifi> builder)
