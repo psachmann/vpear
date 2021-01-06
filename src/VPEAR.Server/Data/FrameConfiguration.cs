@@ -40,7 +40,8 @@ namespace VPEAR.Server.Data
                 .IsUnicode();
 
             builder.HasOne(frame => frame.Filter)
-                .WithMany(filter => filter.Frames);
+                .WithMany(filter => filter.Frames)
+                .HasForeignKey(frame => frame.FilterForeignKey);
 #if DEBUG
             builder.HasData(DbSeed.Frames);
 #endif

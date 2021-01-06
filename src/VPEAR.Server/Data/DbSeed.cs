@@ -60,6 +60,7 @@ namespace VPEAR.Server.Data
                 var frame = new Frame()
                 {
                     DeviceForeignKey = device.Id,
+                    FilterForeignKey = filter.Id,
                     Id = device.Id,
                     Index = i,
                     Time = $"time_{i}",

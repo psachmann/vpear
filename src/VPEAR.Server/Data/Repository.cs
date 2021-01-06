@@ -42,14 +42,6 @@ namespace VPEAR.Server.Data
 #endif
         }
 
-        public dynamic Context
-        {
-            get
-            {
-                return this.context;
-            }
-        }
-
         /// <inheritdoc/>
         public async Task<TEntity> CreateAsync(TEntity entity)
         {

@@ -46,6 +46,12 @@ namespace VPEAR.Core.Models
         public Device Device { get; set; }
 
         /// <summary>
+        /// Gets or sets the foreign key.
+        /// </summary>
+        /// <value>The Filter foreign key.</value>
+        public Guid FilterForeignKey { get; set; }
+
+        /// <summary>
         /// Gets or sets the filter.
         /// </summary>
         /// <value>The filter navigation property.</value>

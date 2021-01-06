@@ -10,6 +10,7 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using VPEAR.Core;
 using VPEAR.Core.Abstractions;
@@ -138,12 +139,142 @@ namespace VPEAR.Server.Test
             return mock.Object;
         }
 
+        public static IRepository<Device, Guid> CreateDeviceRepository()
+        {
+            var mock = new Mock<IRepository<Device, Guid>>();
+            var devices = new List<Device>();
+            var states = new List<(Guid Id, DeviceStatus Status)>()
+            {
+                Archived,
+                NotReachable,
+                Recording,
+                Stopped,
+            };
+
+            foreach (var state in states)
+            {
+                var device = new Device()
+                {
+                    Address = "address",
+                    Class = "class",
+                    DisplayName = "display_name",
+                    Frames = new List<Frame>(),
+                    Frequency = 60,
+                    Id = state.Id,
+                    Name = "name",
+                    RequiredSensors = 1,
+                    Sensors = new List<Sensor>(),
+                    Status = state.Status,
+                };
+
+                var filter = new Filter()
+                {
+                    Device = device,
+                    DeviceForeignKey = state.Id,
+                    Id = state.Id,
+                    Frames = new List<Frame>(),
+                    Noise = true,
+                    Smooth = true,
+                    Spot = true,
+                };
+
+                var firmware = new Firmware()
+                {
+                    Device = device,
+                    DeviceForeignKey = state.Id,
+                    Id = state.Id,
+                    Source = "source",
+                    Upgrade = "upgrade",
+                    Version = "version",
+                };
+
+                var frame = new Frame()
+                {
+                    Device = device,
+                    DeviceForeignKey = state.Id,
+                    Filter = filter,
+                    Id = state.Id,
+                    Index = 1,
+
+                    // TODO: generate more test values
+                    Readings = new List<IList<int>>(),
+
+                    // TODO: eventually remove time
+                    Time = "time",
+                };
+
+                var sensor = new Sensor()
+                {
+                    Columns = 1,
+                    Device = device,
+                    DeviceForeignKey = state.Id,
+                    Id = state.Id,
+                    Height = 1,
+                    Maximum = 1,
+                    Minimum = 1,
+                    Name = "name",
+                    Rows = 1,
+                    Units = "units",
+                    Width = 1,
+                };
+
+                var wifi = new Wifi()
+                {
+                    Device = device,
+                    DeviceForeignKey = state.Id,
+                    Id = state.Id,
+                    Mode = "mode",
+                    Neighbors = new List<string>(),
+                    Ssid = "ssid",
+                };
+
+                device.Filters = filter;
+                device.Firmware = firmware;
+                device.Frames.Add(frame);
+                device.Sensors.Add(sensor);
+                device.Wifi = wifi;
+                filter.Frames.Add(frame);
+
+                devices.Add(device);
+            }
+
+            mock.Setup(mock => mock.CreateAsync(It.IsAny<Device>()))
+                .ReturnsAsync(It.IsAny<Device>());
+
+            mock.Setup(mock => mock.DeleteAsync(It.IsAny<Device>()))
+                .Returns(Task.CompletedTask);
+
+            mock.Setup(mock => mock.Get())
+                .Returns(devices.AsQueryable().BuildMock().Object);
+
+            foreach (var device in devices)
+            {
+                mock.Setup(mock => mock.GetAsync(device.Id))
+                    .ReturnsAsync(device);
+            }
+
+            mock.Setup(mock => mock.GetReference(It.IsAny<Device>(), It.IsAny<Expression<Func<Device, It.IsAnyType>>>()));
+
+            mock.Setup(mock => mock.GetReferenceAsync(It.IsAny<Device>(), It.IsAny<Expression<Func<Device, It.IsAnyType>>>()))
+                .Returns(Task.CompletedTask);
+
+            mock.Setup(mock => mock.GetCollection(It.IsAny<Device>(), It.IsAny<Expression<Func<Device, IEnumerable<It.IsAnyType>>>>()));
+
+            mock.Setup(mock => mock.GetCollectionAsync(It.IsAny<Device>(), It.IsAny<Expression<Func<Device, IEnumerable<It.IsAnyType>>>>()))
+                .Returns(Task.CompletedTask);
+
+            mock.Setup(mock => mock.UpdateAsync(It.IsAny<Device>()))
+                .ReturnsAsync(It.IsAny<Device>());
+
+            return mock.Object;
+        }
+
         public static DeviceClient.Factory CreateDeviceClientFactory()
         {
             var mock = new Mock<DeviceClient.Factory>();
 
             mock.Setup(m => m.Invoke(It.IsAny<string>()))
-                .Returns(CreateDeviceClient());
+                .Returns(CreateSuccessDeviceClient());
 
             return mock.Object;
         }
@@ -251,18 +382,91 @@ namespace VPEAR.Server.Test
             return mock.Object;
         }
 
-        private static IDeviceClient CreateDeviceClient()
+        public static IDeviceClient CreateSuccessDeviceClient()
         {
             var mock = new Mock<IDeviceClient>();
 
             mock.Setup(mock => mock.CanConnectAsync())
                 .ReturnsAsync(true);
 
-            mock.Setup(mock => mock.GetPowerAsync())
-                .ReturnsAsync(new PowerResponse());
+            mock.Setup(mock => mock.GetAsync())
+                .ReturnsAsync(new ApiResponse());
+
+            mock.Setup(mock => mock.GetDeviceAsync())
+                .ReturnsAsync(new DeviceResponse());
+
+            mock.Setup(mock => mock.GetFiltersAsync())
+                .ReturnsAsync(new FiltersResponse());
 
             mock.Setup(mock => mock.GetFirmwareAsync())
                 .ReturnsAsync(new FirmwareResponse());
+
+            mock.Setup(mock => mock.GetFramesAsync(It.IsAny<int?>()))
+                .ReturnsAsync(new List<FrameResponse>());
+
+            mock.Setup(mock => mock.GetFrequencyAsync())
+                .ReturnsAsync(60U);
+
+            mock.Setup(mock => mock.GetPowerAsync())
+                .ReturnsAsync(new PowerResponse());
+
+            mock.Setup(mock => mock.GetRequiredSensorsAsync())
+                .ReturnsAsync(1U);
+
+            mock.Setup(mock => mock.GetSensorsAsync())
+                .ReturnsAsync(new List<SensorResponse>());
+
+            mock.Setup(mock => mock.GetTimeAsync())
+                .ReturnsAsync(DateTimeOffset.UtcNow);
+
+            mock.Setup(mock => mock.GetWifiAsync())
+                .ReturnsAsync(new WifiResponse());
+
+            mock.Setup(mock => mock.PutFiltersAsync(It.IsAny<bool?>(), It.IsAny<bool?>(), It.IsAny<bool?>()))
+                .ReturnsAsync(true);
+
+            mock.Setup(mock => mock.PutFirmwareAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>()))
+                .ReturnsAsync(true);
+
+            mock.Setup(mock => mock.PutFrequencyAsync(It.IsAny<uint>()))
+                .ReturnsAsync(true);
+
+            mock.Setup(mock => mock.PutRequiredSensorsAsync(It.IsAny<int>()))
+                .ReturnsAsync(true);
+
+            mock.Setup(mock => mock.PutTimeAsync(It.IsAny<DateTimeOffset>()))
+                .ReturnsAsync(true);
+
+            mock.Setup(mock => mock.PutWifiAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(true);
+
+            return mock.Object;
+        }
+
+        public static IDeviceClient CreateFailureDeviceClient()
+        {
+            var mock = new Mock<IDeviceClient>();
+
+            mock.Setup(mock => mock.CanConnectAsync())
+                .ReturnsAsync(false);
+
+            mock.Setup(mock => mock.PutFiltersAsync(It.IsAny<bool?>(), It.IsAny<bool?>(), It.IsAny<bool?>()))
+                .ReturnsAsync(false);
+
+            mock.Setup(mock => mock.PutFirmwareAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>()))
+                .ReturnsAsync(false);
+
+            mock.Setup(mock => mock.PutFrequencyAsync(It.IsAny<uint>()))
+                .ReturnsAsync(false);
+
+            mock.Setup(mock => mock.PutRequiredSensorsAsync(It.IsAny<int>()))
+                .ReturnsAsync(false);
+
+            mock.Setup(mock => mock.PutTimeAsync(It.IsAny<DateTimeOffset>()))
+                .ReturnsAsync(false);
+
+            mock.Setup(mock => mock.PutWifiAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(false);
 
             return mock.Object;
         }

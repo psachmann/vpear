@@ -21,8 +21,6 @@ namespace VPEAR.Core.Abstractions
         where TEntity : class
         where TKey : struct, IEquatable<TKey>
     {
-        dynamic Context { get; }
-
         /// <summary>
         /// Creates a new database entry.
         /// </summary>

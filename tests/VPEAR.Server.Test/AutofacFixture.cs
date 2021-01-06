@@ -142,7 +142,7 @@ namespace VPEAR.Server.Test
 
         private static void RegisterRepositories(ContainerBuilder builder)
         {
-            builder.Register(context => Mocks.CreateRepository<Device>())
+            builder.Register(context => Mocks.CreateDeviceRepository())
                 .As<IRepository<Device, Guid>>()
                 .InstancePerDependency();
 
