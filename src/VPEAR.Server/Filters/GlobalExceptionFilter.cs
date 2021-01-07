@@ -6,6 +6,7 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Serilog;
 using System;
 using System.Net;
 using VPEAR.Core.Wrappers;
@@ -39,6 +40,10 @@ namespace VPEAR.Server.Filters
 #if DEBUG
             throw exception;
 #else
+            Log.Information("{@Message}", exception.Message);
+            Log.Error("{@Source}", exception.Source);
+            Log.Fatal("{@Stacktrace}", exception.StackTrace);
+
             var response = new ErrorResponse(HttpStatusCode.InternalServerError, "An internal server error occurred.");
 
             context.HttpContext.Response.StatusCode = response.StatusCode;

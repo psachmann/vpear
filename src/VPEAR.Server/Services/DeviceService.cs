@@ -112,7 +112,7 @@ namespace VPEAR.Server.Services
             var address = IPAddress.Parse(request.Address!);
             var subnetMask = IPAddress.Parse(request.SubnetMask!);
 
-            if (address.IsIPv4() && subnetMask.IsIPv4())
+            if (address.IsIPv4() && subnetMask.IsIPv4() && subnetMask.IsIPv4SubnetMask())
             {
                 await this.discovery.SearchDevicesAsync(address, subnetMask);
 
