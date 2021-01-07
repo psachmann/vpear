@@ -41,7 +41,7 @@ namespace VPEAR.Server.Services
 
             Parallel.For(0, addresses.Count, async index =>
             {
-                var client = this.factory.Invoke(addresses[index].ToString());
+                var client = this.factory.Invoke($"http://{addresses[index]}");
                 var response = await client.GetDeviceAsync();
 
                 if (response != null)
@@ -84,7 +84,6 @@ namespace VPEAR.Server.Services
                 var response = await client.GetAsync();
                 var newDevice = new Device
                 {
-                    // TODO: will ef core also create all other entities e.g. Filters, Firmware etc?
                     Address = response.Device.Address,
                     Class = response.Device.Class,
                     DisplayName = string.Empty,
@@ -128,8 +127,7 @@ namespace VPEAR.Server.Services
                     });
                 }
 
-                // TODO: update time on client
-                // await client.SyncTimeAsync()
+                await client.PutTimeAsync(DateTimeOffset.UtcNow);
                 await this.devices.CreateAsync(newDevice);
             }
         }
