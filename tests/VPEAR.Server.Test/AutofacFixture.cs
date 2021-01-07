@@ -6,6 +6,7 @@
 using Autofac;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
+using Quartz;
 using System;
 using System.Net.Http;
 using VPEAR.Core;
@@ -20,20 +21,20 @@ namespace VPEAR.Server.Test
 {
     public class AutofacFixture : IDisposable
     {
+        private static readonly object Sync = new object();
         private static IContainer? root;
         private static bool isInitialized;
-        private static object sync = new object();
         private ILifetimeScope? child;
 
         public AutofacFixture()
         {
-            lock (sync)
+            lock (Sync)
             {
                 if (!isInitialized)
                 {
                     var builder = new ContainerBuilder();
 
-                    RegisterClientFactoties(builder);
+                    RegisterFactories(builder);
                     RegisterControllers(builder);
                     RegisterLoggers(builder);
                     RegisterRepositories(builder);
@@ -71,10 +72,14 @@ namespace VPEAR.Server.Test
             }
         }
 
-        private static void RegisterClientFactoties(ContainerBuilder builder)
+        private static void RegisterFactories(ContainerBuilder builder)
         {
             builder.Register(context => Mocks.CreateDeviceClientFactory())
                 .As<DeviceClient.Factory>()
+                .InstancePerDependency();
+
+            builder.Register(context => Mocks.GetSchedulerFactory())
+                .As<ISchedulerFactory>()
                 .InstancePerDependency();
         }
 

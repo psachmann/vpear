@@ -7,10 +7,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using MockQueryable.Moq;
 using Moq;
+using Quartz;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 using VPEAR.Core;
 using VPEAR.Core.Abstractions;
@@ -404,13 +406,13 @@ namespace VPEAR.Server.Test
                 .ReturnsAsync(new List<FrameResponse>());
 
             mock.Setup(mock => mock.GetFrequencyAsync())
-                .ReturnsAsync(60U);
+                .ReturnsAsync(60);
 
             mock.Setup(mock => mock.GetPowerAsync())
                 .ReturnsAsync(new PowerResponse());
 
             mock.Setup(mock => mock.GetRequiredSensorsAsync())
-                .ReturnsAsync(1U);
+                .ReturnsAsync(1);
 
             mock.Setup(mock => mock.GetSensorsAsync())
                 .ReturnsAsync(new List<SensorResponse>());
@@ -427,10 +429,10 @@ namespace VPEAR.Server.Test
             mock.Setup(mock => mock.PutFirmwareAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>()))
                 .ReturnsAsync(true);
 
-            mock.Setup(mock => mock.PutFrequencyAsync(It.IsAny<uint>()))
+            mock.Setup(mock => mock.PutFrequencyAsync(It.IsAny<int?>()))
                 .ReturnsAsync(true);
 
-            mock.Setup(mock => mock.PutRequiredSensorsAsync(It.IsAny<int>()))
+            mock.Setup(mock => mock.PutRequiredSensorsAsync(It.IsAny<int?>()))
                 .ReturnsAsync(true);
 
             mock.Setup(mock => mock.PutTimeAsync(It.IsAny<DateTimeOffset>()))
@@ -455,7 +457,7 @@ namespace VPEAR.Server.Test
             mock.Setup(mock => mock.PutFirmwareAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>()))
                 .ReturnsAsync(false);
 
-            mock.Setup(mock => mock.PutFrequencyAsync(It.IsAny<uint>()))
+            mock.Setup(mock => mock.PutFrequencyAsync(It.IsAny<int>()))
                 .ReturnsAsync(false);
 
             mock.Setup(mock => mock.PutRequiredSensorsAsync(It.IsAny<int>()))
@@ -466,6 +468,35 @@ namespace VPEAR.Server.Test
 
             mock.Setup(mock => mock.PutWifiAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(false);
+
+            return mock.Object;
+        }
+
+        public static ISchedulerFactory GetSchedulerFactory()
+        {
+            var mock = new Mock<ISchedulerFactory>();
+
+            mock.Setup(mock => mock.GetScheduler(It.IsAny<CancellationToken>()))
+                .ReturnsAsync(GetScheduler());
+
+            mock.Setup(mock => mock.GetScheduler(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(GetScheduler());
+
+            return mock.Object;
+        }
+
+        public static IScheduler GetScheduler()
+        {
+            var mock = new Mock<IScheduler>();
+
+            mock.Setup(mock => mock.ScheduleJob(It.IsAny<IJobDetail>(), It.IsAny<ITrigger>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(DateTimeOffset.UtcNow);
+
+            mock.Setup(mock => mock.ScheduleJob(It.IsAny<ITrigger>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(DateTimeOffset.UtcNow);
+
+            mock.Setup(mock => mock.DeleteJob(It.IsAny<JobKey>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(true);
 
             return mock.Object;
         }

@@ -20,7 +20,7 @@ namespace VPEAR.Server.Test
                 .UseInMemoryDatabase(Schemas.DbSchema)
                 .Options;
 
-            this.Context = new VPEARDbContext(options, new List<IEventDetector<VPEARDbContext>>());
+            this.Context = new VPEARDbContext(options);
             this.Seed();
         }
 
@@ -29,6 +29,7 @@ namespace VPEAR.Server.Test
         public void Dispose()
         {
             this.Context.Dispose();
+            GC.SuppressFinalize(this);
         }
 
         private void Seed()
