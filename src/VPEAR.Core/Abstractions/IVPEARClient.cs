@@ -24,7 +24,7 @@ namespace VPEAR.Core.Abstractions
 
         Task<bool> PostDevicesAsync(string deviceId, string address, string subnetMask);
 
-        Task<bool> PutDeviceAsync(string deviceId, string diplayName, uint? frquency, uint? requiredSesnors);
+        Task<bool> PutDeviceAsync(string deviceId, string diplayName, int? frquency, int? requiredSesnors);
 
         Task<GetFiltersResponse> GetFiltersAsync(string deviceId);
 

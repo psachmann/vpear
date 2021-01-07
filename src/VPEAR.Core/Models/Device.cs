@@ -54,13 +54,13 @@ namespace VPEAR.Core.Models
         /// Gets or sets the frequency.
         /// </summary>
         /// <value>The scanning frequency.</value>
-        public uint Frequency { get; set; }
+        public int Frequency { get; set; }
 
         /// <summary>
         /// Gets or sets the required sensors.
         /// </summary>
         /// <value>The number of required sensors.</value>
-        public uint RequiredSensors { get; set; }
+        public int RequiredSensors { get; set; }
 
         /// <summary>
         /// Gets or sets the filters object.

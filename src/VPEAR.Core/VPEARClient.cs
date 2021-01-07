@@ -90,7 +90,7 @@ namespace VPEAR.Core
             return await this.PostAsync(uri, payload) && this.IsSuccessResponse();
         }
 
-        public async Task<bool> PutDeviceAsync(string deviceId, string displayName, uint? frquency, uint? requiredSesnors)
+        public async Task<bool> PutDeviceAsync(string deviceId, string displayName, int? frquency, int? requiredSesnors)
         {
             var uri = $"{ApiPrefix}/device?id={deviceId}";
             var payload = new PutDeviceRequest()

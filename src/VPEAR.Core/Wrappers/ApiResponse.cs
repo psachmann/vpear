@@ -39,14 +39,14 @@ namespace VPEAR.Core.Wrappers
         /// </summary>
         /// <value>The sample frequency.</value>
         [JsonPropertyName("frequency")]
-        public uint Frequency { get; set; }
+        public int Frequency { get; set; }
 
         /// <summary>
         /// Gets or sets the sensors required.
         /// </summary>
         /// <value>The number of required sensors.</value>
         [JsonPropertyName("sensorsRequired")]
-        public uint SensorsRequired { get; set; }
+        public int SensorsRequired { get; set; }
 
         /// <summary>
         /// Gets or sets the filters object.

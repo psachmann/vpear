@@ -19,7 +19,7 @@ namespace VPEAR.Core.Wrappers
         public string Id { get; set; } = string.Empty;
 
         [JsonPropertyName("required_sensors")]
-        public uint ReqioredSensors { get; set; }
+        public int ReqioredSensors { get; set; }
 
         [JsonPropertyName("sample_frequnecy")]
         public double SampleFrequency { get; set; }

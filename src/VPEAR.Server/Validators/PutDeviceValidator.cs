@@ -32,7 +32,7 @@ namespace VPEAR.Server.Validators
             {
                 this.RuleFor(request => request.Frequency)
                     .NotNull()
-                    .InclusiveBetween(uint.MinValue, uint.MaxValue)
+                    .InclusiveBetween(1, int.MaxValue)
                     .OverridePropertyName("frequency");
             });
 
@@ -40,7 +40,7 @@ namespace VPEAR.Server.Validators
             {
                 this.RuleFor(request => request.RequiredSensors)
                     .NotNull()
-                    .InclusiveBetween(1U, uint.MaxValue)
+                    .InclusiveBetween(1, int.MaxValue)
                     .OverridePropertyName("required_sensors");
             });
         }

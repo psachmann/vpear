@@ -27,13 +27,13 @@ namespace VPEAR.Core.Abstractions
 
         Task<IList<FrameResponse>> GetFramesAsync(int? after = null);
 
-        Task<uint?> GetFrequencyAsync();
+        Task<int?> GetFrequencyAsync();
 
-        Task<bool> PutFrequencyAsync(uint frequency);
+        Task<bool> PutFrequencyAsync(int? frequency);
 
-        Task<uint?> GetRequiredSensorsAsync();
+        Task<int?> GetRequiredSensorsAsync();
 
-        Task<bool> PutRequiredSensorsAsync(int requiredSensors);
+        Task<bool> PutRequiredSensorsAsync(int? requiredSensors);
 
         Task<FiltersResponse> GetFiltersAsync();
 

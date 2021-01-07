@@ -16,10 +16,10 @@ namespace VPEAR.Core.Wrappers
         public string DisplayName { get; set; }
 
         [JsonPropertyName("frequency")]
-        public uint? Frequency { get; set; }
+        public int? Frequency { get; set; }
 
         [JsonPropertyName("required_sensors")]
-        public uint? RequiredSensors { get; set; }
+        public int? RequiredSensors { get; set; }
 
         [JsonPropertyName("status")]
         [JsonConverter(typeof(JsonStringEnumConverter))]

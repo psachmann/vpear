@@ -109,7 +109,7 @@ namespace VPEAR.Core
             }
         }
 
-        public async Task<uint?> GetFrequencyAsync()
+        public async Task<int?> GetFrequencyAsync()
         {
             var uri = $"{ApiPrefix}/frequency";
 
@@ -117,7 +117,7 @@ namespace VPEAR.Core
             {
                 var json = await this.Response.Content.ReadAsStringAsync();
 
-                return json.FromJsonString<uint>();
+                return json.FromJsonString<int>();
             }
             else
             {
@@ -125,14 +125,19 @@ namespace VPEAR.Core
             }
         }
 
-        public async Task<bool> PutFrequencyAsync(uint frequency)
+        public async Task<bool> PutFrequencyAsync(int? frequency)
         {
             var uri = $"{ApiPrefix}/frequency";
 
-            return await this.PostAsync(uri, frequency) && this.IsSuccessResponse();
+            if (frequency == null)
+            {
+                return true;
+            }
+
+            return await this.PutAsync(uri, frequency) && this.IsSuccessResponse();
         }
 
-        public async Task<uint?> GetRequiredSensorsAsync()
+        public async Task<int?> GetRequiredSensorsAsync()
         {
             var uri = $"{ApiPrefix}/sensorsRequired";
 
@@ -140,7 +145,7 @@ namespace VPEAR.Core
             {
                 var json = await this.Response.Content.ReadAsStringAsync();
 
-                return json.FromJsonString<uint>();
+                return json.FromJsonString<int>();
             }
             else
             {
@@ -148,9 +153,14 @@ namespace VPEAR.Core
             }
         }
 
-        public async Task<bool> PutRequiredSensorsAsync(int requiredSensors)
+        public async Task<bool> PutRequiredSensorsAsync(int? requiredSensors)
         {
             var uri = $"{ApiPrefix}/sensorsRequired";
+
+            if (requiredSensors == null)
+            {
+                return true;
+            }
 
             return await this.PutAsync(uri, requiredSensors) && this.IsSuccessResponse();
         }
@@ -262,18 +272,18 @@ namespace VPEAR.Core
             };
 
             if (ssid != null && password == null
-                && !(await this.PostAsync(ssidUri, ssid) && this.IsSuccessResponse()))
+                && !(await this.PutAsync(ssidUri, ssid) && this.IsSuccessResponse()))
             {
                 return false;
             }
 
             if (ssid != null && password != null
-                && !(await this.PostAsync(uri, payload) && this.IsSuccessResponse()))
+                && !(await this.PutAsync(uri, payload) && this.IsSuccessResponse()))
             {
                 return false;
             }
 
-            if (mode != null && !(await this.PostAsync(modeUri, mode) && this.IsSuccessResponse()))
+            if (mode != null && !(await this.PutAsync(modeUri, mode) && this.IsSuccessResponse()))
             {
                 return false;
             }
@@ -303,17 +313,17 @@ namespace VPEAR.Core
             var upgradeUri = $"{ApiPrefix}/firmware/upgrade";
             var packageUri = $"{ApiPrefix}/firmware/package";
 
-            if (source != null && !(await this.PostAsync(sourceUri, source) && this.IsSuccessResponse()))
+            if (source != null && !(await this.PutAsync(sourceUri, source) && this.IsSuccessResponse()))
             {
                 return false;
             }
 
-            if (upgrade != null && !(await this.PostAsync(upgradeUri, upgrade) && this.IsSuccessResponse()))
+            if (upgrade != null && !(await this.PutAsync(upgradeUri, upgrade) && this.IsSuccessResponse()))
             {
                 return false;
             }
 
-            if (package && !(await this.PostAsync<Null>(packageUri, null) && this.IsSuccessResponse()))
+            if (package && !(await this.PutAsync<Null>(packageUri, null) && this.IsSuccessResponse()))
             {
                 return false;
             }
