@@ -21,7 +21,7 @@ namespace VPEAR.Server.Data
         {
             base.Configure(builder);
 
-            builder.ToTable(Schemas.FilterSchema);
+            builder.ToTable(Schemas.FirmwareSchema);
 
             builder.HasOne(firmware => firmware.Device)
                 .WithOne(device => device.Firmware)
