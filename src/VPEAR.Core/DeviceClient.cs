@@ -35,7 +35,7 @@ namespace VPEAR.Core
 
         public override async Task<bool> CanConnectAsync()
         {
-            var uri = $"{ApiPrefix}";
+            var uri = $"{ApiPrefix}/device";
 
             return await this.GetAsync(uri) && this.IsSuccessResponse();
         }

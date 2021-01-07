@@ -28,14 +28,14 @@ namespace VPEAR.Core.Abstractions
                 throw new ArgumentNullException(nameof(factory));
             }
 
-            if (Uri.TryCreate(baseAddress, UriKind.RelativeOrAbsolute, out var uri))
+            if (Uri.TryCreate(baseAddress, UriKind.Absolute, out var uri))
             {
                 this.client = factory.CreateClient();
                 this.client.BaseAddress = uri;
             }
             else
             {
-                throw new ArgumentException("Is not a valid Uri.", nameof(baseAddress));
+                throw new ArgumentException("Is not a valid absolute Uri.", nameof(baseAddress));
             }
         }
 

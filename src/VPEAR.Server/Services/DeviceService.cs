@@ -5,6 +5,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Quartz;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,7 @@ using VPEAR.Core.Extensions;
 using VPEAR.Core.Models;
 using VPEAR.Core.Wrappers;
 using VPEAR.Server.Controllers;
+using VPEAR.Server.Services.Jobs;
 using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Services
@@ -27,15 +29,21 @@ namespace VPEAR.Server.Services
     {
         private readonly IRepository<Device, Guid> devices;
         private readonly IDiscoveryService discovery;
+        private readonly DeviceClient.Factory factory;
+        private readonly ISchedulerFactory schedulerFactory;
         private readonly ILogger<DeviceController> logger;
 
         public DeviceService(
             IRepository<Device, Guid> devices,
             IDiscoveryService discovery,
+            DeviceClient.Factory factory,
+            ISchedulerFactory schedulerFactory,
             ILogger<DeviceController> logger)
         {
             this.devices = devices;
             this.discovery = discovery;
+            this.factory = factory;
+            this.schedulerFactory = schedulerFactory;
             this.logger = logger;
         }
 
@@ -96,14 +104,27 @@ namespace VPEAR.Server.Services
                 return new Result<Null>(HttpStatusCode.FailedDependency, ErrorMessages.DeviceIsNotReachable);
             }
 
-            device.DisplayName = request.DisplayName ?? device.DisplayName;
-            device.Frequency = request.Frequency ?? device.Frequency;
-            device.RequiredSensors = request.RequiredSensors ?? device.RequiredSensors;
-            device.Status = request.Status ?? device.Status;
+            var client = this.factory.Invoke(device.Address);
 
-            await this.devices.UpdateAsync(device);
+            if (await client.PutFrequencyAsync(request.Frequency) && await client.PutRequiredSensorsAsync(request.RequiredSensors))
+            {
+                device.DisplayName = request.DisplayName ?? device.DisplayName;
+                device.Frequency = await this.UpdatePollFramesJobAsync(device, request.Frequency) ?? device.Frequency;
+                device.RequiredSensors = request.RequiredSensors ?? device.RequiredSensors;
+                device.Status = await this.CreatePollFramesJobAsync(device, request.Status) ?? device.Status;
 
-            return new Result<Null>(HttpStatusCode.OK);
+                await this.devices.UpdateAsync(device);
+
+                return new Result<Null>(HttpStatusCode.OK);
+            }
+            else
+            {
+                device.Status = DeviceStatus.NotReachable;
+
+                await this.devices.UpdateAsync(device);
+
+                return new Result<Null>(HttpStatusCode.FailedDependency, ErrorMessages.DeviceIsNotReachable);
+            }
         }
 
         /// <inheritdoc/>
@@ -142,6 +163,82 @@ namespace VPEAR.Server.Services
             await this.devices.DeleteAsync(device);
 
             return new Result<Null>(HttpStatusCode.OK);
+        }
+
+        private async Task<DeviceStatus?> CreatePollFramesJobAsync(Device device, DeviceStatus? status)
+        {
+            if (status == null)
+            {
+                return status;
+            }
+
+            var scheduler = await this.schedulerFactory.GetScheduler();
+
+            if (device.Status == DeviceStatus.Stopped && status == DeviceStatus.Recording)
+            {
+                var job = JobBuilder.Create<PollFramesJob>()
+                        .WithIdentity(device.Id.ToString())
+                        .Build();
+
+                var trigger = TriggerBuilder.Create()
+                    .WithIdentity(device.Id.ToString(), "Poll-Frames")
+                    .WithSimpleSchedule(builder => builder
+                        .WithIntervalInSeconds(device.Frequency)
+                        .RepeatForever())
+                    .StartNow()
+                    .Build();
+
+                await scheduler.ScheduleJob(job, trigger);
+
+                this.logger.LogInformation("Created new {@Job} with {@Trigger}", job, trigger);
+            }
+            else
+            {
+                var job = new JobKey(device.Id.ToString());
+
+                await scheduler.DeleteJob(job);
+
+                this.logger.LogInformation("Deleted {@Job}", job);
+            }
+
+            return status;
+        }
+
+        private async Task<int?> UpdatePollFramesJobAsync(Device device, int? frequency)
+        {
+            if (frequency == null)
+            {
+                return frequency;
+            }
+
+            var scheduler = await this.schedulerFactory.GetScheduler();
+
+            if (device.Status == DeviceStatus.Recording && device.Frequency != frequency)
+            {
+                var jobKey = new JobKey($"{device.Id}-Job");
+
+                await scheduler.DeleteJob(jobKey);
+
+                this.logger.LogInformation("Deleted {@Job}", jobKey);
+
+                var job = JobBuilder.Create<PollFramesJob>()
+                        .WithIdentity($"{device.Id}-Job")
+                        .Build();
+
+                var trigger = TriggerBuilder.Create()
+                    .WithIdentity($"{device.Id}-Trigger", "Poll-Frames")
+                    .WithSimpleSchedule(builder => builder
+                        .WithIntervalInSeconds(frequency.Value)
+                        .RepeatForever())
+                    .StartNow()
+                    .Build();
+
+                await scheduler.ScheduleJob(job, trigger);
+
+                this.logger.LogInformation("Created new {@Job} with {@Trigger}", job, trigger);
+            }
+
+            return frequency;
         }
     }
 }

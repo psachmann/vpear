@@ -5,8 +5,6 @@
 
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using VPEAR.Core.Abstractions;
 using VPEAR.Server.Data;
 using static VPEAR.Server.Constants;
 

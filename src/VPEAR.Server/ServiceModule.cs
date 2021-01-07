@@ -6,6 +6,7 @@
 using Autofac;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using Quartz;
 using System;
 using VPEAR.Core;
 using VPEAR.Core.Abstractions;
@@ -31,6 +32,8 @@ namespace VPEAR.Server
             builder.Register(context => new DeviceService(
                     context.Resolve<IRepository<Device, Guid>>(),
                     context.Resolve<IDiscoveryService>(),
+                    context.Resolve<DeviceClient.Factory>(),
+                    context.Resolve<ISchedulerFactory>(),
                     context.Resolve<ILogger<DeviceController>>()))
                 .As<IDeviceService>()
                 .InstancePerLifetimeScope();

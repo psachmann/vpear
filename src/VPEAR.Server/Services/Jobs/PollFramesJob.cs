@@ -6,24 +6,76 @@
 using Microsoft.Extensions.Logging;
 using Quartz;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using VPEAR.Core;
+using VPEAR.Core.Abstractions;
+using VPEAR.Core.Models;
+using VPEAR.Core.Wrappers;
 
 namespace VPEAR.Server.Services.Jobs
 {
     public class PollFramesJob : IJob
     {
+        private readonly IRepository<Device, Guid> devices;
+        private readonly IRepository<Frame, Guid> frames;
+        private readonly DeviceClient.Factory factory;
         private readonly ILogger<PollFramesJob> logger;
 
-        public PollFramesJob(ILogger<PollFramesJob> logger)
+        public PollFramesJob(
+            IRepository<Device, Guid> devices,
+            IRepository<Frame, Guid> frames,
+            DeviceClient.Factory factory,
+            ILogger<PollFramesJob> logger)
         {
+            this.devices = devices;
+            this.frames = frames;
+            this.factory = factory;
             this.logger = logger;
         }
 
-        public Task Execute(IJobExecutionContext context)
+        public async Task Execute(IJobExecutionContext context)
         {
-            this.logger.LogInformation("\nPolling frames from device. - {@Time}\n", DateTimeOffset.Now);
+            var id = new Guid(context.JobDetail.Key.Name);
+            var device = await this.devices.GetAsync(id);
+            var client = this.factory.Invoke(device.Address);
 
-            return Task.CompletedTask;
+            if (await client.CanConnectAsync())
+            {
+                var frames = new List<FrameResponse>();
+                var respone = await client.GetFramesAsync();
+
+                await this.devices.GetReferenceAsync(device, device => device.Filter);
+
+                if (respone != null && respone.Count != 0)
+                {
+                    frames.AddRange(respone);
+                    respone = await client.GetFramesAsync(respone[0].Id);
+                    frames.AddRange(respone);
+
+                    foreach (var frame in frames)
+                    {
+                        await this.frames.CreateAsync(new Frame()
+                        {
+                            Device = device,
+                            Filter = device.Filter,
+                            Index = frame.Id,
+                            Readings = frame.Readings,
+                            Time = frame.Time,
+                        });
+                    }
+                }
+            }
+            else
+            {
+                await context.Scheduler.DeleteJob(context.JobDetail.Key);
+
+                device.Status = DeviceStatus.NotReachable;
+
+                await this.devices.UpdateAsync(device);
+
+                this.logger.LogError("Client {@ClientId} is not reachable", id);
+            }
         }
     }
 }
