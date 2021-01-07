@@ -5,6 +5,10 @@
 
 using Autofac;
 using Microsoft.Extensions.Logging;
+using System;
+using VPEAR.Core;
+using VPEAR.Core.Abstractions;
+using VPEAR.Core.Models;
 using VPEAR.Server.Services.Jobs;
 
 namespace VPEAR.Server
@@ -16,6 +20,9 @@ namespace VPEAR.Server
             base.Load(builder);
 
             builder.Register(context => new PollFramesJob(
+                    context.Resolve<IRepository<Device, Guid>>(),
+                    context.Resolve<IRepository<Frame, Guid>>(),
+                    context.Resolve<DeviceClient.Factory>(),
                     context.Resolve<ILogger<PollFramesJob>>()))
                 .AsSelf()
                 .InstancePerDependency();
