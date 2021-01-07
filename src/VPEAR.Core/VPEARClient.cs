@@ -13,6 +13,20 @@ using VPEAR.Core.Wrappers;
 
 namespace VPEAR.Core
 {
+    /// <summary>
+    /// This class implements <see cref="IVPEARClient"/> interface and should
+    /// provide and sdk like experience for communication with the vpear server.
+    /// You can use via dependency injection with the interface or directly
+    /// instantiate a vpear client.
+    /// NOTE: If you use it with dependency injection register the client as singleton.
+    /// <para>
+    /// USAGE:
+    /// Before you use anything from the client, use the login method to get an
+    /// authorization token and the rest will be handled by the client.
+    /// NOTE: If you are not registered already use the register method, but
+    /// it will take some time, because the admin has to verify the regestration.
+    /// </para>
+    /// </summary>
     public class VPEARClient : AbstractClient, IVPEARClient
     {
         private const string AuthenticationScheme = "Bearer";
@@ -23,18 +37,37 @@ namespace VPEAR.Core
         private string token = string.Empty;
         private DateTimeOffset expiresAt = default;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VPEARClient"/> class.
+        /// NOTE: It's highly recommended to use this constructor.
+        /// </summary>
+        /// <param name="baseAddress">The base address for the client to connect to.</param>
+        /// <param name="factory">The factory to create the <see cref="HttpClient"/> from.</param>
         public VPEARClient(string baseAddress, IHttpClientFactory factory)
             : base(baseAddress, factory)
         {
         }
 
-        internal VPEARClient(string baseAddress, HttpClient client)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VPEARClient"/> class.
+        /// </summary>
+        /// <param name="baseAddress">The base address for the client to connect to.</param>
+        /// <param name="client">The http client to create http connections.</param>
+        public VPEARClient(string baseAddress, HttpClient client)
             : base(baseAddress, client)
         {
         }
 
+        /// <summary>
+        /// Autofac create a factory method with this delegate, because
+        /// the baseAddress argument isn't known during resolution time
+        /// and will be later provided.
+        /// </summary>
+        /// <param name="baseAddress">The base address for the client to connect to.</param>
+        /// <returns>An instanciated <see cref="VPEARClient"/> with all dependencies resolved.</returns>
         public delegate IVPEARClient Factory(string baseAddress);
 
+        /// <inheritdoc/>
         public override async Task<bool> CanConnectAsync()
         {
             var uri = $"{ApiPrefix}";
@@ -50,6 +83,7 @@ namespace VPEAR.Core
             }
         }
 
+        /// <inheritdoc/>
         public async Task<bool> DeleteDeviceAsync(string deviceId)
         {
             var uri = $"{ApiPrefix}/device?id={deviceId}";
@@ -57,6 +91,7 @@ namespace VPEAR.Core
             return await this.DeleteAsync(uri) && this.IsSuccessResponse();
         }
 
+        /// <inheritdoc/>
         public async Task<Container<GetDeviceResponse>> GetDevicesAsync(DeviceStatus? status = null)
         {
             var uri = $"{ApiPrefix}/device";
@@ -78,6 +113,7 @@ namespace VPEAR.Core
             }
         }
 
+        /// <inheritdoc/>
         public async Task<bool> PostDevicesAsync(string deviceId, string address, string subnetMask)
         {
             var uri = $"{ApiPrefix}/device?id={deviceId}";
@@ -90,19 +126,21 @@ namespace VPEAR.Core
             return await this.PostAsync(uri, payload) && this.IsSuccessResponse();
         }
 
-        public async Task<bool> PutDeviceAsync(string deviceId, string displayName, int? frquency, int? requiredSesnors)
+        /// <inheritdoc/>
+        public async Task<bool> PutDeviceAsync(string deviceId, string displayName, int? frequency, int? requiredSensors)
         {
             var uri = $"{ApiPrefix}/device?id={deviceId}";
             var payload = new PutDeviceRequest()
             {
                 DisplayName = displayName,
-                Frequency = frquency,
-                RequiredSensors = requiredSesnors,
+                Frequency = frequency,
+                RequiredSensors = requiredSensors,
             };
 
             return await this.PutAsync(uri, payload) && this.IsSuccessResponse();
         }
 
+        /// <inheritdoc/>
         public async Task<GetFiltersResponse> GetFiltersAsync(string deviceId)
         {
             var uri = $"{ApiPrefix}/device/filter?id={deviceId}";
@@ -119,6 +157,7 @@ namespace VPEAR.Core
             }
         }
 
+        /// <inheritdoc/>
         public async Task<bool> PutFiltersAsync(string deviceId, bool? spot, bool? smooth, bool? noise)
         {
             var uri = $"{ApiPrefix}/device/filter?id={deviceId}";
@@ -132,6 +171,7 @@ namespace VPEAR.Core
             return await this.PostAsync(uri, payload) && this.IsSuccessResponse();
         }
 
+        /// <inheritdoc/>
         public async Task<GetFirmwareResponse> GetFirmwareAsync(string deviceId)
         {
             var uri = $"{ApiPrefix}/device/firmware?id={deviceId}";
@@ -148,6 +188,7 @@ namespace VPEAR.Core
             }
         }
 
+        /// <inheritdoc/>
         public async Task<bool> PutFirmwareAsync(string deviceId, string source, string upgrade, bool package = false)
         {
             var uri = $"{ApiPrefix}/firmware?id={deviceId}";
@@ -161,6 +202,7 @@ namespace VPEAR.Core
             return await this.PutAsync(uri, payload) && this.IsSuccessResponse();
         }
 
+        /// <inheritdoc/>
         public async Task<GetPowerResponse> GetPowerAsync(string deviceId)
         {
             var uri = $"{ApiPrefix}/device/power?id={deviceId}";
@@ -177,6 +219,7 @@ namespace VPEAR.Core
             }
         }
 
+        /// <inheritdoc/>
         public async Task<Container<GetFrameResponse>> GetFramesAsync(string deviceId, int? start, int? count)
         {
             var uri = $"{ApiPrefix}/device/frames?id={deviceId}";
@@ -203,6 +246,7 @@ namespace VPEAR.Core
             }
         }
 
+        /// <inheritdoc/>
         public async Task<Container<GetSensorResponse>> GetSensorsAsync(string deviceId)
         {
             var uri = $"{ApiPrefix}/device/sensors?id={deviceId}";
@@ -219,6 +263,7 @@ namespace VPEAR.Core
             }
         }
 
+        /// <inheritdoc/>
         public async Task<bool> DeleteUserAsync(string name)
         {
             var uri = $"{ApiPrefix}/user?name={name}";
@@ -226,6 +271,7 @@ namespace VPEAR.Core
             return await this.DeleteAsync(uri) && this.IsSuccessResponse();
         }
 
+        /// <inheritdoc/>
         public async Task<Container<GetUserResponse>> GetUsersAsync(string role = null)
         {
             var uri = $"{ApiPrefix}/user";
@@ -247,6 +293,7 @@ namespace VPEAR.Core
             }
         }
 
+        /// <inheritdoc/>
         public async Task<bool> LoginAsync(string name, string password)
         {
             var uri = $"{ApiPrefix}/user/login";
@@ -275,6 +322,7 @@ namespace VPEAR.Core
             }
         }
 
+        /// <inheritdoc/>
         public void Logout()
         {
             this.isSignedIn = false;
@@ -284,6 +332,7 @@ namespace VPEAR.Core
             this.expiresAt = default;
         }
 
+        /// <inheritdoc/>
         public async Task<bool> RegisterAsync(string name, string password, bool isAdmin = false)
         {
             var uri = $"{ApiPrefix}/user/register";
@@ -297,6 +346,7 @@ namespace VPEAR.Core
             return await this.PostAsync(uri, payload) && this.IsSuccessResponse();
         }
 
+        /// <inheritdoc/>
         public async Task<GetWifiResponse> GetWifiAsync(string deviceId)
         {
             var uri = $"{ApiPrefix}/device/wifi?id={deviceId}";
@@ -313,6 +363,7 @@ namespace VPEAR.Core
             }
         }
 
+        /// <inheritdoc/>
         public async Task<bool> PutWifiAsync(string deviceId, string ssid, string password, string mode = null)
         {
             var uri = $"{ApiPrefix}/device/wifi?id={deviceId}";
@@ -326,6 +377,7 @@ namespace VPEAR.Core
             return await this.PutAsync(uri, payload) && this.IsSuccessResponse();
         }
 
+        /// <inheritdoc/>
         protected override async Task<bool> SendAsync<TPayload>(HttpMethod method, string uri, TPayload payload = default)
         {
             try

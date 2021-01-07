@@ -15,12 +15,19 @@ namespace VPEAR.Core
 {
     /// <summary>
     /// Implements the <see cref="IDeviceClient"/> interface.
+    /// This client gives access to a sensor device.
+    /// NOTE: This class is only for the vpear server to connect to devices.
     /// </summary>
     public class DeviceClient : AbstractClient, IDeviceClient
     {
         private const string ApiPrefix = "/api";
         private const string TimeFormat = "yyyy-MM-dd hh:mm:ss.fff";
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DeviceClient"/> class.
+        /// </summary>
+        /// <param name="baseAddess"></param>
+        /// <param name="factory"></param>
         public DeviceClient(string baseAddess, IHttpClientFactory factory)
             : base(baseAddess, factory)
         {
@@ -31,8 +38,16 @@ namespace VPEAR.Core
         {
         }
 
-        public delegate IDeviceClient Factory(string baseAddess);
+        /// <summary>
+        /// Autofac create a factory method with this delegate, because
+        /// the baseAddress argument isn't known during resolution time
+        /// and will be later provided.
+        /// </summary>
+        /// <param name="baseAddress">The base address for the client to connect to.</param>
+        /// <returns>An instanciated <see cref="DeviceClient"/> with all dependencies resolved.</returns>
+        public delegate IDeviceClient Factory(string baseAddress);
 
+        /// <inheritdoc/>
         public override async Task<bool> CanConnectAsync()
         {
             var uri = $"{ApiPrefix}/device";
@@ -40,6 +55,7 @@ namespace VPEAR.Core
             return await this.GetAsync(uri) && this.IsSuccessResponse();
         }
 
+        /// <inheritdoc/>
         public async Task<ApiResponse> GetAsync()
         {
             var uri = $"{ApiPrefix}";
@@ -56,6 +72,7 @@ namespace VPEAR.Core
             }
         }
 
+        /// <inheritdoc/>
         public async Task<DeviceResponse> GetDeviceAsync()
         {
             var uri = $"{ApiPrefix}/device";
@@ -72,6 +89,7 @@ namespace VPEAR.Core
             }
         }
 
+        /// <inheritdoc/>
         public async Task<IList<SensorResponse>> GetSensorsAsync()
         {
             var uri = $"{ApiPrefix}/sensors";
@@ -88,6 +106,7 @@ namespace VPEAR.Core
             }
         }
 
+        /// <inheritdoc/>
         public async Task<IList<FrameResponse>> GetFramesAsync(int? after = null)
         {
             var uri = $"{ApiPrefix}/frames";
@@ -109,6 +128,7 @@ namespace VPEAR.Core
             }
         }
 
+        /// <inheritdoc/>
         public async Task<int?> GetFrequencyAsync()
         {
             var uri = $"{ApiPrefix}/frequency";
@@ -125,6 +145,7 @@ namespace VPEAR.Core
             }
         }
 
+        /// <inheritdoc/>
         public async Task<bool> PutFrequencyAsync(int? frequency)
         {
             var uri = $"{ApiPrefix}/frequency";
@@ -137,6 +158,7 @@ namespace VPEAR.Core
             return await this.PutAsync(uri, frequency) && this.IsSuccessResponse();
         }
 
+        /// <inheritdoc/>
         public async Task<int?> GetRequiredSensorsAsync()
         {
             var uri = $"{ApiPrefix}/sensorsRequired";
@@ -153,6 +175,7 @@ namespace VPEAR.Core
             }
         }
 
+        /// <inheritdoc/>
         public async Task<bool> PutRequiredSensorsAsync(int? requiredSensors)
         {
             var uri = $"{ApiPrefix}/sensorsRequired";
@@ -165,6 +188,7 @@ namespace VPEAR.Core
             return await this.PutAsync(uri, requiredSensors) && this.IsSuccessResponse();
         }
 
+        /// <inheritdoc/>
         public async Task<FiltersResponse> GetFiltersAsync()
         {
             var uri = $"{ApiPrefix}/filters";
@@ -181,6 +205,7 @@ namespace VPEAR.Core
             }
         }
 
+        /// <inheritdoc/>
         public async Task<bool> PutFiltersAsync(bool? spot, bool? smooth, bool? noise)
         {
             var spotUri = $"{ApiPrefix}/filters/spot";
@@ -205,6 +230,7 @@ namespace VPEAR.Core
             return true;
         }
 
+        /// <inheritdoc/>
         public async Task<PowerResponse> GetPowerAsync()
         {
             var uri = $"{ApiPrefix}/power";
@@ -221,6 +247,7 @@ namespace VPEAR.Core
             }
         }
 
+        /// <inheritdoc/>
         public async Task<DateTimeOffset?> GetTimeAsync()
         {
             var uri = $"{ApiPrefix}/time";
@@ -237,6 +264,7 @@ namespace VPEAR.Core
             }
         }
 
+        /// <inheritdoc/>
         public async Task<bool> PutTimeAsync(DateTimeOffset time)
         {
             var uri = $"{ApiPrefix}/time";
@@ -244,6 +272,7 @@ namespace VPEAR.Core
             return await this.PutAsync(uri, time.ToString(TimeFormat));
         }
 
+        /// <inheritdoc/>
         public async Task<WifiResponse> GetWifiAsync()
         {
             var uri = $"{ApiPrefix}/wifi";
@@ -260,6 +289,7 @@ namespace VPEAR.Core
             }
         }
 
+        /// <inheritdoc/>
         public async Task<bool> PutWifiAsync(string ssid, string password = null, string mode = null)
         {
             var uri = $"{ApiPrefix}/wifi";
@@ -289,6 +319,7 @@ namespace VPEAR.Core
             return true;
         }
 
+        /// <inheritdoc/>
         public async Task<FirmwareResponse> GetFirmwareAsync()
         {
             var uri = $"{ApiPrefix}/firmware";
@@ -305,6 +336,7 @@ namespace VPEAR.Core
             }
         }
 
+        /// <inheritdoc/>
         public async Task<bool> PutFirmwareAsync(string source = null, string upgrade = null, bool package = false)
         {
             var sourceUri = $"{ApiPrefix}/firmware/source";
