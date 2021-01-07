@@ -74,7 +74,6 @@ namespace VPEAR.Server
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder.RegisterModule(new ClientModule());
-            builder.RegisterModule(new EventDetectorModule());
             builder.RegisterModule(new JobModule());
             builder.RegisterModule(new RepositoryModule());
             builder.RegisterModule(new ServiceModule());
@@ -157,14 +156,14 @@ namespace VPEAR.Server
 
         private void ConfigureDatabase(IServiceCollection services)
         {
-#if false
+#if DEBUG
             services.AddDbContext<VPEARDbContext>(options =>
             {
                 options.UseInMemoryDatabase(Schemas.DbSchema);
                 options.EnableSensitiveDataLogging();
             });
 #else
-            services.AddDbContext<VPEARDbContext>(builder =>
+            services.AddDbContextPool<VPEARDbContext>(builder =>
             {
                 builder.UseMySql(
                     Startup.Config!.DbConnection,

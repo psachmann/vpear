@@ -100,6 +100,7 @@ namespace VPEAR.Server.Controllers
         /// <param name="request">The request data.</param>
         /// <returns>Http status code, which indicates the operation result.</returns>
         [HttpPost]
+        [Authorize(Roles = Roles.AdminRole)]
         [SwaggerResponse(StatusCodes.Status102Processing, "Searching for devices.", typeof(Null))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, "The address or subnet mask are not IPv4 addresses.", typeof(ErrorResponse))]
         [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", typeof(Null))]

@@ -18,7 +18,6 @@ namespace VPEAR.Server
     {
         public VPEARDbContext CreateDbContext(string[] args)
         {
-            var eventDetectors = new List<IEventDetector<VPEARDbContext>>();
             var builder = new DbContextOptionsBuilder<VPEARDbContext>();
 
             Configuration.EnsureLoaded(args);
@@ -31,7 +30,7 @@ namespace VPEAR.Server
                     options.CharSetBehavior(CharSetBehavior.NeverAppend);
                 });
 
-            return new VPEARDbContext(builder.Options, eventDetectors);
+            return new VPEARDbContext(builder.Options);
         }
     }
 }

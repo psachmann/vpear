@@ -21,27 +21,27 @@ namespace VPEAR.Server.Test.Validators
 
         [Theory]
         [InlineData(null, null, null)]
-        [InlineData(null, null, 1U)]
-        [InlineData(null, null, uint.MaxValue)]
-        [InlineData(null, uint.MinValue, null)]
-        [InlineData(null, uint.MinValue, 1U)]
-        [InlineData(null, uint.MinValue, uint.MaxValue)]
-        [InlineData(null, uint.MaxValue, null)]
-        [InlineData(null, uint.MaxValue, 1U)]
-        [InlineData(null, uint.MaxValue, uint.MaxValue)]
+        [InlineData(null, null, 1)]
+        [InlineData(null, null, int.MaxValue)]
+        [InlineData(null, 1, null)]
+        [InlineData(null, 1, 1)]
+        [InlineData(null, 1, int.MaxValue)]
+        [InlineData(null, int.MaxValue, null)]
+        [InlineData(null, int.MaxValue, 1)]
+        [InlineData(null, int.MaxValue, int.MaxValue)]
         [InlineData("display_name", null, null)]
-        [InlineData("display_name", null, 1U)]
-        [InlineData("display_name", null, uint.MaxValue)]
-        [InlineData("display_name", uint.MinValue, null)]
-        [InlineData("display_name", uint.MinValue, 1U)]
-        [InlineData("display_name", uint.MinValue, uint.MaxValue)]
-        [InlineData("display_name", uint.MaxValue, null)]
-        [InlineData("display_name", uint.MaxValue, 1U)]
-        [InlineData("display_name", uint.MaxValue, uint.MaxValue)]
+        [InlineData("display_name", null, 1)]
+        [InlineData("display_name", null, int.MaxValue)]
+        [InlineData("display_name", 1, null)]
+        [InlineData("display_name", 1, 1)]
+        [InlineData("display_name", 1, int.MaxValue)]
+        [InlineData("display_name", int.MaxValue, null)]
+        [InlineData("display_name", int.MaxValue, 1)]
+        [InlineData("display_name", int.MaxValue, int.MaxValue)]
         public void ValidateSuccessTest(
             string? displayName,
-            uint? frequncy,
-            uint? requiredSensors)
+            int? frequncy,
+            int? requiredSensors)
         {
             var request = new PutDeviceRequest()
             {
@@ -56,11 +56,14 @@ namespace VPEAR.Server.Test.Validators
 
         [Theory]
         [InlineData("", null, null)]
-        [InlineData(null, null, 0U)]
+        [InlineData(null, null, 0)]
+        [InlineData(null, 0, null)]
+        [InlineData(null, 0, 0)]
+        [InlineData("", 0, 0)]
         public void ValidateFailureTest(
             string? displayName,
-            uint? frequncy,
-            uint? requiredSensors)
+            int? frequncy,
+            int? requiredSensors)
         {
             var request = new PutDeviceRequest()
             {

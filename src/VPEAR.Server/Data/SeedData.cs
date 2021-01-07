@@ -33,12 +33,12 @@ namespace VPEAR.Server.Data
             {
                 var device = new Device()
                 {
-                    Address = $"address_{i}",
+                    Address = $"http://192.168.178.{i}",
                     Class = $"class_{i}",
                     Id = new Guid($"00000000-0000-0000-0000-00000000000{i}"),
                     Name = $"name_{i}",
-                    RequiredSensors = (uint)i,
-                    Frequency = (uint)i,
+                    RequiredSensors = i,
+                    Frequency = i,
                     Status = (DeviceStatus)((i - 1) % 4),
                 };
 
