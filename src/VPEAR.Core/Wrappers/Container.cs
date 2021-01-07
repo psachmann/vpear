@@ -8,17 +8,30 @@ using System.Text.Json.Serialization;
 
 namespace VPEAR.Core.Wrappers
 {
+    /// <summary>
+    /// A json wrapper class with json naming conventions.
+    /// </summary>
+    /// <typeparam name="TItem">Type of the items.</typeparam>
     public class Container<TItem>
     {
+        /// <summary>
+        /// Gets or sets the start index.
+        /// </summary>
+        /// <value>The start index.</value>
         [JsonPropertyName("start")]
-        public long Start { get; set; }
+        public int Start { get; set; }
 
-        [JsonPropertyName("stop")]
-        public long Stop { get; set; }
-
+        /// <summary>
+        /// Gets the items count.
+        /// </summary>
+        /// <value>Indicates how many items are sent.</value>
         [JsonPropertyName("count")]
-        public long Count => this.Items.Count;
+        public int Count => this.Items.Count;
 
+        /// <summary>
+        /// Gets or sets the items.
+        /// </summary>
+        /// <value>The requested items.</value>
         [JsonPropertyName("items")]
         public IList<TItem> Items { get; set; } = new List<TItem>();
     }

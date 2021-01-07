@@ -12,12 +12,24 @@ namespace VPEAR.Core.Wrappers
     /// </summary>
     public class PostRegisterRequest
     {
+        /// <summary>
+        /// Gets or sets the name.
+        /// </summary>
+        /// <value>The desired user name.</value>
         [JsonPropertyName("name")]
         public string Name { get; set; }
 
+        /// <summary>
+        /// Gets or sets the password.
+        /// </summary>
+        /// <value>The desired user password.</value>
         [JsonPropertyName("password")]
         public string Password { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the user is an admin or not.
+        /// </summary>
+        /// <value>Indicates whether the user is an admin or not.</value>
         [JsonPropertyName("is_admin")]
         public bool IsAdmin { get; set; }
     }

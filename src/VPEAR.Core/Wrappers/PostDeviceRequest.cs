@@ -12,9 +12,17 @@ namespace VPEAR.Core.Wrappers
     /// </summary>
     public class PostDeviceRequest
     {
+        /// <summary>
+        /// Gets or sets the address.
+        /// </summary>
+        /// <value>A IP address from the subnet to search.</value>
         [JsonPropertyName("address")]
         public string Address { get; set; }
 
+        /// <summary>
+        /// Gets or sets the subnet mask.
+        /// </summary>
+        /// <value>The subnet mask form the subnet to search.</value>
         [JsonPropertyName("subent_mask")]
         public string SubnetMask { get; set; }
     }

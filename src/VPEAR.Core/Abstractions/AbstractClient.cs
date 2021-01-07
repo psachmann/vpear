@@ -10,12 +10,20 @@ using System.Threading.Tasks;
 
 namespace VPEAR.Core.Abstractions
 {
+    /// <summary>
+    /// Base class for clients. It implements some base functionality.
+    /// </summary>
     public abstract class AbstractClient : IDisposable
     {
         private readonly HttpClient client;
         private Exception error;
         private HttpResponseMessage response;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AbstractClient"/> class.
+        /// </summary>
+        /// <param name="baseAddress">The base address to connect to.</param>
+        /// <param name="factory">The http client factory.</param>
         protected AbstractClient(string baseAddress, IHttpClientFactory factory)
         {
             if (baseAddress == null)
@@ -39,6 +47,11 @@ namespace VPEAR.Core.Abstractions
             }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AbstractClient"/> class.
+        /// </summary>
+        /// <param name="baseAddress">The base address to connect to.</param>
+        /// <param name="client">The http client.</param>
         protected AbstractClient(string baseAddress, HttpClient client)
         {
             if (baseAddress == null)
@@ -62,6 +75,10 @@ namespace VPEAR.Core.Abstractions
             }
         }
 
+        /// <summary>
+        /// Gets or sets the error.
+        /// </summary>
+        /// <value>The occurred client error.</value>
         public Exception Error
         {
             get
@@ -75,6 +92,10 @@ namespace VPEAR.Core.Abstractions
             }
         }
 
+        /// <summary>
+        /// Gets or sets the http response.
+        /// </summary>
+        /// <value>The http response for the http request.</value>
         public HttpResponseMessage Response
         {
             get
@@ -89,6 +110,10 @@ namespace VPEAR.Core.Abstractions
             }
         }
 
+        /// <summary>
+        /// Gets the http client.
+        /// </summary>
+        /// <value>The http client which executes the http requests.</value>
         protected HttpClient Client
         {
             get
@@ -97,8 +122,13 @@ namespace VPEAR.Core.Abstractions
             }
         }
 
+        /// <summary>
+        /// Indicates whether can connect to the destination or not.
+        /// </summary>
+        /// <returns>True if we can cannoct, otherwise false.</returns>
         public abstract Task<bool> CanConnectAsync();
 
+        /// <inheritdoc/>
         public void Dispose()
         {
             this.Client.Dispose();
@@ -106,31 +136,67 @@ namespace VPEAR.Core.Abstractions
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// Indicates whether the response is successful or not.
+        /// </summary>
+        /// <returns>True if the response was successful, otherwise false.</returns>
         public bool IsSuccessResponse()
         {
             return this.Response != null && this.Response.IsSuccessStatusCode;
         }
 
+        /// <summary>
+        /// Makes a http DELETE request to the given uri.
+        /// </summary>
+        /// <param name="uri">The request uri.</param>
+        /// <returns>True if the request was successful, otherwise false.</returns>
         protected Task<bool> DeleteAsync(string uri)
         {
             return this.SendAsync<Null>(HttpMethod.Delete, uri);
         }
 
+        /// <summary>
+        /// Makes a http GET request to the given uri.
+        /// </summary>
+        /// <param name="uri">The request uri.</param>
+        /// <returns>True if the request was successful, otherwise false.</returns>
         protected Task<bool> GetAsync(string uri)
         {
             return this.SendAsync<Null>(HttpMethod.Get, uri);
         }
 
+        /// <summary>
+        /// Makes a http POST request to the given uri.
+        /// </summary>
+        /// <param name="uri">The request uri.</param>
+        /// <param name="payload">The request payload.</param>
+        /// <typeparam name="TPayload">The payload type.</typeparam>
+        /// <returns>True if the request was successful, otherwise false.</returns>
         protected Task<bool> PostAsync<TPayload>(string uri, TPayload payload)
         {
             return this.SendAsync(HttpMethod.Post, uri, payload);
         }
 
+        /// <summary>
+        /// Makes a http PUT request to the given uri.
+        /// </summary>
+        /// <param name="uri">The request uri.</param>
+        /// <param name="payload">The request payload.</param>
+        /// <typeparam name="TPayload">The payload type.</typeparam>
+        /// <returns>True if the request was successful, otherwise false.</returns>
         protected Task<bool> PutAsync<TPayload>(string uri, TPayload payload)
         {
             return this.SendAsync(HttpMethod.Put, uri, payload);
         }
 
+        /// <summary>
+        /// Executes the http requests for the client.
+        /// </summary>
+        /// <param name="method">The http method.</param>
+        /// <param name="uri">The request uri.</param>
+        /// <param name="payload">The request payload.</param>
+        /// <typeparam name="TPayload">The payload type.</typeparam>
+        /// <returns>True if the request was successful, otherwise false.</returns>
         protected virtual async Task<bool> SendAsync<TPayload>(HttpMethod method, string uri, TPayload payload = default)
         {
             try

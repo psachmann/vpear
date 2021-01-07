@@ -13,8 +13,15 @@ using VPEAR.Server.Services.Jobs;
 
 namespace VPEAR.Server
 {
+    /// <summary>
+    /// Encapsulates the Autofac job registration in a single module.
+    /// </summary>
     public class JobModule : Module
     {
+        /// <summary>
+        /// Register all quartz jobs with the Autofac container.
+        /// </summary>
+        /// <param name="builder">The container builder to build the Autofac container.</param>
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);

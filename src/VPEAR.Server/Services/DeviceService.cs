@@ -33,6 +33,14 @@ namespace VPEAR.Server.Services
         private readonly ISchedulerFactory schedulerFactory;
         private readonly ILogger<DeviceController> logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DeviceService"/> class.
+        /// </summary>
+        /// <param name="devices">The device repository.</param>
+        /// <param name="discovery">The discovery service.</param>
+        /// <param name="factory">The device client factory.</param>
+        /// <param name="schedulerFactory">The Quartz scheduler factory.</param>
+        /// <param name="logger">The service logger.</param>
         public DeviceService(
             IRepository<Device, Guid> devices,
             IDiscoveryService discovery,
@@ -74,8 +82,8 @@ namespace VPEAR.Server.Services
                         Address = device.Address,
                         DisplayName = device.DisplayName,
                         Id = device.Id.ToString(),
-                        ReqioredSensors = device.RequiredSensors,
-                        SampleFrequency = device.Frequency,
+                        RequiredSensors = device.RequiredSensors,
+                        Frequency = device.Frequency,
                         Status = device.Status,
                     });
                 });

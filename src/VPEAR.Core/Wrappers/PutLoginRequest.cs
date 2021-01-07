@@ -8,13 +8,21 @@ using System.Text.Json.Serialization;
 namespace VPEAR.Core.Wrappers
 {
     /// <summary>
-    /// A json request wrapper class.
+    /// A json wrapper class with json naming conventions.
     /// </summary>
     public class PutLoginRequest
     {
+        /// <summary>
+        /// Gets or sets the name.
+        /// </summary>
+        /// <value>The user name.</value>
         [JsonPropertyName("name")]
         public string Name { get; set; }
 
+        /// <summary>
+        /// Gets or sets the password.
+        /// </summary>
+        /// <value>The user password.</value>
         [JsonPropertyName("password")]
         public string Password { get; set; }
     }

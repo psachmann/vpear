@@ -12,15 +12,31 @@ namespace VPEAR.Core.Wrappers
     /// </summary>
     public class PutDeviceRequest
     {
+        /// <summary>
+        /// Gets or sets the display name.
+        /// </summary>
+        /// <value>The new device display name.</value>
         [JsonPropertyName("display_name")]
         public string DisplayName { get; set; }
 
+        /// <summary>
+        /// Gets or sets the frequency.
+        /// </summary>
+        /// <value>The new device scanning freqency.</value>
         [JsonPropertyName("frequency")]
         public int? Frequency { get; set; }
 
+        /// <summary>
+        /// Gets or sets the required sensors.
+        /// </summary>
+        /// <value>Indicates how many sensors are required for the device.</value>
         [JsonPropertyName("required_sensors")]
         public int? RequiredSensors { get; set; }
 
+        /// <summary>
+        /// Gets or sets the status.
+        /// </summary>
+        /// <value>The new device status.</value>
         [JsonPropertyName("status")]
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public DeviceStatus? Status { get; set; }

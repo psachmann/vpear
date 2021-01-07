@@ -50,25 +50,25 @@ namespace VPEAR.Core
         }
 
         /// <summary>
-        /// Indicates the success of the result.
+        /// Gets a value indicating whether the result is successful or not.
         /// </summary>
         /// <value>The success status.</value>
         public bool IsSuccess { get; }
 
         /// <summary>
-        /// The status code for the http response.
+        /// gets the status code for the http response.
         /// </summary>
         /// <value>The result status code.</value>
         public int StatusCode { get; }
 
         /// <summary>
-        /// The error messages for the http response.
+        /// Gets the error messages for the http response.
         /// </summary>
         /// <value>The result error.</value>
         public ErrorResponse Error { get; }
 
         /// <summary>
-        /// The success value for the http response.
+        /// Gets the success value for the http response.
         /// </summary>
         /// <value>The success value.</value>
         public TSuccess Value { get; }

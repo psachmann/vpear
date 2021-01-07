@@ -26,6 +26,12 @@ namespace VPEAR.Server.Services
         private readonly IRepository<Frame, Guid> frames;
         private readonly ILogger<SensorController> logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SensorService"/> class.
+        /// </summary>
+        /// <param name="devices">The device repository.</param>
+        /// <param name="frames">The frame repository.</param>
+        /// <param name="logger">The service logger.</param>
         public SensorService(
             IRepository<Device, Guid> devices,
             IRepository<Frame, Guid> frames,

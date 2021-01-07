@@ -15,6 +15,10 @@ using VPEAR.Core.Wrappers;
 
 namespace VPEAR.Server.Services.Jobs
 {
+    /// <summary>
+    /// The job to poll periodically frames from the device.
+    /// This job is scheduled by Quartz.
+    /// </summary>
     public class PollFramesJob : IJob
     {
         private readonly IRepository<Device, Guid> devices;
@@ -22,6 +26,13 @@ namespace VPEAR.Server.Services.Jobs
         private readonly DeviceClient.Factory factory;
         private readonly ILogger<PollFramesJob> logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PollFramesJob"/> class.
+        /// </summary>
+        /// <param name="devices">The device repository.</param>
+        /// <param name="frames">The frame repository.</param>
+        /// <param name="factory">The device client factory.</param>
+        /// <param name="logger">The job logger.</param>
         public PollFramesJob(
             IRepository<Device, Guid> devices,
             IRepository<Frame, Guid> frames,
@@ -34,6 +45,7 @@ namespace VPEAR.Server.Services.Jobs
             this.logger = logger;
         }
 
+        /// <inheritdoc/>
         public async Task Execute(IJobExecutionContext context)
         {
             var id = new Guid(context.JobDetail.Key.Name);

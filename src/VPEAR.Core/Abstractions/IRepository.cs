@@ -49,15 +49,41 @@ namespace VPEAR.Core.Abstractions
         /// <returns>The complete entity or null, if id not exists.</returns>
         Task<TEntity> GetAsync(TKey id);
 
+        /// <summary>
+        /// Loads the reference synchron from the database.
+        /// </summary>
+        /// <param name="entity">The entity to load from.</param>
+        /// <param name="expression">The reference to load.</param>
+        /// <typeparam name="TProperty">Type of the reference.</typeparam>
         void GetReference<TProperty>(TEntity entity, Expression<Func<TEntity, TProperty>> expression)
             where TProperty : class;
 
+        /// <summary>
+        /// Loads the reference from the database.
+        /// </summary>
+        /// <param name="entity">The entity to load from.</param>
+        /// <param name="expression">The reference to load.</param>
+        /// <typeparam name="TProperty">Type of the reference.</typeparam>
+        /// <returns>An awaitable task.</returns>
         Task GetReferenceAsync<TProperty>(TEntity entity, Expression<Func<TEntity, TProperty>> expression)
             where TProperty : class;
 
+        /// <summary>
+        /// Loads the collection from the database.
+        /// </summary>
+        /// <param name="entity">The entity to load from.</param>
+        /// <param name="expression">The collection to load.</param>
+        /// <typeparam name="TProperty">Type of the collection.</typeparam>
         void GetCollection<TProperty>(TEntity entity, Expression<Func<TEntity, IEnumerable<TProperty>>> expression)
             where TProperty : class;
 
+        /// <summary>
+        /// Loads the collection from the database.
+        /// </summary>
+        /// <param name="entity">The entity to load from.</param>
+        /// <param name="expression">The collection to load.</param>
+        /// <typeparam name="TProperty">Type of the collection.</typeparam>
+        /// <returns>An awaitable task.</returns>
         Task GetCollectionAsync<TProperty>(TEntity entity, Expression<Func<TEntity, IEnumerable<TProperty>>> expression)
             where TProperty : class;
 

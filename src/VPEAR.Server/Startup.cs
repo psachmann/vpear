@@ -36,7 +36,6 @@ namespace VPEAR.Server
     /// </summary>
     public class Startup
     {
-
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class.
         /// </summary>

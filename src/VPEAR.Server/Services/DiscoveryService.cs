@@ -18,12 +18,21 @@ using VPEAR.Server.Controllers;
 
 namespace VPEAR.Server.Services
 {
+    /// <summary>
+    /// Implements the <see cref="IDiscoveryService"/> interface.
+    /// </summary>
     public class DiscoveryService : IDiscoveryService
     {
         private readonly IRepository<Device, Guid> devices;
         private readonly DeviceClient.Factory factory;
         private readonly ILogger<DeviceController> logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscoveryService"/> class.
+        /// </summary>
+        /// <param name="devices">The device repository.</param>
+        /// <param name="factory">The device client factory.</param>
+        /// <param name="logger">The service logger.</param>
         public DiscoveryService(
             IRepository<Device, Guid> devices,
             DeviceClient.Factory factory,
@@ -34,6 +43,7 @@ namespace VPEAR.Server.Services
             this.logger = logger;
         }
 
+        /// <inheritdoc/>
         public async Task SearchDevicesAsync(IPAddress address, IPAddress subnetMask)
         {
             var addresses = GetSearchRange(address, subnetMask);
@@ -127,8 +137,8 @@ namespace VPEAR.Server.Services
                     });
                 }
 
-                await client.PutTimeAsync(DateTimeOffset.UtcNow);
                 await this.devices.CreateAsync(newDevice);
+                await client.PutTimeAsync(DateTimeOffset.UtcNow);
             }
         }
     }

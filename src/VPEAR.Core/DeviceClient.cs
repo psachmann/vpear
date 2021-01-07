@@ -26,13 +26,18 @@ namespace VPEAR.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceClient"/> class.
         /// </summary>
-        /// <param name="baseAddess"></param>
-        /// <param name="factory"></param>
-        public DeviceClient(string baseAddess, IHttpClientFactory factory)
-            : base(baseAddess, factory)
+        /// <param name="baseAddress">The base address to connect to.</param>
+        /// <param name="factory">The http client factory.</param>
+        public DeviceClient(string baseAddress, IHttpClientFactory factory)
+            : base(baseAddress, factory)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DeviceClient"/> class.
+        /// </summary>
+        /// <param name="baseAddress">The base address to connect to.</param>
+        /// <param name="client">The http client.</param>
         internal DeviceClient(string baseAddress, HttpClient client)
             : base(baseAddress, client)
         {

@@ -7,15 +7,17 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using System;
-using System.Collections.Generic;
-using VPEAR.Core.Abstractions;
 using VPEAR.Server.Data;
 using VPEAR.Server.Internals;
 
 namespace VPEAR.Server
 {
+    /// <summary>
+    /// Allows Entity Framework Core Tolls to create a <see cref="VPEARDbContext"/> instance during design time.
+    /// </summary>
     public class DesignTimeVPEARDbContextFactory : IDesignTimeDbContextFactory<VPEARDbContext>
     {
+        /// <inheritdoc/>
         public VPEARDbContext CreateDbContext(string[] args)
         {
             var builder = new DbContextOptionsBuilder<VPEARDbContext>();

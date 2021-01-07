@@ -31,6 +31,12 @@ namespace VPEAR.Server.Services
         private readonly UserManager<IdentityUser> users;
         private readonly ILogger<UserController> logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UserService"/> class.
+        /// </summary>
+        /// <param name="roles">The role manager.</param>
+        /// <param name="users">The user manager.</param>
+        /// <param name="logger">The service logger.</param>
         public UserService(
             RoleManager<IdentityRole> roles,
             UserManager<IdentityUser> users,
@@ -198,7 +204,7 @@ namespace VPEAR.Server.Services
 
             if (!user.EmailConfirmed)
             {
-                return new Result<PutLoginResponse>(HttpStatusCode.Forbidden, ErrorMessages.UserNotVerfied);
+                return new Result<PutLoginResponse>(HttpStatusCode.Forbidden, ErrorMessages.UserNotVerified);
             }
 
             if (await this.users.CheckPasswordAsync(user, request.Password))
@@ -224,7 +230,7 @@ namespace VPEAR.Server.Services
                 var token = new JwtSecurityToken(
                     expires: DateTime.Now.AddHours(24),
                     claims: authClaims,
-                    signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256));
+                    signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha512));
                 var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
 
                 var payload = new PutLoginResponse()
