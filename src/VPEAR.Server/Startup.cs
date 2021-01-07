@@ -157,14 +157,14 @@ namespace VPEAR.Server
 
         private void ConfigureDatabase(IServiceCollection services)
         {
-#if DEBUG
+#if false
             services.AddDbContext<VPEARDbContext>(options =>
             {
                 options.UseInMemoryDatabase(Schemas.DbSchema);
                 options.EnableSensitiveDataLogging();
             });
 #else
-            services.AddDbContextPool<VPEARDbContext>(builder =>
+            services.AddDbContext<VPEARDbContext>(builder =>
             {
                 builder.UseMySql(
                     Startup.Config!.DbConnection,

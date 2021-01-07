@@ -8,6 +8,8 @@
 // Arguments
 var target = Argument("target", "Test");
 var config = Argument("config", "Debug");
+var name = Argument("name", "Name");
+
 
 // Paths
 var project = "./VPEAR.sln";
@@ -18,6 +20,7 @@ var testSettings = "./tests/Coverlet.runsettings";
 var reportFiles = "./tests/**/coverage.opencover.xml";
 var reportDir = "./docs/vpear-docs/report";
 var historyDir = "./docs/history";
+var srcDir = "./src";
 var server = "./src/VPEAR.Server/VPEAR.Server.csproj";
 
 // Tasks
@@ -96,10 +99,31 @@ Task("Docs")
         DocFxBuild(File(docfxSettings));
     });
 
-Task("DB")
+Task("Migration-Add")
     .Does(() =>
     {
-        // TODO: prepare db for the server
+        var settings = new DotNetCoreEfMigrationAddSettings()
+        {
+            Configuration = config,
+            OutputDir = "Data/Migrations",
+            Migration = name,
+            Project = "VPEAR.Server/VPEAR.Server.csproj",
+        };
+
+        DotNetCoreEfMigrationAdd(srcDir, settings);
+    });
+
+Task("Database-Update")
+    .Does(() =>
+    {
+        var settings = new DotNetCoreEfDatabaseUpdateSettings()
+        {
+            Configuration = config,
+            Migration = name,
+            Project = "VPEAR.Server/VPEAR.Server.csproj",
+        };
+
+        DotNetCoreEfDatabaseUpdate(srcDir, settings);
     });
 
 RunTarget(target);
