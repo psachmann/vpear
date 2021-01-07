@@ -48,7 +48,7 @@ namespace VPEAR.Core
             {
                 var json = await this.Response.Content.ReadAsStringAsync();
 
-                return json.FromJsonString<ApiResponse>();
+                return json?.FromJsonString<ApiResponse>();
             }
             else
             {
@@ -64,7 +64,7 @@ namespace VPEAR.Core
             {
                 var json = await this.Response.Content.ReadAsStringAsync();
 
-                return json.FromJsonString<DeviceResponse>();
+                return json?.FromJsonString<DeviceResponse>();
             }
             else
             {
@@ -80,7 +80,7 @@ namespace VPEAR.Core
             {
                 var json = await this.Response.Content.ReadAsStringAsync();
 
-                return json.FromJsonString<IList<SensorResponse>>();
+                return json?.FromJsonString<IList<SensorResponse>>();
             }
             else
             {
@@ -101,7 +101,7 @@ namespace VPEAR.Core
             {
                 var json = await this.Response.Content.ReadAsStringAsync();
 
-                return json.FromJsonString<IList<FrameResponse>>();
+                return json?.FromJsonString<IList<FrameResponse>>();
             }
             else
             {
@@ -117,7 +117,7 @@ namespace VPEAR.Core
             {
                 var json = await this.Response.Content.ReadAsStringAsync();
 
-                return json.FromJsonString<int>();
+                return json?.FromJsonString<int>();
             }
             else
             {
@@ -145,7 +145,7 @@ namespace VPEAR.Core
             {
                 var json = await this.Response.Content.ReadAsStringAsync();
 
-                return json.FromJsonString<int>();
+                return json?.FromJsonString<int>();
             }
             else
             {
@@ -173,7 +173,7 @@ namespace VPEAR.Core
             {
                 var json = await this.Response.Content.ReadAsStringAsync();
 
-                return json.FromJsonString<FiltersResponse>();
+                return json?.FromJsonString<FiltersResponse>();
             }
             else
             {
@@ -213,7 +213,7 @@ namespace VPEAR.Core
             {
                 var json = await this.Response.Content.ReadAsStringAsync();
 
-                return json.FromJsonString<PowerResponse>();
+                return json?.FromJsonString<PowerResponse>();
             }
             else
             {
@@ -252,7 +252,7 @@ namespace VPEAR.Core
             {
                 var json = await this.Response.Content.ReadAsStringAsync();
 
-                return json.FromJsonString<WifiResponse>();
+                return json?.FromJsonString<WifiResponse>();
             }
             else
             {
@@ -271,14 +271,12 @@ namespace VPEAR.Core
                 Password = password,
             };
 
-            if (ssid != null && password == null
-                && !(await this.PutAsync(ssidUri, ssid) && this.IsSuccessResponse()))
+            if (ssid != null && password == null && !(await this.PutAsync(ssidUri, ssid) && this.IsSuccessResponse()))
             {
                 return false;
             }
 
-            if (ssid != null && password != null
-                && !(await this.PutAsync(uri, payload) && this.IsSuccessResponse()))
+            if (ssid != null && password != null && !(await this.PutAsync(uri, payload) && this.IsSuccessResponse()))
             {
                 return false;
             }
@@ -299,7 +297,7 @@ namespace VPEAR.Core
             {
                 var json = await this.Response.Content.ReadAsStringAsync();
 
-                return json.FromJsonString<FirmwareResponse>();
+                return json?.FromJsonString<FirmwareResponse>();
             }
             else
             {

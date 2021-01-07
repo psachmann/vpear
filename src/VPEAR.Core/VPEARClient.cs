@@ -70,7 +70,7 @@ namespace VPEAR.Core
             {
                 var json = await this.Response.Content.ReadAsStringAsync();
 
-                return json.FromJsonString<Container<GetDeviceResponse>>();
+                return json?.FromJsonString<Container<GetDeviceResponse>>();
             }
             else
             {
@@ -111,7 +111,7 @@ namespace VPEAR.Core
             {
                 var json = await this.Response.Content.ReadAsStringAsync();
 
-                return json.FromJsonString<GetFiltersResponse>();
+                return json?.FromJsonString<GetFiltersResponse>();
             }
             else
             {
@@ -140,7 +140,7 @@ namespace VPEAR.Core
             {
                 var json = await this.Response.Content.ReadAsStringAsync();
 
-                return json.FromJsonString<GetFirmwareResponse>();
+                return json?.FromJsonString<GetFirmwareResponse>();
             }
             else
             {
@@ -169,7 +169,7 @@ namespace VPEAR.Core
             {
                 var json = await this.Response.Content.ReadAsStringAsync();
 
-                return json.FromJsonString<GetPowerResponse>();
+                return json?.FromJsonString<GetPowerResponse>();
             }
             else
             {
@@ -195,7 +195,7 @@ namespace VPEAR.Core
             {
                 var json = await this.Response.Content.ReadAsStringAsync();
 
-                return json.FromJsonString<Container<GetFrameResponse>>();
+                return json?.FromJsonString<Container<GetFrameResponse>>();
             }
             else
             {
@@ -211,7 +211,7 @@ namespace VPEAR.Core
             {
                 var json = await this.Response.Content.ReadAsStringAsync();
 
-                return json.FromJsonString<Container<GetSensorResponse>>();
+                return json?.FromJsonString<Container<GetSensorResponse>>();
             }
             else
             {
@@ -239,7 +239,7 @@ namespace VPEAR.Core
             {
                 var json = await this.Response.Content.ReadAsStringAsync();
 
-                return json.FromJsonString<Container<GetUserResponse>>();
+                return json?.FromJsonString<Container<GetUserResponse>>();
             }
             else
             {
@@ -305,7 +305,7 @@ namespace VPEAR.Core
             {
                 var json = await this.Response.Content.ReadAsStringAsync();
 
-                return json.FromJsonString<GetWifiResponse>();
+                return json?.FromJsonString<GetWifiResponse>();
             }
             else
             {
