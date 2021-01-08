@@ -152,20 +152,13 @@ namespace VPEAR.Server
 
             services.AddHttpClient();
 
-            this.ConfigureDatabase(services);
-            this.ConfigureQuartz(services);
-            this.ConfigureSwagger(services);
+            ConfigureDatabase(services);
+            ConfigureQuartz(services);
+            ConfigureSwagger(services);
         }
 
-        private void ConfigureDatabase(IServiceCollection services)
+        private static void ConfigureDatabase(IServiceCollection services)
         {
-#if DEBUG
-            services.AddDbContext<VPEARDbContext>(options =>
-            {
-                options.UseInMemoryDatabase(Schemas.DbSchema);
-                options.EnableSensitiveDataLogging();
-            });
-#else
             services.AddDbContextPool<VPEARDbContext>(builder =>
             {
                 builder.UseMySql(
@@ -176,10 +169,9 @@ namespace VPEAR.Server
                         options.CharSetBehavior(CharSetBehavior.NeverAppend);
                     });
             });
-#endif
         }
 
-        private void ConfigureQuartz(IServiceCollection services)
+        private static void ConfigureQuartz(IServiceCollection services)
         {
             services.AddQuartz(options =>
             {
@@ -193,7 +185,7 @@ namespace VPEAR.Server
             });
         }
 
-        private void ConfigureSwagger(IServiceCollection services)
+        private static void ConfigureSwagger(IServiceCollection services)
         {
             services.AddSwaggerGen(options =>
             {
