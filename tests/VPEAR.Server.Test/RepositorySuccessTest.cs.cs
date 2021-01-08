@@ -14,7 +14,7 @@ using Xunit;
 
 namespace VPEAR.Server.Test
 {
-    [Collection("RepositoryTest")]
+    [Collection("DatabaseTest")]
     public class RepositorySuccessTest : IClassFixture<VPEARDbContextFixture>
     {
         private readonly IRepository<Device, Guid> devices;

@@ -21,14 +21,14 @@ namespace VPEAR.Server.Test
 {
     public class AutofacFixture : IDisposable
     {
-        private static readonly object Sync = new object();
+        private static readonly object Lock = new object();
         private static IContainer? root;
         private static bool isInitialized;
         private ILifetimeScope? child;
 
         public AutofacFixture()
         {
-            lock (Sync)
+            lock (Lock)
             {
                 if (!isInitialized)
                 {
@@ -59,17 +59,8 @@ namespace VPEAR.Server.Test
 
         public void Dispose()
         {
-            this.Dispose(true);
+            this.child?.Dispose();
             GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing && this.child != null)
-            {
-                this.child.Dispose();
-                this.child = null;
-            }
         }
 
         private static void RegisterFactories(ContainerBuilder builder)

@@ -15,6 +15,8 @@ namespace VPEAR.Server.Test
 {
     public class VPEARDbContextFixture : IDisposable
     {
+        private static readonly object Lock = new object();
+
         public VPEARDbContextFixture()
         {
             Seed();
@@ -40,108 +42,111 @@ namespace VPEAR.Server.Test
 
         private static void Seed()
         {
-            using var context = new VPEARDbContext(GetDbContextOptions());
-            var devices = new List<Device>();
-            var states = new List<(Guid Id, DeviceStatus Status)>()
+            lock (Lock)
             {
-                Mocks.Archived,
-                Mocks.NotReachable,
-                Mocks.Recording,
-                Mocks.Stopped,
-            };
-
-            context.Database.EnsureDeleted();
-            context.Database.EnsureCreated();
-
-            foreach (var (id, status) in states)
-            {
-                var device = new Device()
+                using var context = new VPEARDbContext(GetDbContextOptions());
+                var devices = new List<Device>();
+                var states = new List<(Guid Id, DeviceStatus Status)>()
                 {
-                    Address = "http://192.168.178.8",
-                    Class = "class",
-                    DisplayName = "display_name",
-                    Frames = new List<Frame>(),
-                    Frequency = 60,
-                    Id = id,
-                    Name = "name",
-                    RequiredSensors = 1,
-                    Sensors = new List<Sensor>(),
-                    Status = status,
+                    Mocks.Archived,
+                    Mocks.NotReachable,
+                    Mocks.Recording,
+                    Mocks.Stopped,
                 };
 
-                var filter = new Filter()
+                context.Database.EnsureDeleted();
+                context.Database.EnsureCreated();
+
+                foreach (var (id, status) in states)
                 {
-                    Device = device,
-                    DeviceForeignKey = id,
-                    Id = id,
-                    Frames = new List<Frame>(),
-                    Noise = true,
-                    Smooth = true,
-                    Spot = true,
-                };
+                    var device = new Device()
+                    {
+                        Address = "http://192.168.178.8",
+                        Class = "class",
+                        DisplayName = "display_name",
+                        Frames = new List<Frame>(),
+                        Frequency = 60,
+                        Id = id,
+                        Name = "name",
+                        RequiredSensors = 1,
+                        Sensors = new List<Sensor>(),
+                        Status = status,
+                    };
 
-                var firmware = new Firmware()
-                {
-                    Device = device,
-                    DeviceForeignKey = id,
-                    Id = id,
-                    Source = "source",
-                    Upgrade = "upgrade",
-                    Version = "version",
-                };
+                    var filter = new Filter()
+                    {
+                        Device = device,
+                        DeviceForeignKey = id,
+                        Id = id,
+                        Frames = new List<Frame>(),
+                        Noise = true,
+                        Smooth = true,
+                        Spot = true,
+                    };
 
-                var frame = new Frame()
-                {
-                    Device = device,
-                    DeviceForeignKey = id,
-                    Filter = filter,
-                    Id = id,
-                    Index = 1,
+                    var firmware = new Firmware()
+                    {
+                        Device = device,
+                        DeviceForeignKey = id,
+                        Id = id,
+                        Source = "source",
+                        Upgrade = "upgrade",
+                        Version = "version",
+                    };
 
-                    // TODO: generate more test values
-                    Readings = new List<IList<int>>(),
+                    var frame = new Frame()
+                    {
+                        Device = device,
+                        DeviceForeignKey = id,
+                        Filter = filter,
+                        Id = id,
+                        Index = 1,
 
-                    // TODO: eventually remove time
-                    Time = "time",
-                };
+                        // TODO: generate more test values
+                        Readings = new List<IList<int>>(),
 
-                var sensor = new Sensor()
-                {
-                    Columns = 1,
-                    Device = device,
-                    DeviceForeignKey = id,
-                    Id = id,
-                    Height = 1,
-                    Maximum = 1,
-                    Minimum = 1,
-                    Name = "name",
-                    Rows = 1,
-                    Units = "units",
-                    Width = 1,
-                };
+                        // TODO: eventually remove time
+                        Time = "time",
+                    };
 
-                var wifi = new Wifi()
-                {
-                    Device = device,
-                    DeviceForeignKey = id,
-                    Id = id,
-                    Mode = "mode",
-                    Neighbors = new List<string>(),
-                    Ssid = "ssid",
-                };
+                    var sensor = new Sensor()
+                    {
+                        Columns = 1,
+                        Device = device,
+                        DeviceForeignKey = id,
+                        Id = id,
+                        Height = 1,
+                        Maximum = 1,
+                        Minimum = 1,
+                        Name = "name",
+                        Rows = 1,
+                        Units = "units",
+                        Width = 1,
+                    };
 
-                device.Filter = filter;
-                device.Firmware = firmware;
-                device.Frames.Add(frame);
-                device.Sensors.Add(sensor);
-                device.Wifi = wifi;
-                filter.Frames.Add(frame);
+                    var wifi = new Wifi()
+                    {
+                        Device = device,
+                        DeviceForeignKey = id,
+                        Id = id,
+                        Mode = "mode",
+                        Neighbors = new List<string>(),
+                        Ssid = "ssid",
+                    };
 
-                devices.Add(device);
+                    device.Filter = filter;
+                    device.Firmware = firmware;
+                    device.Frames.Add(frame);
+                    device.Sensors.Add(sensor);
+                    device.Wifi = wifi;
+                    filter.Frames.Add(frame);
+
+                    devices.Add(device);
+                }
+
+                context.AddRange(devices);
+                context.SaveChanges();
             }
-
-            context.AddRange(devices);
-            context.SaveChanges();
         }
     }
 }
