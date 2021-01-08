@@ -106,7 +106,7 @@ namespace VPEAR.Server.Services
                     Name = response.Device.Name,
                     RequiredSensors = response.SensorsRequired,
                     Frequency = response.Frequency,
-                    Status = DeviceStatus.None,
+                    Status = DeviceStatus.Stopped,
                 };
 
                 await this.devices.CreateAsync(newDevice);

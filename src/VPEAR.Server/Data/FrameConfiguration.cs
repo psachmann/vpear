@@ -42,6 +42,8 @@ namespace VPEAR.Server.Data
             builder.HasOne(frame => frame.Filter)
                 .WithMany(filter => filter.Frames)
                 .HasForeignKey(frame => frame.FilterForeignKey);
+
+            builder.HasData(DataSeed.Frames);
         }
     }
 }

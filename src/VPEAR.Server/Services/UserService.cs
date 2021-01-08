@@ -146,7 +146,11 @@ namespace VPEAR.Server.Services
 
                 if (request.IsAdmin)
                 {
-                    await this.CreateAdminAsync(user);
+                    await this.users.AddToRolesAsync(user, Roles.AllRoles);
+                }
+                else
+                {
+                    await this.users.AddToRoleAsync(user, Roles.UserRole);
                 }
 
                 if ((await this.users.CreateAsync(user, request.Password)).Succeeded)
@@ -246,24 +250,6 @@ namespace VPEAR.Server.Services
             else
             {
                 return new Result<PutLoginResponse>(HttpStatusCode.Forbidden, ErrorMessages.InvalidPassword);
-            }
-        }
-
-        private async Task CreateAdminAsync(IdentityUser user)
-        {
-            if (!(await this.roles.RoleExistsAsync(Roles.AdminRole)))
-            {
-                await this.roles.CreateAsync(new IdentityRole(Roles.AdminRole));
-            }
-
-            if (!(await this.roles.RoleExistsAsync(Roles.UserRole)))
-            {
-                await this.roles.CreateAsync(new IdentityRole(Roles.UserRole));
-            }
-
-            if (await this.roles.RoleExistsAsync(Roles.AdminRole))
-            {
-                await this.users.AddToRoleAsync(user, Roles.AdminRole);
             }
         }
     }

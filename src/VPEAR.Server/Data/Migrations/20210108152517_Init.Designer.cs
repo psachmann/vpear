@@ -9,8 +9,8 @@ using VPEAR.Server.Data;
 namespace VPEAR.Server.Data.Migrations
 {
     [DbContext(typeof(VPEARDbContext))]
-    [Migration("20210107095026_Init_Release")]
-    partial class Init_Release
+    [Migration("20210108152517_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -238,8 +238,8 @@ namespace VPEAR.Server.Data.Migrations
                         .IsUnicode(true)
                         .HasColumnType("varchar(1024)");
 
-                    b.Property<uint>("Frequency")
-                        .HasColumnType("int unsigned");
+                    b.Property<int>("Frequency")
+                        .HasColumnType("int");
 
                     b.Property<DateTimeOffset>("ModifiedAt")
                         .IsConcurrencyToken()
@@ -252,8 +252,8 @@ namespace VPEAR.Server.Data.Migrations
                         .IsUnicode(true)
                         .HasColumnType("varchar(1024)");
 
-                    b.Property<uint>("RequiredSensors")
-                        .HasColumnType("int unsigned");
+                    b.Property<int>("RequiredSensors")
+                        .HasColumnType("int");
 
                     b.Property<byte>("Status")
                         .HasColumnType("tinyint unsigned");
@@ -261,6 +261,60 @@ namespace VPEAR.Server.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Devices");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000001"),
+                            Address = "http://192.168.178.1",
+                            Class = "Boditrak DataPort",
+                            CreatedAt = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            DisplayName = "Max Mustermann 1",
+                            Frequency = 100,
+                            ModifiedAt = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "DataPort-1",
+                            RequiredSensors = 1,
+                            Status = (byte)1
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000002"),
+                            Address = "http://192.168.178.2",
+                            Class = "Boditrak DataPort",
+                            CreatedAt = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            DisplayName = "Max Mustermann 2",
+                            Frequency = 200,
+                            ModifiedAt = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "DataPort-2",
+                            RequiredSensors = 2,
+                            Status = (byte)2
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000003"),
+                            Address = "http://192.168.178.3",
+                            Class = "Boditrak DataPort",
+                            CreatedAt = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            DisplayName = "Max Mustermann 3",
+                            Frequency = 300,
+                            ModifiedAt = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "DataPort-3",
+                            RequiredSensors = 3,
+                            Status = (byte)3
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000004"),
+                            Address = "http://192.168.178.4",
+                            Class = "Boditrak DataPort",
+                            CreatedAt = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            DisplayName = "Max Mustermann 4",
+                            Frequency = 400,
+                            ModifiedAt = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "DataPort-4",
+                            RequiredSensors = 4,
+                            Status = (byte)0
+                        });
                 });
 
             modelBuilder.Entity("VPEAR.Core.Models.Filter", b =>
@@ -296,50 +350,48 @@ namespace VPEAR.Server.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Filters");
-                });
 
-            modelBuilder.Entity("VPEAR.Core.Models.Firmware", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<Guid>("DeviceForeignKey")
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTimeOffset>("ModifiedAt")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Source")
-                        .IsRequired()
-                        .HasMaxLength(1024)
-                        .IsUnicode(true)
-                        .HasColumnType("varchar(1024)");
-
-                    b.Property<string>("Upgrade")
-                        .IsRequired()
-                        .HasMaxLength(1024)
-                        .IsUnicode(true)
-                        .HasColumnType("varchar(1024)");
-
-                    b.Property<string>("Version")
-                        .IsRequired()
-                        .HasMaxLength(1024)
-                        .IsUnicode(true)
-                        .HasColumnType("varchar(1024)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DeviceForeignKey")
-                        .IsUnique();
-
-                    b.ToTable("Firmwares");
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000001"),
+                            CreatedAt = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            DeviceForeignKey = new Guid("00000000-0000-0000-0000-000000000001"),
+                            ModifiedAt = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Noise = true,
+                            Smooth = true,
+                            Spot = true
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000002"),
+                            CreatedAt = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            DeviceForeignKey = new Guid("00000000-0000-0000-0000-000000000002"),
+                            ModifiedAt = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Noise = true,
+                            Smooth = true,
+                            Spot = true
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000003"),
+                            CreatedAt = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            DeviceForeignKey = new Guid("00000000-0000-0000-0000-000000000003"),
+                            ModifiedAt = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Noise = true,
+                            Smooth = true,
+                            Spot = true
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000004"),
+                            CreatedAt = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            DeviceForeignKey = new Guid("00000000-0000-0000-0000-000000000004"),
+                            ModifiedAt = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Noise = true,
+                            Smooth = true,
+                            Spot = true
+                        });
                 });
 
             modelBuilder.Entity("VPEAR.Core.Models.Frame", b =>
@@ -382,102 +434,52 @@ namespace VPEAR.Server.Data.Migrations
                     b.HasIndex("FilterForeignKey");
 
                     b.ToTable("Frames");
-                });
 
-            modelBuilder.Entity("VPEAR.Core.Models.Sensor", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<uint>("Columns")
-                        .HasColumnType("int unsigned");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<Guid>("DeviceForeignKey")
-                        .HasColumnType("char(36)");
-
-                    b.Property<uint>("Height")
-                        .HasColumnType("int unsigned");
-
-                    b.Property<uint>("Maximum")
-                        .HasColumnType("int unsigned");
-
-                    b.Property<uint>("Minimum")
-                        .HasColumnType("int unsigned");
-
-                    b.Property<DateTimeOffset>("ModifiedAt")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(1024)
-                        .IsUnicode(true)
-                        .HasColumnType("varchar(1024)");
-
-                    b.Property<uint>("Rows")
-                        .HasColumnType("int unsigned");
-
-                    b.Property<string>("Units")
-                        .IsRequired()
-                        .HasMaxLength(1024)
-                        .IsUnicode(true)
-                        .HasColumnType("varchar(1024)");
-
-                    b.Property<uint>("Width")
-                        .HasColumnType("int unsigned");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DeviceForeignKey");
-
-                    b.ToTable("Sensors");
-                });
-
-            modelBuilder.Entity("VPEAR.Core.Models.Wifi", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<Guid>("DeviceForeignKey")
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("Mode")
-                        .IsRequired()
-                        .HasMaxLength(1024)
-                        .IsUnicode(true)
-                        .HasColumnType("varchar(1024)");
-
-                    b.Property<DateTimeOffset>("ModifiedAt")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Neighbors")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Ssid")
-                        .IsRequired()
-                        .HasMaxLength(1024)
-                        .IsUnicode(true)
-                        .HasColumnType("varchar(1024)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DeviceForeignKey")
-                        .IsUnique();
-
-                    b.ToTable("Wifis");
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000001"),
+                            CreatedAt = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            DeviceForeignKey = new Guid("00000000-0000-0000-0000-000000000001"),
+                            FilterForeignKey = new Guid("00000000-0000-0000-0000-000000000001"),
+                            Index = 1,
+                            ModifiedAt = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Readings = "[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]",
+                            Time = "2021-01-08 03:25:16.489"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000002"),
+                            CreatedAt = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            DeviceForeignKey = new Guid("00000000-0000-0000-0000-000000000002"),
+                            FilterForeignKey = new Guid("00000000-0000-0000-0000-000000000002"),
+                            Index = 2,
+                            ModifiedAt = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Readings = "[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]",
+                            Time = "2021-01-08 03:25:16.493"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000003"),
+                            CreatedAt = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            DeviceForeignKey = new Guid("00000000-0000-0000-0000-000000000003"),
+                            FilterForeignKey = new Guid("00000000-0000-0000-0000-000000000003"),
+                            Index = 3,
+                            ModifiedAt = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Readings = "[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]",
+                            Time = "2021-01-08 03:25:16.493"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000004"),
+                            CreatedAt = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            DeviceForeignKey = new Guid("00000000-0000-0000-0000-000000000004"),
+                            FilterForeignKey = new Guid("00000000-0000-0000-0000-000000000004"),
+                            Index = 4,
+                            ModifiedAt = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Readings = "[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]",
+                            Time = "2021-01-08 03:25:16.493"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -542,17 +544,6 @@ namespace VPEAR.Server.Data.Migrations
                     b.Navigation("Device");
                 });
 
-            modelBuilder.Entity("VPEAR.Core.Models.Firmware", b =>
-                {
-                    b.HasOne("VPEAR.Core.Models.Device", "Device")
-                        .WithOne("Firmware")
-                        .HasForeignKey("VPEAR.Core.Models.Firmware", "DeviceForeignKey")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Device");
-                });
-
             modelBuilder.Entity("VPEAR.Core.Models.Frame", b =>
                 {
                     b.HasOne("VPEAR.Core.Models.Device", "Device")
@@ -572,39 +563,11 @@ namespace VPEAR.Server.Data.Migrations
                     b.Navigation("Filter");
                 });
 
-            modelBuilder.Entity("VPEAR.Core.Models.Sensor", b =>
-                {
-                    b.HasOne("VPEAR.Core.Models.Device", "Device")
-                        .WithMany("Sensors")
-                        .HasForeignKey("DeviceForeignKey")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Device");
-                });
-
-            modelBuilder.Entity("VPEAR.Core.Models.Wifi", b =>
-                {
-                    b.HasOne("VPEAR.Core.Models.Device", "Device")
-                        .WithOne("Wifi")
-                        .HasForeignKey("VPEAR.Core.Models.Wifi", "DeviceForeignKey")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Device");
-                });
-
             modelBuilder.Entity("VPEAR.Core.Models.Device", b =>
                 {
                     b.Navigation("Filter");
 
-                    b.Navigation("Firmware");
-
                     b.Navigation("Frames");
-
-                    b.Navigation("Sensors");
-
-                    b.Navigation("Wifi");
                 });
 
             modelBuilder.Entity("VPEAR.Core.Models.Filter", b =>

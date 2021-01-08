@@ -48,7 +48,6 @@ namespace VPEAR.Server.Test
 
                 context.Database.EnsureDeleted();
                 context.Database.EnsureCreated();
-                context.AddRange(Mocks.GetDevices());
                 context.SaveChanges();
             }
         }

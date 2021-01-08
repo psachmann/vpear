@@ -14,6 +14,8 @@ namespace VPEAR.Server
         {
             public const string DefaultConfigurationPath = "./appsettings.json";
             public const string DefaultResponseType = "application/json";
+            public const string DefaultAdminName = "admin";
+            public const string DefaultAdminPassword = "Passw0rd?";
             public const int DefaultHttpPort = 80;
             public const int DefaultHttpsPort = 443;
 #if DEBUG

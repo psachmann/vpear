@@ -16,23 +16,23 @@ namespace VPEAR.Server.Test.Integration
 {
     public class AdminIntegrationTest : IClassFixture<WebApplicationFactory<Startup>>
     {
+        private const string BaseAddress = "http://localhost";
         private readonly WebApplicationFactory<Startup> factory;
-        private readonly VPEARClient client;
 
         public AdminIntegrationTest(WebApplicationFactory<Startup> factory)
         {
             this.factory = factory;
-            this.client = new VPEARClient("http://localhost", factory.CreateClient());
         }
 
         [Fact]
         [Priority(0)]
         public async Task LoginAsyncScuccessTest()
         {
-            var result = await this.client.LoginAsync("admin", "password");
+            var client = new VPEARClient(BaseAddress, this.factory.CreateClient());
+            var result = await client.LoginAsync("admin", "Passw0rd?");
 
             Assert.True(result, "Login should be successful.");
-            Assert.Equal(HttpStatusCode.OK, this.client.Response.StatusCode);
+            Assert.Equal(HttpStatusCode.OK, client.Response.StatusCode);
         }
 
         [Theory]
@@ -45,10 +45,11 @@ namespace VPEAR.Server.Test.Integration
             string? name,
             string? password)
         {
-            var result = await this.client.LoginAsync(name, password);
+            var client = new VPEARClient(BaseAddress, this.factory.CreateClient());
+            var result = await client.LoginAsync(name, password);
 
             Assert.False(result, "Login should NOT be successful.");
-            Assert.Equal(expectedStatus, this.client.Response.StatusCode);
+            Assert.Equal(expectedStatus, client.Response.StatusCode);
         }
     }
 }
