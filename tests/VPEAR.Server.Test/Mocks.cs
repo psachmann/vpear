@@ -152,27 +152,27 @@ namespace VPEAR.Server.Test
                 Stopped,
             };
 
-            foreach (var state in states)
+            foreach (var (id, status) in states)
             {
                 var device = new Device()
                 {
-                    Address = "address",
+                    Address = "http://192.168.178.8",
                     Class = "class",
                     DisplayName = "display_name",
                     Frames = new List<Frame>(),
                     Frequency = 60,
-                    Id = state.Id,
+                    Id = id,
                     Name = "name",
                     RequiredSensors = 1,
                     Sensors = new List<Sensor>(),
-                    Status = state.Status,
+                    Status = status,
                 };
 
                 var filter = new Filter()
                 {
                     Device = device,
-                    DeviceForeignKey = state.Id,
-                    Id = state.Id,
+                    DeviceForeignKey = id,
+                    Id = id,
                     Frames = new List<Frame>(),
                     Noise = true,
                     Smooth = true,
@@ -182,8 +182,8 @@ namespace VPEAR.Server.Test
                 var firmware = new Firmware()
                 {
                     Device = device,
-                    DeviceForeignKey = state.Id,
-                    Id = state.Id,
+                    DeviceForeignKey = id,
+                    Id = id,
                     Source = "source",
                     Upgrade = "upgrade",
                     Version = "version",
@@ -192,9 +192,9 @@ namespace VPEAR.Server.Test
                 var frame = new Frame()
                 {
                     Device = device,
-                    DeviceForeignKey = state.Id,
+                    DeviceForeignKey = id,
                     Filter = filter,
-                    Id = state.Id,
+                    Id = id,
                     Index = 1,
 
                     // TODO: generate more test values
@@ -208,8 +208,8 @@ namespace VPEAR.Server.Test
                 {
                     Columns = 1,
                     Device = device,
-                    DeviceForeignKey = state.Id,
-                    Id = state.Id,
+                    DeviceForeignKey = id,
+                    Id = id,
                     Height = 1,
                     Maximum = 1,
                     Minimum = 1,
@@ -222,8 +222,8 @@ namespace VPEAR.Server.Test
                 var wifi = new Wifi()
                 {
                     Device = device,
-                    DeviceForeignKey = state.Id,
-                    Id = state.Id,
+                    DeviceForeignKey = id,
+                    Id = id,
                     Mode = "mode",
                     Neighbors = new List<string>(),
                     Ssid = "ssid",
