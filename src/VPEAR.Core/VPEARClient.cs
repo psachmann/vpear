@@ -6,6 +6,7 @@
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Extensions;
@@ -24,7 +25,7 @@ namespace VPEAR.Core
     /// Before you use anything from the client, use the login method to get an
     /// authorization token and the rest will be handled by the client.
     /// NOTE: If you are not registered already use the register method, but
-    /// it will take some time, because the admin has to verify the regestration.
+    /// it will take some time, because the admin has to verify the registration.
     /// </para>
     /// </summary>
     public class VPEARClient : AbstractClient, IVPEARClient
@@ -64,7 +65,7 @@ namespace VPEAR.Core
         /// and will be later provided.
         /// </summary>
         /// <param name="baseAddress">The base address for the client to connect to.</param>
-        /// <returns>An instanciated <see cref="VPEARClient"/> with all dependencies resolved.</returns>
+        /// <returns>An instantiated <see cref="VPEARClient"/> with all dependencies resolved.</returns>
         public delegate IVPEARClient Factory(string baseAddress);
 
         /// <inheritdoc/>
@@ -384,10 +385,12 @@ namespace VPEAR.Core
             {
                 var message = new HttpRequestMessage()
                 {
-                    Content = new StringContent(payload?.ToJsonString()),
+                    Content = new StringContent(payload?.ToJsonString(), Encoding.UTF8, "application/json"),
                     Method = method,
-                    RequestUri = new Uri(uri),
+                    RequestUri = new Uri(this.BaseAddress + uri),
                 };
+
+                message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
                 if (this.isSignedIn)
                 {

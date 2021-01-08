@@ -5,8 +5,9 @@
 
 using System;
 using System.Net.Http;
-using System.Text.Json;
+using System.Text;
 using System.Threading.Tasks;
+using VPEAR.Core.Extensions;
 
 namespace VPEAR.Core.Abstractions
 {
@@ -15,6 +16,7 @@ namespace VPEAR.Core.Abstractions
     /// </summary>
     public abstract class AbstractClient : IDisposable
     {
+        private readonly string baseAddress;
         private readonly HttpClient client;
         private Exception error;
         private HttpResponseMessage response;
@@ -36,10 +38,10 @@ namespace VPEAR.Core.Abstractions
                 throw new ArgumentNullException(nameof(factory));
             }
 
-            if (Uri.TryCreate(baseAddress, UriKind.Absolute, out var uri))
+            if (Uri.TryCreate(baseAddress, UriKind.Absolute, out var _))
             {
+                this.baseAddress = baseAddress;
                 this.client = factory.CreateClient();
-                this.client.BaseAddress = uri;
             }
             else
             {
@@ -64,10 +66,10 @@ namespace VPEAR.Core.Abstractions
                 throw new ArgumentNullException(nameof(client));
             }
 
-            if (Uri.TryCreate(baseAddress, UriKind.RelativeOrAbsolute, out var uri))
+            if (Uri.TryCreate(baseAddress, UriKind.Absolute, out var _))
             {
+                this.baseAddress = baseAddress;
                 this.client = client;
-                this.client.BaseAddress = uri;
             }
             else
             {
@@ -111,6 +113,18 @@ namespace VPEAR.Core.Abstractions
         }
 
         /// <summary>
+        /// Gets the base address.
+        /// </summary>
+        /// <value>The client base address.</value>
+        protected string BaseAddress
+        {
+            get
+            {
+                return this.baseAddress;
+            }
+        }
+
+        /// <summary>
         /// Gets the http client.
         /// </summary>
         /// <value>The http client which executes the http requests.</value>
@@ -125,7 +139,7 @@ namespace VPEAR.Core.Abstractions
         /// <summary>
         /// Indicates whether can connect to the destination or not.
         /// </summary>
-        /// <returns>True if we can cannoct, otherwise false.</returns>
+        /// <returns>True if we can connect, otherwise false.</returns>
         public abstract Task<bool> CanConnectAsync();
 
         /// <inheritdoc/>
@@ -203,9 +217,9 @@ namespace VPEAR.Core.Abstractions
             {
                 var message = new HttpRequestMessage()
                 {
-                    Content = new StringContent(JsonSerializer.Serialize(payload)),
+                    Content = new StringContent(payload?.ToJsonString(), Encoding.UTF8, "application/json"),
                     Method = method,
-                    RequestUri = new Uri(uri),
+                    RequestUri = new Uri(this.baseAddress + uri),
                 };
 
                 this.Response = await this.Client.SendAsync(message);
