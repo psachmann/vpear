@@ -70,8 +70,6 @@ namespace VPEAR.Server.Test.Services
         {
             var devices = new List<Guid>()
             {
-                Mocks.Archived.Id,
-                Mocks.NotReachable.Id,
                 Mocks.Stopped.Id,
                 Mocks.Recording.Id,
             };
@@ -93,6 +91,26 @@ namespace VPEAR.Server.Test.Services
             Assert.NotNull(result.Error);
             Assert.Equal(StatusCodes.Status404NotFound, result.StatusCode);
             Assert.Contains(ErrorMessages.DeviceNotFound, result.Error!.Messages);
+        }
+
+        [Fact]
+        public async Task GetSensorsAsync410GoneTest()
+        {
+            var result = await this.service.GetSensorsAsync(Mocks.Archived.Id);
+
+            Assert.Equal(StatusCodes.Status410Gone, result.StatusCode);
+            Assert.NotNull(result.Error);
+            Assert.Contains(ErrorMessages.DeviceIsArchived, result.Error!.Messages);
+        }
+
+        [Fact]
+        public async Task GetSensorsAsync424FailedDependencyTest()
+        {
+            var result = await this.service.GetSensorsAsync(Mocks.NotReachable.Id);
+
+            Assert.Equal(StatusCodes.Status424FailedDependency, result.StatusCode);
+            Assert.NotNull(result.Error);
+            Assert.Contains(ErrorMessages.DeviceIsNotReachable, result.Error!.Messages);
         }
     }
 }

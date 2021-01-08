@@ -40,28 +40,6 @@ namespace VPEAR.Server.Controllers
         }
 
         /// <summary>
-        /// Gets the device sensor information.
-        /// </summary>
-        /// <param name="id">The device id.</param>
-        /// <returns>Device sensor information.</returns>
-        [HttpGet]
-        [Route(Routes.SensorsRoute)]
-        [SwaggerResponse(StatusCodes.Status200OK, "Device sensor information.", typeof(Container<GetSensorResponse>))]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(ErrorMessages))]
-        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", typeof(Null))]
-        [SwaggerResponse(StatusCodes.Status404NotFound, "Id not found.", typeof(ErrorResponse))]
-        public async Task<IActionResult> OnGetSensorsAsync([FromQuery, Required] Guid id)
-        {
-            this.logger.LogDebug("{@Device}", id);
-
-            var result = await this.service.GetSensorsAsync(id);
-
-            this.StatusCode(result.StatusCode);
-
-            return result.IsSuccess ? this.Json(result.Value) : this.Json(result.Error);
-        }
-
-        /// <summary>
         /// Gets the recorded data.
         /// </summary>
         /// <param name="id">The device id.</param>
@@ -84,6 +62,30 @@ namespace VPEAR.Server.Controllers
             this.logger.LogDebug("{@Device}: {@Request}", id, new { Start = start, Count = count, });
 
             var result = await this.service.GetFramesAsync(id, start ?? 0, count ?? 0);
+
+            this.StatusCode(result.StatusCode);
+
+            return result.IsSuccess ? this.Json(result.Value) : this.Json(result.Error);
+        }
+
+        /// <summary>
+        /// Gets the device sensor information.
+        /// </summary>
+        /// <param name="id">The device id.</param>
+        /// <returns>Device sensor information.</returns>
+        [HttpGet]
+        [Route(Routes.SensorsRoute)]
+        [SwaggerResponse(StatusCodes.Status200OK, "Device sensor information.", typeof(Container<GetSensorResponse>))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(ErrorMessages))]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", typeof(Null))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Id not found.", typeof(ErrorResponse))]
+        [SwaggerResponse(StatusCodes.Status410Gone, "Device is archived.", typeof(ErrorResponse))]
+        [SwaggerResponse(StatusCodes.Status424FailedDependency, "Device is not reachable.", typeof(ErrorResponse))]
+        public async Task<IActionResult> OnGetSensorsAsync([FromQuery, Required] Guid id)
+        {
+            this.logger.LogDebug("{@Device}", id);
+
+            var result = await this.service.GetSensorsAsync(id);
 
             this.StatusCode(result.StatusCode);
 

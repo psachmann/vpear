@@ -50,16 +50,38 @@ namespace VPEAR.Server.Services
             {
                 return new Result<GetFirmwareResponse>(HttpStatusCode.NotFound, ErrorMessages.DeviceNotFound);
             }
+
+            if (device.Status == DeviceStatus.Archived)
+            {
+                return new Result<GetFirmwareResponse>(HttpStatusCode.Gone, ErrorMessages.DeviceIsArchived);
+            }
+
+            if (device.Status == DeviceStatus.NotReachable)
+            {
+                return new Result<GetFirmwareResponse>(HttpStatusCode.FailedDependency, ErrorMessages.DeviceIsNotReachable);
+            }
+
+            var client = this.factory.Invoke(device.Address);
+
+            if (await client.CanConnectAsync())
+            {
+                var firmware = await client.GetFirmwareAsync();
+                var payload = new GetFirmwareResponse()
+                {
+                    Source = firmware.Source,
+                    Upgrade = firmware.Upgrade,
+                    Version = firmware.Version,
+                };
+
+                return new Result<GetFirmwareResponse>(HttpStatusCode.OK, payload);
+            }
             else
             {
-                await this.devices.GetReferenceAsync(device, device => device.Firmware);
+                device.Status = DeviceStatus.NotReachable;
 
-                return new Result<GetFirmwareResponse>(HttpStatusCode.OK, new GetFirmwareResponse()
-                {
-                    Source = device.Firmware.Source,
-                    Upgrade = device.Firmware.Upgrade,
-                    Version = device.Firmware.Version,
-                });
+                await this.devices.UpdateAsync(device);
+
+                return new Result<GetFirmwareResponse>(HttpStatusCode.FailedDependency, ErrorMessages.DeviceIsNotReachable);
             }
         }
 

@@ -62,6 +62,7 @@ namespace VPEAR.Server
             builder.Register(context => new SensorService(
                     context.Resolve<IRepository<Device, Guid>>(),
                     context.Resolve<IRepository<Frame, Guid>>(),
+                    context.Resolve<DeviceClient.Factory>(),
                     context.Resolve<ILogger<SensorController>>()))
                 .As<ISensorService>()
                 .InstancePerLifetimeScope();

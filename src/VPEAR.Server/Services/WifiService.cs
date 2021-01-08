@@ -52,18 +52,38 @@ namespace VPEAR.Server.Services
             {
                 return new Result<GetWifiResponse>(HttpStatusCode.NotFound, ErrorMessages.DeviceNotFound);
             }
-            else
-            {
-                await this.devices.GetReferenceAsync(device, device => device.Wifi);
 
+            if (device.Status == DeviceStatus.Archived)
+            {
+                return new Result<GetWifiResponse>(HttpStatusCode.Gone, ErrorMessages.DeviceIsArchived);
+            }
+
+            if (device.Status == DeviceStatus.NotReachable)
+            {
+                return new Result<GetWifiResponse>(HttpStatusCode.FailedDependency, ErrorMessages.DeviceIsNotReachable);
+            }
+
+            var client = this.factory.Invoke(device.Address);
+
+            if (await client.CanConnectAsync())
+            {
+                var wifi = await client.GetWifiAsync();
                 var payload = new GetWifiResponse()
                 {
-                    Mode = device.Wifi.Mode,
-                    Neighbors = device.Wifi.Neighbors,
-                    Ssid = device.Wifi.Ssid,
+                    Mode = wifi.Mode,
+                    Neighbors = wifi.Neighbors,
+                    Ssid = wifi.Ssid,
                 };
 
                 return new Result<GetWifiResponse>(HttpStatusCode.OK, payload);
+            }
+            else
+            {
+                device.Status = DeviceStatus.NotReachable;
+
+                await this.devices.UpdateAsync(device);
+
+                return new Result<GetWifiResponse>(HttpStatusCode.FailedDependency, ErrorMessages.DeviceIsNotReachable);
             }
         }
 

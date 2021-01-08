@@ -65,11 +65,11 @@ namespace VPEAR.Server.Services
 
             if (await client.CanConnectAsync())
             {
-                var response = await client.GetPowerAsync();
+                var power = await client.GetPowerAsync();
                 var payload = new GetPowerResponse()
                 {
-                    Level = response.Level,
-                    State = response.State,
+                    Level = power.Level,
+                    State = power.State,
                 };
 
                 return new Result<GetPowerResponse>(HttpStatusCode.OK, payload);

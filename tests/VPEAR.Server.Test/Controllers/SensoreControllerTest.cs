@@ -65,8 +65,6 @@ namespace VPEAR.Server.Test.Controllers
         {
             var devices = new List<Guid>()
             {
-                Mocks.Archived.Id,
-                Mocks.NotReachable.Id,
                 Mocks.Recording.Id,
                 Mocks.Stopped.Id,
             };
@@ -91,6 +89,30 @@ namespace VPEAR.Server.Test.Controllers
             Assert.NotNull(response);
             Assert.Equal(StatusCodes.Status404NotFound, response.StatusCode);
             Assert.Contains(ErrorMessages.DeviceNotFound, response.Messages);
+        }
+
+        [Fact]
+        public async Task OnGetSensorsAsync410GoneTest()
+        {
+            var result = await this.controller.OnGetSensorsAsync(Mocks.Archived.Id);
+            var jsonResult = Assert.IsType<JsonResult>(result);
+            var response = Assert.IsAssignableFrom<ErrorResponse>(jsonResult.Value);
+
+            Assert.NotNull(response);
+            Assert.Equal(StatusCodes.Status410Gone, response.StatusCode);
+            Assert.Contains(ErrorMessages.DeviceIsArchived, response.Messages);
+        }
+
+        [Fact]
+        public async Task OnGetSensorsAsync424FailedDependencyTest()
+        {
+            var result = await this.controller.OnGetSensorsAsync(Mocks.NotReachable.Id);
+            var jsonResult = Assert.IsType<JsonResult>(result);
+            var response = Assert.IsAssignableFrom<ErrorResponse>(jsonResult.Value);
+
+            Assert.NotNull(response);
+            Assert.Equal(StatusCodes.Status424FailedDependency, response.StatusCode);
+            Assert.Contains(ErrorMessages.DeviceIsNotReachable, response.Messages);
         }
     }
 }

@@ -24,6 +24,7 @@ namespace VPEAR.Server.Services
     {
         private readonly IRepository<Device, Guid> devices;
         private readonly IRepository<Frame, Guid> frames;
+        private readonly DeviceClient.Factory factory;
         private readonly ILogger<SensorController> logger;
 
         /// <summary>
@@ -31,14 +32,17 @@ namespace VPEAR.Server.Services
         /// </summary>
         /// <param name="devices">The device repository.</param>
         /// <param name="frames">The frame repository.</param>
+        /// <param name="factory">The device client factory.</param>
         /// <param name="logger">The service logger.</param>
         public SensorService(
             IRepository<Device, Guid> devices,
             IRepository<Frame, Guid> frames,
+            DeviceClient.Factory factory,
             ILogger<SensorController> logger)
         {
             this.devices = devices;
             this.frames = frames;
+            this.factory = factory;
             this.logger = logger;
         }
 
@@ -133,13 +137,25 @@ namespace VPEAR.Server.Services
             {
                 return new Result<Container<GetSensorResponse>>(HttpStatusCode.NotFound, ErrorMessages.DeviceNotFound);
             }
-            else
+
+            if (device.Status == DeviceStatus.Archived)
             {
+                return new Result<Container<GetSensorResponse>>(HttpStatusCode.Gone, ErrorMessages.DeviceIsArchived);
+            }
+
+            if (device.Status == DeviceStatus.NotReachable)
+            {
+                return new Result<Container<GetSensorResponse>>(HttpStatusCode.FailedDependency, ErrorMessages.DeviceIsNotReachable);
+            }
+
+            var client = this.factory.Invoke(device.Address);
+
+            if (await client.CanConnectAsync())
+            {
+                var sensors = await client.GetSensorsAsync();
                 var payload = new Container<GetSensorResponse>();
 
-                await this.devices.GetCollectionAsync(device, device => device.Sensors);
-
-                foreach (var sensor in device.Sensors)
+                foreach (var sensor in sensors)
                 {
                     payload.Items.Add(new GetSensorResponse()
                     {
@@ -155,6 +171,14 @@ namespace VPEAR.Server.Services
                 }
 
                 return new Result<Container<GetSensorResponse>>(HttpStatusCode.OK, payload);
+            }
+            else
+            {
+                device.Status = DeviceStatus.NotReachable;
+
+                await this.devices.UpdateAsync(device);
+
+                return new Result<Container<GetSensorResponse>>(HttpStatusCode.FailedDependency, ErrorMessages.DeviceIsNotReachable);
             }
         }
     }
