@@ -30,9 +30,9 @@ TODO: write short introduction
 | Sensor | Done | Done | - |
 | User | Done | Done | Done |
 | Wifi | Done | Done | Done |
-| Reading Device | - | `NotStarted` | - |
-| DeviceClient | - | `InProgress`  | - |
-| VPEARClient | - | `InProgress`  | - |
+| Reading Device | - | `InProgress` | - |
+| DeviceClient | - | Done  | - |
+| VPEARClient | - | Done  | - |
 
 ### Security
 
@@ -43,6 +43,15 @@ TODO: write short introduction
 
 | Feature | Status | Description |
 | :- | :-: | :- |
+
+## Device Status State Transitions
+
+| Status | Archived | Not Reachable | Recording | Stopped |
+| :- | :-: | :-: | :-: | :-: |
+| Archived | Yes | No | No | No |
+| Not Reachable | Yes | Yes | No | Yes |
+| Recording | Yes | Yes | Yes | Yes |
+| Stopped | Yes | Yes | Yes | Yes |
 
 ---
 ## Wep Api

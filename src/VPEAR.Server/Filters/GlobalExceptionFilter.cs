@@ -3,13 +3,13 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
-using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Serilog;
 using System;
 using System.Net;
 using VPEAR.Core.Wrappers;
+using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Filters
 {
@@ -26,9 +26,6 @@ namespace VPEAR.Server.Filters
                 case NotImplementedException exception:
                     NotImplementedExceptionOccurred(exception, context);
                     break;
-                case ValidationException exception:
-                    ValidationExceptionOccurred(exception, context);
-                    break;
                 default:
                     ExceptionOccurred(context.Exception, context);
                     break;
@@ -44,7 +41,7 @@ namespace VPEAR.Server.Filters
             Log.Error("{@Source}", exception.Source);
             Log.Fatal("{@Stacktrace}", exception.StackTrace);
 
-            var response = new ErrorResponse(HttpStatusCode.InternalServerError, "An internal server error occurred.");
+            var response = new ErrorResponse(HttpStatusCode.InternalServerError, ErrorMessages.InternalServerError);
 
             context.HttpContext.Response.StatusCode = response.StatusCode;
             context.Result = new JsonResult(response);
@@ -54,14 +51,6 @@ namespace VPEAR.Server.Filters
         private static void NotImplementedExceptionOccurred(NotImplementedException exception, ExceptionContext context)
         {
             var response = new ErrorResponse(HttpStatusCode.NotImplemented, exception.Message);
-
-            context.HttpContext.Response.StatusCode = response.StatusCode;
-            context.Result = new JsonResult(response);
-        }
-
-        private static void ValidationExceptionOccurred(ValidationException exception, ExceptionContext context)
-        {
-            var response = new ErrorResponse(HttpStatusCode.BadRequest, string.Join(" -- ", exception.Errors));
 
             context.HttpContext.Response.StatusCode = response.StatusCode;
             context.Result = new JsonResult(response);

@@ -26,7 +26,6 @@ namespace VPEAR.Server.Controllers
     {
         private readonly ILogger<UserController> logger;
         private readonly IUserService service;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="UserController"/> class.
         /// </summary>
@@ -57,9 +56,7 @@ namespace VPEAR.Server.Controllers
 
             var result = await this.service.GetAsync(role);
 
-            this.StatusCode(result.StatusCode);
-
-            return result.IsSuccess ? this.Json(result.Value) : this.Json(result.Error);
+            return result.IsSuccess ? this.StatusCode(result.StatusCode, result.Value) : this.StatusCode(result.StatusCode, result.Error);
         }
 
         /// <summary>
@@ -81,9 +78,7 @@ namespace VPEAR.Server.Controllers
 
             var result = await this.service.PutAsync(id, request);
 
-            this.StatusCode(result.StatusCode);
-
-            return result.IsSuccess ? this.Json(result.Value) : this.Json(result.Error);
+            return result.IsSuccess ? this.StatusCode(result.StatusCode, result.Value) : this.StatusCode(result.StatusCode, result.Error);
         }
 
         /// <summary>
@@ -104,9 +99,7 @@ namespace VPEAR.Server.Controllers
 
             var result = await this.service.DeleteAsync(id);
 
-            this.StatusCode(result.StatusCode);
-
-            return result.IsSuccess ? this.Json(result.Value) : this.Json(result.Error);
+            return result.IsSuccess ? this.StatusCode(result.StatusCode, result.Value) : this.StatusCode(result.StatusCode, result.Error);
         }
 
         /// <summary>
@@ -126,9 +119,7 @@ namespace VPEAR.Server.Controllers
 
             var result = await this.service.PostRegisterAsync(request);
 
-            this.StatusCode(result.StatusCode);
-
-            return result.IsSuccess ? this.Json(result.Value) : this.Json(result.Error);
+            return result.IsSuccess ? this.StatusCode(result.StatusCode, result.Value) : this.StatusCode(result.StatusCode, result.Error);
         }
 
         /// <summary>
@@ -148,9 +139,7 @@ namespace VPEAR.Server.Controllers
 
             var result = await this.service.PutLoginAsync(request);
 
-            this.StatusCode(result.StatusCode);
-
-            return result.IsSuccess ? this.Json(result.Value) : this.Json(result.Error);
+            return result.IsSuccess ? this.StatusCode(result.StatusCode, result.Value) : this.StatusCode(result.StatusCode, result.Error); return result.IsSuccess ? this.Json(result.Value) : this.StatusCode(result.StatusCode, result.Error);
         }
     }
 }

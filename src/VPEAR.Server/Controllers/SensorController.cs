@@ -63,9 +63,7 @@ namespace VPEAR.Server.Controllers
 
             var result = await this.service.GetFramesAsync(id, start ?? 0, count ?? 0);
 
-            this.StatusCode(result.StatusCode);
-
-            return result.IsSuccess ? this.Json(result.Value) : this.Json(result.Error);
+            return result.IsSuccess ? this.StatusCode(result.StatusCode, result.Value) : this.StatusCode(result.StatusCode, result.Error);
         }
 
         /// <summary>
@@ -87,9 +85,7 @@ namespace VPEAR.Server.Controllers
 
             var result = await this.service.GetSensorsAsync(id);
 
-            this.StatusCode(result.StatusCode);
-
-            return result.IsSuccess ? this.Json(result.Value) : this.Json(result.Error);
+            return result.IsSuccess ? this.StatusCode(result.StatusCode, result.Value) : this.StatusCode(result.StatusCode, result.Error);
         }
     }
 }

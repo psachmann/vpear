@@ -59,9 +59,7 @@ namespace VPEAR.Server.Controllers
 
             var result = await this.service.GetAsync(status);
 
-            this.StatusCode(result.StatusCode);
-
-            return result.IsSuccess ? this.Json(result.Value) : this.Json(result.Error);
+            return result.IsSuccess ? this.StatusCode(result.StatusCode, result.Value) : this.StatusCode(result.StatusCode, result.Error);
         }
 
         /// <summary>
@@ -86,9 +84,7 @@ namespace VPEAR.Server.Controllers
 
             var result = await this.service.PutAsync(id, request);
 
-            this.StatusCode(result.StatusCode);
-
-            return result.IsSuccess ? this.Json(result.Value) : this.Json(result.Error);
+            return result.IsSuccess ? this.StatusCode(result.StatusCode, result.Value) : this.StatusCode(result.StatusCode, result.Error);
         }
 
         /// <summary>
@@ -108,9 +104,7 @@ namespace VPEAR.Server.Controllers
         {
             var result = await this.service.PostAsync(request);
 
-            this.StatusCode(result.StatusCode);
-
-            return result.IsSuccess ? this.Json(result.Value) : this.Json(result.Error);
+            return result.IsSuccess ? this.StatusCode(result.StatusCode, result.Value) : this.StatusCode(result.StatusCode, result.Error);
         }
 
         /// <summary>
@@ -131,9 +125,7 @@ namespace VPEAR.Server.Controllers
 
             var result = await this.service.DeleteAsync(id);
 
-            this.StatusCode(result.StatusCode);
-
-            return result.IsSuccess ? this.Json(result.Value) : this.Json(result.Error);
+            return result.IsSuccess ? this.StatusCode(result.StatusCode, result.Value) : this.StatusCode(result.StatusCode, result.Error);
         }
     }
 }

@@ -37,8 +37,8 @@ namespace VPEAR.Server.Test.Controllers
             devices.ForEach(async device =>
             {
                 var result = await this.controller.OnGetAsync(device);
-                var jsonResult = Assert.IsType<JsonResult>(result);
-                var response = Assert.IsAssignableFrom<GetPowerResponse>(jsonResult.Value);
+                var objectResult = Assert.IsType<ObjectResult>(result);
+                var response = Assert.IsAssignableFrom<GetPowerResponse>(objectResult.Value);
 
                 Assert.NotNull(response);
             });
@@ -48,8 +48,8 @@ namespace VPEAR.Server.Test.Controllers
         public async Task OnGetAsync404NotFoundTest()
         {
             var result = await this.controller.OnGetAsync(Mocks.NotExisting.Id);
-            var jsonResult = Assert.IsType<JsonResult>(result);
-            var response = Assert.IsAssignableFrom<ErrorResponse>(jsonResult.Value);
+            var objectResult = Assert.IsType<ObjectResult>(result);
+            var response = Assert.IsAssignableFrom<ErrorResponse>(objectResult.Value);
 
             Assert.NotNull(response);
             Assert.Equal(StatusCodes.Status404NotFound, response.StatusCode);
@@ -60,8 +60,8 @@ namespace VPEAR.Server.Test.Controllers
         public async Task OnGetAsync410GoneTest()
         {
             var result = await this.controller.OnGetAsync(Mocks.Archived.Id);
-            var jsonResult = Assert.IsType<JsonResult>(result);
-            var response = Assert.IsAssignableFrom<ErrorResponse>(jsonResult.Value);
+            var objectResult = Assert.IsType<ObjectResult>(result);
+            var response = Assert.IsAssignableFrom<ErrorResponse>(objectResult.Value);
 
             Assert.NotNull(response);
             Assert.Equal(StatusCodes.Status410Gone, response.StatusCode);
@@ -72,8 +72,8 @@ namespace VPEAR.Server.Test.Controllers
         public async Task OnGetAsync424FailedDependencyTest()
         {
             var result = await this.controller.OnGetAsync(Mocks.NotReachable.Id);
-            var jsonResult = Assert.IsType<JsonResult>(result);
-            var response = Assert.IsAssignableFrom<ErrorResponse>(jsonResult.Value);
+            var objectResult = Assert.IsType<ObjectResult>(result);
+            var response = Assert.IsAssignableFrom<ErrorResponse>(objectResult.Value);
 
             Assert.NotNull(response);
             Assert.Equal(StatusCodes.Status424FailedDependency, response.StatusCode);

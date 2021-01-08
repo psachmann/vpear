@@ -31,15 +31,15 @@ namespace VPEAR.Server.Test.Controllers
         public async Task OnGetAsync200OKTest()
         {
             var result = await this.controller.OnGetAsync(Roles.AdminRole);
-            var jsonResult = Assert.IsType<JsonResult>(result);
-            var response = Assert.IsAssignableFrom<Container<GetUserResponse>>(jsonResult.Value);
+            var objectResult = Assert.IsType<ObjectResult>(result);
+            var response = Assert.IsAssignableFrom<Container<GetUserResponse>>(objectResult.Value);
 
             Assert.NotNull(response);
             Assert.InRange(response.Items.Count, 1L, long.MaxValue);
 
             result = await this.controller.OnGetAsync(Roles.UserRole);
-            jsonResult = Assert.IsType<JsonResult>(result);
-            response = Assert.IsAssignableFrom<Container<GetUserResponse>>(jsonResult.Value);
+            objectResult = Assert.IsType<ObjectResult>(result);
+            response = Assert.IsAssignableFrom<Container<GetUserResponse>>(objectResult.Value);
 
             Assert.NotNull(response);
             Assert.InRange(response.Items.Count, 1L, long.MaxValue);
@@ -62,17 +62,17 @@ namespace VPEAR.Server.Test.Controllers
                 OldPassword = oldPassword,
             };
             var result = await this.controller.OnPutAsync(Mocks.User.Id.ToString(), request);
-            var jsonResult = Assert.IsType<JsonResult>(result);
+            var objectResult = Assert.IsType<ObjectResult>(result);
 
-            Assert.Null(jsonResult.Value);
+            Assert.Null(objectResult.Value);
         }
 
         [Fact]
         public async Task OnPutAsync404NotFoundTest()
         {
             var result = await this.controller.OnPutAsync(Mocks.NotExisting.Id.ToString(), new PutUserRequest());
-            var jsonResult = Assert.IsType<JsonResult>(result);
-            var response = Assert.IsAssignableFrom<ErrorResponse>(jsonResult.Value);
+            var objectResult = Assert.IsType<ObjectResult>(result);
+            var response = Assert.IsAssignableFrom<ErrorResponse>(objectResult.Value);
 
             Assert.NotNull(response);
             Assert.Equal(StatusCodes.Status404NotFound, response.StatusCode);
@@ -83,17 +83,17 @@ namespace VPEAR.Server.Test.Controllers
         public async Task OnDeleteAsync200OKTest()
         {
             var result = await this.controller.OnDeleteAsync(Mocks.User.Id.ToString());
-            var jsonResult = Assert.IsType<JsonResult>(result);
+            var objectResult = Assert.IsType<ObjectResult>(result);
 
-            Assert.Null(jsonResult.Value);
+            Assert.Null(objectResult.Value);
         }
 
         [Fact]
         public async Task OnDeleteAsync403ForbiddenTest()
         {
             var result = await this.controller.OnDeleteAsync(Mocks.Admin.Id.ToString());
-            var jsonResult = Assert.IsType<JsonResult>(result);
-            var response = Assert.IsAssignableFrom<ErrorResponse>(jsonResult.Value);
+            var objectResult = Assert.IsType<ObjectResult>(result);
+            var response = Assert.IsAssignableFrom<ErrorResponse>(objectResult.Value);
 
             Assert.NotNull(response);
             Assert.Equal(StatusCodes.Status403Forbidden, response.StatusCode);
@@ -104,8 +104,8 @@ namespace VPEAR.Server.Test.Controllers
         public async Task OnDeleteAsync404NotFoundTest()
         {
             var result = await this.controller.OnDeleteAsync(Mocks.NotExisting.Id.ToString());
-            var jsonResult = Assert.IsType<JsonResult>(result);
-            var response = Assert.IsAssignableFrom<ErrorResponse>(jsonResult.Value);
+            var objectResult = Assert.IsType<ObjectResult>(result);
+            var response = Assert.IsAssignableFrom<ErrorResponse>(objectResult.Value);
 
             Assert.NotNull(response);
             Assert.Equal(StatusCodes.Status404NotFound, response.StatusCode);
@@ -122,9 +122,9 @@ namespace VPEAR.Server.Test.Controllers
                 Password = Mocks.ValidPassword,
             };
             var result = await this.controller.OnPostRegisterAsync(request);
-            var jsonResult = Assert.IsType<JsonResult>(result);
+            var objectResult = Assert.IsType<ObjectResult>(result);
 
-            Assert.Null(jsonResult.Value);
+            Assert.Null(objectResult.Value);
 
             request = new PostRegisterRequest()
             {
@@ -133,9 +133,9 @@ namespace VPEAR.Server.Test.Controllers
                 Password = Mocks.ValidPassword,
             };
             result = await this.controller.OnPostRegisterAsync(request);
-            jsonResult = Assert.IsType<JsonResult>(result);
+            objectResult = Assert.IsType<ObjectResult>(result);
 
-            Assert.Null(jsonResult.Value);
+            Assert.Null(objectResult.Value);
         }
 
         [Fact]
@@ -148,8 +148,8 @@ namespace VPEAR.Server.Test.Controllers
                 Password = Mocks.ValidPassword,
             };
             var result = await this.controller.OnPostRegisterAsync(request);
-            var jsonResult = Assert.IsType<JsonResult>(result);
-            var response = Assert.IsAssignableFrom<ErrorResponse>(jsonResult.Value);
+            var objectResult = Assert.IsType<ObjectResult>(result);
+            var response = Assert.IsAssignableFrom<ErrorResponse>(objectResult.Value);
 
             Assert.NotNull(response);
             Assert.Equal(StatusCodes.Status409Conflict, response.StatusCode);
@@ -165,8 +165,8 @@ namespace VPEAR.Server.Test.Controllers
                 Password = Mocks.ValidPassword,
             };
             var result = await this.controller.OnPutLoginAsync(request);
-            var jsonResult = Assert.IsType<JsonResult>(result);
-            var response = Assert.IsAssignableFrom<PutLoginResponse>(jsonResult.Value);
+            var objectResult = Assert.IsType<ObjectResult>(result);
+            var response = Assert.IsAssignableFrom<PutLoginResponse>(objectResult.Value);
 
             Assert.NotNull(response);
         }
@@ -180,8 +180,8 @@ namespace VPEAR.Server.Test.Controllers
                 Password = Mocks.InvalidPassword,
             };
             var result = await this.controller.OnPutLoginAsync(request);
-            var jsonResult = Assert.IsType<JsonResult>(result);
-            var response = Assert.IsAssignableFrom<ErrorResponse>(jsonResult.Value);
+            var objectResult = Assert.IsType<ObjectResult>(result);
+            var response = Assert.IsAssignableFrom<ErrorResponse>(objectResult.Value);
 
             Assert.NotNull(response);
             Assert.Equal(StatusCodes.Status403Forbidden, response.StatusCode);
@@ -197,8 +197,8 @@ namespace VPEAR.Server.Test.Controllers
                 Password = Mocks.ValidPassword,
             };
             var result = await this.controller.OnPutLoginAsync(request);
-            var jsonResult = Assert.IsType<JsonResult>(result);
-            var response = Assert.IsAssignableFrom<ErrorResponse>(jsonResult.Value);
+            var objectResult = Assert.IsType<ObjectResult>(result);
+            var response = Assert.IsAssignableFrom<ErrorResponse>(objectResult.Value);
 
             Assert.NotNull(response);
             Assert.Equal(StatusCodes.Status404NotFound, response.StatusCode);

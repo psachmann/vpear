@@ -120,6 +120,8 @@ namespace VPEAR.Server
                             messages.Add($"{key}: {errors}");
                         });
 
+                        context.HttpContext.Response.StatusCode = (int)status;
+
                         return new JsonResult(new ErrorResponse(status, messages));
                     };
                 });
