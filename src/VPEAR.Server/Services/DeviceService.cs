@@ -173,7 +173,19 @@ namespace VPEAR.Server.Services
             return new Result<Null>(HttpStatusCode.OK);
         }
 
-        public async Task<int?> UpdateFrequencyAsync(Device device, int? frequency)
+        internal static int GetIntervallInSeconds(int frequnecy)
+        {
+            if (frequnecy >= 1)
+            {
+                return frequnecy;
+            }
+            else
+            {
+                return 1;
+            }
+        }
+
+        internal async Task<int?> UpdateFrequencyAsync(Device device, int? frequency)
         {
             if (frequency == null)
             {
@@ -196,7 +208,7 @@ namespace VPEAR.Server.Services
                 var trigger = TriggerBuilder.Create()
                     .WithIdentity($"{device.Id}-Trigger", "Poll-Frames")
                     .WithSimpleSchedule(builder => builder
-                        .WithIntervalInSeconds(frequency.Value)
+                        .WithIntervalInSeconds(GetIntervallInSeconds(frequency.Value))
                         .RepeatForever())
                     .StartNow()
                     .Build();
@@ -209,7 +221,7 @@ namespace VPEAR.Server.Services
             return frequency;
         }
 
-        public async Task<DeviceStatus?> UpdateStatusAsync(Device device, DeviceStatus? status, IDeviceClient client)
+        internal async Task<DeviceStatus?> UpdateStatusAsync(Device device, DeviceStatus? status, IDeviceClient client)
         {
             if (status == null)
             {
@@ -239,7 +251,7 @@ namespace VPEAR.Server.Services
                 var trigger = TriggerBuilder.Create()
                     .WithIdentity(device.Id.ToString(), "Poll-Frames")
                     .WithSimpleSchedule(builder => builder
-                        .WithIntervalInSeconds(device.Frequency)
+                        .WithIntervalInSeconds(GetIntervallInSeconds(device.Frequency))
                         .RepeatForever())
                     .StartNow()
                     .Build();
