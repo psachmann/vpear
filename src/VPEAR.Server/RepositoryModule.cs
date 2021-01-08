@@ -37,28 +37,10 @@ namespace VPEAR.Server
                 .As<IRepository<Filter, Guid>>()
                 .InstancePerLifetimeScope();
 
-            builder.Register(context => new Repository<VPEARDbContext, Firmware, Guid>(
-                    context.Resolve<VPEARDbContext>(),
-                    context.Resolve<ILogger<IRepository<Firmware, Guid>>>()))
-                .As<IRepository<Firmware, Guid>>()
-                .InstancePerLifetimeScope();
-
             builder.Register(context => new Repository<VPEARDbContext, Frame, Guid>(
                     context.Resolve<VPEARDbContext>(),
                     context.Resolve<ILogger<IRepository<Frame, Guid>>>()))
                 .As<IRepository<Frame, Guid>>()
-                .InstancePerLifetimeScope();
-
-            builder.Register(context => new Repository<VPEARDbContext, Sensor, Guid>(
-                    context.Resolve<VPEARDbContext>(),
-                    context.Resolve<ILogger<IRepository<Sensor, Guid>>>()))
-                .As<IRepository<Sensor, Guid>>()
-                .InstancePerLifetimeScope();
-
-            builder.Register(context => new Repository<VPEARDbContext, Wifi, Guid>(
-                    context.Resolve<VPEARDbContext>(),
-                    context.Resolve<ILogger<IRepository<Wifi, Guid>>>()))
-                .As<IRepository<Wifi, Guid>>()
                 .InstancePerLifetimeScope();
         }
     }

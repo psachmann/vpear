@@ -109,16 +109,6 @@ namespace VPEAR.Server.Services
 
             if (await client.PutFirmwareAsync(request.Source, request.Upgrade, request.Package))
             {
-                var response = await client.GetFirmwareAsync();
-
-                await this.devices.GetReferenceAsync(device, device => device.Firmware);
-
-                device.Firmware.Source = response.Source ?? device.Firmware.Source;
-                device.Firmware.Upgrade = response.Upgrade ?? device.Firmware.Upgrade;
-                device.Firmware.Version = response.Version ?? device.Firmware.Version;
-
-                await this.devices.UpdateAsync(device);
-
                 return new Result<Null>(HttpStatusCode.OK);
             }
             else

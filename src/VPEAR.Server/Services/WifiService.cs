@@ -111,13 +111,6 @@ namespace VPEAR.Server.Services
 
             if (await client.PutWifiAsync(request.Ssid, request.Password, request.Mode))
             {
-                await this.devices.GetReferenceAsync(device, device => device.Wifi);
-
-                device.Wifi.Mode = request.Mode ?? device.Wifi.Mode;
-                device.Wifi.Ssid = request.Ssid ?? device.Wifi.Ssid;
-
-                await this.devices.UpdateAsync(device);
-
                 return new Result<Null>(HttpStatusCode.OK);
             }
             else

@@ -39,28 +39,10 @@ namespace VPEAR.Server.Data
         public DbSet<Filter>? Filters { get; set; }
 
         /// <summary>
-        /// Gets or sets firmwares.
-        /// </summary>
-        /// <value>All firmwares in the db.</value>
-        public DbSet<Firmware>? Firmwares { get; set; }
-
-        /// <summary>
         /// Gets or sets frames.
         /// </summary>
         /// <value>All frames in the db.</value>
         public DbSet<Frame>? Frames { get; set; }
-
-        /// <summary>
-        /// Gets or sets sensors.
-        /// </summary>
-        /// <value>All sensors in the db.</value>
-        public DbSet<Sensor>? Sensors { get; set; }
-
-        /// <summary>
-        /// Gets or sets wifis.
-        /// </summary>
-        /// <value>All wifis in the db.</value>
-        public DbSet<Wifi>? Wifis { get; set; }
 
         /// <summary>
         /// Creates and configures the db model for the entities.
@@ -73,10 +55,7 @@ namespace VPEAR.Server.Data
 
             builder.ApplyConfiguration(new DeviceConfiguration());
             builder.ApplyConfiguration(new FilterConfiguration());
-            builder.ApplyConfiguration(new FirmwareConfiguration());
             builder.ApplyConfiguration(new FrameConfiguration());
-            builder.ApplyConfiguration(new SensorConfiguration());
-            builder.ApplyConfiguration(new WifiConfiguration());
         }
     }
 }

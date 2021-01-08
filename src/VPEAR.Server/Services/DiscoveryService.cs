@@ -103,39 +103,11 @@ namespace VPEAR.Server.Services
                         Smooth = response.Filters.Smooth,
                         Spot = response.Filters.Spot,
                     },
-                    Firmware = new Firmware()
-                    {
-                        Source = response.Firmware.Source,
-                        Upgrade = response.Firmware.Upgrade,
-                        Version = response.Firmware.Version,
-                    },
                     Name = response.Device.Name,
                     RequiredSensors = response.SensorsRequired,
                     Frequency = response.Frequency,
                     Status = DeviceStatus.None,
-                    Sensors = new List<Sensor>(),
-                    Wifi = new Wifi()
-                    {
-                        Mode = response.Wifi.Mode,
-                        Neighbors = response.Wifi.Neighbors,
-                        Ssid = response.Wifi.Ssid,
-                    },
                 };
-
-                foreach (var sensor in response.Sensors)
-                {
-                    newDevice.Sensors.Add(new Sensor()
-                    {
-                        Columns = sensor.Columns,
-                        Height = sensor.Height,
-                        Maximum = sensor.Maximum,
-                        Minimum = sensor.Minimum,
-                        Name = sensor.Name,
-                        Rows = sensor.Rows,
-                        Units = sensor.Units,
-                        Width = sensor.Width,
-                    });
-                }
 
                 await this.devices.CreateAsync(newDevice);
                 await client.PutTimeAsync(DateTimeOffset.UtcNow);

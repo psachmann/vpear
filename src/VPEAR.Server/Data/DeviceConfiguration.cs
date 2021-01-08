@@ -40,9 +40,6 @@ namespace VPEAR.Server.Data
             builder.HasOne(device => device.Filter)
                 .WithOne();
 
-            builder.HasOne(device => device.Firmware)
-                .WithOne();
-
             builder.HasMany(device => device.Frames)
                 .WithOne();
 
@@ -50,12 +47,6 @@ namespace VPEAR.Server.Data
                 .HasMaxLength(Limits.MaxStringLength)
                 .IsRequired()
                 .IsUnicode();
-
-            builder.HasMany(device => device.Sensors)
-                .WithOne();
-
-            builder.HasOne(device => device.Wifi)
-                .WithOne();
         }
     }
 }
