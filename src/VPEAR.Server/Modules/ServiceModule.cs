@@ -14,7 +14,7 @@ using VPEAR.Core.Entities;
 using VPEAR.Server.Controllers;
 using VPEAR.Server.Services;
 
-namespace VPEAR.Server
+namespace VPEAR.Server.Modules
 {
     /// <summary>
     /// Encapsulates the Autofac service registration in a single module.

@@ -6,10 +6,13 @@
 using FluentValidation;
 using static VPEAR.Server.Constants;
 
-namespace VPEAR.Server.Internals
+namespace VPEAR.Server.Validators
 {
-    internal class ConfigurationValidator : AbstractValidator<Configuration>
+    public class ConfigurationValidator : AbstractValidator<Configuration>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConfigurationValidator"/> class.
+        /// </summary>
         public ConfigurationValidator()
         {
             this.RuleFor(c => c.DbConnection)

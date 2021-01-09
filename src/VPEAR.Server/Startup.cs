@@ -26,7 +26,7 @@ using System.Text;
 using VPEAR.Core.Wrappers;
 using VPEAR.Server.Data;
 using VPEAR.Server.Filters;
-using VPEAR.Server.Internals;
+using VPEAR.Server.Modules;
 using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server

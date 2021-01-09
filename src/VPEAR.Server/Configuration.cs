@@ -10,11 +10,12 @@ using System.IO;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using VPEAR.Server.Validators;
 using static VPEAR.Server.Constants;
 
-namespace VPEAR.Server.Internals
+namespace VPEAR.Server
 {
-    internal sealed class Configuration
+    public sealed class Configuration
     {
         [JsonPropertyName("db_connection")]
         public string DbConnection { get; set; } = string.Empty;

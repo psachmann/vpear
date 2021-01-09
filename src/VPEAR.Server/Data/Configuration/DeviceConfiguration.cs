@@ -9,7 +9,7 @@ using System;
 using VPEAR.Core.Entities;
 using static VPEAR.Server.Constants;
 
-namespace VPEAR.Server.Data
+namespace VPEAR.Server.Data.Configuration
 {
     /// <summary>
     /// The entity framework configuration for the <see cref="Device"/> class.

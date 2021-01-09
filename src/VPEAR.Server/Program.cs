@@ -9,7 +9,6 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using System;
 using System.Runtime.CompilerServices;
-using VPEAR.Server.Internals;
 using static VPEAR.Server.Constants;
 
 [assembly: InternalsVisibleTo("VPEAR.Server.Test")]

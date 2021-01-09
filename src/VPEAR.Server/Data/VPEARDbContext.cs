@@ -6,9 +6,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Threading;
-using System.Threading.Tasks;
 using VPEAR.Core.Entities;
+using VPEAR.Server.Data.Configuration;
 
 namespace VPEAR.Server.Data
 {

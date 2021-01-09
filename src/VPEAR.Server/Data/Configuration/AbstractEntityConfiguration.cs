@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using VPEAR.Core.Abstractions;
 
-namespace VPEAR.Server.Data
+namespace VPEAR.Server.Data.Configuration
 {
     /// <summary>
     /// Base class for all db entity configuration classes.

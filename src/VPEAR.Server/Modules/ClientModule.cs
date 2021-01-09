@@ -7,7 +7,7 @@ using Autofac;
 using VPEAR.Core;
 using VPEAR.Core.Abstractions;
 
-namespace VPEAR.Server
+namespace VPEAR.Server.Modules
 {
     /// <summary>
     /// Encapsulates the Autofac client registration in a single module.

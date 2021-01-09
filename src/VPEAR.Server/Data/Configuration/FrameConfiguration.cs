@@ -11,7 +11,7 @@ using VPEAR.Core.Entities;
 using VPEAR.Core.Extensions;
 using static VPEAR.Server.Constants;
 
-namespace VPEAR.Server.Data
+namespace VPEAR.Server.Data.Configuration
 {
     /// <summary>
     /// The entity framework configuration for the <see cref="Frame"/> class.

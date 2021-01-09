@@ -9,7 +9,6 @@ using System;
 using System.Threading.Tasks;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Wrappers;
-using VPEAR.Server.Internals;
 using Xunit;
 using static VPEAR.Server.Constants;
 

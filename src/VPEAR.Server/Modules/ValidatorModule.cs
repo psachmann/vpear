@@ -8,7 +8,7 @@ using FluentValidation;
 using VPEAR.Core.Wrappers;
 using VPEAR.Server.Validators;
 
-namespace VPEAR.Server
+namespace VPEAR.Server.Modules
 {
     /// <summary>
     /// Encapsulates the Autofac validator registration in a single module.

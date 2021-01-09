@@ -11,7 +11,7 @@ using VPEAR.Core.Abstractions;
 using VPEAR.Core.Entities;
 using VPEAR.Server.Services.Jobs;
 
-namespace VPEAR.Server
+namespace VPEAR.Server.Modules
 {
     /// <summary>
     /// Encapsulates the Autofac job registration in a single module.

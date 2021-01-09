@@ -10,7 +10,7 @@ using VPEAR.Core.Abstractions;
 using VPEAR.Core.Entities;
 using VPEAR.Server.Data;
 
-namespace VPEAR.Server
+namespace VPEAR.Server.Modules
 {
     /// <summary>
     /// Encapsulates the Autofac repository registration in a single module.

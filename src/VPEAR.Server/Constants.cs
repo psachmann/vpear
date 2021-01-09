@@ -51,10 +51,7 @@ namespace VPEAR.Server
             public const string DbSchema = "VPEARDbContext";
             public const string DeviceSchema = "Devices";
             public const string FilterSchema = "Filters";
-            public const string FirmwareSchema = "Firmwares";
             public const string FrameSchema = "Frames";
-            public const string SensorSchema = "Sensors";
-            public const string WifiSchema = "Wifis";
         }
 
         public static class ErrorMessages
@@ -64,7 +61,7 @@ namespace VPEAR.Server
             public const string LastAdminError = "The last admin can not be deleted.";
             public const string DeviceNotFound = "Device not found.";
             public const string UserNotFound = "User not found.";
-            public const string DeviceIsArchivedOrRecording = "Device is archived or currently recording";
+            public const string DeviceIsArchivedOrRecording = "Device is archived or currently recording.";
             public const string DeviceIsArchived = "Device is archived.";
             public const string DeviceIsNotReachable = "Device is not reachable.";
             public const string BadRequest = "Wrong request format.";
@@ -107,8 +104,6 @@ namespace VPEAR.Server
             public const string UsersRoute = BaseRoute + "user";
             public const string RegisterRoute = BaseRoute + "user/register";
             public const string LoginRoute = BaseRoute + "user/login";
-            public const string LogoutRoute = BaseRoute + "user/logout";
-            public const string TokenRoute = BaseRoute + "user/token";
         }
     }
 }

@@ -7,10 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using System;
-using VPEAR.Server.Data;
-using VPEAR.Server.Internals;
 
-namespace VPEAR.Server
+namespace VPEAR.Server.Data
 {
     /// <summary>
     /// Allows Entity Framework Core Tolls to create a <see cref="VPEARDbContext"/> instance during design time.
@@ -26,7 +24,7 @@ namespace VPEAR.Server
         {
             var builder = new DbContextOptionsBuilder<VPEARDbContext>();
 
-            Configuration.EnsureLoaded(args);
+            Server.Configuration.EnsureLoaded(args);
 
             builder.UseMySql(
                 Startup.Config!.DbConnection,
