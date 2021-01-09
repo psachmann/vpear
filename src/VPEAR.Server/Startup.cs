@@ -150,8 +150,8 @@ namespace VPEAR.Server
             services.AddDbContextPool<VPEARDbContext>(builder =>
             {
                 builder.UseMySql(
-                    Startup.Config!.DbConnection,
-                    new MySqlServerVersion(new Version(Startup.Config.DbVersion)),
+                    Config!.DbConnection,
+                    new MySqlServerVersion(new Version(Config.DbVersion)),
                     options =>
                     {
                         options.CharSetBehavior(CharSetBehavior.NeverAppend);
@@ -181,6 +181,33 @@ namespace VPEAR.Server
                     Title = "VPEAR API",
                     Version = "v1",
                 });
+
+                options.AddSecurityDefinition(
+                    JwtBearerDefaults.AuthenticationScheme,
+                    new OpenApiSecurityScheme()
+                    {
+                        Description = "Please enter into field the word 'Bearer' following by space and JWT.",
+                        In = ParameterLocation.Header,
+                        Name = "Authorization",
+                        Type = SecuritySchemeType.ApiKey,
+                        Scheme = "Bearer",
+                    });
+
+                options.AddSecurityRequirement(
+                    new OpenApiSecurityRequirement()
+                    {
+                        {
+                            new OpenApiSecurityScheme
+                            {
+                                Reference = new OpenApiReference
+                                {
+                                    Type = ReferenceType.SecurityScheme,
+                                    Id = "Bearer",
+                                },
+                            },
+                            new List<string>()
+                        },
+                    });
 
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);

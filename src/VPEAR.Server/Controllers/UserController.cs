@@ -109,6 +109,7 @@ namespace VPEAR.Server.Controllers
         /// <param name="request">The request data.</param>
         /// <returns>Http status code, which indicates the operation result.</returns>
         [HttpPost]
+        [AllowAnonymous]
         [Route(Routes.RegisterRoute)]
         [Produces(Defaults.DefaultResponseType)]
         [SwaggerResponse(StatusCodes.Status200OK, "User was registered.", typeof(Null))]
@@ -129,6 +130,7 @@ namespace VPEAR.Server.Controllers
         /// <param name="request">The request data.</param>
         /// <returns>The authorization token and the date, when the token expires.</returns>
         [HttpPut]
+        [AllowAnonymous]
         [Route(Routes.LoginRoute)]
         [Produces(Defaults.DefaultResponseType)]
         [SwaggerResponse(StatusCodes.Status200OK, "User was logged in.", typeof(PutLoginResponse))]

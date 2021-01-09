@@ -16,7 +16,7 @@ namespace VPEAR.Server
             public const string DefaultResponseType = "application/json";
             public const string DefaultAdminName = "admin";
             public const string DefaultAdminPassword = "Passw0rd?";
-            public const string DefaultLogPath = "./logs/log.txt";
+            public const string DefaultLogPath = "../../logs/log_.txt";
             public const int DefaultHttpPort = 80;
             public const int DefaultHttpsPort = 443;
 #if DEBUG
