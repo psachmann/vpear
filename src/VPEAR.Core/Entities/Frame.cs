@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using VPEAR.Core.Abstractions;
 
-namespace VPEAR.Core.Models
+namespace VPEAR.Core.Entities
 {
     /// <summary>
     /// Db data model for entity framework.

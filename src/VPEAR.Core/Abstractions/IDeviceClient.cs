@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using VPEAR.Core.Models;
+using VPEAR.Core.Entities;
 using VPEAR.Core.Wrappers;
 
 namespace VPEAR.Core.Abstractions

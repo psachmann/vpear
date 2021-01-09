@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
-using VPEAR.Core.Models;
+using VPEAR.Core.Entities;
 
 namespace VPEAR.Server.Data
 {

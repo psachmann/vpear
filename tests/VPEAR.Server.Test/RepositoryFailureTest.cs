@@ -6,7 +6,7 @@
 using System;
 using System.Threading.Tasks;
 using VPEAR.Core.Abstractions;
-using VPEAR.Core.Models;
+using VPEAR.Core.Entities;
 using VPEAR.Server.Data;
 using Xunit;
 

@@ -9,7 +9,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Extensions;
-using VPEAR.Core.Models;
+using VPEAR.Core.Entities;
 using VPEAR.Core.Wrappers;
 
 namespace VPEAR.Core

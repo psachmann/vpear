@@ -10,7 +10,7 @@ using Quartz;
 using System;
 using VPEAR.Core;
 using VPEAR.Core.Abstractions;
-using VPEAR.Core.Models;
+using VPEAR.Core.Entities;
 using VPEAR.Core.Wrappers;
 using VPEAR.Server.Controllers;
 using VPEAR.Server.Services;

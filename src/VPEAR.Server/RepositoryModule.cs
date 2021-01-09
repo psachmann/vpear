@@ -7,7 +7,7 @@ using Autofac;
 using Microsoft.Extensions.Logging;
 using System;
 using VPEAR.Core.Abstractions;
-using VPEAR.Core.Models;
+using VPEAR.Core.Entities;
 using VPEAR.Server.Data;
 
 namespace VPEAR.Server

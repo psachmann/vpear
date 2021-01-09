@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using VPEAR.Core;
 using VPEAR.Core.Abstractions;
-using VPEAR.Core.Models;
+using VPEAR.Core.Entities;
 using VPEAR.Core.Wrappers;
 
 namespace VPEAR.Server.Services.Jobs

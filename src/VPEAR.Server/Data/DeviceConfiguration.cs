@@ -6,7 +6,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
-using VPEAR.Core.Models;
+using VPEAR.Core.Entities;
 using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Data

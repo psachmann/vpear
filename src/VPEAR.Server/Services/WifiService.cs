@@ -11,7 +11,7 @@ using System.Net;
 using System.Threading.Tasks;
 using VPEAR.Core;
 using VPEAR.Core.Abstractions;
-using VPEAR.Core.Models;
+using VPEAR.Core.Entities;
 using VPEAR.Core.Wrappers;
 using VPEAR.Server.Controllers;
 using static VPEAR.Server.Constants;

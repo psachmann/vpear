@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 using VPEAR.Core;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Extensions;
-using VPEAR.Core.Models;
+using VPEAR.Core.Entities;
 using VPEAR.Core.Wrappers;
 using VPEAR.Server.Controllers;
 using VPEAR.Server.Services.Jobs;
