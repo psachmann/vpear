@@ -109,28 +109,7 @@ namespace VPEAR.Server
                 })
                 .ConfigureApiBehaviorOptions(options =>
                 {
-                    options.InvalidModelStateResponseFactory = context =>
-                    {
-                        var status = HttpStatusCode.BadRequest;
-                        var messages = new List<string>();
-
-                        context.ModelState.ToList().ForEach(keyValuePair =>
-                        {
-                            var key = keyValuePair.Key;
-                            var errors = new StringBuilder();
-
-                            keyValuePair.Value.Errors.ToList().ForEach(error =>
-                            {
-                                errors.AppendJoin(' ', error.ErrorMessage);
-                            });
-
-                            messages.Add($"{key}: {errors}");
-                        });
-
-                        context.HttpContext.Response.StatusCode = (int)status;
-
-                        return new JsonResult(new ErrorResponse(status, messages));
-                    };
+                    options.InvalidModelStateResponseFactory = InvalidModelStateResponseFactory;
                 });
 
             services.AddIdentity<IdentityUser, IdentityRole>()
@@ -208,6 +187,29 @@ namespace VPEAR.Server
                 options.IncludeXmlComments(xmlPath);
                 options.EnableAnnotations();
             });
+        }
+
+        private static IActionResult InvalidModelStateResponseFactory(ActionContext context)
+        {
+            var status = HttpStatusCode.BadRequest;
+            var messages = new List<string>();
+
+            context.ModelState.ToList().ForEach(keyValuePair =>
+            {
+                var key = keyValuePair.Key;
+                var errors = new StringBuilder();
+
+                keyValuePair.Value.Errors.ToList().ForEach(error =>
+                {
+                    errors.AppendJoin(' ', error.ErrorMessage);
+                });
+
+                messages.Add($"{key}: {errors}");
+            });
+
+            context.HttpContext.Response.StatusCode = (int)status;
+
+            return new JsonResult(new ErrorResponse(status, messages));
         }
     }
 }

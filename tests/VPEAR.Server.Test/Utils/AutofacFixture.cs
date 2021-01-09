@@ -8,7 +8,6 @@ using FluentValidation;
 using Microsoft.Extensions.Logging;
 using Quartz;
 using System;
-using System.Net.Http;
 using VPEAR.Core;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Models;
