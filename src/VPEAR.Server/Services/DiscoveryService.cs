@@ -96,25 +96,33 @@ namespace VPEAR.Server.Services
                 var oldDevice = await this.devices.Get()
                     .Where(device => device.Address == deviceResponse.Address && device.Status != DeviceStatus.Archived)
                     .FirstOrDefaultAsync();
-                var newDevice = new Device
-                {
-                    Address = response.Device.Address,
-                    Class = response.Device.Class,
-                    DisplayName = string.Empty,
-                    Filter = new Filter()
-                    {
-                        Noise = response.Filters.Noise,
-                        Smooth = response.Filters.Smooth,
-                        Spot = response.Filters.Spot,
-                    },
-                    Name = response.Device.Name,
-                    RequiredSensors = response.SensorsRequired,
-                    Frequency = response.Frequency,
-                    Status = DeviceStatus.Stopped,
-                };
 
-                await this.devices.CreateAsync(newDevice);
-                await client.PutTimeAsync(DateTimeOffset.UtcNow);
+                if (oldDevice == null)
+                {
+                    var newDevice = new Device
+                    {
+                        Address = response.Device.Address,
+                        Class = response.Device.Class,
+                        DisplayName = string.Empty,
+                        Filter = new Filter()
+                        {
+                            Noise = response.Filters.Noise,
+                            Smooth = response.Filters.Smooth,
+                            Spot = response.Filters.Spot,
+                        },
+                        Name = response.Device.Name,
+                        RequiredSensors = response.SensorsRequired,
+                        Frequency = response.Frequency,
+                        Status = DeviceStatus.Stopped,
+                    };
+
+                    await this.devices.CreateAsync(newDevice);
+                    await client.PutTimeAsync(DateTimeOffset.UtcNow);
+                }
+                else
+                {
+                    // TODO: device already exists with an non archived status
+                }
             }
         }
     }

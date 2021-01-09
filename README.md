@@ -49,7 +49,7 @@ TODO: write short introduction
 | Status | Archived | Not Reachable | Recording | Stopped |
 | :- | :-: | :-: | :-: | :-: |
 | Archived | Yes | No | No | No |
-| Not Reachable | Yes | Yes | No | Yes |
+| Not Reachable | Yes | Yes | Yes | Yes |
 | Recording | Yes | Yes | Yes | Yes |
 | Stopped | Yes | Yes | Yes | Yes |
 
