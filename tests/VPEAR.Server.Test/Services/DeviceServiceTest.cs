@@ -192,14 +192,15 @@ namespace VPEAR.Server.Test.Services
         public async Task UpdateFrequencyAsyncTest(
             int? expectedFrequency,
             int currentFrequency,
-            int? newFrquency)
+            int? newFrequency)
         {
             var service = (DeviceService)this.service;
             var device = new Device()
             {
                 Frequency = currentFrequency,
+                Status = DeviceStatus.Recording,
             };
-            var result = await service.UpdateFrequencyAsync(device, newFrquency);
+            var result = await service.UpdateFrequencyAsync(device, newFrequency);
 
             Assert.Equal(expectedFrequency, result);
         }
@@ -212,9 +213,9 @@ namespace VPEAR.Server.Test.Services
         [InlineData(int.MaxValue, int.MaxValue)]
         public void GetIntervallInSecondsTest(
             int expectedFrequency,
-            int newFrquency)
+            int newFrequency)
         {
-            var result = DeviceService.GetIntervallInSeconds(newFrquency);
+            var result = DeviceService.GetIntervallInSeconds(newFrequency);
 
             Assert.Equal(expectedFrequency, result);
         }

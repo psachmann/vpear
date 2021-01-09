@@ -17,7 +17,11 @@ namespace VPEAR.Server
     /// </summary>
     public class DesignTimeVPEARDbContextFactory : IDesignTimeDbContextFactory<VPEARDbContext>
     {
-        /// <inheritdoc/>
+        /// <summary>
+        /// Creates a <see cref="VPEARDbContext"/> instance during design time.
+        /// </summary>
+        /// <param name="args">The command line args.</param>
+        /// <returns>A <see cref="VPEARDbContext"/> instance.</returns>
         public VPEARDbContext CreateDbContext(string[] args)
         {
             var builder = new DbContextOptionsBuilder<VPEARDbContext>();

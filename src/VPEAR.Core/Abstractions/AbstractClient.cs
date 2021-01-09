@@ -142,7 +142,9 @@ namespace VPEAR.Core.Abstractions
         /// <returns>True if we can connect, otherwise false.</returns>
         public abstract Task<bool> CanConnectAsync();
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Disposes the client and response resources.
+        /// </summary>
         public void Dispose()
         {
             this.Client.Dispose();

@@ -45,7 +45,11 @@ namespace VPEAR.Server.Services.Jobs
             this.logger = logger;
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Polls all available frames from the registered device.
+        /// </summary>
+        /// <param name="context">The job execution context.</param>
+        /// <returns>An asynchronous task.</returns>
         public async Task Execute(IJobExecutionContext context)
         {
             var id = new Guid(context.JobDetail.Key.Name);

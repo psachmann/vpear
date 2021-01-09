@@ -18,7 +18,10 @@ namespace VPEAR.Server.Filters
     /// </summary>
     public sealed class GlobalExceptionFilter : ExceptionFilterAttribute
     {
-        /// <inheritdoc/>
+        /// <summary>
+        /// Filters and handels exceptions for the server.
+        /// </summary>
+        /// <param name="context">The exception context.</param>
         public override void OnException(ExceptionContext context)
         {
             switch (context.Exception)
