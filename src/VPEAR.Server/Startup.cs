@@ -187,9 +187,9 @@ namespace VPEAR.Server
                 options.UseMicrosoftDependencyInjectionScopedJobFactory();
             });
 
-            services.AddQuartzServer(options =>
+            services.AddQuartzHostedService(options =>
             {
-                options.WaitForJobsToComplete = true;
+                options.WaitForJobsToComplete = false;
             });
         }
 
