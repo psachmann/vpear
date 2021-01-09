@@ -14,6 +14,7 @@ using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Test.Integration
 {
+    [Collection("IntegrationTest")]
     public class AdminIntegrationTest : IClassFixture<WebApplicationFactory<Startup>>
     {
         private const string BaseAddress = "http://localhost";
@@ -26,7 +27,7 @@ namespace VPEAR.Server.Test.Integration
 
         [Fact]
         [Priority(0)]
-        public async Task LoginAsyncScuccessTest()
+        public async Task LoginAsyncSuccessTest()
         {
             var client = new VPEARClient(BaseAddress, this.factory.CreateClient());
             var result = await client.LoginAsync("admin", "Passw0rd?");

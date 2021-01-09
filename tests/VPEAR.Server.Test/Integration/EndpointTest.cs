@@ -11,8 +11,9 @@ using System.Threading.Tasks;
 using Xunit;
 using static VPEAR.Server.Constants;
 
-namespace VPEAR.Server.Test
+namespace VPEAR.Server.Test.Integration
 {
+    [Collection("IntegrationTest")]
     public class EndpointTest : IClassFixture<WebApplicationFactory<Startup>>
     {
         private const string Get = "GET";
