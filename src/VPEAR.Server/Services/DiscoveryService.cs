@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -86,12 +87,15 @@ namespace VPEAR.Server.Services
             return addresses;
         }
 
-        private async Task InitializeDevicesAsync(IEnumerable<DeviceResponse> devices)
+        private async Task InitializeDevicesAsync(IEnumerable<DeviceResponse> deviceResponses)
         {
-            foreach (var device in devices)
+            foreach (var deviceResponse in deviceResponses)
             {
-                var client = this.factory.Invoke(device.Address);
+                var client = this.factory.Invoke(deviceResponse.Address);
                 var response = await client.GetAsync();
+                var oldDevice = await this.devices.Get()
+                    .Where(device => device.Address == deviceResponse.Address && device.Status != DeviceStatus.Archived)
+                    .FirstOrDefaultAsync();
                 var newDevice = new Device
                 {
                     Address = response.Device.Address,
