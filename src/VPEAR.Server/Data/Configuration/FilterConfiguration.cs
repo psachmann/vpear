@@ -29,8 +29,6 @@ namespace VPEAR.Server.Data.Configuration
 
             builder.HasMany(filter => filter.Frames)
                 .WithOne(frame => frame.Filter);
-
-            builder.HasData(DataSeed.Filters);
         }
     }
 }

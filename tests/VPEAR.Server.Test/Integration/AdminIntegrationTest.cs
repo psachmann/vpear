@@ -25,17 +25,17 @@ namespace VPEAR.Server.Test.Integration
             this.factory = factory;
         }
 
-        [Fact]
+        [SkipIfCIFact]
         public async Task LoginAsyncSuccessTest()
         {
             var client = new VPEARClient(BaseAddress, this.factory.CreateClient());
             var result = await client.LoginAsync(Defaults.DefaultAdminName, Defaults.DefaultAdminPassword);
 
-            Assert.True(result, "Login should be successful.");
             Assert.Equal(HttpStatusCode.OK, client.Response.StatusCode);
+            Assert.True(result, "Login should be successful.");
         }
 
-        [Theory]
+        [SkipIfCITherory]
         [InlineData(HttpStatusCode.BadRequest, null, null)]
         [InlineData(HttpStatusCode.BadRequest, "", "")]
         [InlineData(HttpStatusCode.NotFound, "user", "password")]

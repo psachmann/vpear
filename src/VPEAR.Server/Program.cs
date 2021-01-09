@@ -5,10 +5,12 @@
 
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using System;
 using System.Runtime.CompilerServices;
+using VPEAR.Server.Data;
 using static VPEAR.Server.Constants;
 
 [assembly: InternalsVisibleTo("VPEAR.Server.Test")]
@@ -28,9 +30,12 @@ namespace VPEAR.Server
         {
             try
             {
-                CreateHostBuilder(args)
-                    .Build()
-                    .Run();
+                var host = CreateHostBuilder(args)
+                    .Build();
+
+                DataSeed.Seed(host.Services);
+
+                host.Run();
             }
             catch (Exception exception)
             {

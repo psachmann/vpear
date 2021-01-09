@@ -4,10 +4,12 @@
 // </copyright>
 
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using VPEAR.Core;
+using VPEAR.Core.Abstractions;
 using VPEAR.Core.Entities;
 using static VPEAR.Server.Constants;
 
@@ -21,8 +23,6 @@ namespace VPEAR.Server.Data
         static DataSeed()
         {
             Devices = new List<Device>();
-            Filters = new List<Filter>();
-            Frames = new List<Frame>();
 
             foreach (var i in Enumerable.Range(1, 4))
             {
@@ -33,7 +33,7 @@ namespace VPEAR.Server.Data
                     Address = $"http://192.168.178.{i}",
                     Class = "Boditrak DataPort",
                     DisplayName = $"Boditrak DataPort {i}",
-                    Id = id,
+                    Frames = new List<Frame>(),
                     Frequency = i * 100,
                     Name = $"DataPort-{i}",
                     RequiredSensors = i,
@@ -42,7 +42,7 @@ namespace VPEAR.Server.Data
 
                 var filter = new Filter()
                 {
-                    DeviceForeignKey = id,
+                    Device = device,
                     Id = id,
                     Noise = true,
                     Smooth = true,
@@ -51,8 +51,8 @@ namespace VPEAR.Server.Data
 
                 var frame = new Frame()
                 {
-                    DeviceForeignKey = id,
-                    FilterForeignKey = id,
+                    Device = device,
+                    Filter = filter,
                     Id = id,
                     Index = i,
                     Readings = new List<IList<int>>()
@@ -66,9 +66,10 @@ namespace VPEAR.Server.Data
                     Time = DateTimeOffset.UtcNow.ToString("yyyy-MM-dd hh:mm:ss.fff"),
                 };
 
+                device.Filter = filter;
+                device.Frames.Add(frame);
+
                 Devices.Add(device);
-                Filters.Add(filter);
-                Frames.Add(frame);
             }
         }
 
@@ -78,27 +79,21 @@ namespace VPEAR.Server.Data
         /// <value>The database seed for <see cref="Device"/>.</value>
         public static IList<Device> Devices { get; }
 
-        /// <summary>
-        /// Gets the filter seed data.
-        /// </summary>
-        /// <value>The database see for <see cref="Filter"/>.</value>
-        public static IList<Filter> Filters { get; }
-
-        /// <summary>
-        /// Gets the frame seed data.
-        /// </summary>
-        /// <value>The database seed for <see cref="Frame"/>.</value>
-        public static IList<Frame> Frames { get; }
-
-        /// <summary>
-        /// Seeds all user roles and an default admin user.
-        /// </summary>
-        /// <param name="roles">The role  manager for seeding.</param>
-        /// <param name="users">The user manager for seeding.</param>
-        public static void Seed(RoleManager<IdentityRole> roles, UserManager<IdentityUser> users)
+        public static void Seed(IServiceProvider provider)
         {
-            SeedRoles(roles);
-            SeedUsers(users);
+            using var scope = provider.CreateScope();
+
+            SeedDb(scope.ServiceProvider.GetRequiredService<VPEARDbContext>());
+            SeedRoles(scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>());
+            SeedUsers(scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>());
+        }
+
+        private static void SeedDb(VPEARDbContext context)
+        {
+#if DEBUG
+            context.AddRange(Devices);
+            context.SaveChanges();
+#endif
         }
 
         private static void SeedRoles(RoleManager<IdentityRole> roles)

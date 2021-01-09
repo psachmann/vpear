@@ -27,6 +27,7 @@ using VPEAR.Core.Wrappers;
 using VPEAR.Server.Data;
 using VPEAR.Server.Filters;
 using VPEAR.Server.Modules;
+using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server
 {
@@ -50,13 +51,7 @@ namespace VPEAR.Server
         /// </summary>
         /// <param name="app">The application to configure.</param>
         /// <param name="env">The environment to configure.</param>
-        /// <param name="roles">The role manager for data seeding.</param>
-        /// <param name="users">The user manager for data seeding.</param>
-        public void Configure(
-            IApplicationBuilder app,
-            IWebHostEnvironment env,
-            RoleManager<IdentityRole> roles,
-            UserManager<IdentityUser> users)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
 #if DEBUG
             env.EnvironmentName = "Development";
@@ -69,7 +64,6 @@ namespace VPEAR.Server
 #endif
             app.UseRouting();
             app.UseAuthorization();
-            DataSeed.Seed(roles, users);
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

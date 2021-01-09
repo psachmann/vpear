@@ -27,7 +27,7 @@ namespace VPEAR.Server.Test.Integration
             this.factory = factory;
         }
 
-        [Theory]
+        [SkipIfCITherory]
         [InlineData(Routes.BaseRoute, Get)]
         [InlineData(Routes.DeviceRoute, Get)]
         [InlineData(Routes.DeviceRoute, Put)]
@@ -62,7 +62,7 @@ namespace VPEAR.Server.Test.Integration
             Assert.NotEqual(HttpStatusCode.NotFound, response.StatusCode);
         }
 
-        [Theory]
+        [SkipIfCITherory]
         [InlineData(Routes.DeviceRoute, Get)]
         [InlineData(Routes.DeviceRoute, Put)]
         [InlineData(Routes.DeviceRoute, Post)]

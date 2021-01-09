@@ -26,7 +26,7 @@ namespace VPEAR.Server.Data.Configuration
             builder.ToTable(Schemas.FrameSchema);
 
             builder.HasOne(frame => frame.Device)
-                .WithMany(devcie => devcie.Frames)
+                .WithMany(device => device.Frames)
                 .HasForeignKey(frame => frame.DeviceForeignKey);
 
             builder.Property(frame => frame.Readings)
@@ -42,8 +42,6 @@ namespace VPEAR.Server.Data.Configuration
             builder.HasOne(frame => frame.Filter)
                 .WithMany(filter => filter.Frames)
                 .HasForeignKey(frame => frame.FilterForeignKey);
-
-            builder.HasData(DataSeed.Frames);
         }
     }
 }
