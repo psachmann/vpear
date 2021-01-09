@@ -122,6 +122,7 @@ namespace VPEAR.Server.Services
                 device.Status = await this.UpdateStatusAsync(device, request.Status, client) ?? device.Status;
 
                 await this.devices.UpdateAsync(device);
+                await client.SyncAsync(device, this.devices);
 
                 return new Result<Null>(HttpStatusCode.OK);
             }
@@ -185,22 +186,28 @@ namespace VPEAR.Server.Services
             }
         }
 
+        internal async Task DeletePollFramesJobAsync(Device device)
+        {
+            var scheduler = await this.schedulerFactory.GetScheduler();
+            var job = new JobKey(device.Id.ToString());
+
+            await scheduler.DeleteJob(job);
+
+            this.logger.LogInformation("Deleted {@Job}", job);
+        }
+
         internal async Task<int?> UpdateFrequencyAsync(Device device, int? frequency)
         {
-            if (frequency == null)
+            if (frequency == null || frequency == device.Frequency)
             {
                 return null;
             }
 
-            if (device.Status == DeviceStatus.Recording && device.Frequency != frequency)
+            await this.DeletePollFramesJobAsync(device);
+
+            if (device.Status == DeviceStatus.Recording)
             {
                 var scheduler = await this.schedulerFactory.GetScheduler();
-                var jobKey = new JobKey($"{device.Id}-Job");
-
-                await scheduler.DeleteJob(jobKey);
-
-                this.logger.LogInformation("Deleted {@Job} to updated frequency", jobKey);
-
                 var job = JobBuilder.Create<PollFramesJob>()
                         .WithIdentity($"{device.Id}-Job")
                         .Build();
@@ -223,27 +230,26 @@ namespace VPEAR.Server.Services
 
         internal async Task<DeviceStatus?> UpdateStatusAsync(Device device, DeviceStatus? status, IDeviceClient client)
         {
-            if (status == null)
+            if (status == null || device.Status == status)
             {
                 return null;
             }
 
-            if (device.Status == DeviceStatus.Archived)
+            await this.DeletePollFramesJobAsync(device);
+
+            if (device.Status == DeviceStatus.Archived || status == DeviceStatus.Archived)
             {
                 return DeviceStatus.Archived;
             }
 
-            if (device.Status == DeviceStatus.NotReachable
-                && status != DeviceStatus.NotReachable
-                && !await client.CanConnectAsync())
+            if (!await client.CanConnectAsync())
             {
                 return DeviceStatus.NotReachable;
             }
 
-            var scheduler = await this.schedulerFactory.GetScheduler();
-
-            if (device.Status == DeviceStatus.Stopped && status == DeviceStatus.Recording)
+            if (status == DeviceStatus.Recording)
             {
+                var scheduler = await this.schedulerFactory.GetScheduler();
                 var job = JobBuilder.Create<PollFramesJob>()
                         .WithIdentity(device.Id.ToString())
                         .Build();
@@ -259,14 +265,6 @@ namespace VPEAR.Server.Services
                 await scheduler.ScheduleJob(job, trigger);
 
                 this.logger.LogInformation("Created new {@Job} with {@Trigger}", job, trigger);
-            }
-            else
-            {
-                var job = new JobKey(device.Id.ToString());
-
-                await scheduler.DeleteJob(job);
-
-                this.logger.LogInformation("Deleted {@Job}", job);
             }
 
             return status;

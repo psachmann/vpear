@@ -109,6 +109,8 @@ namespace VPEAR.Server.Services
 
             if (await client.PutFirmwareAsync(request.Source, request.Upgrade, request.Package))
             {
+                await client.SyncAsync(device, this.devices);
+
                 return new Result<Null>(HttpStatusCode.OK);
             }
             else

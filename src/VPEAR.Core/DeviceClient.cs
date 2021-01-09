@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Extensions;
+using VPEAR.Core.Models;
 using VPEAR.Core.Wrappers;
 
 namespace VPEAR.Core
@@ -359,6 +360,34 @@ namespace VPEAR.Core
             }
 
             if (package && !(await this.PutAsync<Null>(packageUri, null) && this.IsSuccessResponse()))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <inheritdoc/>
+        public async Task<bool> SyncAsync(Device device, IRepository<Device, Guid> devices)
+        {
+            await devices.GetReferenceAsync(device, temp => temp.Filter);
+
+            if (!await this.PutFiltersAsync(device.Filter.Spot, device.Filter.Smooth, device.Filter.Noise))
+            {
+                return false;
+            }
+
+            if (!await this.PutFrequencyAsync(device.Frequency))
+            {
+                return false;
+            }
+
+            if (!await this.PutRequiredSensorsAsync(device.RequiredSensors))
+            {
+                return false;
+            }
+
+            if (!await this.PutTimeAsync(DateTimeOffset.UtcNow))
             {
                 return false;
             }

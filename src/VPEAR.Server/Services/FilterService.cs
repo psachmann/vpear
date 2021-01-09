@@ -99,6 +99,7 @@ namespace VPEAR.Server.Services
                 device.Filter = filter;
 
                 await this.devices.UpdateAsync(device);
+                await client.SyncAsync(device, this.devices);
 
                 return new Result<Null>(HttpStatusCode.OK);
             }

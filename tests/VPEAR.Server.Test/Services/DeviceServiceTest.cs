@@ -10,7 +10,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using VPEAR.Core;
 using VPEAR.Core.Abstractions;
+using VPEAR.Core.Models;
 using VPEAR.Core.Wrappers;
+using VPEAR.Server.Services;
 using Xunit;
 using static VPEAR.Server.Constants;
 
@@ -178,6 +180,100 @@ namespace VPEAR.Server.Test.Services
                 Assert.Equal(StatusCodes.Status409Conflict, result.StatusCode);
                 Assert.Contains(ErrorMessages.DeviceIsArchivedOrRecording, result.Error!.Messages);
             });
+        }
+
+        [Theory]
+        [InlineData(null, 60, null)]
+        [InlineData(null, 60, 60)]
+        [InlineData(300, 60, 300)]
+        [InlineData(0, 60, 0)]
+        [InlineData(1, 60, 1)]
+        [InlineData(int.MinValue, 60, int.MinValue)]
+        public async Task UpdateFrequencyAsyncTest(
+            int? expectedFrequency,
+            int currentFrequency,
+            int? newFrquency)
+        {
+            var service = (DeviceService)this.service;
+            var device = new Device()
+            {
+                Frequency = currentFrequency,
+            };
+            var result = await service.UpdateFrequencyAsync(device, newFrquency);
+
+            Assert.Equal(expectedFrequency, result);
+        }
+
+        [Theory]
+        [InlineData(60, 60)]
+        [InlineData(1, 1)]
+        [InlineData(1, 0)]
+        [InlineData(1, int.MinValue)]
+        [InlineData(int.MaxValue, int.MaxValue)]
+        public void GetIntervallInSecondsTest(
+            int expectedFrequency,
+            int newFrquency)
+        {
+            var result = DeviceService.GetIntervallInSeconds(newFrquency);
+
+            Assert.Equal(expectedFrequency, result);
+        }
+
+        [Theory]
+        [InlineData(null, DeviceStatus.Archived, null)]
+        [InlineData(null, DeviceStatus.NotReachable, null)]
+        [InlineData(null, DeviceStatus.Recording, null)]
+        [InlineData(null, DeviceStatus.Stopped, null)]
+        [InlineData(null, DeviceStatus.Archived, DeviceStatus.Archived)]
+        [InlineData(DeviceStatus.Archived, DeviceStatus.Archived, DeviceStatus.NotReachable)]
+        [InlineData(DeviceStatus.Archived, DeviceStatus.Archived, DeviceStatus.Recording)]
+        [InlineData(DeviceStatus.Archived, DeviceStatus.Archived, DeviceStatus.Stopped)]
+        [InlineData(DeviceStatus.Archived, DeviceStatus.NotReachable, DeviceStatus.Archived)]
+        [InlineData(null, DeviceStatus.NotReachable, DeviceStatus.NotReachable)]
+        [InlineData(DeviceStatus.Recording, DeviceStatus.NotReachable, DeviceStatus.Recording)]
+        [InlineData(DeviceStatus.Stopped, DeviceStatus.NotReachable, DeviceStatus.Stopped)]
+        [InlineData(DeviceStatus.Archived, DeviceStatus.Recording, DeviceStatus.Archived)]
+        [InlineData(DeviceStatus.NotReachable, DeviceStatus.Recording, DeviceStatus.NotReachable)]
+        [InlineData(null, DeviceStatus.Recording, DeviceStatus.Recording)]
+        [InlineData(DeviceStatus.Stopped, DeviceStatus.Recording, DeviceStatus.Stopped)]
+        [InlineData(DeviceStatus.Archived, DeviceStatus.Stopped, DeviceStatus.Archived)]
+        [InlineData(DeviceStatus.NotReachable, DeviceStatus.Stopped, DeviceStatus.NotReachable)]
+        [InlineData(DeviceStatus.Recording, DeviceStatus.Stopped, DeviceStatus.Recording)]
+        [InlineData(null, DeviceStatus.Stopped, DeviceStatus.Stopped)]
+        public async Task UpdateStatusWithSuccessClientAsyncTest(
+            DeviceStatus? expectedStatus,
+            DeviceStatus currentStatus,
+            DeviceStatus? newStatus)
+        {
+            var service = (DeviceService)this.service;
+            var device = new Device()
+            {
+                Filter = new Filter(),
+                Status = currentStatus,
+            };
+            var result = await service.UpdateStatusAsync(device, newStatus, Mocks.CreateSuccessDeviceClient());
+
+            Assert.Equal(expectedStatus, result);
+        }
+
+        [Theory]
+        [InlineData(DeviceStatus.Archived, DeviceStatus.NotReachable, DeviceStatus.Archived)]
+        [InlineData(DeviceStatus.NotReachable, DeviceStatus.NotReachable, DeviceStatus.Stopped)]
+        [InlineData(DeviceStatus.NotReachable, DeviceStatus.NotReachable, DeviceStatus.Recording)]
+        public async Task UpdateStatusWithFailureClientAsyncTest(
+            DeviceStatus? expectedStatus,
+            DeviceStatus currentStatus,
+            DeviceStatus? newStatus)
+        {
+            var service = (DeviceService)this.service;
+            var device = new Device()
+            {
+                Filter = new Filter(),
+                Status = currentStatus,
+            };
+            var result = await service.UpdateStatusAsync(device, newStatus, Mocks.CreateFailureDeviceClient());
+
+            Assert.Equal(expectedStatus, result);
         }
     }
 }

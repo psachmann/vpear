@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using VPEAR.Core.Models;
 using VPEAR.Core.Wrappers;
 
 namespace VPEAR.Core.Abstractions
@@ -52,5 +53,7 @@ namespace VPEAR.Core.Abstractions
         Task<FirmwareResponse> GetFirmwareAsync();
 
         Task<bool> PutFirmwareAsync(string source = null, string upgrade = null, bool package = false);
+
+        Task<bool> SyncAsync(Device device, IRepository<Device, Guid> devices);
     }
 }
