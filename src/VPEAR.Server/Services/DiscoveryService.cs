@@ -87,42 +87,58 @@ namespace VPEAR.Server.Services
             return addresses;
         }
 
+        private async Task CreateDeviceAsync(ApiResponse response, IDeviceClient client)
+        {
+            var newDevice = new Device
+            {
+                Address = response.Device.Address,
+                Class = response.Device.Class,
+                DisplayName = string.Empty,
+                Filter = new Filter()
+                {
+                    Noise = response.Filters.Noise,
+                    Smooth = response.Filters.Smooth,
+                    Spot = response.Filters.Spot,
+                },
+                Name = response.Device.Name,
+                RequiredSensors = response.SensorsRequired,
+                Frequency = response.Frequency,
+                Status = DeviceStatus.Stopped,
+            };
+
+            await this.devices.CreateAsync(newDevice);
+            await client.PutTimeAsync(DateTimeOffset.UtcNow);
+        }
+
         private async Task InitializeDevicesAsync(IEnumerable<DeviceResponse> deviceResponses)
         {
             foreach (var deviceResponse in deviceResponses)
             {
                 var client = this.factory.Invoke(deviceResponse.Address);
                 var response = await client.GetAsync();
-                var oldDevice = await this.devices.Get()
+                var knownDevice = await this.devices.Get()
                     .Where(device => device.Address == deviceResponse.Address && device.Status != DeviceStatus.Archived)
                     .FirstOrDefaultAsync();
 
-                if (oldDevice == null)
+                // we create a new device if the address is new or a device with the same address was archived
+                if (knownDevice == null || knownDevice.Status == DeviceStatus.Archived)
                 {
-                    var newDevice = new Device
-                    {
-                        Address = response.Device.Address,
-                        Class = response.Device.Class,
-                        DisplayName = string.Empty,
-                        Filter = new Filter()
-                        {
-                            Noise = response.Filters.Noise,
-                            Smooth = response.Filters.Smooth,
-                            Spot = response.Filters.Spot,
-                        },
-                        Name = response.Device.Name,
-                        RequiredSensors = response.SensorsRequired,
-                        Frequency = response.Frequency,
-                        Status = DeviceStatus.Stopped,
-                    };
+                    await this.CreateDeviceAsync(response, client);
 
-                    await this.devices.CreateAsync(newDevice);
-                    await client.PutTimeAsync(DateTimeOffset.UtcNow);
+                    continue;
                 }
-                else
+
+                // we will sync the old device and set it to stopped
+                if (knownDevice.Status == DeviceStatus.NotReachable)
                 {
-                    // TODO: device already exists with an non archived status
+                    await client.SyncAsync(knownDevice, this.devices);
+                    knownDevice.Status = DeviceStatus.Stopped;
+                    await this.devices.UpdateAsync(knownDevice);
+
+                    continue;
                 }
+
+                // we will do nothing with the already known devices in stopped and recording
             }
         }
     }
