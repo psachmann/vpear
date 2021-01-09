@@ -52,10 +52,11 @@ namespace VPEAR.Server
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
-                       .MinimumLevel.Is(Defaults.DefaultLogLevel)
-                       .Enrich.FromLogContext()
-                       .WriteTo.Console()
-                       .CreateLogger();
+                .MinimumLevel.Is(Defaults.DefaultLogLevel)
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .WriteTo.File(Defaults.DefaultLogPath, rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
+                .CreateLogger();
 
             Startup.Config = Configuration.Load(args);
 
