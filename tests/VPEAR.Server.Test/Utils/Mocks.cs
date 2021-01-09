@@ -43,103 +43,6 @@ namespace VPEAR.Server.Test
             return mock.Object;
         }
 
-        public static IRepository<TEntity, Guid> CreateRepository<TEntity>()
-            where TEntity : AbstractEntity<Guid>
-        {
-            var mock = new Mock<IRepository<TEntity, Guid>>();
-            var notExistingEntity = Activator.CreateInstance<TEntity>();
-            var archivedEntity = Activator.CreateInstance<TEntity>();
-            var notReachableEntity = Activator.CreateInstance<TEntity>();
-            var recordingEntity = Activator.CreateInstance<TEntity>();
-            var stoppedEntity = Activator.CreateInstance<TEntity>();
-
-            var entities = new List<TEntity>()
-            {
-                notExistingEntity,
-                archivedEntity,
-                notReachableEntity,
-                recordingEntity,
-                stoppedEntity,
-            };
-
-            var ids = new List<(Guid Id, DeviceStatus Status)>()
-            {
-                NotExisting,
-                Archived,
-                NotReachable,
-                Recording,
-                Stopped,
-            };
-
-            var i = 0;
-            entities.ForEach(entity =>
-            {
-                var info = entity.GetType()
-                    .GetProperty("DeviceForeignKey");
-
-                if (info != null)
-                {
-                    entity.Id = ids[i].Id;
-                    info.SetValue(entity, ids[i].Id);
-                }
-
-                if (entity is Device device)
-                {
-                    device.Id = ids[i].Id;
-                    device.Status = ids[i].Status;
-                }
-
-                i += 1;
-            });
-
-            mock.Setup(repository => repository.CreateAsync(It.IsAny<TEntity>()))
-                .ReturnsAsync(Activator.CreateInstance<TEntity>());
-
-            mock.Setup(repository => repository.DeleteAsync(It.IsAny<TEntity>()))
-                .Returns(Task.CompletedTask);
-
-            mock.Setup(repository => repository.GetAsync(Archived.Id))
-                    .ReturnsAsync(archivedEntity);
-
-            mock.Setup(repository => repository.GetAsync(NotReachable.Id))
-                    .ReturnsAsync(notReachableEntity);
-
-            mock.Setup(repository => repository.GetAsync(Recording.Id))
-                    .ReturnsAsync(recordingEntity);
-
-            mock.Setup(repository => repository.GetAsync(Stopped.Id))
-                    .ReturnsAsync(stoppedEntity);
-
-            mock.Setup(repository => repository.Get())
-                .Returns(new List<TEntity>()
-                {
-                    archivedEntity,
-                    notReachableEntity,
-                    recordingEntity,
-                    stoppedEntity,
-                }
-                .AsQueryable()
-                .BuildMock()
-                .Object);
-
-            mock.Setup(repository => repository.UpdateAsync(notExistingEntity))
-                .ReturnsAsync(notExistingEntity);
-
-            mock.Setup(repository => repository.UpdateAsync(archivedEntity))
-                .ReturnsAsync(archivedEntity);
-
-            mock.Setup(repository => repository.UpdateAsync(notReachableEntity))
-                .ReturnsAsync(notReachableEntity);
-
-            mock.Setup(repository => repository.UpdateAsync(recordingEntity))
-                .ReturnsAsync(recordingEntity);
-
-            mock.Setup(repository => repository.UpdateAsync(stoppedEntity))
-                .ReturnsAsync(stoppedEntity);
-
-            return mock.Object;
-        }
-
         public static IRepository<Device, Guid> CreateDeviceRepository()
         {
             var mock = new Mock<IRepository<Device, Guid>>();
@@ -172,6 +75,43 @@ namespace VPEAR.Server.Test
 
             mock.Setup(mock => mock.UpdateAsync(It.IsAny<Device>()))
                 .ReturnsAsync(It.IsAny<Device>());
+
+            return mock.Object;
+        }
+
+        public static IRepository<Frame, Guid> CreateFrameRepository()
+        {
+            var mock = new Mock<IRepository<Frame, Guid>>();
+            var devices = GetDevices();
+
+            mock.Setup(mock => mock.CreateAsync(It.IsAny<Frame>()))
+                .ReturnsAsync(It.IsAny<Frame>());
+
+            mock.Setup(mock => mock.DeleteAsync(It.IsAny<Frame>()))
+                .Returns(Task.CompletedTask);
+
+            mock.Setup(mock => mock.Get())
+                .Returns(devices.Select(device => device.Frames[0])
+                    .AsQueryable().BuildMock().Object);
+
+            foreach (var device in devices)
+            {
+                mock.Setup(mock => mock.GetAsync(device.Id))
+                    .ReturnsAsync(device.Frames[0]);
+            }
+
+            mock.Setup(mock => mock.GetReference(It.IsAny<Frame>(), It.IsAny<Expression<Func<Frame, It.IsAnyType>>>()));
+
+            mock.Setup(mock => mock.GetReferenceAsync(It.IsAny<Frame>(), It.IsAny<Expression<Func<Frame, It.IsAnyType>>>()))
+                .Returns(Task.CompletedTask);
+
+            mock.Setup(mock => mock.GetCollection(It.IsAny<Frame>(), It.IsAny<Expression<Func<Frame, IEnumerable<It.IsAnyType>>>>()));
+
+            mock.Setup(mock => mock.GetCollectionAsync(It.IsAny<Frame>(), It.IsAny<Expression<Func<Frame, IEnumerable<It.IsAnyType>>>>()))
+                .Returns(Task.CompletedTask);
+
+            mock.Setup(mock => mock.UpdateAsync(It.IsAny<Frame>()))
+                .ReturnsAsync(It.IsAny<Frame>());
 
             return mock.Object;
         }
@@ -378,20 +318,20 @@ namespace VPEAR.Server.Test
             return mock.Object;
         }
 
-        public static ISchedulerFactory GetSchedulerFactory()
+        public static ISchedulerFactory CreateSchedulerFactory()
         {
             var mock = new Mock<ISchedulerFactory>();
 
             mock.Setup(mock => mock.GetScheduler(It.IsAny<CancellationToken>()))
-                .ReturnsAsync(GetScheduler());
+                .ReturnsAsync(CreateScheduler());
 
             mock.Setup(mock => mock.GetScheduler(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(GetScheduler());
+                .ReturnsAsync(CreateScheduler());
 
             return mock.Object;
         }
 
-        public static IScheduler GetScheduler()
+        public static IScheduler CreateScheduler()
         {
             var mock = new Mock<IScheduler>();
 
@@ -451,11 +391,7 @@ namespace VPEAR.Server.Test
                     Filter = filter,
                     Id = id,
                     Index = 1,
-
-                    // TODO: generate more test values
                     Readings = new List<IList<int>>(),
-
-                    // TODO: eventually remove time
                     Time = "time",
                 };
 

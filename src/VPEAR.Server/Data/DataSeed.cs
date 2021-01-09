@@ -32,7 +32,7 @@ namespace VPEAR.Server.Data
                 {
                     Address = $"http://192.168.178.{i}",
                     Class = "Boditrak DataPort",
-                    DisplayName = $"Max Mustermann {i}",
+                    DisplayName = $"Boditrak DataPort {i}",
                     Id = id,
                     Frequency = i * 100,
                     Name = $"DataPort-{i}",
@@ -57,11 +57,11 @@ namespace VPEAR.Server.Data
                     Index = i,
                     Readings = new List<IList<int>>()
                     {
-                        new List<int> { 0, 0, 0, 0, 0, },
-                        new List<int> { 0, 0, 0, 0, 0, },
-                        new List<int> { 0, 0, 0, 0, 0, },
-                        new List<int> { 0, 0, 0, 0, 0, },
-                        new List<int> { 0, 0, 0, 0, 0, },
+                        new List<int> { 0, 0, 0, 0, 0 },
+                        new List<int> { 0, 0, 0, 0, 0 },
+                        new List<int> { 0, 0, 0, 0, 0 },
+                        new List<int> { 0, 0, 0, 0, 0 },
+                        new List<int> { 0, 0, 0, 0, 0 },
                     },
                     Time = DateTimeOffset.UtcNow.ToString("yyyy-MM-dd hh:mm:ss.fff"),
                 };

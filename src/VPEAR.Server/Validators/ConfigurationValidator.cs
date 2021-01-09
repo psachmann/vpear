@@ -8,6 +8,9 @@ using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Validators
 {
+    /// <summary>
+    /// Validates the <see cref="Configuration"/> from 'appsettings.json'.
+    /// </summary>
     public class ConfigurationValidator : AbstractValidator<Configuration>
     {
         /// <summary>

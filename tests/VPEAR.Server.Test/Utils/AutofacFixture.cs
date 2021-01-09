@@ -68,7 +68,7 @@ namespace VPEAR.Server.Test
                 .As<DeviceClient.Factory>()
                 .InstancePerDependency();
 
-            builder.Register(context => Mocks.GetSchedulerFactory())
+            builder.Register(context => Mocks.CreateSchedulerFactory())
                 .As<ISchedulerFactory>()
                 .InstancePerDependency();
         }
@@ -141,7 +141,7 @@ namespace VPEAR.Server.Test
                 .As<IRepository<Device, Guid>>()
                 .InstancePerDependency();
 
-            builder.Register(context => Mocks.CreateRepository<Frame>())
+            builder.Register(context => Mocks.CreateFrameRepository())
                 .As<IRepository<Frame, Guid>>()
                 .InstancePerDependency();
         }
