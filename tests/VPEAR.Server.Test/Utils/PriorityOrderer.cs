@@ -5,7 +5,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Xunit;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
@@ -42,7 +41,7 @@ namespace VPEAR.Server.Test
             where TKey : struct
             where TValue : new()
         {
-            return dictionary.TryGetValue(key, out TValue value) ? value : (dictionary[key] = new TValue());
+            return dictionary.TryGetValue(key, out TValue? value) ? value : (dictionary[key] = new TValue());
         }
     }
 }
