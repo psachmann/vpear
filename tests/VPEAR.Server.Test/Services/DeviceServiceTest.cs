@@ -138,7 +138,6 @@ namespace VPEAR.Server.Test.Services
         {
             var devices = new List<Guid>()
             {
-                Mocks.Archived.Id,
                 Mocks.NotReachable.Id,
                 Mocks.Stopped.Id,
             };
@@ -163,13 +162,22 @@ namespace VPEAR.Server.Test.Services
         }
 
         [Fact]
-        public async Task DeleteAsync409ConflictTest()
+        public void DeleteAsync409ConflictTest()
         {
-            var result = await this.service.DeleteAsync(Mocks.Recording.Id);
+            var devices = new List<Guid>()
+            {
+                Mocks.Archived.Id,
+                Mocks.Recording.Id,
+            };
 
-            Assert.NotNull(result.Error);
-            Assert.Equal(StatusCodes.Status409Conflict, result.StatusCode);
-            Assert.Contains(ErrorMessages.DeviceIsRecording, result.Error!.Messages);
+            devices.ForEach(async device =>
+            {
+                var result = await this.service.DeleteAsync(device);
+
+                Assert.NotNull(result.Error);
+                Assert.Equal(StatusCodes.Status409Conflict, result.StatusCode);
+                Assert.Contains(ErrorMessages.DeviceIsArchivedOrRecording, result.Error!.Messages);
+            });
         }
     }
 }

@@ -163,9 +163,9 @@ namespace VPEAR.Server.Services
                 return new Result<Null>(HttpStatusCode.NotFound, ErrorMessages.DeviceNotFound);
             }
 
-            if (device.Status == DeviceStatus.Recording)
+            if (device.Status == DeviceStatus.Archived || device.Status == DeviceStatus.Recording)
             {
-                return new Result<Null>(HttpStatusCode.Conflict, ErrorMessages.DeviceIsRecording);
+                return new Result<Null>(HttpStatusCode.Conflict, ErrorMessages.DeviceIsArchivedOrRecording);
             }
 
             await this.devices.DeleteAsync(device);

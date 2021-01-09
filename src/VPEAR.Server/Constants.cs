@@ -63,7 +63,7 @@ namespace VPEAR.Server
             public const string LastAdminError = "The last admin can not be deleted.";
             public const string DeviceNotFound = "Device not found.";
             public const string UserNotFound = "User not found.";
-            public const string DeviceIsRecording = "Device is currently recording";
+            public const string DeviceIsArchivedOrRecording = "Device is archived or currently recording";
             public const string DeviceIsArchived = "Device is archived.";
             public const string DeviceIsNotReachable = "Device is not reachable.";
             public const string BadRequest = "Wrong request format.";

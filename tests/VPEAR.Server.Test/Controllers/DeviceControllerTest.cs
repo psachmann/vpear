@@ -149,7 +149,6 @@ namespace VPEAR.Server.Test.Controllers
         {
             var devices = new List<Guid>()
             {
-                Mocks.Archived.Id,
                 Mocks.NotReachable.Id,
                 Mocks.Stopped.Id,
             };
@@ -176,15 +175,24 @@ namespace VPEAR.Server.Test.Controllers
         }
 
         [Fact]
-        public async Task DeleteAsync409ConflictTest()
+        public void DeleteAsync409ConflictTest()
         {
-            var result = await this.controller.OnDeleteAsync(Mocks.Recording.Id);
-            var objectResult = Assert.IsType<ObjectResult>(result);
-            var response = Assert.IsAssignableFrom<ErrorResponse>(objectResult.Value);
+            var devices = new List<Guid>()
+            {
+                Mocks.Archived.Id,
+                Mocks.Recording.Id,
+            };
 
-            Assert.NotNull(response);
-            Assert.Equal(StatusCodes.Status409Conflict, response.StatusCode);
-            Assert.Contains(ErrorMessages.DeviceIsRecording, response.Messages);
+            devices.ForEach(async device =>
+            {
+                var result = await this.controller.OnDeleteAsync(device);
+                var objectResult = Assert.IsType<ObjectResult>(result);
+                var response = Assert.IsAssignableFrom<ErrorResponse>(objectResult.Value);
+
+                Assert.NotNull(response);
+                Assert.Equal(StatusCodes.Status409Conflict, response.StatusCode);
+                Assert.Contains(ErrorMessages.DeviceIsArchivedOrRecording, response.Messages);
+            });
         }
     }
 }
