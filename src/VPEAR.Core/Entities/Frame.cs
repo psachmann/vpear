@@ -30,7 +30,6 @@ namespace VPEAR.Core.Entities
         /// Gets or sets the readings.
         /// </summary>
         /// <value>The frame sensor values.</value>
-        /// TODO: translate into a valid database type
         public virtual IList<IList<int>> Readings { get; set; } = new List<IList<int>>();
 
         /// <summary>

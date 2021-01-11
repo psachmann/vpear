@@ -219,7 +219,7 @@ namespace VPEAR.Core.Abstractions
             {
                 var message = new HttpRequestMessage()
                 {
-                    Content = new StringContent(payload?.ToJsonString(), Encoding.UTF8, "application/json"),
+                    Content = new StringContent(payload?.ToJsonString() ?? string.Empty, Encoding.UTF8, "application/json"),
                     Method = method,
                     RequestUri = new Uri(this.baseAddress + uri),
                 };

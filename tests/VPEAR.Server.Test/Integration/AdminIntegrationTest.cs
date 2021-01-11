@@ -20,6 +20,7 @@ namespace VPEAR.Server.Test.Integration
     public class AdminIntegrationTest : IClassFixture<WebApplicationFactory<Startup>>
     {
         private const string BaseAddress = "http://localhost";
+        private const string DeviceBaseAddress = "http://192.168.33.24";
         private const string AdminName = Defaults.DefaultAdminName;
         private const string AdminPassword = Defaults.DefaultAdminPassword;
         private const string UserName = "John_Doe";
@@ -40,9 +41,6 @@ namespace VPEAR.Server.Test.Integration
             await client.GetDevicesAsync();
             await client.PostDevicesAsync(string.Empty, string.Empty, string.Empty);
             await client.PutDeviceAsync(string.Empty, string.Empty, null, null);
-
-            await client.GetFiltersAsync(string.Empty);
-            await client.PutFiltersAsync(string.Empty, null, null, null);
 
             await client.GetFirmwareAsync(string.Empty);
             await client.PutFirmwareAsync(string.Empty, string.Empty, string.Empty, false);
@@ -132,7 +130,7 @@ namespace VPEAR.Server.Test.Integration
             Assert.InRange(container.Count, 0, int.MaxValue);
         }
 
-        [Priority(105)]
+        [Priority(1000)]
         [SkipIfNoDbFact]
         public async Task DeleteUserAsync()
         {
@@ -148,23 +146,44 @@ namespace VPEAR.Server.Test.Integration
             Assert.Equal(HttpStatusCode.NoContent, client.Response.StatusCode);
         }
 
+        [Priority(200)]
+        [SkipIfNoDbFact]
+        public async Task GetFiltersAsync()
+        {
+            using var client = this.CreateClient();
+            var result = await client.LoginAsync(AdminName, AdminPassword);
+
+            Assert.True(result, "Login should be successful.");
+            Assert.Equal(HttpStatusCode.OK, client.Response.StatusCode);
+
+            var container = await client.GetDevicesAsync(DeviceStatus.Archived);
+
+            Assert.InRange(container.Count, 1, int.MaxValue);
+        }
+
+        [Priority(201)]
+        [SkipIfNoDbOrDeviceFact(DeviceBaseAddress)]
+        public async Task PutFiltersAsync()
+        {
+            using var client = this.CreateClient();
+            var result = await client.LoginAsync(AdminName, AdminPassword);
+
+            Assert.True(result, "Login should be successful.");
+            Assert.Equal(HttpStatusCode.OK, client.Response.StatusCode);
+
+            var container = await client.GetDevicesAsync(DeviceStatus.Stopped);
+
+            Assert.InRange(container.Count, 1, int.MaxValue);
+
+            result = await client.PutFiltersAsync(container.Items[0].Id, true, true, true);
+
+            Assert.True(result, "Put filters should be successful.");
+            Assert.Equal(HttpStatusCode.NoContent, client.Response.StatusCode);
+        }
+
         private IVPEARClient CreateClient()
         {
             return new VPEARClient(BaseAddress, this.factory.CreateClient());
         }
-
-        /*
-
-
-        [Priority(10)]
-        [SkipIfNoDbFact]
-        public async Task DeleteUserAsync()
-        {
-            var result = await this.client.DeleteUserAsync(UserName);
-
-            Assert.True(result, "Delete user should be successful.");
-            Assert.Equal(HttpStatusCode.OK, this.client.Response.StatusCode);
-        }
-        */
     }
 }

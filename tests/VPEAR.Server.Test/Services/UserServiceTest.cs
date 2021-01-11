@@ -60,7 +60,7 @@ namespace VPEAR.Server.Test.Services
             var result = await this.service.PutAsync(Mocks.User.Name, request);
 
             Assert.Null(result.Value);
-            Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
+            Assert.Equal(StatusCodes.Status204NoContent, result.StatusCode);
         }
 
         [Fact]
@@ -79,7 +79,7 @@ namespace VPEAR.Server.Test.Services
             var result = await this.service.DeleteAsync(Mocks.User.Name);
 
             Assert.Null(result.Value);
-            Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
+            Assert.Equal(StatusCodes.Status204NoContent, result.StatusCode);
         }
 
         [Fact]
