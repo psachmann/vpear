@@ -85,8 +85,9 @@ namespace VPEAR.Server.Services.Jobs
             else
             {
                 device.StatusChanged(DeviceStatus.NotReachable);
+                device.Status = DeviceStatus.NotReachable;
 
-                await this.devices.SaveChangesAsync();
+                await this.devices.UpdateAsync(device);
 
                 this.logger.LogError("Client({@ClientId}) is not reachable.", id);
             }

@@ -132,7 +132,10 @@ namespace VPEAR.Server.Services
                 if (knownDevice.Status == DeviceStatus.NotReachable)
                 {
                     await client.SyncAsync(knownDevice, this.devices);
+
+                    knownDevice.StatusChanged(DeviceStatus.Stopped);
                     knownDevice.Status = DeviceStatus.Stopped;
+
                     await this.devices.UpdateAsync(knownDevice);
 
                     continue;

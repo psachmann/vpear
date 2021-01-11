@@ -42,9 +42,10 @@ namespace VPEAR.Server.Handlers
         {
             var device = notification.OriginalValue;
 
+            await this.DeletePollFramesJobAsync(device);
+
             if (device.Status == DeviceStatus.Recording)
             {
-                await this.DeletePollFramesJobAsync(device);
                 await this.CreatePollFramesJobAsync(device);
             }
         }
@@ -84,7 +85,7 @@ namespace VPEAR.Server.Handlers
         private async Task DeletePollFramesJobAsync(Device device)
         {
             var scheduler = await this.schedulerFactory.GetScheduler();
-            var job = new JobKey($"{device.Id}-Job");
+            var job = new JobKey($"{device.Id}");
 
             if (await scheduler.DeleteJob(job))
             {

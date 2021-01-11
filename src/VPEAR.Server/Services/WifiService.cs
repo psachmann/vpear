@@ -79,6 +79,7 @@ namespace VPEAR.Server.Services
             }
             else
             {
+                device.StatusChanged(DeviceStatus.NotReachable);
                 device.Status = DeviceStatus.NotReachable;
 
                 await this.devices.UpdateAsync(device);
@@ -118,8 +119,9 @@ namespace VPEAR.Server.Services
             else
             {
                 device.StatusChanged(DeviceStatus.NotReachable);
+                device.Status = DeviceStatus.NotReachable;
 
-                await this.devices.SaveChangesAsync();
+                await this.devices.UpdateAsync(device);
 
                 return new Result<Null>(HttpStatusCode.FailedDependency, ErrorMessages.DeviceIsNotReachable);
             }

@@ -114,8 +114,12 @@ namespace VPEAR.Server.Services
             {
                 device.DisplayName = request.DisplayName ?? device.DisplayName;
                 device.RequiredSensors = request.RequiredSensors ?? device.RequiredSensors;
+
                 device.FrequencyChanged(request.Frequency);
                 device.StatusChanged(request.Status);
+
+                device.Frequency = request.Frequency ?? device.Frequency;
+                device.Status = request.Status ?? device.Status;
 
                 await this.devices.UpdateAsync(device);
                 await client.SyncAsync(device, this.devices);
@@ -124,9 +128,10 @@ namespace VPEAR.Server.Services
             }
             else
             {
+                device.Status = DeviceStatus.NotReachable;
                 device.StatusChanged(DeviceStatus.NotReachable);
 
-                await this.devices.SaveChangesAsync();
+                await this.devices.UpdateAsync(device);
 
                 return new Result<Null>(HttpStatusCode.FailedDependency, ErrorMessages.DeviceIsNotReachable);
             }

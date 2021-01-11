@@ -43,29 +43,11 @@ namespace VPEAR.Server.Handlers
         {
             var device = notification.OriginalValue;
 
-            if (device.Status == DeviceStatus.Archived)
-            {
-                await this.DeletePollFramesJobAsync(device);
-            }
-
-            if (device.Status == DeviceStatus.NotReachable)
-            {
-                await this.DeletePollFramesJobAsync(device);
-            }
+            await this.DeletePollFramesJobAsync(device);
 
             if (device.Status == DeviceStatus.Recording)
             {
-                await this.DeletePollFramesJobAsync(device);
                 await this.CreatePollFramesJobAsync(device);
-            }
-            else
-            {
-                await this.DeletePollFramesJobAsync(device);
-            }
-
-            if (device.Status == DeviceStatus.Stopped)
-            {
-                await this.DeletePollFramesJobAsync(device);
             }
         }
 
@@ -104,11 +86,11 @@ namespace VPEAR.Server.Handlers
         private async Task DeletePollFramesJobAsync(Device device)
         {
             var scheduler = await this.schedulerFactory.GetScheduler();
-            var job = new JobKey($"{device.Id}-Job");
+            var job = new JobKey($"{device.Id}");
 
             if (await scheduler.DeleteJob(job))
             {
-                this.logger.LogInformation("Deleted jon({@Job}) from device({@Device}).", job, device);
+                this.logger.LogInformation("Deleted job({@Job}) from device({@Device}).", job, device);
             }
         }
     }
