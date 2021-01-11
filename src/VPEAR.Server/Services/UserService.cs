@@ -234,9 +234,6 @@ namespace VPEAR.Server.Services
 
                 var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Startup.Config!.Secret));
 
-                // TODO: add issuer and audience
-                // issuer: _configuration["JWT:ValidIssuer"],
-                // audience: _configuration["JWT:ValidAudience"],
                 var token = new JwtSecurityToken(
                     expires: DateTime.Now.AddHours(24),
                     claims: authClaims,

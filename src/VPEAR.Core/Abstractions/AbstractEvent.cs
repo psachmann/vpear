@@ -4,7 +4,6 @@
 // </copyright>
 
 using MediatR;
-using System;
 
 namespace VPEAR.Core.Abstractions
 {
@@ -13,10 +12,5 @@ namespace VPEAR.Core.Abstractions
     /// </summary>
     public abstract class AbstractEvent : INotification
     {
-        /// <summary>
-        /// Gets or sets the occurred date.
-        /// </summary>
-        /// <value>The date and time when the event occurred.</value>
-        public DateTimeOffset Occurred { get; protected set; } = DateTimeOffset.UtcNow;
     }
 }

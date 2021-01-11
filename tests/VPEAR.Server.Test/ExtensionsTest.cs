@@ -6,6 +6,7 @@
 using System;
 using System.Net;
 using System.Text.Json;
+using VPEAR.Core;
 using VPEAR.Core.Extensions;
 using Xunit;
 
@@ -103,6 +104,12 @@ namespace VPEAR.Server.Test
             var json = "[\"item1\",\"item2\"]";
 
             Assert.Equal(json, array.ToJsonString());
+        }
+
+        [Fact]
+        public void NullTest()
+        {
+            Assert.Throws<InvalidOperationException>(() => new Null());
         }
     }
 }

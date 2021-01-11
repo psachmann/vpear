@@ -134,10 +134,6 @@ namespace VPEAR.Server
                     {
                         ValidateIssuer = false,
                         ValidateAudience = false,
-
-                        // TODO: read more about audience and issuer
-                        // ValidAudience = Configuration["JWT:ValidAudience"],
-                        // ValidIssuer = Configuration["JWT:ValidIssuer"],
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Config!.Secret)),
                     };
                 });
