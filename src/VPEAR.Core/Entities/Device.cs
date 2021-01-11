@@ -80,7 +80,7 @@ namespace VPEAR.Core.Entities
                 return;
             }
 
-            this.Events.Add(new DeviceFrequencyChangedEvent(this, newFrequency.Value));
+            this.Events.Add(new DeviceFrequencyChangedEvent(this));
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace VPEAR.Core.Entities
                 return;
             }
 
-            this.Events.Add(new DeviceStatusChangedEvent(this, newStatus.Value));
+            this.Events.Add(new DeviceStatusChangedEvent(this));
         }
     }
 }

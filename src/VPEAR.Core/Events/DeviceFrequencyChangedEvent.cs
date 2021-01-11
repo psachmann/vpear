@@ -17,11 +17,9 @@ namespace VPEAR.Core.Events
         /// Initializes a new instance of the <see cref="DeviceFrequencyChangedEvent"/> class.
         /// </summary>
         /// <param name="device">The original state.</param>
-        /// <param name="newFrequency">The new scanning frequency.</param>
-        public DeviceFrequencyChangedEvent(Device device, int newFrequency)
+        public DeviceFrequencyChangedEvent(Device device)
         {
             this.OriginalValue = device;
-            this.NewValue = newFrequency;
         }
 
         /// <summary>
@@ -29,11 +27,5 @@ namespace VPEAR.Core.Events
         /// </summary>
         /// <value>The original device state.</value>
         public Device OriginalValue { get; }
-
-        /// <summary>
-        /// Gets the new scanning frequency.
-        /// </summary>
-        /// <value>The new device scanning frequency.</value>
-        public int NewValue { get; }
     }
 }

@@ -17,11 +17,9 @@ namespace VPEAR.Core.Events
         /// Initializes a new instance of the <see cref="DeviceStatusChangedEvent"/> class.
         /// </summary>
         /// <param name="device">The original device state.</param>
-        /// <param name="newStatus">The new device status.</param>
-        public DeviceStatusChangedEvent(Device device, DeviceStatus newStatus)
+        public DeviceStatusChangedEvent(Device device)
         {
             this.OriginalValue = device;
-            this.NewValue = newStatus;
         }
 
         /// <summary>
@@ -29,11 +27,5 @@ namespace VPEAR.Core.Events
         /// </summary>
         /// <value>The original device state.</value>
         public Device OriginalValue { get; }
-
-        /// <summary>
-        /// Gets the new status.
-        /// </summary>
-        /// <value>The new device status.</value>
-        public DeviceStatus NewValue { get; }
     }
 }

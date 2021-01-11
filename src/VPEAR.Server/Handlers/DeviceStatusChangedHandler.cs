@@ -22,22 +22,18 @@ namespace VPEAR.Server.Handlers
     /// </summary>
     public class DeviceStatusChangedHandler : INotificationHandler<DeviceStatusChangedEvent>
     {
-        private readonly IRepository<Device, Guid> devices;
         private readonly ISchedulerFactory schedulerFactory;
         private readonly ILogger<DeviceStatusChangedHandler> logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceStatusChangedHandler"/> class.
         /// </summary>
-        /// <param name="devices">The device repository.</param>
         /// <param name="schedulerFactory">The scheduler factory.</param>
         /// <param name="logger">The handler logger.</param>
         public DeviceStatusChangedHandler(
-            IRepository<Device, Guid> devices,
             ISchedulerFactory schedulerFactory,
             ILogger<DeviceStatusChangedHandler> logger)
         {
-            this.devices = devices;
             this.schedulerFactory = schedulerFactory;
             this.logger = logger;
         }
@@ -46,44 +42,31 @@ namespace VPEAR.Server.Handlers
         public async Task Handle(DeviceStatusChangedEvent notification, CancellationToken cancellationToken)
         {
             var device = notification.OriginalValue;
-            var newStatus = notification.NewValue;
 
-            if (newStatus == DeviceStatus.Archived)
+            if (device.Status == DeviceStatus.Archived)
             {
                 await this.DeletePollFramesJobAsync(device);
-
-                device.Status = DeviceStatus.Archived;
             }
 
-            if (newStatus == DeviceStatus.NotReachable)
+            if (device.Status == DeviceStatus.NotReachable)
             {
                 await this.DeletePollFramesJobAsync(device);
-
-                device.Status = DeviceStatus.NotReachable;
             }
 
-            if (newStatus == DeviceStatus.Recording)
+            if (device.Status == DeviceStatus.Recording)
             {
                 await this.DeletePollFramesJobAsync(device);
                 await this.CreatePollFramesJobAsync(device);
-
-                device.Status = DeviceStatus.Recording;
             }
             else
             {
                 await this.DeletePollFramesJobAsync(device);
-
-                device.Status = DeviceStatus.NotReachable;
             }
 
-            if (newStatus == DeviceStatus.Stopped)
+            if (device.Status == DeviceStatus.Stopped)
             {
                 await this.DeletePollFramesJobAsync(device);
-
-                device.Status = DeviceStatus.Stopped;
             }
-
-            await this.devices.UpdateAsync(device);
         }
 
         private static int GetIntervallInSeconds(int frequency)
@@ -102,11 +85,11 @@ namespace VPEAR.Server.Handlers
         {
             var scheduler = await this.schedulerFactory.GetScheduler();
             var job = JobBuilder.Create<PollFramesJob>()
-                    .WithIdentity($"{device.Id}-Job")
+                    .WithIdentity($"{device.Id}")
                     .Build();
 
             var trigger = TriggerBuilder.Create()
-                .WithIdentity($"{device.Id}-Trigger", "Poll-Frames-Job")
+                .WithIdentity($"{device.Id}", "Poll-Frames-Job")
                 .WithSimpleSchedule(builder => builder
                     .WithIntervalInSeconds(GetIntervallInSeconds(device.Frequency))
                     .RepeatForever())

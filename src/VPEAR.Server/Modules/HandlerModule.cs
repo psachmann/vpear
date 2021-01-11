@@ -30,14 +30,12 @@ namespace VPEAR.Server.Modules
             base.Load(builder);
 
             builder.Register(context => new DeviceFrequencyChangedHandler(
-                    context.Resolve<IRepository<Device, Guid>>(),
                     context.Resolve<ISchedulerFactory>(),
                     context.Resolve<ILogger<DeviceFrequencyChangedHandler>>()))
                 .As<INotificationHandler<DeviceFrequencyChangedEvent>>()
                 .InstancePerDependency();
 
             builder.Register(context => new DeviceStatusChangedHandler(
-                    context.Resolve<IRepository<Device, Guid>>(),
                     context.Resolve<ISchedulerFactory>(),
                     context.Resolve<ILogger<DeviceStatusChangedHandler>>()))
                 .As<INotificationHandler<DeviceStatusChangedEvent>>()
