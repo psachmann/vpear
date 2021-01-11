@@ -48,11 +48,11 @@ namespace VPEAR.Server.Services
         }
 
         /// <inheritdoc/>
-        public async Task<Result<Null>> DeleteAsync(string id)
+        public async Task<Result<Null>> DeleteAsync(string name)
         {
             var status = HttpStatusCode.InternalServerError;
             var message = ErrorMessages.InternalServerError;
-            var user = await this.users.FindByIdAsync(id);
+            var user = await this.users.FindByNameAsync(name);
 
             if (user == null)
             {
@@ -168,9 +168,9 @@ namespace VPEAR.Server.Services
         }
 
         /// <inheritdoc/>
-        public async Task<Result<Null>> PutAsync(string id, PutUserRequest request)
+        public async Task<Result<Null>> PutAsync(string name, PutUserRequest request)
         {
-            var user = await this.users.FindByIdAsync(id);
+            var user = await this.users.FindByNameAsync(name);
 
             if (user == null)
             {

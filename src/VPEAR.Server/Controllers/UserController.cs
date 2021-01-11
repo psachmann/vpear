@@ -63,7 +63,7 @@ namespace VPEAR.Server.Controllers
         /// <summary>
         /// The admin can update a user.
         /// </summary>
-        /// <param name="id">The user id.</param>
+        /// <param name="name">The user name.</param>
         /// <param name="request">The request data.</param>
         /// <returns>Http status code, which indicates the operation result.</returns>
         [HttpPut]
@@ -73,11 +73,11 @@ namespace VPEAR.Server.Controllers
         [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(ErrorResponse))]
         [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is not authorized.", typeof(Null))]
         [SwaggerResponse(StatusCodes.Status404NotFound, "No user found.", typeof(ErrorResponse))]
-        public async Task<IActionResult> OnPutAsync([FromQuery, Required] string id, [FromQuery, Required] PutUserRequest request)
+        public async Task<IActionResult> OnPutAsync([FromQuery, Required] string name, [FromQuery, Required] PutUserRequest request)
         {
-            this.logger.LogDebug("{@User}: {@Request}", id, request);
+            this.logger.LogDebug("{@User}: {@Request}", name, request);
 
-            var result = await this.service.PutAsync(id, request);
+            var result = await this.service.PutAsync(name, request);
 
             return result.IsSuccess ? this.StatusCode(result.StatusCode, result.Value) : this.StatusCode(result.StatusCode, result.Error);
         }
@@ -85,7 +85,7 @@ namespace VPEAR.Server.Controllers
         /// <summary>
         /// The admin can delete a user.
         /// </summary>
-        /// <param name="id">The user id.</param>
+        /// <param name="name">The user name.</param>
         /// <returns>Http status code, which indicates the operation result.</returns>
         [HttpDelete]
         [Authorize(Roles = Roles.AdminRole)]
@@ -94,11 +94,11 @@ namespace VPEAR.Server.Controllers
         [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is not authorized.", typeof(Null))]
         [SwaggerResponse(StatusCodes.Status403Forbidden, "Last admin will not be deleted.", typeof(ErrorResponse))]
         [SwaggerResponse(StatusCodes.Status404NotFound, "No user found.", typeof(ErrorResponse))]
-        public async Task<IActionResult> OnDeleteAsync([FromQuery, Required] string id = "")
+        public async Task<IActionResult> OnDeleteAsync([FromQuery, Required] string name = "")
         {
-            this.logger.LogDebug("{@User}", id);
+            this.logger.LogDebug("{@User}", name);
 
-            var result = await this.service.DeleteAsync(id);
+            var result = await this.service.DeleteAsync(name);
 
             return result.IsSuccess ? this.StatusCode(result.StatusCode, result.Value) : this.StatusCode(result.StatusCode, result.Error);
         }

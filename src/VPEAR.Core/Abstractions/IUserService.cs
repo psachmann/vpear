@@ -12,9 +12,9 @@ namespace VPEAR.Core.Abstractions
     {
         Task<Result<Container<GetUserResponse>>> GetAsync(string role = null);
 
-        Task<Result<Null>> PutAsync(string id, PutUserRequest request);
+        Task<Result<Null>> PutAsync(string name, PutUserRequest request);
 
-        Task<Result<Null>> DeleteAsync(string id);
+        Task<Result<Null>> DeleteAsync(string name);
 
         Task<Result<Null>> PostRegisterAsync(PostRegisterRequest request);
 
