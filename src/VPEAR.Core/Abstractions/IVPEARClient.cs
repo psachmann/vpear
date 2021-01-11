@@ -44,6 +44,8 @@ namespace VPEAR.Core.Abstractions
 
         Task<Container<GetUserResponse>> GetUsersAsync(string role = null);
 
+        Task<bool> PutUserAsync(string oldPassword, string newPassword, bool isVerified = false);
+
         Task<bool> LoginAsync(string name, string password);
 
         void Logout();

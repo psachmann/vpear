@@ -295,8 +295,32 @@ namespace VPEAR.Core
         }
 
         /// <inheritdoc/>
+        public async Task<bool> PutUserAsync(string oldPassword, string newPassword, bool isVerified = false)
+        {
+            var uri = $"{ApiPrefix}/user?name={this.name}";
+            var payload = new PutUserRequest()
+            {
+                IsVerified = isVerified,
+                NewPassword = newPassword,
+                OldPassword = oldPassword,
+            };
+
+            return await this.PutAsync(uri, payload) && this.IsSuccessResponse();
+        }
+
+        /// <inheritdoc/>
         public async Task<bool> LoginAsync(string name, string password)
         {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException("Is null or empty.", nameof(name));
+            }
+
+            if (string.IsNullOrEmpty(password))
+            {
+                throw new ArgumentException("Is null or empty.", nameof(password));
+            }
+
             var uri = $"{ApiPrefix}/user/login";
             var payload = new PutLoginRequest()
             {
@@ -336,6 +360,16 @@ namespace VPEAR.Core
         /// <inheritdoc/>
         public async Task<bool> RegisterAsync(string name, string password, bool isAdmin = false)
         {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException("Is null or empty.", nameof(name));
+            }
+
+            if (string.IsNullOrEmpty(password))
+            {
+                throw new ArgumentException("Is null or empty.", nameof(password));
+            }
+
             var uri = $"{ApiPrefix}/user/register";
             var payload = new PostRegisterRequest()
             {
