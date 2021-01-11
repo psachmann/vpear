@@ -59,7 +59,7 @@ namespace VPEAR.Server.Test.Controllers
         }
 
         [Fact]
-        public void OnPutAsync200OKTest()
+        public void OnPutAsync204NoContentTest()
         {
             var devices = new List<Guid>()
             {

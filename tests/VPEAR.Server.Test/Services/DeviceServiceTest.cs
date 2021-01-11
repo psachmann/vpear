@@ -59,7 +59,7 @@ namespace VPEAR.Server.Test.Services
         }
 
         [Fact]
-        public void PutAsync200OKTest()
+        public void PutAsync20NoContentTest()
         {
             var devices = new List<Guid>()
             {
@@ -71,7 +71,7 @@ namespace VPEAR.Server.Test.Services
             {
                 var result = await this.service.PutAsync(device, new PutDeviceRequest());
 
-                Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
+                Assert.Equal(StatusCodes.Status204NoContent, result.StatusCode);
                 Assert.Null(result.Value);
             });
         }
@@ -136,7 +136,7 @@ namespace VPEAR.Server.Test.Services
         }
 
         [Fact]
-        public void DeleteAsync200OKTest()
+        public void DeleteAsync204NoContentTest()
         {
             var devices = new List<Guid>()
             {
@@ -149,7 +149,7 @@ namespace VPEAR.Server.Test.Services
                 var result = await this.service.DeleteAsync(device);
 
                 Assert.Null(result.Value);
-                Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
+                Assert.Equal(StatusCodes.Status204NoContent, result.StatusCode);
             });
         }
 

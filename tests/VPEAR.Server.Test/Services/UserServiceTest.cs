@@ -74,7 +74,7 @@ namespace VPEAR.Server.Test.Services
         }
 
         [Fact]
-        public async Task DeleteAsync200OKTest()
+        public async Task DeleteAsync204NoContentTest()
         {
             var result = await this.service.DeleteAsync(Mocks.User.Name);
 
@@ -103,7 +103,7 @@ namespace VPEAR.Server.Test.Services
         }
 
         [Fact]
-        public async Task PostRegisterAsync200OKTest()
+        public async Task PostRegisterAsync204NoContentTest()
         {
             var request = new PostRegisterRequest()
             {
@@ -114,7 +114,7 @@ namespace VPEAR.Server.Test.Services
             var result = await this.service.PostRegisterAsync(request);
 
             Assert.Null(result.Value);
-            Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
+            Assert.Equal(StatusCodes.Status204NoContent, result.StatusCode);
 
             request = new PostRegisterRequest()
             {
@@ -125,7 +125,7 @@ namespace VPEAR.Server.Test.Services
             result = await this.service.PostRegisterAsync(request);
 
             Assert.Null(result.Value);
-            Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
+            Assert.Equal(StatusCodes.Status204NoContent, result.StatusCode);
         }
 
         [Fact]

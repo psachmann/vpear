@@ -162,7 +162,7 @@ namespace VPEAR.Server.Services
                     await this.users.AddToRoleAsync(user, Roles.UserRole);
                 }
 
-                return new Result<Null>(HttpStatusCode.OK);
+                return new Result<Null>(HttpStatusCode.NoContent);
             }
             else
             {

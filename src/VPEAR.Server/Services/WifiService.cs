@@ -113,7 +113,7 @@ namespace VPEAR.Server.Services
             {
                 await client.SyncAsync(device, this.devices);
 
-                return new Result<Null>(HttpStatusCode.OK);
+                return new Result<Null>(HttpStatusCode.NoContent);
             }
             else
             {

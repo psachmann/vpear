@@ -73,9 +73,9 @@ namespace VPEAR.Server.Test.Services
         }
 
         [Theory]
-        [InlineData(StatusCodes.Status200OK, false, "stable", "next")]
-        [InlineData(StatusCodes.Status200OK, true, null, null)]
-        public void PutAsync200OKTest(
+        [InlineData(StatusCodes.Status204NoContent, false, "stable", "next")]
+        [InlineData(StatusCodes.Status204NoContent, true, null, null)]
+        public void PutAsync204NoContentTest(
             int expectedStatus,
             bool package,
             string? source,

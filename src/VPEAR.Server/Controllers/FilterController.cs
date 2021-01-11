@@ -68,7 +68,7 @@ namespace VPEAR.Server.Controllers
         /// <returns>Http status code, which indicates the operation result.</returns>
         [HttpPut]
         [Produces(Defaults.DefaultResponseType)]
-        [SwaggerResponse(StatusCodes.Status200OK, "Saved filters to device and database.", typeof(Null))]
+        [SwaggerResponse(StatusCodes.Status204NoContent, "Saved filters to device and database.", typeof(Null))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(ErrorResponse))]
         [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", typeof(Null))]
         [SwaggerResponse(StatusCodes.Status404NotFound, "Id not found.", typeof(ErrorResponse))]

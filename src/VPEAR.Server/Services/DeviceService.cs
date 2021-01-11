@@ -30,7 +30,6 @@ namespace VPEAR.Server.Services
         private readonly IRepository<Device, Guid> devices;
         private readonly IDiscoveryService discovery;
         private readonly DeviceClient.Factory factory;
-        private readonly ISchedulerFactory schedulerFactory;
         private readonly ILogger<DeviceController> logger;
 
         /// <summary>
@@ -39,19 +38,16 @@ namespace VPEAR.Server.Services
         /// <param name="devices">The device repository.</param>
         /// <param name="discovery">The discovery service.</param>
         /// <param name="factory">The device client factory.</param>
-        /// <param name="schedulerFactory">The Quartz scheduler factory.</param>
         /// <param name="logger">The service logger.</param>
         public DeviceService(
             IRepository<Device, Guid> devices,
             IDiscoveryService discovery,
             DeviceClient.Factory factory,
-            ISchedulerFactory schedulerFactory,
             ILogger<DeviceController> logger)
         {
             this.devices = devices;
             this.discovery = discovery;
             this.factory = factory;
-            this.schedulerFactory = schedulerFactory;
             this.logger = logger;
         }
 
@@ -124,7 +120,7 @@ namespace VPEAR.Server.Services
                 await this.devices.UpdateAsync(device);
                 await client.SyncAsync(device, this.devices);
 
-                return new Result<Null>(HttpStatusCode.OK);
+                return new Result<Null>(HttpStatusCode.NoContent);
             }
             else
             {
@@ -171,7 +167,7 @@ namespace VPEAR.Server.Services
 
             await this.devices.DeleteAsync(device);
 
-            return new Result<Null>(HttpStatusCode.OK);
+            return new Result<Null>(HttpStatusCode.NoContent);
         }
     }
 }

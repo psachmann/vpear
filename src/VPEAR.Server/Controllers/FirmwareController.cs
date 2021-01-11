@@ -76,7 +76,7 @@ namespace VPEAR.Server.Controllers
         [HttpPut]
         [Authorize(Roles = Roles.AdminRole)]
         [Produces(Defaults.DefaultResponseType)]
-        [SwaggerResponse(StatusCodes.Status200OK, "Firmware information were saved to device and db.", typeof(Null))]
+        [SwaggerResponse(StatusCodes.Status204NoContent, "Firmware information were saved to device and db.", typeof(Null))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(ErrorResponse))]
         [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", typeof(Null))]
         [SwaggerResponse(StatusCodes.Status404NotFound, "Id not found.", typeof(ErrorResponse))]

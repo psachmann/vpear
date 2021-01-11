@@ -72,7 +72,7 @@ namespace VPEAR.Server.Controllers
         /// <param name="request">The request data.</param>
         /// <returns>Http status code, which indicates the operation result.</returns>
         [HttpPut]
-        [SwaggerResponse(StatusCodes.Status200OK, "Changes were saved to db and device.", typeof(Null))]
+        [SwaggerResponse(StatusCodes.Status204NoContent, "Changes were saved to db and device.", typeof(Null))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(ErrorResponse))]
         [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", typeof(Null))]
         [SwaggerResponse(StatusCodes.Status404NotFound, "Id not found.", typeof(ErrorResponse))]
@@ -114,7 +114,7 @@ namespace VPEAR.Server.Controllers
         /// <returns>Http status code, which indicates the operation result.</returns>
         [HttpDelete]
         [Authorize(Roles = Roles.AdminRole)]
-        [SwaggerResponse(StatusCodes.Status200OK, "Device was deleted.", typeof(Null))]
+        [SwaggerResponse(StatusCodes.Status204NoContent, "Device was deleted.", typeof(Null))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(ErrorResponse))]
         [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", typeof(Null))]
         [SwaggerResponse(StatusCodes.Status404NotFound, "Device not found.", typeof(ErrorResponse))]

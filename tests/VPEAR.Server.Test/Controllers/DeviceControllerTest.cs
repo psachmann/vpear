@@ -60,7 +60,7 @@ namespace VPEAR.Server.Test.Controllers
         }
 
         [Fact]
-        public void PutAsync200OKTest()
+        public void PutAsync204NoContentTest()
         {
             var devices = new List<Guid>()
             {
@@ -145,7 +145,7 @@ namespace VPEAR.Server.Test.Controllers
         }
 
         [Fact]
-        public void DeleteAsync200OKTest()
+        public void DeleteAsync204NoContentTest()
         {
             var devices = new List<Guid>()
             {

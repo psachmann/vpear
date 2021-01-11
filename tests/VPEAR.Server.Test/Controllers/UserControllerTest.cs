@@ -49,7 +49,7 @@ namespace VPEAR.Server.Test.Controllers
         [InlineData(true, null, null)]
         [InlineData(false, "newPassword", "oldPassword")]
         [InlineData(true, "newPassword", "oldPassword")]
-        public async Task OnPutAsync200OKTest(
+        public async Task OnPutAsync204NoContentTest(
             bool isVerified,
             string? newPassword,
             string? oldPassword)
@@ -79,7 +79,7 @@ namespace VPEAR.Server.Test.Controllers
         }
 
         [Fact]
-        public async Task OnDeleteAsync200OKTest()
+        public async Task OnDeleteAsync204NoContentTest()
         {
             var result = await this.controller.OnDeleteAsync(Mocks.User.Name);
             var objectResult = Assert.IsType<ObjectResult>(result);
@@ -112,7 +112,7 @@ namespace VPEAR.Server.Test.Controllers
         }
 
         [Fact]
-        public async Task OnPostRegisterAsync200OKTest()
+        public async Task OnPostRegisterAsync204NoContentTest()
         {
             var request = new PostRegisterRequest()
             {

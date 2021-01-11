@@ -101,7 +101,7 @@ namespace VPEAR.Server.Services
                 await this.devices.UpdateAsync(device);
                 await client.SyncAsync(device, this.devices);
 
-                return new Result<Null>(HttpStatusCode.OK);
+                return new Result<Null>(HttpStatusCode.NoContent);
             }
             else
             {

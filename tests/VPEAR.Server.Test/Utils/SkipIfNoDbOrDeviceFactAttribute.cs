@@ -18,12 +18,22 @@ namespace VPEAR.Server.Test
         public SkipIfNoDbOrDeviceFactAttribute(string baseAddress)
         {
             using var context = ContextFactory.CreateDbContext(Environment.GetCommandLineArgs());
-            using var client = new DeviceClient(baseAddress, new HttpClient());
+            using var client = new DeviceClient(baseAddress, CreateClient());
 
             if (!context.Database.CanConnect() || client.CanConnectAsync().Result)
             {
                 this.Skip = "Can not connect to database or device.";
             }
+        }
+
+        private static HttpClient CreateClient()
+        {
+            var client = new HttpClient
+            {
+                Timeout = TimeSpan.FromMilliseconds(300.0),
+            };
+
+            return client;
         }
     }
 }

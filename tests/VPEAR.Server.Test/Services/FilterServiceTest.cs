@@ -55,7 +55,7 @@ namespace VPEAR.Server.Test.Services
         }
 
         [Fact]
-        public void PutAsync200OKTest()
+        public void PutAsync204NoContentTest()
         {
             var devices = new List<Guid>()
             {
@@ -67,7 +67,7 @@ namespace VPEAR.Server.Test.Services
             {
                 var result = await this.service.PutAsync(device, new PutFilterRequest());
 
-                Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
+                Assert.Equal(StatusCodes.Status204NoContent, result.StatusCode);
                 Assert.Null(result.Value);
             });
         }

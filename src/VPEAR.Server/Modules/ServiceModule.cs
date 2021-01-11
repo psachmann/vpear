@@ -33,7 +33,6 @@ namespace VPEAR.Server.Modules
                     context.Resolve<IRepository<Device, Guid>>(),
                     context.Resolve<IDiscoveryService>(),
                     context.Resolve<DeviceClient.Factory>(),
-                    context.Resolve<ISchedulerFactory>(),
                     context.Resolve<ILogger<DeviceController>>()))
                 .As<IDeviceService>()
                 .InstancePerLifetimeScope();
