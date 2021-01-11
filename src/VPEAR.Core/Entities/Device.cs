@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using VPEAR.Core.Abstractions;
+using VPEAR.Core.Events;
 
 namespace VPEAR.Core.Entities
 {
@@ -67,5 +68,47 @@ namespace VPEAR.Core.Entities
         /// </summary>
         /// <value>The device status.</value>
         public DeviceStatus Status { get; set; } = DeviceStatus.Stopped;
+
+        /// <summary>
+        /// Raises a new frequency changed event.
+        /// </summary>
+        /// <param name="newFrequency">The new device scanning frequency.</param>
+        public void FrequencyChanged(int? newFrequency)
+        {
+            if (newFrequency == null || this.Frequency == newFrequency)
+            {
+                return;
+            }
+
+            this.Events.Add(new DeviceFrequencyChangedEvent(this, newFrequency.Value));
+        }
+
+        /// <summary>
+        /// Raises a new required sensors changed event.
+        /// </summary>
+        /// <param name="newRequiredSensors">The new amount of required sensors.</param>
+        public void RequiredSensorsChanged(int? newRequiredSensors)
+        {
+            if (newRequiredSensors == null || this.RequiredSensors == newRequiredSensors)
+            {
+                return;
+            }
+
+            this.Events.Add(new DeviceRequiredSensorsChangedEvent(this, newRequiredSensors.Value));
+        }
+
+        /// <summary>
+        /// Raises a new device status changed event.
+        /// </summary>
+        /// <param name="newStatus">The new device status.</param>
+        public void StatusChanged(DeviceStatus? newStatus)
+        {
+            if (newStatus == null || this.Status == newStatus)
+            {
+                return;
+            }
+
+            this.Events.Add(new DeviceStatusChangedEvent(this, newStatus.Value));
+        }
     }
 }

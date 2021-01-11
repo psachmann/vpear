@@ -18,7 +18,7 @@ namespace VPEAR.Core.Abstractions
     /// <typeparam name="TEntity">Type of the entity.</typeparam>
     /// <typeparam name="TKey">Type of the database key.</typeparam>
     public interface IRepository<TEntity, in TKey>
-        where TEntity : class
+        where TEntity : AbstractEntity<TKey>
         where TKey : struct, IEquatable<TKey>
     {
         /// <summary>

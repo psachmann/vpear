@@ -41,6 +41,8 @@ namespace VPEAR.Server.Data.Configuration
                 .IsRequired()
                 .IsRowVersion()
                 .ValueGeneratedOnAddOrUpdate();
+
+            builder.Ignore(entity => entity.Events);
         }
     }
 }

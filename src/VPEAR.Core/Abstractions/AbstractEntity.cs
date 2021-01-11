@@ -4,6 +4,7 @@
 // </copyright>
 
 using System;
+using System.Collections.Generic;
 
 namespace VPEAR.Core.Abstractions
 {
@@ -35,5 +36,11 @@ namespace VPEAR.Core.Abstractions
         /// </summary>
         /// <value>The concurrency token for the specific item.</value>
         public DateTimeOffset ModifiedAt { get; set; }
+
+        /// <summary>
+        /// Gets or sets the events.
+        /// </summary>
+        /// <value>The events for the entity.</value>
+        public IList<AbstractEvent> Events { get; set; } = new List<AbstractEvent>();
     }
 }
