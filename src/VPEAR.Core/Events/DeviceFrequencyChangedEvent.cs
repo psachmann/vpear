@@ -20,7 +20,7 @@ namespace VPEAR.Core.Events
         /// <param name="newFrequency">The new scanning frequency.</param>
         public DeviceFrequencyChangedEvent(Device device, int newFrequency)
         {
-            this.OldValue = device;
+            this.OriginalValue = device;
             this.NewValue = newFrequency;
         }
 
@@ -28,7 +28,7 @@ namespace VPEAR.Core.Events
         /// Gets the original device state.
         /// </summary>
         /// <value>The original device state.</value>
-        public Device OldValue { get; }
+        public Device OriginalValue { get; }
 
         /// <summary>
         /// Gets the new scanning frequency.

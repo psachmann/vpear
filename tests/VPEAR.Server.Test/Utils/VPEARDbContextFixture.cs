@@ -18,7 +18,7 @@ namespace VPEAR.Server.Test
         {
             Seed();
 
-            this.Context = new VPEARDbContext(GetDbContextOptions());
+            this.Context = new VPEARDbContext(GetDbContextOptions(), null);
         }
 
         public VPEARDbContext Context { get; private set; }
@@ -41,7 +41,7 @@ namespace VPEAR.Server.Test
         {
             lock (Lock)
             {
-                using var context = new VPEARDbContext(GetDbContextOptions());
+                using var context = new VPEARDbContext(GetDbContextOptions(), null);
 
                 context.Database.EnsureDeleted();
                 context.Database.EnsureCreated();

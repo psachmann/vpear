@@ -34,7 +34,7 @@ namespace VPEAR.Server.Data
                     options.CharSetBehavior(CharSetBehavior.NeverAppend);
                 });
 
-            return new VPEARDbContext(builder.Options);
+            return new VPEARDbContext(builder.Options, null);
         }
     }
 }

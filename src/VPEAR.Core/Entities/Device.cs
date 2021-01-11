@@ -84,20 +84,6 @@ namespace VPEAR.Core.Entities
         }
 
         /// <summary>
-        /// Raises a new required sensors changed event.
-        /// </summary>
-        /// <param name="newRequiredSensors">The new amount of required sensors.</param>
-        public void RequiredSensorsChanged(int? newRequiredSensors)
-        {
-            if (newRequiredSensors == null || this.RequiredSensors == newRequiredSensors)
-            {
-                return;
-            }
-
-            this.Events.Add(new DeviceRequiredSensorsChangedEvent(this, newRequiredSensors.Value));
-        }
-
-        /// <summary>
         /// Raises a new device status changed event.
         /// </summary>
         /// <param name="newStatus">The new device status.</param>

@@ -117,9 +117,9 @@ namespace VPEAR.Server.Services
             if (await client.PutFrequencyAsync(request.Frequency) && await client.PutRequiredSensorsAsync(request.RequiredSensors))
             {
                 device.DisplayName = request.DisplayName ?? device.DisplayName;
-                device.Frequency = await this.UpdateFrequencyAsync(device, request.Frequency) ?? device.Frequency;
                 device.RequiredSensors = request.RequiredSensors ?? device.RequiredSensors;
-                device.Status = await this.UpdateStatusAsync(device, request.Status, client) ?? device.Status;
+                device.FrequencyChanged(request.Frequency);
+                device.StatusChanged(request.Status);
 
                 await this.devices.UpdateAsync(device);
                 await client.SyncAsync(device, this.devices);
@@ -128,9 +128,9 @@ namespace VPEAR.Server.Services
             }
             else
             {
-                device.Status = DeviceStatus.NotReachable;
+                device.StatusChanged(DeviceStatus.NotReachable);
 
-                await this.devices.UpdateAsync(device);
+                await this.devices.SaveChangesAsync();
 
                 return new Result<Null>(HttpStatusCode.FailedDependency, ErrorMessages.DeviceIsNotReachable);
             }
@@ -172,102 +172,6 @@ namespace VPEAR.Server.Services
             await this.devices.DeleteAsync(device);
 
             return new Result<Null>(HttpStatusCode.OK);
-        }
-
-        internal static int GetIntervallInSeconds(int frequnecy)
-        {
-            if (frequnecy >= 1)
-            {
-                return frequnecy;
-            }
-            else
-            {
-                return 1;
-            }
-        }
-
-        internal async Task DeletePollFramesJobAsync(Device device)
-        {
-            var scheduler = await this.schedulerFactory.GetScheduler();
-            var job = new JobKey(device.Id.ToString());
-
-            await scheduler.DeleteJob(job);
-
-            this.logger.LogInformation("Deleted {@Job}", job);
-        }
-
-        internal async Task<int?> UpdateFrequencyAsync(Device device, int? frequency)
-        {
-            if (frequency == null || frequency == device.Frequency)
-            {
-                return null;
-            }
-
-            await this.DeletePollFramesJobAsync(device);
-
-            if (device.Status == DeviceStatus.Recording)
-            {
-                var scheduler = await this.schedulerFactory.GetScheduler();
-                var job = JobBuilder.Create<PollFramesJob>()
-                        .WithIdentity($"{device.Id}-Job")
-                        .Build();
-
-                var trigger = TriggerBuilder.Create()
-                    .WithIdentity($"{device.Id}-Trigger", "Poll-Frames")
-                    .WithSimpleSchedule(builder => builder
-                        .WithIntervalInSeconds(GetIntervallInSeconds(frequency.Value))
-                        .RepeatForever())
-                    .StartNow()
-                    .Build();
-
-                await scheduler.ScheduleJob(job, trigger);
-
-                this.logger.LogInformation("Created new {@Job} with {@Trigger}", job, trigger);
-            }
-
-            return frequency;
-        }
-
-        internal async Task<DeviceStatus?> UpdateStatusAsync(Device device, DeviceStatus? status, IDeviceClient client)
-        {
-            if (status == null || device.Status == status)
-            {
-                return null;
-            }
-
-            await this.DeletePollFramesJobAsync(device);
-
-            if (device.Status == DeviceStatus.Archived || status == DeviceStatus.Archived)
-            {
-                return DeviceStatus.Archived;
-            }
-
-            if (!await client.CanConnectAsync())
-            {
-                return DeviceStatus.NotReachable;
-            }
-
-            if (status == DeviceStatus.Recording)
-            {
-                var scheduler = await this.schedulerFactory.GetScheduler();
-                var job = JobBuilder.Create<PollFramesJob>()
-                        .WithIdentity(device.Id.ToString())
-                        .Build();
-
-                var trigger = TriggerBuilder.Create()
-                    .WithIdentity(device.Id.ToString(), "Poll-Frames")
-                    .WithSimpleSchedule(builder => builder
-                        .WithIntervalInSeconds(GetIntervallInSeconds(device.Frequency))
-                        .RepeatForever())
-                    .StartNow()
-                    .Build();
-
-                await scheduler.ScheduleJob(job, trigger);
-
-                this.logger.LogInformation("Created new {@Job} with {@Trigger}", job, trigger);
-            }
-
-            return status;
         }
     }
 }

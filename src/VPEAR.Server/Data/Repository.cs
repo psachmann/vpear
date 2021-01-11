@@ -139,6 +139,18 @@ namespace VPEAR.Server.Data
         }
 
         /// <inheritdoc/>
+        public void SaveChanges()
+        {
+            this.context.SaveChanges();
+        }
+
+        /// <inheritdoc/>
+        public async Task SaveChangesAsync()
+        {
+            await this.context.SaveChangesAsync();
+        }
+
+        /// <inheritdoc/>
         public async Task<TEntity> UpdateAsync(TEntity entity)
         {
             try

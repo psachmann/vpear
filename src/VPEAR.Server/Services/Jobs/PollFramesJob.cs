@@ -84,13 +84,11 @@ namespace VPEAR.Server.Services.Jobs
             }
             else
             {
-                await context.Scheduler.DeleteJob(context.JobDetail.Key);
+                device.StatusChanged(DeviceStatus.NotReachable);
 
-                device.Status = DeviceStatus.NotReachable;
+                await this.devices.SaveChangesAsync();
 
-                await this.devices.UpdateAsync(device);
-
-                this.logger.LogError("Client {@ClientId} is not reachable", id);
+                this.logger.LogError("Client({@ClientId}) is not reachable.", id);
             }
         }
     }

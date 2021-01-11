@@ -50,7 +50,7 @@ namespace VPEAR.Core.Abstractions
         Task<TEntity> GetAsync(TKey id);
 
         /// <summary>
-        /// Loads the reference synchron from the database.
+        /// Loads the reference from the database.
         /// </summary>
         /// <param name="entity">The entity to load from.</param>
         /// <param name="expression">The reference to load.</param>
@@ -59,7 +59,7 @@ namespace VPEAR.Core.Abstractions
             where TProperty : class;
 
         /// <summary>
-        /// Loads the reference from the database.
+        /// Loads the reference asynchronous from the database.
         /// </summary>
         /// <param name="entity">The entity to load from.</param>
         /// <param name="expression">The reference to load.</param>
@@ -78,7 +78,7 @@ namespace VPEAR.Core.Abstractions
             where TProperty : class;
 
         /// <summary>
-        /// Loads the collection from the database.
+        /// Loads the collection asynchronous from the database.
         /// </summary>
         /// <param name="entity">The entity to load from.</param>
         /// <param name="expression">The collection to load.</param>
@@ -86,6 +86,17 @@ namespace VPEAR.Core.Abstractions
         /// <returns>An awaitable task.</returns>
         Task GetCollectionAsync<TProperty>(TEntity entity, Expression<Func<TEntity, IEnumerable<TProperty>>> expression)
             where TProperty : class;
+
+        /// <summary>
+        /// Save changes to the database.
+        /// </summary>
+        void SaveChanges();
+
+        /// <summary>
+        /// Save changes asynchronous to the database.
+        /// </summary>
+        /// <returns>An awaitable task.</returns>
+        Task SaveChangesAsync();
 
         /// <summary>
         /// Updates an entry in the database.

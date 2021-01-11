@@ -5,6 +5,7 @@
 
 using Autofac;
 using FluentValidation.AspNetCore;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -77,6 +78,7 @@ namespace VPEAR.Server
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder.RegisterModule(new ClientModule());
+            builder.RegisterModule(new HandlerModule());
             builder.RegisterModule(new JobModule());
             builder.RegisterModule(new RepositoryModule());
             builder.RegisterModule(new ServiceModule());
@@ -105,7 +107,15 @@ namespace VPEAR.Server
                     options.InvalidModelStateResponseFactory = InvalidModelStateResponseFactory;
                 });
 
-            services.AddIdentity<IdentityUser, IdentityRole>()
+            services.AddIdentity<IdentityUser, IdentityRole>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = Limits.MinPasswordLength;
+                options.Password.RequiredUniqueChars = 0;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+            })
                 .AddEntityFrameworkStores<VPEARDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -132,6 +142,7 @@ namespace VPEAR.Server
                 });
 
             services.AddHttpClient();
+            services.AddMediatR(typeof(Startup));
 
             ConfigureDatabase(services);
             ConfigureQuartz(services);
