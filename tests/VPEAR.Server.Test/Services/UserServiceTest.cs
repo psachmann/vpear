@@ -57,7 +57,7 @@ namespace VPEAR.Server.Test.Services
                 NewPassword = newPassword,
                 OldPassword = oldPassword,
             };
-            var result = await this.service.PutAsync(Mocks.User.Id.ToString(), request);
+            var result = await this.service.PutAsync(Mocks.User.Name, request);
 
             Assert.Null(result.Value);
             Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
@@ -76,7 +76,7 @@ namespace VPEAR.Server.Test.Services
         [Fact]
         public async Task DeleteAsync200OKTest()
         {
-            var result = await this.service.DeleteAsync(Mocks.User.Id.ToString());
+            var result = await this.service.DeleteAsync(Mocks.User.Name);
 
             Assert.Null(result.Value);
             Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
@@ -85,7 +85,7 @@ namespace VPEAR.Server.Test.Services
         [Fact]
         public async Task DeleteAsync403ForbiddenTest()
         {
-            var result = await this.service.DeleteAsync(Mocks.Admin.Id.ToString());
+            var result = await this.service.DeleteAsync(Mocks.Admin.Name);
 
             Assert.NotNull(result.Error);
             Assert.Equal(StatusCodes.Status403Forbidden, result.StatusCode);

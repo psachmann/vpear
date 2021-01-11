@@ -10,7 +10,7 @@ using VPEAR.Core.Wrappers;
 
 namespace VPEAR.Core.Abstractions
 {
-    public interface IVPEARClient
+    public interface IVPEARClient : IDisposable
     {
         Exception Error { get; }
 
@@ -44,7 +44,7 @@ namespace VPEAR.Core.Abstractions
 
         Task<Container<GetUserResponse>> GetUsersAsync(string role = null);
 
-        Task<bool> PutUserAsync(string oldPassword, string newPassword, bool isVerified = false);
+        Task<bool> PutUserAsync(string name, string oldPassword = default, string newPassword = default, bool isVerified = false);
 
         Task<bool> LoginAsync(string name, string password);
 

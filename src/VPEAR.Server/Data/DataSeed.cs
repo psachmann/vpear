@@ -83,17 +83,8 @@ namespace VPEAR.Server.Data
         {
             using var scope = provider.CreateScope();
 
-            SeedDb(scope.ServiceProvider.GetRequiredService<VPEARDbContext>());
             SeedRoles(scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>());
             SeedUsers(scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>());
-        }
-
-        private static void SeedDb(VPEARDbContext context)
-        {
-#if DEBUG
-            context.AddRange(Devices);
-            context.SaveChanges();
-#endif
         }
 
         private static void SeedRoles(RoleManager<IdentityRole> roles)

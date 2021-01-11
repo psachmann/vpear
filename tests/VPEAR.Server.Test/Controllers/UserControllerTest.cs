@@ -60,7 +60,7 @@ namespace VPEAR.Server.Test.Controllers
                 NewPassword = newPassword,
                 OldPassword = oldPassword,
             };
-            var result = await this.controller.OnPutAsync(Mocks.User.Id.ToString(), request);
+            var result = await this.controller.OnPutAsync(Mocks.User.Name, request);
             var objectResult = Assert.IsType<ObjectResult>(result);
 
             Assert.Null(objectResult.Value);
@@ -81,7 +81,7 @@ namespace VPEAR.Server.Test.Controllers
         [Fact]
         public async Task OnDeleteAsync200OKTest()
         {
-            var result = await this.controller.OnDeleteAsync(Mocks.User.Id.ToString());
+            var result = await this.controller.OnDeleteAsync(Mocks.User.Name);
             var objectResult = Assert.IsType<ObjectResult>(result);
 
             Assert.Null(objectResult.Value);
@@ -90,7 +90,7 @@ namespace VPEAR.Server.Test.Controllers
         [Fact]
         public async Task OnDeleteAsync403ForbiddenTest()
         {
-            var result = await this.controller.OnDeleteAsync(Mocks.Admin.Id.ToString());
+            var result = await this.controller.OnDeleteAsync(Mocks.Admin.Name);
             var objectResult = Assert.IsType<ObjectResult>(result);
             var response = Assert.IsAssignableFrom<ErrorResponse>(objectResult.Value);
 

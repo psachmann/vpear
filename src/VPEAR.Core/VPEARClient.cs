@@ -295,9 +295,14 @@ namespace VPEAR.Core
         }
 
         /// <inheritdoc/>
-        public async Task<bool> PutUserAsync(string oldPassword, string newPassword, bool isVerified = false)
+        public async Task<bool> PutUserAsync(string name, string oldPassword = default, string newPassword = default, bool isVerified = false)
         {
-            var uri = $"{ApiPrefix}/user?name={this.name}";
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException("Is null or empty.", nameof(name));
+            }
+
+            var uri = $"{ApiPrefix}/user?name={name}";
             var payload = new PutUserRequest()
             {
                 IsVerified = isVerified,
@@ -419,7 +424,7 @@ namespace VPEAR.Core
             {
                 var message = new HttpRequestMessage()
                 {
-                    Content = new StringContent(payload?.ToJsonString(), Encoding.UTF8, "application/json"),
+                    Content = new StringContent(payload?.ToJsonString() ?? string.Empty, Encoding.UTF8, "application/json"),
                     Method = method,
                     RequestUri = new Uri(this.BaseAddress + uri),
                 };

@@ -64,6 +64,7 @@ namespace VPEAR.Server
             app.UseHttpsRedirection();
 #endif
             app.UseRouting();
+            app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
@@ -151,7 +152,7 @@ namespace VPEAR.Server
 
         private static void ConfigureDatabase(IServiceCollection services)
         {
-            services.AddDbContextPool<VPEARDbContext>(builder =>
+            services.AddDbContext<VPEARDbContext>(builder =>
             {
                 builder.UseMySql(
                     Config!.DbConnection,

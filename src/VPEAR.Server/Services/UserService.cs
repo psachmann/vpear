@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
@@ -69,7 +70,7 @@ namespace VPEAR.Server.Services
             {
                 if ((await this.users.DeleteAsync(user)).Succeeded)
                 {
-                    return new Result<Null>(HttpStatusCode.OK);
+                    return new Result<Null>(HttpStatusCode.NoContent);
                 }
             }
 
@@ -143,6 +144,14 @@ namespace VPEAR.Server.Services
                     UserName = request.Name,
                     SecurityStamp = DateTimeOffset.UtcNow.ToString(),
                 };
+                var result = await this.users.CreateAsync(user, request.Password);
+
+                if (!result.Succeeded)
+                {
+                    return new Result<Null>(
+                        HttpStatusCode.BadRequest,
+                        result.Errors.Select(error => error.Description));
+                }
 
                 if (request.IsAdmin)
                 {
@@ -153,10 +162,7 @@ namespace VPEAR.Server.Services
                     await this.users.AddToRoleAsync(user, Roles.UserRole);
                 }
 
-                if ((await this.users.CreateAsync(user, request.Password)).Succeeded)
-                {
-                    return new Result<Null>(HttpStatusCode.OK);
-                }
+                return new Result<Null>(HttpStatusCode.OK);
             }
             else
             {
@@ -193,7 +199,7 @@ namespace VPEAR.Server.Services
                 }
             }
 
-            return new Result<Null>(HttpStatusCode.OK);
+            return new Result<Null>(HttpStatusCode.NoContent);
         }
 
         /// <inheritdoc/>

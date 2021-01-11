@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using System.Collections.Generic;
 using System.Net;
 using VPEAR.Core.Wrappers;
 
@@ -41,12 +42,24 @@ namespace VPEAR.Core
         /// Initializes a new instance of the <see cref="Result{TSuccess}"/> class.
         /// </summary>
         /// <param name="statusCode">The http status code.</param>
-        /// <param name="message">The error message.</param>
-        public Result(HttpStatusCode statusCode, string message)
+        /// <param name="errorMessage">The error message.</param>
+        public Result(HttpStatusCode statusCode, string errorMessage)
         {
             this.IsSuccess = false;
             this.StatusCode = (int)statusCode;
-            this.Error = new ErrorResponse(statusCode, message);
+            this.Error = new ErrorResponse(statusCode, errorMessage);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Result{TSuccess}"/> class.
+        /// </summary>
+        /// <param name="statusCode">The http status code.</param>
+        /// <param name="errorMessages">The error messages.</param>
+        public Result(HttpStatusCode statusCode, IEnumerable<string> errorMessages)
+        {
+            this.IsSuccess = false;
+            this.StatusCode = (int)statusCode;
+            this.Error = new ErrorResponse(statusCode, errorMessages);
         }
 
         /// <summary>

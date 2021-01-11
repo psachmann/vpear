@@ -28,8 +28,8 @@ namespace VPEAR.Server.Test
         public const string UnconfirmedUser = "unconfirmed_user";
         public const string ValidPassword = "valid_password";
         public const string InvalidPassword = "invalid_password";
-        public static readonly (Guid Id, string Role) Admin = (new Guid("00000000000000000000000000000001"), Roles.AdminRole);
-        public static readonly (Guid Id, string Role) User = (new Guid("00000000000000000000000000000002"), Roles.UserRole);
+        public static readonly (string Name, string Role) Admin = ("Admin", Roles.AdminRole);
+        public static readonly (string Name, string Role) User = ("User", Roles.UserRole);
         public static readonly (Guid Id, DeviceStatus Status) NotExisting = (new Guid("00000000000000000000000000000000"), DeviceStatus.None);
         public static readonly (Guid Id, DeviceStatus Status) Archived = (new Guid("00000000000000000000000000000001"), DeviceStatus.Archived);
         public static readonly (Guid Id, DeviceStatus Status) NotReachable = (new Guid("00000000000000000000000000000002"), DeviceStatus.NotReachable);
@@ -149,30 +149,25 @@ namespace VPEAR.Server.Test
             var mock = new Mock<UserManager<IdentityUser>>(store.Object, null, null, null, null, null, null, null, null);
             var admin = new IdentityUser()
             {
-                Id = Mocks.Admin.Id.ToString(),
                 Email = "admin@mail.tld",
                 EmailConfirmed = true,
                 NormalizedEmail = "ADMIN@MAIL.TLD",
                 NormalizedUserName = "ADMIN",
-                UserName = "Admin",
+                UserName = Admin.Name,
             };
             var user = new IdentityUser()
             {
-                Id = Mocks.User.Id.ToString(),
                 Email = "user@email.tld",
                 EmailConfirmed = true,
                 NormalizedEmail = "USER@MAIL.TLD",
                 NormalizedUserName = "USER",
-                UserName = "User",
+                UserName = User.Name,
             };
 
             mock.Object.UserValidators.Add(new UserValidator<IdentityUser>());
             mock.Object.PasswordValidators.Add(new PasswordValidator<IdentityUser>());
 
             mock.Setup(mock => mock.AddToRoleAsync(It.IsAny<IdentityUser>(), It.IsAny<string>()))
-                .ReturnsAsync(IdentityResult.Success);
-
-            mock.Setup(mock => mock.ChangeEmailAsync(It.IsAny<IdentityUser>(), It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(IdentityResult.Success);
 
             mock.Setup(mock => mock.ChangePasswordAsync(It.IsAny<IdentityUser>(), It.IsAny<string>(), It.IsAny<string>()))
@@ -200,16 +195,16 @@ namespace VPEAR.Server.Test
                 .ReturnsAsync(IdentityResult.Success);
 
             mock.Setup(mock => mock.GetRolesAsync(admin))
-                .ReturnsAsync(new List<string>() { Roles.AdminRole, Roles.UserRole, });
+                .ReturnsAsync(new List<string>() { Roles.AdminRole, Roles.UserRole });
 
             mock.Setup(mock => mock.GetRolesAsync(user))
-                .ReturnsAsync(new List<string>() { Roles.UserRole, });
+                .ReturnsAsync(new List<string>() { Roles.UserRole });
 
             mock.Setup(mock => mock.GetUsersInRoleAsync(Roles.AdminRole))
-                .ReturnsAsync(new List<IdentityUser>() { admin, });
+                .ReturnsAsync(new List<IdentityUser>() { admin });
 
             mock.Setup(mock => mock.GetUsersInRoleAsync(Roles.UserRole))
-                .ReturnsAsync(new List<IdentityUser>() { admin, user, });
+                .ReturnsAsync(new List<IdentityUser>() { admin, user });
 
             mock.Setup(mock => mock.GetUsersInRoleAsync(Roles.None))
                 .ReturnsAsync(new List<IdentityUser>());
@@ -217,10 +212,10 @@ namespace VPEAR.Server.Test
             mock.Setup(mock => mock.FindByNameAsync(ConfirmedUser))
                 .ReturnsAsync(user);
 
-            mock.Setup(mock => mock.FindByIdAsync(admin.Id))
+            mock.Setup(mock => mock.FindByNameAsync(admin.UserName))
                 .ReturnsAsync(admin);
 
-            mock.Setup(mock => mock.FindByIdAsync(user.Id))
+            mock.Setup(mock => mock.FindByNameAsync(user.UserName))
                 .ReturnsAsync(user);
 
             mock.Setup(mock => mock.SetAuthenticationTokenAsync(It.IsAny<IdentityUser>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
