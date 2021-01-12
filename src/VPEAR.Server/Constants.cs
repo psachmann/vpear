@@ -19,6 +19,7 @@ namespace VPEAR.Server
             public const string DefaultLogPath = "../../logs/log_.txt";
             public const int DefaultHttpPort = 80;
             public const int DefaultHttpsPort = 443;
+            public const double DefaultHttpTimeout = 1000.0;
 #if DEBUG
             public const LogEventLevel DefaultLogLevel = LogEventLevel.Debug;
             public static readonly List<string> DefaultUrls = new List<string>()

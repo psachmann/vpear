@@ -145,7 +145,11 @@ namespace VPEAR.Server
                     };
                 });
 
-            services.AddHttpClient();
+            services.AddHttpClient("default", client =>
+            {
+                client.Timeout = TimeSpan.FromMilliseconds(Defaults.DefaultHttpTimeout);
+            });
+
             services.AddMediatR(typeof(Startup));
 
             ConfigureDatabase(services);

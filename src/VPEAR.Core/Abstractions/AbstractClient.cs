@@ -41,7 +41,7 @@ namespace VPEAR.Core.Abstractions
             if (Uri.TryCreate(baseAddress, UriKind.Absolute, out var _))
             {
                 this.baseAddress = baseAddress;
-                this.client = factory.CreateClient();
+                this.client = factory.CreateClient("default");
             }
             else
             {
