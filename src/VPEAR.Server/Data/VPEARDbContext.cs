@@ -53,6 +53,10 @@ namespace VPEAR.Server.Data
         /// <value>All frames in the db.</value>
         public DbSet<Frame>? Frames { get; set; }
 
+        /// <summary>
+        /// Saves all changes made in this context to the database.
+        /// </summary>
+        /// <returns>The number of state entries written to the database.</returns>
         public override int SaveChanges()
         {
             return this.SaveChangesAsync()
@@ -60,6 +64,11 @@ namespace VPEAR.Server.Data
                 .GetResult();
         }
 
+        /// <summary>
+        /// Saves all changes made in this context to the database.
+        /// </summary>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents the asynchronous save operation. The task result contains the number of state entries written to the database.</returns>
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             var result = await base.SaveChangesAsync(cancellationToken)
@@ -77,13 +86,15 @@ namespace VPEAR.Server.Data
 
             foreach (var entity in entitiesWithEvents)
             {
-                foreach (var abstractEvent in entity.Events.ToArray())
+                var events = entity.Events.ToArray();
+
+                entity.Events.Clear();
+
+                foreach (var abstractEvent in events)
                 {
                     await this.mediator.Publish(abstractEvent, cancellationToken)
                         .ConfigureAwait(false);
                 }
-
-                entity.Events.Clear();
             }
 
             return result;

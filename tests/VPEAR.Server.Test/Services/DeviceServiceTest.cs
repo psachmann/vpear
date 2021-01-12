@@ -97,16 +97,6 @@ namespace VPEAR.Server.Test.Services
         }
 
         [Fact]
-        public async Task PutAsync424FailedDependencyTest()
-        {
-            var result = await this.service.PutAsync(Mocks.NotReachable.Id, new PutDeviceRequest());
-
-            Assert.NotNull(result.Error);
-            Assert.Equal(StatusCodes.Status424FailedDependency, result.StatusCode);
-            Assert.Contains(ErrorMessages.DeviceIsNotReachable, result.Error!.Messages);
-        }
-
-        [Fact]
         public async Task PostAsync102ProcessingTest()
         {
             var request = new PostDeviceRequest()

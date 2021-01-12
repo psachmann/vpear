@@ -103,23 +103,14 @@ namespace VPEAR.Server.Services
                 return new Result<Null>(HttpStatusCode.Gone, ErrorMessages.DeviceIsArchived);
             }
 
-            if (device.Status == DeviceStatus.NotReachable)
-            {
-                return new Result<Null>(HttpStatusCode.FailedDependency, ErrorMessages.DeviceIsNotReachable);
-            }
-
             var client = this.factory.Invoke(device.Address);
 
             if (await client.PutFrequencyAsync(request.Frequency) && await client.PutRequiredSensorsAsync(request.RequiredSensors))
             {
                 device.DisplayName = request.DisplayName ?? device.DisplayName;
                 device.RequiredSensors = request.RequiredSensors ?? device.RequiredSensors;
-
                 device.FrequencyChanged(request.Frequency);
                 device.StatusChanged(request.Status);
-
-                device.Frequency = request.Frequency ?? device.Frequency;
-                device.Status = request.Status ?? device.Status;
 
                 await this.devices.UpdateAsync(device);
                 await client.SyncAsync(device, this.devices);
@@ -128,7 +119,6 @@ namespace VPEAR.Server.Services
             }
             else
             {
-                device.Status = DeviceStatus.NotReachable;
                 device.StatusChanged(DeviceStatus.NotReachable);
 
                 await this.devices.UpdateAsync(device);

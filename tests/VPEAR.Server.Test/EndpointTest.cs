@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using Xunit;
 using static VPEAR.Server.Constants;
 
-namespace VPEAR.Server.Test.Integration
+namespace VPEAR.Server.Test
 {
     [Collection("IntegrationTest")]
     public class EndpointTest : IClassFixture<WebApplicationFactory<Startup>>

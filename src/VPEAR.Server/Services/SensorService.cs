@@ -175,7 +175,6 @@ namespace VPEAR.Server.Services
             else
             {
                 device.StatusChanged(DeviceStatus.NotReachable);
-                device.Status = DeviceStatus.NotReachable;
 
                 await this.devices.UpdateAsync(device);
 

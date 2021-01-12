@@ -147,7 +147,7 @@ namespace VPEAR.Core.Abstractions
         /// </summary>
         public void Dispose()
         {
-            this.Client.Dispose();
+            this.Client?.Dispose();
             this.Response?.Dispose();
             GC.SuppressFinalize(this);
         }

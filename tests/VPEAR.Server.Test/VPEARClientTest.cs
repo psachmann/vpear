@@ -1,4 +1,4 @@
-// <copyright file="AdminIntegrationTest.cs" company="Patrick Sachmann">
+// <copyright file="VPEARClientTest.cs" company="Patrick Sachmann">
 // Copyright (c) Patrick Sachmann. All rights reserved.
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
@@ -13,11 +13,11 @@ using VPEAR.Core.Wrappers;
 using Xunit;
 using static VPEAR.Server.Constants;
 
-namespace VPEAR.Server.Test.Integration
+namespace VPEAR.Server.Test
 {
     [Collection("IntegrationTest")]
     [TestCaseOrderer("VPEAR.Server.Test.PriorityOrderer", "VPEAR.Server.Test")]
-    public class AdminIntegrationTest : IClassFixture<WebApplicationFactory<Startup>>
+    public class VPEARClientTest : IClassFixture<WebApplicationFactory<Startup>>
     {
         private const string BaseAddress = "http://localhost";
         private const string DeviceBaseAddress = "http://192.168.33.24";
@@ -29,7 +29,7 @@ namespace VPEAR.Server.Test.Integration
 
         private readonly WebApplicationFactory<Startup> factory;
 
-        public AdminIntegrationTest(WebApplicationFactory<Startup> factory)
+        public VPEARClientTest(WebApplicationFactory<Startup> factory)
         {
             this.factory = factory;
         }

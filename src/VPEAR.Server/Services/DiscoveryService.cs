@@ -134,7 +134,6 @@ namespace VPEAR.Server.Services
                     await client.SyncAsync(knownDevice, this.devices);
 
                     knownDevice.StatusChanged(DeviceStatus.Stopped);
-                    knownDevice.Status = DeviceStatus.Stopped;
 
                     await this.devices.UpdateAsync(knownDevice);
 
