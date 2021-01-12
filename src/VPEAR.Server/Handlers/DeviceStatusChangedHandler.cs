@@ -6,11 +6,9 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Quartz;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using VPEAR.Core;
-using VPEAR.Core.Abstractions;
 using VPEAR.Core.Entities;
 using VPEAR.Core.Events;
 using VPEAR.Server.Services.Jobs;

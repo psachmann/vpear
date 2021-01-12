@@ -52,7 +52,13 @@ namespace VPEAR.Server
         /// </summary>
         /// <param name="app">The application to configure.</param>
         /// <param name="env">The environment to configure.</param>
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        /// <param name="roles">The role manager to seed roles.</param>
+        /// <param name="users">The user manager to seed users.</param>
+        public void Configure(
+            IApplicationBuilder app,
+            IWebHostEnvironment env,
+            RoleManager<IdentityRole> roles,
+            UserManager<IdentityUser> users)
         {
 #if DEBUG
             env.EnvironmentName = "Development";
@@ -64,6 +70,7 @@ namespace VPEAR.Server
             app.UseHttpsRedirection();
 #endif
             app.UseRouting();
+            DataSeed.Seed(roles, users);
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>

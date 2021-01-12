@@ -45,7 +45,6 @@ namespace VPEAR.Server.Test
 
                 context.Database.EnsureDeleted();
                 context.Database.EnsureCreated();
-                context.AddRange(DataSeed.Devices);
                 context.SaveChanges();
             }
         }

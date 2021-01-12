@@ -47,6 +47,9 @@ namespace VPEAR.Server.Data.Configuration
                 .HasMaxLength(Limits.MaxStringLength)
                 .IsRequired()
                 .IsUnicode();
+#if DEBUG
+            builder.HasData(DataSeed.Devices);
+#endif
         }
     }
 }

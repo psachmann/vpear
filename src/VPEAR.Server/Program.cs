@@ -30,12 +30,9 @@ namespace VPEAR.Server
         {
             try
             {
-                var host = CreateHostBuilder(args)
-                    .Build();
-
-                DataSeed.Seed(host.Services);
-
-                host.Run();
+                CreateHostBuilder(args)
+                    .Build()
+                    .Run();
             }
             catch (Exception exception)
             {

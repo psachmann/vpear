@@ -93,7 +93,7 @@ namespace VPEAR.Server.Test
         public async Task UpdateAsyncTest()
         {
             var device = this.devices.Get()
-                .Where(device => device.Status == DeviceStatus.Recording)
+                .Where(device => device.Status == DeviceStatus.Stopped)
                 .First();
 
             device.Address = "new_address";

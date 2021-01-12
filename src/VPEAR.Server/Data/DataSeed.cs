@@ -23,8 +23,10 @@ namespace VPEAR.Server.Data
         static DataSeed()
         {
             Devices = new List<Device>();
+            Filters = new List<Filter>();
+            Frames = new List<Frame>();
 
-            foreach (var i in Enumerable.Range(1, 4))
+            foreach (var i in Enumerable.Range(1, 8))
             {
                 var id = new Guid(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (byte)i);
 
@@ -35,14 +37,15 @@ namespace VPEAR.Server.Data
                     DisplayName = $"Boditrak DataPort {i}",
                     Frames = new List<Frame>(),
                     Frequency = i * 100,
+                    Id = id,
                     Name = $"DataPort-{i}",
                     RequiredSensors = i,
-                    Status = (DeviceStatus)(i % 4),
+                    Status = ((DeviceStatus)(i % 4)) == DeviceStatus.Recording ? DeviceStatus.Stopped : (DeviceStatus)(i % 4),
                 };
 
                 var filter = new Filter()
                 {
-                    Device = device,
+                    DeviceForeignKey = id,
                     Id = id,
                     Noise = true,
                     Smooth = true,
@@ -51,8 +54,8 @@ namespace VPEAR.Server.Data
 
                 var frame = new Frame()
                 {
-                    Device = device,
-                    Filter = filter,
+                    DeviceForeignKey = id,
+                    FilterForeignKey = id,
                     Id = id,
                     Index = i,
                     Readings = new List<IList<int>>()
@@ -66,10 +69,9 @@ namespace VPEAR.Server.Data
                     Time = DateTimeOffset.UtcNow.ToString("yyyy-MM-dd hh:mm:ss.fff"),
                 };
 
-                device.Filter = filter;
-                device.Frames.Add(frame);
-
                 Devices.Add(device);
+                Filters.Add(filter);
+                Frames.Add(frame);
             }
         }
 
@@ -79,12 +81,27 @@ namespace VPEAR.Server.Data
         /// <value>The database seed for <see cref="Device"/>.</value>
         public static IList<Device> Devices { get; }
 
-        public static void Seed(IServiceProvider provider)
-        {
-            using var scope = provider.CreateScope();
+        /// <summary>
+        /// Gets the filter seed data.
+        /// </summary>
+        /// <value>The database seed for <see cref="Filter"/>.</value>
+        public static IList<Filter> Filters { get; }
 
-            SeedRoles(scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>());
-            SeedUsers(scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>());
+        /// <summary>
+        /// Gets the frame seed data.
+        /// </summary>
+        /// <value>The database seed for <see cref="Frame"/>.</value>
+        public static IList<Frame> Frames { get; }
+
+        /// <summary>
+        /// Seeds roles and users into the db.
+        /// </summary>
+        /// <param name="roles">The role manager to seed roles.</param>
+        /// <param name="users">The user manager to seed users.</param>
+        public static void Seed(RoleManager<IdentityRole> roles, UserManager<IdentityUser> users)
+        {
+            SeedRoles(roles);
+            SeedUsers(users);
         }
 
         private static void SeedRoles(RoleManager<IdentityRole> roles)
