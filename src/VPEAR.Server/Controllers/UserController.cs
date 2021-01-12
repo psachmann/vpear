@@ -57,7 +57,7 @@ namespace VPEAR.Server.Controllers
 
             var result = await this.service.GetAsync(role);
 
-            return result.IsSuccess ? this.StatusCode(result.StatusCode, result.Value) : this.StatusCode(result.StatusCode, result.Error);
+            return this.StatusCode(result.StatusCode, result.Value);
         }
 
         /// <summary>

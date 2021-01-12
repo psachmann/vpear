@@ -36,14 +36,12 @@ namespace VPEAR.Server.Test
         public static readonly (Guid Id, DeviceStatus Status) Recording = (new Guid("00000000000000000000000000000003"), DeviceStatus.Recording);
         public static readonly (Guid Id, DeviceStatus Status) Stopped = (new Guid("00000000000000000000000000000004"), DeviceStatus.Stopped);
 
-        public static ILogger<T> CreateLogger<T>()
+        public static Mock<ILogger<T>> MockLogger<T>()
         {
-            var mock = new Mock<ILogger<T>>();
-
-            return mock.Object;
+            return new Mock<ILogger<T>>();
         }
 
-        public static IRepository<Device, Guid> CreateDeviceRepository()
+        public static Mock<IRepository<Device, Guid>> MockDeviceRepository()
         {
             var mock = new Mock<IRepository<Device, Guid>>();
             var devices = GetDevices();
@@ -76,10 +74,10 @@ namespace VPEAR.Server.Test
             mock.Setup(mock => mock.UpdateAsync(It.IsAny<Device>()))
                 .ReturnsAsync(It.IsAny<Device>());
 
-            return mock.Object;
+            return mock;
         }
 
-        public static IRepository<Frame, Guid> CreateFrameRepository()
+        public static Mock<IRepository<Frame, Guid>> MockFrameRepository()
         {
             var mock = new Mock<IRepository<Frame, Guid>>();
             var devices = GetDevices();
@@ -113,17 +111,39 @@ namespace VPEAR.Server.Test
             mock.Setup(mock => mock.UpdateAsync(It.IsAny<Frame>()))
                 .ReturnsAsync(It.IsAny<Frame>());
 
-            return mock.Object;
+            return mock;
         }
 
-        public static DeviceClient.Factory CreateDeviceClientFactory()
+        public static Mock<DeviceClient.Factory> MockDeviceClientFactory(bool success = true)
         {
             var mock = new Mock<DeviceClient.Factory>();
 
-            mock.Setup(m => m.Invoke(It.IsAny<string>()))
-                .Returns(CreateSuccessDeviceClient());
+            if (success)
+            {
+                mock.Setup(m => m.Invoke(It.IsAny<string>()))
+                    .Returns(CreateSuccessDeviceClient());
+            }
+            else
+            {
+                mock.Setup(m => m.Invoke(It.IsAny<string>()))
+                    .Returns(CreateFailureDeviceClient());
+            }
 
-            return mock.Object;
+            return mock;
+        }
+
+        public static Mock<IJobExecutionContext> MockJobExecutionContext()
+        {
+            var mock = new Mock<IJobExecutionContext>();
+
+            mock.SetupAllProperties();
+
+            var jobKey = new JobKey(Recording.Id.ToString());
+
+            mock.SetupGet(mock => mock.JobDetail.Key)
+                .Returns(jobKey);
+
+            return mock;
         }
 
         public static RoleManager<IdentityRole> CreateRoleManager()
@@ -313,20 +333,21 @@ namespace VPEAR.Server.Test
             return mock.Object;
         }
 
-        public static ISchedulerFactory CreateSchedulerFactory()
+        public static ISchedulerFactory CreateSchedulerFactory(Mock<IScheduler>? mockScheduler = default)
         {
             var mock = new Mock<ISchedulerFactory>();
+            var scheduler = mockScheduler ?? MockScheduler();
 
             mock.Setup(mock => mock.GetScheduler(It.IsAny<CancellationToken>()))
-                .ReturnsAsync(CreateScheduler());
+                .ReturnsAsync(scheduler.Object);
 
             mock.Setup(mock => mock.GetScheduler(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(CreateScheduler());
+                .ReturnsAsync(scheduler.Object);
 
             return mock.Object;
         }
 
-        public static IScheduler CreateScheduler()
+        public static Mock<IScheduler> MockScheduler()
         {
             var mock = new Mock<IScheduler>();
 
@@ -339,7 +360,7 @@ namespace VPEAR.Server.Test
             mock.Setup(mock => mock.DeleteJob(It.IsAny<JobKey>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
 
-            return mock.Object;
+            return mock;
         }
 
         public static List<Device> GetDevices()

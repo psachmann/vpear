@@ -161,8 +161,8 @@ namespace VPEAR.Server.Test.Integration
             Assert.InRange(container.Count, 1, int.MaxValue);
         }
 
-        [Priority(201)]
-        [SkipIfNoDbOrDeviceFact(DeviceBaseAddress)]
+        // [Priority(201)]
+        // [SkipIfNoDbOrDeviceFact(DeviceBaseAddress)]
         public async Task PutFiltersAsync()
         {
             using var client = this.CreateClient();

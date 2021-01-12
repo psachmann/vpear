@@ -12,7 +12,7 @@ using VPEAR.Core.Extensions;
 using VPEAR.Core.Wrappers;
 using Xunit;
 
-namespace VPEAR.Server.Test.Integration
+namespace VPEAR.Server.Test
 {
     public class DeviceClientTest
     {
@@ -21,16 +21,22 @@ namespace VPEAR.Server.Test.Integration
         [Fact]
         public void DeviceClientConstructorTest()
         {
+            using var client = new HttpClient();
+            var factory = new Mock<IHttpClientFactory>();
+
             Assert.Throws<ArgumentNullException>(() => new DeviceClient(null, client: null));
             Assert.Throws<ArgumentNullException>(() => new DeviceClient(FailureBaseAddress, client: null));
-            Assert.Throws<ArgumentNullException>(() => new DeviceClient(null, client: new HttpClient()));
-            Assert.Throws<ArgumentException>(() => new DeviceClient("0.0.0.0", client: new HttpClient()));
+            Assert.Throws<ArgumentNullException>(() => new DeviceClient(null, client: client));
+            Assert.Throws<ArgumentException>(() => new DeviceClient("0.0.0.0", client: client));
+            using var withClient = new DeviceClient("http://0.0.0.0", client: client);
 
-            var factory = new Mock<IHttpClientFactory>();
             Assert.Throws<ArgumentNullException>(() => new DeviceClient(null, factory: null));
             Assert.Throws<ArgumentNullException>(() => new DeviceClient(FailureBaseAddress, factory: null));
             Assert.Throws<ArgumentNullException>(() => new DeviceClient(null, factory: factory.Object));
             Assert.Throws<ArgumentException>(() => new DeviceClient("0.0.0.0", factory: factory.Object));
+            using var withFactory = new DeviceClient("http://0.0.0.0", factory: factory.Object);
+
+            Assert.Null(withFactory.Error);
         }
 
         [Fact]

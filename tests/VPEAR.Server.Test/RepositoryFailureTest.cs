@@ -21,7 +21,7 @@ namespace VPEAR.Server.Test
         {
             this.devices = new Repository<VPEARDbContext, Device, Guid>(
                 fixture.Context,
-                Mocks.CreateLogger<IRepository<Device, Guid>>());
+                Mocks.MockLogger<IRepository<Device, Guid>>().Object);
 
             // provokes the failure of every db operation to trigger error handling
             fixture.Context.Database.EnsureDeleted();

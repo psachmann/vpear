@@ -64,7 +64,7 @@ namespace VPEAR.Server.Test
 
         private static void RegisterFactories(ContainerBuilder builder)
         {
-            builder.Register(context => Mocks.CreateDeviceClientFactory())
+            builder.Register(context => Mocks.MockDeviceClientFactory().Object)
                 .As<DeviceClient.Factory>()
                 .InstancePerDependency();
 
@@ -106,42 +106,42 @@ namespace VPEAR.Server.Test
 
         private static void RegisterLoggers(ContainerBuilder builder)
         {
-            builder.Register(context => Mocks.CreateLogger<DeviceController>())
+            builder.Register(context => Mocks.MockLogger<DeviceController>().Object)
                 .As<ILogger<DeviceController>>()
                 .InstancePerDependency();
 
-            builder.Register(context => Mocks.CreateLogger<FilterController>())
+            builder.Register(context => Mocks.MockLogger<FilterController>().Object)
                 .As<ILogger<FilterController>>()
                 .InstancePerDependency();
 
-            builder.Register(context => Mocks.CreateLogger<FirmwareController>())
+            builder.Register(context => Mocks.MockLogger<FirmwareController>().Object)
                 .As<ILogger<FirmwareController>>()
                 .InstancePerDependency();
 
-            builder.Register(context => Mocks.CreateLogger<PowerController>())
+            builder.Register(context => Mocks.MockLogger<PowerController>().Object)
                 .As<ILogger<PowerController>>()
                 .InstancePerDependency();
 
-            builder.Register(context => Mocks.CreateLogger<SensorController>())
+            builder.Register(context => Mocks.MockLogger<SensorController>().Object)
                 .As<ILogger<SensorController>>()
                 .InstancePerDependency();
 
-            builder.Register(context => Mocks.CreateLogger<UserController>())
+            builder.Register(context => Mocks.MockLogger<UserController>().Object)
                 .As<ILogger<UserController>>()
                 .InstancePerDependency();
 
-            builder.Register(context => Mocks.CreateLogger<WifiController>())
+            builder.Register(context => Mocks.MockLogger<WifiController>().Object)
                 .As<ILogger<WifiController>>()
                 .InstancePerDependency();
         }
 
         private static void RegisterRepositories(ContainerBuilder builder)
         {
-            builder.Register(context => Mocks.CreateDeviceRepository())
+            builder.Register(context => Mocks.MockDeviceRepository().Object)
                 .As<IRepository<Device, Guid>>()
                 .InstancePerDependency();
 
-            builder.Register(context => Mocks.CreateFrameRepository())
+            builder.Register(context => Mocks.MockFrameRepository().Object)
                 .As<IRepository<Frame, Guid>>()
                 .InstancePerDependency();
         }

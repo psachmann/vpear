@@ -71,6 +71,30 @@ namespace VPEAR.Server.Test
         }
 
         [Fact]
+        public void IsIPv4SubnetMaskTrueTest()
+        {
+            var address = IPAddress.Parse("255.255.255.0");
+
+            Assert.True(address.IsIPv4SubnetMask(), "This should be a valid IP v4 subnet mask.");
+        }
+
+        [Fact]
+        public void IsIPv4SubnetMaskFalseTest()
+        {
+            var address = IPAddress.Parse("10.10.10.10");
+
+            Assert.False(address.IsIPv4SubnetMask(), "This should NOT be a valid IP v4 subnet mask.");
+        }
+
+        [Fact]
+        public void IsIPv4SubnetMaskThrowsTest()
+        {
+            var address = IPAddress.Parse("0::0");
+
+            Assert.Throws<ArgumentException>(() => address.IsIPv4SubnetMask());
+        }
+
+        [Fact]
         public void FromJsonStringTest()
         {
             var array = new string[] { "item1", "item2", };

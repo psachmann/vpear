@@ -23,7 +23,7 @@ namespace VPEAR.Server.Test
         {
             this.devices = new Repository<VPEARDbContext, Device, Guid>(
                 fixture.Context,
-                Mocks.CreateLogger<IRepository<Device, Guid>>());
+                Mocks.MockLogger<IRepository<Device, Guid>>().Object);
         }
 
         [Fact]
