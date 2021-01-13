@@ -20,11 +20,11 @@ namespace VPEAR.Core.Abstractions
 
         Task<bool> DeleteDeviceAsync(string deviceId);
 
-        Task<Container<GetDeviceResponse>> GetDevicesAsync(DeviceStatus? status = null);
+        Task<Container<GetDeviceResponse>> GetDevicesAsync(DeviceStatus? status = default);
 
-        Task<bool> PostDevicesAsync(string deviceId, string address, string subnetMask);
+        Task<bool> PostDevicesAsync(string address, string subnetMask);
 
-        Task<bool> PutDeviceAsync(string deviceId, string diplayName, int? frquency, int? requiredSesnors);
+        Task<bool> PutDeviceAsync(string deviceId, string displayName = default, int? frequency = default, int? requiredSensors = default, DeviceStatus? status = default);
 
         Task<GetFiltersResponse> GetFiltersAsync(string deviceId);
 
@@ -54,6 +54,6 @@ namespace VPEAR.Core.Abstractions
 
         Task<GetWifiResponse> GetWifiAsync(string deviceId);
 
-        Task<bool> PutWifiAsync(string deviceId, string ssid, string password, string mode = null);
+        Task<bool> PutWifiAsync(string deviceId, string ssid, string password, string mode = default);
     }
 }

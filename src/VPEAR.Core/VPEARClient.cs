@@ -93,7 +93,7 @@ namespace VPEAR.Core
         }
 
         /// <inheritdoc/>
-        public async Task<Container<GetDeviceResponse>> GetDevicesAsync(DeviceStatus? status = null)
+        public async Task<Container<GetDeviceResponse>> GetDevicesAsync(DeviceStatus? status = default)
         {
             var uri = $"{ApiPrefix}/device";
 
@@ -115,9 +115,9 @@ namespace VPEAR.Core
         }
 
         /// <inheritdoc/>
-        public async Task<bool> PostDevicesAsync(string deviceId, string address, string subnetMask)
+        public async Task<bool> PostDevicesAsync(string address, string subnetMask)
         {
-            var uri = $"{ApiPrefix}/device?id={deviceId}";
+            var uri = $"{ApiPrefix}/device";
             var payload = new PostDeviceRequest()
             {
                 Address = address,
@@ -128,7 +128,12 @@ namespace VPEAR.Core
         }
 
         /// <inheritdoc/>
-        public async Task<bool> PutDeviceAsync(string deviceId, string displayName, int? frequency, int? requiredSensors)
+        public async Task<bool> PutDeviceAsync(
+            string deviceId,
+            string displayName = default,
+            int? frequency = default,
+            int? requiredSensors = default,
+            DeviceStatus? status = default)
         {
             var uri = $"{ApiPrefix}/device?id={deviceId}";
             var payload = new PutDeviceRequest()
@@ -136,6 +141,7 @@ namespace VPEAR.Core
                 DisplayName = displayName,
                 Frequency = frequency,
                 RequiredSensors = requiredSensors,
+                Status = status,
             };
 
             return await this.PutAsync(uri, payload) && this.IsSuccessResponse();

@@ -57,11 +57,13 @@ namespace VPEAR.Server.Services
                 return new Result<Container<GetFrameResponse>>(HttpStatusCode.NotFound, ErrorMessages.DeviceNotFound);
             }
 
-            await this.devices.GetCollectionAsync(device, device => device.Frames.OrderBy(frame => frame.CreatedAt));
+            await this.devices.GetCollectionAsync(device, device => device.Frames);
+
+            var frames = device.Frames.OrderBy(frame => frame.CreatedAt);
 
             if (start == 0 && count == 0)
             {
-                foreach (var frame in device.Frames)
+                foreach (var frame in frames)
                 {
                     await this.frames.GetReferenceAsync(frame, frame => frame.Filter);
 
@@ -83,7 +85,7 @@ namespace VPEAR.Server.Services
 
             if (start < count && count < device.Frames.Count)
             {
-                foreach (var frame in device.Frames.ToList().GetRange(start, count))
+                foreach (var frame in frames.ToList().GetRange(start, count))
                 {
                     await this.frames.GetReferenceAsync(frame, frame => frame.Filter);
 
@@ -105,7 +107,7 @@ namespace VPEAR.Server.Services
 
             if (start < count && count >= device.Frames.Count)
             {
-                foreach (var frame in device.Frames.ToList().GetRange(start, device.Frames.Count - start))
+                foreach (var frame in frames.ToList().GetRange(start, device.Frames.Count - start))
                 {
                     await this.frames.GetReferenceAsync(frame, frame => frame.Filter);
 

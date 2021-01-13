@@ -82,7 +82,7 @@ namespace VPEAR.Server
         {
             public const string AdminRole = "admin";
             public const string UserRole = "user";
-            public const string None = "none";
+            public const string AdminAndUser = AdminRole + "," + UserRole;
             public static readonly List<string> AllRoles = new List<string>()
             {
                 AdminRole,

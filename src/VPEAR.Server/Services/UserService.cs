@@ -189,14 +189,12 @@ namespace VPEAR.Server.Services
                 return new Result<Null>(HttpStatusCode.InternalServerError, ErrorMessages.InternalServerError);
             }
 
-            if (request.IsVerified)
+            if (request.IsVerified != null && request.IsVerified.Value)
             {
-                user.EmailConfirmed = request.IsVerified;
+                await this.users.SetEmailAsync(user, "email@domain.tld");
 
-                if (!(await this.users.UpdateAsync(user)).Succeeded)
-                {
-                    return new Result<Null>(HttpStatusCode.InternalServerError, ErrorMessages.InternalServerError);
-                }
+                var token = await this.users.GenerateEmailConfirmationTokenAsync(user);
+                var result = await this.users.ConfirmEmailAsync(user, token);
             }
 
             return new Result<Null>(HttpStatusCode.NoContent);
@@ -212,7 +210,7 @@ namespace VPEAR.Server.Services
                 return new Result<PutLoginResponse>(HttpStatusCode.NotFound, ErrorMessages.UserNotFound);
             }
 
-            if (!user.EmailConfirmed)
+            if (!await this.users.IsEmailConfirmedAsync(user))
             {
                 return new Result<PutLoginResponse>(HttpStatusCode.Forbidden, ErrorMessages.UserNotVerified);
             }

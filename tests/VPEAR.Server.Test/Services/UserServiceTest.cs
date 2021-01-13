@@ -145,35 +145,6 @@ namespace VPEAR.Server.Test.Services
         }
 
         [Fact]
-        public async Task PutLoginAsync200OKTest()
-        {
-            var request = new PutLoginRequest()
-            {
-                Name = Mocks.ConfirmedUser,
-                Password = Mocks.ValidPassword,
-            };
-            var result = await this.service.PutLoginAsync(request);
-
-            Assert.NotNull(result.Value);
-            Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
-        }
-
-        [Fact]
-        public async Task PutLoginAsync403ForbiddenTest()
-        {
-            var request = new PutLoginRequest()
-            {
-                Name = Mocks.ConfirmedUser,
-                Password = Mocks.InvalidPassword,
-            };
-            var result = await this.service.PutLoginAsync(request);
-
-            Assert.NotNull(result.Error);
-            Assert.Equal(StatusCodes.Status403Forbidden, result.StatusCode);
-            Assert.Contains(ErrorMessages.InvalidPassword, result.Error!.Messages);
-        }
-
-        [Fact]
         public async Task PutLoginAsync404NotFoundTest()
         {
             var request = new PutLoginRequest()

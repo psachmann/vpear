@@ -60,6 +60,7 @@ namespace VPEAR.Server
             RoleManager<IdentityRole> roles,
             UserManager<IdentityUser> users)
         {
+            DataSeed.Seed(roles, users);
 #if DEBUG
             env.EnvironmentName = "Development";
             app.UseDeveloperExceptionPage();
@@ -70,7 +71,6 @@ namespace VPEAR.Server
             app.UseHttpsRedirection();
 #endif
             app.UseRouting();
-            DataSeed.Seed(roles, users);
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>

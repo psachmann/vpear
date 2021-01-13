@@ -126,7 +126,6 @@ namespace VPEAR.Server.Data
             try
             {
                 return await this.context.Set<TEntity>()
-                    .AsNoTracking()
                     .FirstOrDefaultAsync(e => id.Equals(e.Id));
             }
             catch (Exception exception)

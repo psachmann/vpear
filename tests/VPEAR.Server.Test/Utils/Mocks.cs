@@ -226,9 +226,6 @@ namespace VPEAR.Server.Test
             mock.Setup(mock => mock.GetUsersInRoleAsync(Roles.UserRole))
                 .ReturnsAsync(new List<IdentityUser>() { admin, user });
 
-            mock.Setup(mock => mock.GetUsersInRoleAsync(Roles.None))
-                .ReturnsAsync(new List<IdentityUser>());
-
             mock.Setup(mock => mock.FindByNameAsync(ConfirmedUser))
                 .ReturnsAsync(user);
 

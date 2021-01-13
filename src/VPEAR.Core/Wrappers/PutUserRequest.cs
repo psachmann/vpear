@@ -31,6 +31,6 @@ namespace VPEAR.Core.Wrappers
         /// </summary>
         /// <value>Indicates whether the user is verified or not.</value>
         [JsonPropertyName("is_verified")]
-        public bool IsVerified { get; set; }
+        public bool? IsVerified { get; set; }
     }
 }

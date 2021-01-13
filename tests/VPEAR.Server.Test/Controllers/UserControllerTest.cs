@@ -156,38 +156,6 @@ namespace VPEAR.Server.Test.Controllers
         }
 
         [Fact]
-        public async Task OnPutLoginAsync200OKTest()
-        {
-            var request = new PutLoginRequest()
-            {
-                Name = Mocks.ConfirmedUser,
-                Password = Mocks.ValidPassword,
-            };
-            var result = await this.controller.OnPutLoginAsync(request);
-            var objectResult = Assert.IsType<ObjectResult>(result);
-            var response = Assert.IsAssignableFrom<PutLoginResponse>(objectResult.Value);
-
-            Assert.NotNull(response);
-        }
-
-        [Fact]
-        public async Task OnPutLoginAsync403ForbiddenTest()
-        {
-            var request = new PutLoginRequest()
-            {
-                Name = Mocks.ConfirmedUser,
-                Password = Mocks.InvalidPassword,
-            };
-            var result = await this.controller.OnPutLoginAsync(request);
-            var objectResult = Assert.IsType<ObjectResult>(result);
-            var response = Assert.IsAssignableFrom<ErrorResponse>(objectResult.Value);
-
-            Assert.NotNull(response);
-            Assert.Equal(StatusCodes.Status403Forbidden, response.StatusCode);
-            Assert.Contains(ErrorMessages.InvalidPassword, response.Messages);
-        }
-
-        [Fact]
         public async Task OnPutLoginAsync404NotFoundTest()
         {
             var request = new PutLoginRequest()

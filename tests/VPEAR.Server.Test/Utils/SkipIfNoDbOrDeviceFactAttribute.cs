@@ -8,6 +8,7 @@ using System.Net.Http;
 using VPEAR.Core;
 using VPEAR.Server.Data;
 using Xunit;
+using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Test
 {
@@ -20,7 +21,7 @@ namespace VPEAR.Server.Test
             using var context = ContextFactory.CreateDbContext(Environment.GetCommandLineArgs());
             using var client = new DeviceClient(baseAddress, CreateClient());
 
-            if (!context.Database.CanConnect() || client.CanConnectAsync().Result)
+            if (!context.Database.CanConnect() || !client.CanConnectAsync().Result)
             {
                 this.Skip = "Can not connect to database or device.";
             }
@@ -30,7 +31,7 @@ namespace VPEAR.Server.Test
         {
             var client = new HttpClient
             {
-                Timeout = TimeSpan.FromMilliseconds(300.0),
+                Timeout = TimeSpan.FromMilliseconds(Defaults.DefaultHttpTimeout),
             };
 
             return client;

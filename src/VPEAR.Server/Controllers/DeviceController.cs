@@ -96,7 +96,6 @@ namespace VPEAR.Server.Controllers
         /// <param name="request">The request data.</param>
         /// <returns>Http status code, which indicates the operation result.</returns>
         [HttpPost]
-        [Authorize(Roles = Roles.AdminRole)]
         [SwaggerResponse(StatusCodes.Status102Processing, "Searching for devices.", typeof(Null))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, "The address or subnet mask are not IPv4 addresses.", typeof(ErrorResponse))]
         [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", typeof(Null))]
@@ -108,17 +107,16 @@ namespace VPEAR.Server.Controllers
         }
 
         /// <summary>
-        /// The admin can delete a device.
+        /// Deletes the given device.
         /// </summary>
         /// <param name="id">The device id as 32 digit hex string.</param>
         /// <returns>Http status code, which indicates the operation result.</returns>
         [HttpDelete]
-        [Authorize(Roles = Roles.AdminRole)]
         [SwaggerResponse(StatusCodes.Status204NoContent, "Device was deleted.", typeof(Null))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(ErrorResponse))]
         [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", typeof(Null))]
         [SwaggerResponse(StatusCodes.Status404NotFound, "Device not found.", typeof(ErrorResponse))]
-        [SwaggerResponse(StatusCodes.Status409Conflict, "Device is currently recording.", typeof(ErrorResponse))]
+        [SwaggerResponse(StatusCodes.Status409Conflict, "Device is archived or recording.", typeof(ErrorResponse))]
         public async Task<IActionResult> OnDeleteAsync([FromQuery, Required] Guid id)
         {
             this.logger.LogDebug("{@Device}", id);

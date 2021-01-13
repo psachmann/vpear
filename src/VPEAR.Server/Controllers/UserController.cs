@@ -73,7 +73,7 @@ namespace VPEAR.Server.Controllers
         [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(ErrorResponse))]
         [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is not authorized.", typeof(Null))]
         [SwaggerResponse(StatusCodes.Status404NotFound, "No user found.", typeof(ErrorResponse))]
-        public async Task<IActionResult> OnPutAsync([FromQuery, Required] string name, [FromQuery, Required] PutUserRequest request)
+        public async Task<IActionResult> OnPutAsync([FromQuery, Required] string name, [FromBody, Required] PutUserRequest request)
         {
             this.logger.LogDebug("{@User}: {@Request}", name, request);
 
