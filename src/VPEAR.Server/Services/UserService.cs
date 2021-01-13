@@ -144,14 +144,8 @@ namespace VPEAR.Server.Services
                     UserName = request.Name,
                     SecurityStamp = DateTimeOffset.UtcNow.ToString(),
                 };
-                var result = await this.users.CreateAsync(user, request.Password);
 
-                if (!result.Succeeded)
-                {
-                    return new Result<Null>(
-                        HttpStatusCode.BadRequest,
-                        result.Errors.Select(error => error.Description));
-                }
+                await this.users.CreateAsync(user, request.Password);
 
                 if (request.IsAdmin)
                 {

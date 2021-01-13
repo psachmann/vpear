@@ -36,7 +36,12 @@ namespace VPEAR.Server.Handlers
             this.logger = logger;
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Handels the <see cref="DeviceStatusChangedEvent"/>.
+        /// </summary>
+        /// <param name="notification">The event notification data.</param>
+        /// <param name="cancellationToken">The cancellation token to observe the task while waiting.</param>
+        /// <returns>An asynchronous task.</returns>
         public async Task Handle(DeviceStatusChangedEvent notification, CancellationToken cancellationToken)
         {
             var device = notification.OriginalValue;

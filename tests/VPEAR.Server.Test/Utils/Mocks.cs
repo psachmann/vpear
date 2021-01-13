@@ -261,7 +261,7 @@ namespace VPEAR.Server.Test
                 .ReturnsAsync(new FirmwareResponse());
 
             mock.Setup(mock => mock.GetFramesAsync(It.IsAny<int?>()))
-                .ReturnsAsync(new List<FrameResponse>());
+                .ReturnsAsync(new List<FrameResponse>() { new FrameResponse(), new FrameResponse(),     });
 
             mock.Setup(mock => mock.GetFrequencyAsync())
                 .ReturnsAsync(60);

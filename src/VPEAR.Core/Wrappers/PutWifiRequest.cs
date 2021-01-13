@@ -17,20 +17,20 @@ namespace VPEAR.Core.Wrappers
         /// </summary>
         /// <value>The network to connect to.</value>
         [JsonPropertyName("ssid")]
-        public string Ssid { get; set; } = string.Empty;
+        public string Ssid { get; set; }
 
         /// <summary>
         /// Gets or sets the password.
         /// </summary>
         /// <value>The network password.</value>
         [JsonPropertyName("password")]
-        public string Password { get; set; } = string.Empty;
+        public string Password { get; set; }
 
         /// <summary>
         /// Gets or sets the mode.
         /// </summary>
         /// <value>The device wifi mode.</value>
         [JsonPropertyName("mode")]
-        public string Mode { get; set; } = string.Empty;
+        public string Mode { get; set; }
     }
 }

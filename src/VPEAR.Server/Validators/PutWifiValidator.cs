@@ -19,21 +19,7 @@ namespace VPEAR.Server.Validators
         /// </summary>
         public PutWifiValidator()
         {
-            this.When(request => request.Ssid == null, () =>
-            {
-                this.RuleFor(request => request.Password)
-                    .Null()
-                    .OverridePropertyName("password");
-            });
-
-            this.When(request => request.Password == null, () =>
-            {
-                this.RuleFor(request => request.Ssid)
-                    .Null()
-                    .OverridePropertyName("ssid");
-            });
-
-            this.When(request => request.Ssid != null && request.Password != null, () =>
+            this.When(request => request.Ssid != null || request.Password != null, () =>
             {
                 this.RuleFor(request => request.Ssid)
                     .NotNull()

@@ -198,7 +198,7 @@ namespace VPEAR.Core
         /// <inheritdoc/>
         public async Task<bool> PutFirmwareAsync(string deviceId, string source, string upgrade, bool package = false)
         {
-            var uri = $"{ApiPrefix}/firmware?id={deviceId}";
+            var uri = $"{ApiPrefix}/device/firmware?id={deviceId}";
             var payload = new PutFirmwareRequest()
             {
                 Package = package,

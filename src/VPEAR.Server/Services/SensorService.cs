@@ -52,6 +52,8 @@ namespace VPEAR.Server.Services
             var device = await this.devices.GetAsync(id);
             var payload = new Container<GetFrameResponse>();
 
+            payload.Start = start;
+
             if (device == null)
             {
                 return new Result<Container<GetFrameResponse>>(HttpStatusCode.NotFound, ErrorMessages.DeviceNotFound);

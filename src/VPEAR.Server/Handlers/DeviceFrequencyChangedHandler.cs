@@ -6,7 +6,6 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Quartz;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using VPEAR.Core;
@@ -37,7 +36,12 @@ namespace VPEAR.Server.Handlers
             this.logger = logger;
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Handels the <see cref="DeviceFrequencyChangedEvent"/>.
+        /// </summary>
+        /// <param name="notification">The event notification data.</param>
+        /// <param name="cancellationToken">The cancellation token to observe the task while waiting.</param>
+        /// <returns>An asynchronous task.</returns>
         public async Task Handle(DeviceFrequencyChangedEvent notification, CancellationToken cancellationToken)
         {
             var device = notification.OriginalValue;

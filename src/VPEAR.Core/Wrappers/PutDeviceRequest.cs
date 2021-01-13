@@ -22,7 +22,7 @@ namespace VPEAR.Core.Wrappers
         /// <summary>
         /// Gets or sets the frequency.
         /// </summary>
-        /// <value>The new device scanning freqency.</value>
+        /// <value>The new device scanning frequency.</value>
         [JsonPropertyName("frequency")]
         public int? Frequency { get; set; }
 
