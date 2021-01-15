@@ -297,7 +297,7 @@ namespace VPEAR.Server.Test
         }
 
         [Priority(900)]
-        [SkipIfNoDbOrDeviceFact(DeviceBaseAddress)]
+        [SkipIfNoDbOrDeviceFact("http://193.168.33.0")]
         public async Task StartAndStoppRecordingAsyncTest()
         {
             using var client = this.CreateClient();
