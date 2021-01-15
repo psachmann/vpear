@@ -11,11 +11,14 @@ using VPEAR.Core;
 using VPEAR.Core.Extensions;
 using VPEAR.Core.Wrappers;
 using Xunit;
+using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Test
 {
+    [Collection("IntegrationTest")]
     public class DeviceClientTest
     {
+        private const string BaseAddress = "http://10.0.0.1";
         private const string FailureBaseAddress = "http://192.168.33.1";
 
         [Fact]
@@ -80,6 +83,33 @@ namespace VPEAR.Server.Test
             Assert.False(await client.PutWifiAsync(string.Empty, null, null));
             Assert.False(await client.PutWifiAsync(string.Empty, string.Empty, null));
             Assert.False(await client.PutWifiAsync(string.Empty, string.Empty, string.Empty));
+        }
+
+        [SkipIfNoDeviceFact(BaseAddress)]
+        public async Task DeviceClientSuccessTest()
+        {
+            using var httpClient = new HttpClient();
+            using var client = new DeviceClient(BaseAddress, httpClient);
+
+            Assert.True(await client.CanConnectAsync(), "There should be a device!");
+            Assert.NotNull(await client.GetAsync());
+            Assert.NotNull(await client.GetDeviceAsync());
+            Assert.NotNull(await client.GetFiltersAsync());
+            Assert.NotNull(await client.GetFirmwareAsync());
+            Assert.NotNull(await client.GetFrequencyAsync());
+            Assert.NotNull(await client.GetFramesAsync());
+            Assert.NotNull(await client.GetFramesAsync(1));
+            Assert.NotNull(await client.GetPowerAsync());
+            Assert.NotNull(await client.GetRequiredSensorsAsync());
+            Assert.NotNull(await client.GetSensorsAsync());
+            Assert.NotNull(await client.GetTimeAsync());
+            Assert.NotNull(await client.GetWifiAsync());
+            Assert.True(await client.PutFiltersAsync(true, true, true));
+            Assert.True(await client.PutFrequencyAsync(3600));
+            Assert.True(await client.PutRequiredSensorsAsync(1));
+            Assert.True(await client.PutTimeAsync(DateTime.UtcNow));
+
+            // Assert.True(await client.PutFirmwareAsync("stable", "unknown"));
         }
 
         [Fact]

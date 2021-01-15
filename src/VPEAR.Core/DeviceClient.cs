@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using VPEAR.Core.Abstractions;
@@ -262,7 +263,7 @@ namespace VPEAR.Core
             {
                 var json = await this.Response.Content.ReadAsStringAsync();
 
-                return DateTimeOffset.ParseExact(json, TimeFormat, null);
+                return DateTime.ParseExact(this.CleanJsonTimeString(json), TimeFormat, CultureInfo.InvariantCulture.DateTimeFormat);
             }
             else
             {
@@ -393,6 +394,18 @@ namespace VPEAR.Core
             }
 
             return true;
+        }
+
+        private string CleanJsonTimeString(string json)
+        {
+            var time = json.Replace("\"", string.Empty);
+
+            if (time.Length > TimeFormat.Length)
+            {
+                time = time.Remove(time.Length - 1);
+            }
+
+            return time;
         }
     }
 }

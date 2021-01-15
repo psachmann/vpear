@@ -23,15 +23,15 @@ namespace VPEAR.Server.Validators
                 .NotNull()
                 .NotEmpty()
                 .Must(ip => IPAddress.TryParse(ip, out _))
-                .OverridePropertyName("start_ip")
-                .WithMessage("'start_ip' is NOT a valid IP address.");
+                .OverridePropertyName("address")
+                .WithMessage("'address' is NOT a valid IP address.");
 
             this.RuleFor(request => request.SubnetMask)
                 .NotNull()
                 .NotEmpty()
                 .Must(ip => IPAddress.TryParse(ip, out _))
-                .OverridePropertyName("stop_ip")
-                .WithMessage("'stop_ip' is NOT a valid IP address.");
+                .OverridePropertyName("subnet_mask")
+                .WithMessage("'subnet_mask' is NOT a valid IP address.");
         }
     }
 }

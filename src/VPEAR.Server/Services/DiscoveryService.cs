@@ -91,7 +91,7 @@ namespace VPEAR.Server.Services
         {
             var newDevice = new Device
             {
-                Address = response.Device.Address,
+                Address = $"http://{response.Device.Address}",
                 Class = response.Device.Class,
                 DisplayName = string.Empty,
                 Filter = new Filter()
@@ -114,7 +114,7 @@ namespace VPEAR.Server.Services
         {
             foreach (var deviceResponse in deviceResponses)
             {
-                var client = this.factory.Invoke(deviceResponse.Address);
+                var client = this.factory.Invoke($"http://{deviceResponse.Address}");
                 var response = await client.GetAsync();
                 var knownDevice = await this.devices.Get()
                     .Where(device => device.Address == deviceResponse.Address && device.Status != DeviceStatus.Archived)

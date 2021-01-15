@@ -175,7 +175,7 @@ namespace VPEAR.Core
                 Spot = spot,
             };
 
-            return await this.PostAsync(uri, payload) && this.IsSuccessResponse();
+            return await this.PutAsync(uri, payload) && this.IsSuccessResponse();
         }
 
         /// <inheritdoc/>

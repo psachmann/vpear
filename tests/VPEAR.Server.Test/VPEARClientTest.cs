@@ -22,8 +22,8 @@ namespace VPEAR.Server.Test
     [TestCaseOrderer("VPEAR.Server.Test.PriorityOrderer", "VPEAR.Server.Test")]
     public class VPEARClientTest : IClassFixture<WebApplicationFactory<Startup>>
     {
-        private const string BaseAddress = "http://localhost";
-        private const string DeviceBaseAddress = "http://127.0.0.2";
+        private const string DeviceBaseAddress = "http://10.0.0.1";
+        private const string ServerBaseAddress = "http://localhost";
         private const string AdminName = Defaults.DefaultAdminName;
         private const string AdminPassword = Defaults.DefaultAdminPassword;
         private const string UserName = "John_Doe";
@@ -271,29 +271,61 @@ namespace VPEAR.Server.Test
         }
 
         [Priority(202)]
-        [SkipIfNoDbOrDeviceFact(BaseAddress)]
+        [SkipIfNoDbOrDeviceFact(DeviceBaseAddress)]
         public async Task PutDeviceAsyncTest()
         {
             using var client = this.CreateClient();
             await client.LoginAsync(UserName, NewUserPassword);
 
-            var result = await client.PutDeviceAsync(this.stoppedDevices.First().Id.ToString(), "Test Device", 2, 1, DeviceStatus.Recording);
+            var result = await client.PutDeviceAsync(await GetDeviceIdAsync(client), "Test Device", 3600, 1);
 
-            Assert.Equal(HttpStatusCode.OK, client.Response.StatusCode);
             Assert.True(result);
+            Assert.Equal(HttpStatusCode.NoContent, client.Response.StatusCode);
         }
 
         [Priority(203)]
-        [SkipIfNoDbOrDeviceFact(DeviceBaseAddress)]
+        [SkipIfNoDbOrDeviceFact("http://193.168.33.0")]
         public async Task PostDeviceAsyncTest()
         {
             using var client = this.CreateClient();
             await client.LoginAsync(UserName, NewUserPassword);
 
-            var result = await client.PostDevicesAsync(BaseAddress, "255.255.255.0");
+            var result = await client.PostDevicesAsync(ServerBaseAddress, "255.255.255.0");
 
             Assert.True(result);
             Assert.Equal(HttpStatusCode.Processing, client.Response.StatusCode);
+        }
+
+        [Priority(900)]
+        [SkipIfNoDbOrDeviceFact(DeviceBaseAddress)]
+        public async Task StartAndStoppRecordingAsyncTest()
+        {
+            using var client = this.CreateClient();
+            await client.LoginAsync(UserName, NewUserPassword);
+            var deviceId = await GetDeviceIdAsync(client);
+
+            var preFrames = await client.GetFramesAsync(deviceId, null, null);
+
+            await client.PutDeviceAsync(deviceId, frequency: 2, status: DeviceStatus.Recording);
+            await Task.Delay(10000);
+            await client.PutDeviceAsync(deviceId, status: DeviceStatus.Stopped);
+
+            var postFrames = await client.GetFramesAsync(deviceId, null, null);
+
+            Assert.True(preFrames.Count < postFrames.Count);
+        }
+
+        [Priority(1000)]
+        [SkipIfNoDbOrDeviceFact("http://193.168.33.0")]
+        public async Task DeleteDeviceAsync()
+        {
+            using var client = this.CreateClient();
+            await client.LoginAsync(UserName, NewUserPassword);
+
+            var result = await client.DeleteDeviceAsync(await GetDeviceIdAsync(client));
+
+            Assert.True(result);
+            Assert.Equal(HttpStatusCode.OK, client.Response.StatusCode);
         }
 
         [Priority(300)]
@@ -351,10 +383,10 @@ namespace VPEAR.Server.Test
             using var client = this.CreateClient();
             await client.LoginAsync(UserName, NewUserPassword);
 
-            var result = await client.PutFiltersAsync(this.stoppedDevices.First().Id.ToString(), true, true, true);
+            var result = await client.PutFiltersAsync(await GetDeviceIdAsync(client), true, true, true);
 
-            Assert.True(result);
             Assert.Equal(HttpStatusCode.NoContent, client.Response.StatusCode);
+            Assert.True(result);
         }
 
         [Priority(400)]
@@ -410,12 +442,13 @@ namespace VPEAR.Server.Test
             using var client = this.CreateClient();
             await client.LoginAsync(UserName, NewUserPassword);
 
-            var result = client.GetFirmwareAsync(this.stoppedDevices.First().Id.ToString());
+            var result = client.GetFirmwareAsync(await GetDeviceIdAsync(client));
 
             Assert.NotNull(result);
             Assert.Equal(HttpStatusCode.OK, client.Response.StatusCode);
         }
 
+/*
         [Priority(702)]
         [SkipIfNoDbOrDeviceFact(DeviceBaseAddress)]
         public async Task PutFirmwareAsyncTest()
@@ -428,6 +461,7 @@ namespace VPEAR.Server.Test
             Assert.True(result, "Put wifi should be successful.");
             Assert.Equal(HttpStatusCode.NoContent, client.Response.StatusCode);
         }
+*/
 
         [Priority(500)]
         [SkipIfNoDbFact]
@@ -472,7 +506,7 @@ namespace VPEAR.Server.Test
             using var client = this.CreateClient();
             await client.LoginAsync(UserName, NewUserPassword);
 
-            var result = await client.GetFramesAsync(this.archivedDevices.First().Id.ToString(), null, null);
+            var result = await client.GetFramesAsync(await GetDeviceIdAsync(client), null, null);
 
             Assert.NotNull(result);
             Assert.Equal(HttpStatusCode.OK, client.Response.StatusCode);
@@ -485,7 +519,7 @@ namespace VPEAR.Server.Test
             using var client = this.CreateClient();
             await client.LoginAsync(UserName, NewUserPassword);
 
-            var result = await client.GetSensorsAsync(this.stoppedDevices.First().Id.ToString());
+            var result = await client.GetSensorsAsync(await GetDeviceIdAsync(client));
 
             Assert.NotNull(result);
             Assert.Equal(HttpStatusCode.OK, client.Response.StatusCode);
@@ -521,7 +555,7 @@ namespace VPEAR.Server.Test
             using var client = this.CreateClient();
             await client.LoginAsync(UserName, NewUserPassword);
 
-            var result = client.GetPowerAsync(this.stoppedDevices.First().Id.ToString());
+            var result = client.GetPowerAsync(await GetDeviceIdAsync(client));
 
             Assert.NotNull(result);
             Assert.Equal(HttpStatusCode.OK, client.Response.StatusCode);
@@ -580,7 +614,7 @@ namespace VPEAR.Server.Test
             using var client = this.CreateClient();
             await client.LoginAsync(UserName, NewUserPassword);
 
-            var result = client.GetWifiAsync(this.stoppedDevices.First().Id.ToString());
+            var result = client.GetWifiAsync(await GetDeviceIdAsync(client));
 
             Assert.NotNull(result);
             Assert.Equal(HttpStatusCode.OK, client.Response.StatusCode);
@@ -593,15 +627,23 @@ namespace VPEAR.Server.Test
             using var client = this.CreateClient();
             await client.LoginAsync(UserName, NewUserPassword);
 
-            var result = await client.PutWifiAsync(this.stoppedDevices.First().Id.ToString(), "ssid", "password", "direct");
+            var result = await client.PutWifiAsync(await GetDeviceIdAsync(client), null, null, "direct");
 
             Assert.True(result, "Put wifi should be successful.");
             Assert.Equal(HttpStatusCode.NoContent, client.Response.StatusCode);
         }
 
+        private static async Task<string> GetDeviceIdAsync(IVPEARClient client)
+        {
+            var devices = await client.GetDevicesAsync(DeviceStatus.Stopped);
+            var device = devices.Items.First(device => device.Address == DeviceBaseAddress);
+
+            return device.Id;
+        }
+
         private IVPEARClient CreateClient()
         {
-            return new VPEARClient(BaseAddress, this.factory.CreateClient());
+            return new VPEARClient(ServerBaseAddress, this.factory.CreateClient());
         }
     }
 }

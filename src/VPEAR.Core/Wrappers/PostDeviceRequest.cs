@@ -23,7 +23,7 @@ namespace VPEAR.Core.Wrappers
         /// Gets or sets the subnet mask.
         /// </summary>
         /// <value>The subnet mask form the subnet to search.</value>
-        [JsonPropertyName("subent_mask")]
+        [JsonPropertyName("subnet_mask")]
         public string SubnetMask { get; set; }
     }
 }
