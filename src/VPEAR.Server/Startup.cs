@@ -28,6 +28,7 @@ using VPEAR.Core.Wrappers;
 using VPEAR.Server.Data;
 using VPEAR.Server.Filters;
 using VPEAR.Server.Modules;
+using VPEAR.Server.Services;
 using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server

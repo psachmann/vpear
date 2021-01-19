@@ -59,7 +59,7 @@ namespace VPEAR.Server.Test.Services
         }
 
         [Fact]
-        public void PutAsync20NoContentTest()
+        public void PutAsync204NoContentTest()
         {
             var devices = new List<Guid>()
             {
@@ -97,7 +97,7 @@ namespace VPEAR.Server.Test.Services
         }
 
         [Fact]
-        public async Task PostAsync102ProcessingTest()
+        public async Task PostAsync202AcceptedTest()
         {
             var request = new PostDeviceRequest()
             {
@@ -107,7 +107,7 @@ namespace VPEAR.Server.Test.Services
             var result = await this.service.PostAsync(request);
 
             Assert.Null(result.Value);
-            Assert.Equal(StatusCodes.Status102Processing, result.StatusCode);
+            Assert.Equal(StatusCodes.Status202Accepted, result.StatusCode);
         }
 
         [Fact]

@@ -17,9 +17,10 @@ namespace VPEAR.Server
             public const string DefaultAdminName = "admin";
             public const string DefaultAdminPassword = "Passw0rd?";
             public const string DefaultLogPath = "../../logs/log_.txt";
+            public const string DefaultSearchDeviceJobId = "Search-Device-Job";
             public const int DefaultHttpPort = 80;
             public const int DefaultHttpsPort = 443;
-            public const double DefaultHttpTimeout = 5000.0;
+            public const double DefaultHttpTimeout = 10000.0;
 #if DEBUG
             public const LogEventLevel DefaultLogLevel = LogEventLevel.Debug;
             public static readonly List<string> DefaultUrls = new List<string>()

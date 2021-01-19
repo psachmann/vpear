@@ -28,26 +28,26 @@ namespace VPEAR.Server.Services
     public class DeviceService : IDeviceService
     {
         private readonly IRepository<Device, Guid> devices;
-        private readonly IDiscoveryService discovery;
-        private readonly DeviceClient.Factory factory;
+        private readonly DeviceClient.Factory deviceClientFactory;
+        private readonly ISchedulerFactory schedulerFactory;
         private readonly ILogger<DeviceController> logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceService"/> class.
         /// </summary>
         /// <param name="devices">The device repository.</param>
-        /// <param name="discovery">The discovery service.</param>
-        /// <param name="factory">The device client factory.</param>
+        /// <param name="deviceClientFactory">The device client factory.</param>
+        /// <param name="schedulerFactory">The scheduler factory.</param>
         /// <param name="logger">The service logger.</param>
         public DeviceService(
             IRepository<Device, Guid> devices,
-            IDiscoveryService discovery,
-            DeviceClient.Factory factory,
+            DeviceClient.Factory deviceClientFactory,
+            ISchedulerFactory schedulerFactory,
             ILogger<DeviceController> logger)
         {
             this.devices = devices;
-            this.discovery = discovery;
-            this.factory = factory;
+            this.deviceClientFactory = deviceClientFactory;
+            this.schedulerFactory = schedulerFactory;
             this.logger = logger;
         }
 
@@ -103,7 +103,7 @@ namespace VPEAR.Server.Services
                 return new Result<Null>(HttpStatusCode.Gone, ErrorMessages.DeviceIsArchived);
             }
 
-            var client = this.factory.Invoke(device.Address);
+            var client = this.deviceClientFactory.Invoke(device.Address);
 
             if (await client.PutFrequencyAsync(request.Frequency) && await client.PutRequiredSensorsAsync(request.RequiredSensors))
             {
@@ -135,9 +135,24 @@ namespace VPEAR.Server.Services
 
             if (address.IsIPv4() && subnetMask.IsIPv4() && subnetMask.IsIPv4SubnetMask())
             {
-                await this.discovery.SearchDevicesAsync(address, subnetMask);
+                var job = JobBuilder.Create<SearcheDeviceJob>()
+                    .WithIdentity(new JobKey(Defaults.DefaultSearchDeviceJobId))
+                    .WithDescription(request.ToJsonString())
+                    .Build();
 
-                return new Result<Null>(HttpStatusCode.Processing);
+                var trigger = TriggerBuilder.Create()
+                    .ForJob(job.Key)
+                    .WithSimpleSchedule(builder => builder
+                        .WithIntervalInSeconds(int.MaxValue)
+                        .RepeatForever())
+                    .StartNow()
+                    .Build();
+
+                var scheduler = await this.schedulerFactory.GetScheduler();
+
+                await scheduler.ScheduleJob(job, trigger);
+
+                return new Result<Null>(HttpStatusCode.Accepted);
             }
             else
             {

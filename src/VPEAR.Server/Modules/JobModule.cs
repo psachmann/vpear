@@ -33,6 +33,13 @@ namespace VPEAR.Server.Modules
                     context.Resolve<ILogger<PollFramesJob>>()))
                 .AsSelf()
                 .InstancePerDependency();
+
+            builder.Register(context => new SearcheDeviceJob(
+                    context.Resolve<IRepository<Device, Guid>>(),
+                    context.Resolve<DeviceClient.Factory>(),
+                    context.Resolve<ILogger<SearcheDeviceJob>>()))
+                .AsSelf()
+                .InstancePerDependency();
         }
     }
 }

@@ -1,11 +1,13 @@
-// <copyright file="DiscoveryService.cs" company="Patrick Sachmann">
+// <copyright file="SearcheDeviceJob.cs" company="Patrick Sachmann">
 // Copyright (c) Patrick Sachmann. All rights reserved.
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Quartz;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -15,40 +17,32 @@ using VPEAR.Core.Abstractions;
 using VPEAR.Core.Entities;
 using VPEAR.Core.Extensions;
 using VPEAR.Core.Wrappers;
-using VPEAR.Server.Controllers;
 
-namespace VPEAR.Server.Services
+namespace VPEAR.Server.Services.Jobs
 {
-    /// <summary>
-    /// Implements the <see cref="IDiscoveryService"/> interface.
-    /// </summary>
-    public class DiscoveryService : IDiscoveryService
+    public class SearcheDeviceJob : IJob
     {
         private readonly IRepository<Device, Guid> devices;
         private readonly DeviceClient.Factory factory;
-        private readonly ILogger<DeviceController> logger;
+        private readonly ILogger<SearcheDeviceJob> logger;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DiscoveryService"/> class.
-        /// </summary>
-        /// <param name="devices">The device repository.</param>
-        /// <param name="factory">The device client factory.</param>
-        /// <param name="logger">The service logger.</param>
-        public DiscoveryService(
+        public SearcheDeviceJob(
             IRepository<Device, Guid> devices,
             DeviceClient.Factory factory,
-            ILogger<DeviceController> logger)
+            ILogger<SearcheDeviceJob> logger)
         {
             this.devices = devices;
             this.factory = factory;
             this.logger = logger;
         }
 
-        /// <inheritdoc/>
-        public async Task SearchDevicesAsync(IPAddress address, IPAddress subnetMask)
+        public async Task Execute(IJobExecutionContext context)
         {
-            var addresses = GetSearchRange(address, subnetMask);
-            var devices = new DeviceResponse[addresses.Count];
+            this.logger.LogInformation("Starting device search...");
+
+            var request = context.JobDetail.Description.FromJsonString<PostDeviceRequest>();
+            var addresses = GetSearchRange(IPAddress.Parse(request.Address), IPAddress.Parse(request.SubnetMask));
+            var devices = new ConcurrentBag<DeviceResponse>();
 
             Parallel.For(0, addresses.Count, async index =>
             {
@@ -57,11 +51,12 @@ namespace VPEAR.Server.Services
 
                 if (response != null)
                 {
-                    devices[index] = response;
+                    devices.Add(response);
                 }
             });
 
-            await this.InitializeDevicesAsync(devices.Where(device => device != null));
+            await this.InitDevicesAsync(devices);
+            await context.Scheduler.DeleteJob(context.JobDetail.Key);
         }
 
         private static IList<IPAddress> GetSearchRange(IPAddress address, IPAddress subnetMask)
@@ -110,7 +105,7 @@ namespace VPEAR.Server.Services
             await client.PutTimeAsync(DateTimeOffset.UtcNow);
         }
 
-        private async Task InitializeDevicesAsync(IEnumerable<DeviceResponse> deviceResponses)
+        private async Task InitDevicesAsync(IEnumerable<DeviceResponse> deviceResponses)
         {
             foreach (var deviceResponse in deviceResponses)
             {

@@ -36,7 +36,7 @@ namespace VPEAR.Core.Wrappers
 
         public override bool Equals(object other)
         {
-            if (!(other is FrameResponse))
+            if (other == null || !(other is FrameResponse))
             {
                 return false;
             }
@@ -52,6 +52,11 @@ namespace VPEAR.Core.Wrappers
             {
                 return false;
             }
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 }

@@ -56,6 +56,11 @@ namespace VPEAR.Server.Handlers
 
         private static int GetIntervallInSeconds(int frequency)
         {
+            if (frequency < 1)
+            {
+                frequency = 1;
+            }
+
             var result = 3600 / frequency;
 
             if (result >= 1)

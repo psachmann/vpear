@@ -4,6 +4,7 @@
 // </copyright>
 
 using Autofac;
+using Autofac.Features.OwnedInstances;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Quartz;
@@ -31,17 +32,10 @@ namespace VPEAR.Server.Modules
 
             builder.Register(context => new DeviceService(
                     context.Resolve<IRepository<Device, Guid>>(),
-                    context.Resolve<IDiscoveryService>(),
                     context.Resolve<DeviceClient.Factory>(),
+                    context.Resolve<ISchedulerFactory>(),
                     context.Resolve<ILogger<DeviceController>>()))
                 .As<IDeviceService>()
-                .InstancePerLifetimeScope();
-
-            builder.Register(context => new DiscoveryService(
-                    context.Resolve<IRepository<Device, Guid>>(),
-                    context.Resolve<DeviceClient.Factory>(),
-                    context.Resolve<ILogger<DeviceController>>()))
-                .As<IDiscoveryService>()
                 .InstancePerLifetimeScope();
 
             builder.Register(context => new FilterService(

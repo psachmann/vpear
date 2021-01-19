@@ -152,10 +152,6 @@ namespace VPEAR.Server.Test
                 .As<IDeviceService>()
                 .InstancePerDependency();
 
-            builder.RegisterType<DiscoveryService>()
-                .As<IDiscoveryService>()
-                .InstancePerDependency();
-
             builder.RegisterType<FilterService>()
                 .As<IFilterService>()
                 .InstancePerDependency();

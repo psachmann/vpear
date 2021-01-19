@@ -270,7 +270,7 @@ namespace VPEAR.Server.Test
             Assert.Equal(HttpStatusCode.OK, client.Response.StatusCode);
         }
 
-        [Priority(202)]
+        [Priority(210)]
         [SkipIfNoDbOrDeviceFact(DeviceBaseAddress)]
         public async Task PutDeviceAsyncTest()
         {
@@ -284,39 +284,20 @@ namespace VPEAR.Server.Test
         }
 
         [Priority(203)]
-        [SkipIfNoDbOrDeviceFact("http://193.168.33.0")]
+        [SkipIfNoDbOrDeviceFact(DeviceBaseAddress)]
         public async Task PostDeviceAsyncTest()
         {
             using var client = this.CreateClient();
             await client.LoginAsync(UserName, NewUserPassword);
 
-            var result = await client.PostDevicesAsync(ServerBaseAddress, "255.255.255.0");
+            var result = await client.PostDevicesAsync("10.0.0.1", "255.255.255.0");
 
+            Assert.Equal(HttpStatusCode.Accepted, client.Response.StatusCode);
             Assert.True(result);
-            Assert.Equal(HttpStatusCode.Processing, client.Response.StatusCode);
-        }
-
-        [Priority(900)]
-        [SkipIfNoDbOrDeviceFact("http://193.168.33.0")]
-        public async Task StartAndStoppRecordingAsyncTest()
-        {
-            using var client = this.CreateClient();
-            await client.LoginAsync(UserName, NewUserPassword);
-            var deviceId = await GetDeviceIdAsync(client);
-
-            var preFrames = await client.GetFramesAsync(deviceId, null, null);
-
-            await client.PutDeviceAsync(deviceId, frequency: 2, status: DeviceStatus.Recording);
-            await Task.Delay(10000);
-            await client.PutDeviceAsync(deviceId, status: DeviceStatus.Stopped);
-
-            var postFrames = await client.GetFramesAsync(deviceId, null, null);
-
-            Assert.True(preFrames.Count < postFrames.Count);
         }
 
         [Priority(1000)]
-        [SkipIfNoDbOrDeviceFact("http://193.168.33.0")]
+        [SkipIfNoDbOrDeviceFact(DeviceBaseAddress)]
         public async Task DeleteDeviceAsync()
         {
             using var client = this.CreateClient();
@@ -325,7 +306,7 @@ namespace VPEAR.Server.Test
             var result = await client.DeleteDeviceAsync(await GetDeviceIdAsync(client));
 
             Assert.True(result);
-            Assert.Equal(HttpStatusCode.OK, client.Response.StatusCode);
+            Assert.Equal(HttpStatusCode.NoContent, client.Response.StatusCode);
         }
 
         [Priority(300)]
