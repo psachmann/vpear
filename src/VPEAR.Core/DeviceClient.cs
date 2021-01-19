@@ -120,7 +120,7 @@ namespace VPEAR.Core
 
             if (after != null)
             {
-                uri += $"?after={after}";
+                uri += $"?after={after.Value}";
             }
 
             if (await this.GetAsync(uri) && this.IsSuccessResponse())

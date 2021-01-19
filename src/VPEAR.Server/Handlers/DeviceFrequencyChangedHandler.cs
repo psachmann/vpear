@@ -37,7 +37,7 @@ namespace VPEAR.Server.Handlers
         }
 
         /// <summary>
-        /// Handels the <see cref="DeviceFrequencyChangedEvent"/>.
+        /// Handel's the <see cref="DeviceFrequencyChangedEvent"/>.
         /// </summary>
         /// <param name="notification">The event notification data.</param>
         /// <param name="cancellationToken">The cancellation token to observe the task while waiting.</param>
@@ -56,9 +56,11 @@ namespace VPEAR.Server.Handlers
 
         private static int GetIntervallInSeconds(int frequency)
         {
-            if (frequency >= 1)
+            var result = 3600 / frequency;
+
+            if (result >= 1)
             {
-                return frequency;
+                return result;
             }
             else
             {

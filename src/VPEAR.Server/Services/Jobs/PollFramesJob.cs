@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Quartz;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using VPEAR.Core;
 using VPEAR.Core.Abstractions;
@@ -68,6 +69,8 @@ namespace VPEAR.Server.Services.Jobs
                     frames.AddRange(respone);
                     respone = await client.GetFramesAsync(respone[0].Id);
                     frames.AddRange(respone);
+
+                    frames = frames.Distinct().ToList();
 
                     foreach (var frame in frames)
                     {

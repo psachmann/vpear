@@ -33,5 +33,25 @@ namespace VPEAR.Core.Wrappers
         /// <value>The frame sensor values.</value>
         [JsonPropertyName("readings")]
         public IList<IList<int>> Readings { get; set; } = new List<IList<int>>();
+
+        public override bool Equals(object other)
+        {
+            if (!(other is FrameResponse))
+            {
+                return false;
+            }
+
+            var frameResponse = (FrameResponse)other;
+
+            if (this.Id == frameResponse.Id
+                && this.Time == frameResponse.Time)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }
