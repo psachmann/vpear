@@ -20,12 +20,21 @@ using VPEAR.Core.Wrappers;
 
 namespace VPEAR.Server.Services.Jobs
 {
+    /// <summary>
+    /// Implements the device search as background task.
+    /// </summary>
     public class SearcheDeviceJob : IJob
     {
         private readonly IRepository<Device, Guid> devices;
         private readonly DeviceClient.Factory factory;
         private readonly ILogger<SearcheDeviceJob> logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SearcheDeviceJob"/> class.
+        /// </summary>
+        /// <param name="devices">The device repository.</param>
+        /// <param name="factory">The device client factory.</param>
+        /// <param name="logger">The job logger.</param>
         public SearcheDeviceJob(
             IRepository<Device, Guid> devices,
             DeviceClient.Factory factory,
@@ -36,6 +45,11 @@ namespace VPEAR.Server.Services.Jobs
             this.logger = logger;
         }
 
+        /// <summary>
+        /// Executes the device searche.
+        /// </summary>
+        /// <param name="context">The job context.</param>
+        /// <returns>Returns an asynchronous task.</returns>
         public async Task Execute(IJobExecutionContext context)
         {
             this.logger.LogInformation("Starting device search...");

@@ -34,6 +34,11 @@ namespace VPEAR.Core.Wrappers
         [JsonPropertyName("readings")]
         public IList<IList<int>> Readings { get; set; } = new List<IList<int>>();
 
+        /// <summary>
+        /// Compares to the given object.
+        /// </summary>
+        /// <param name="other">The object to compare to.</param>
+        /// <returns>Returns true if objects are equal, false if not.</returns>
         public override bool Equals(object other)
         {
             if (other == null || !(other is FrameResponse))
@@ -54,6 +59,10 @@ namespace VPEAR.Core.Wrappers
             }
         }
 
+        /// <summary>
+        /// Gets the hash code for the object.
+        /// </summary>
+        /// <returns>Returns the objects hash code.</returns>
         public override int GetHashCode()
         {
             return base.GetHashCode();
