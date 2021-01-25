@@ -1,22 +1,19 @@
-using Autofac;
 using Serilog;
 using System;
+using System.Net.Http;
 using UnityEngine;
+using VPEAR.Core;
+using VPEAR.Core.Abstractions;
 
 public abstract class AbstractBase : MonoBehaviour, IDisposable
 {
-    private static readonly IContainer container = null;
-    private ILifetimeScope scope = null;
+    protected static Serilog.ILogger logger = null;
+    protected static IVPEARClient client = null;
 
     static AbstractBase()
     {
         ConfigureLogger();
-
-        var builder = new ContainerBuilder();
-        builder.RegisterModule(new ClientModule());
-        builder.RegisterModule(new SerilogModule());
-
-        container = builder.Build();
+        ConfigureClient();
     }
 
     private static void ConfigureLogger()
@@ -28,14 +25,15 @@ public abstract class AbstractBase : MonoBehaviour, IDisposable
             .CreateLogger();
     }
 
-    protected virtual void Awake()
+    private static void ConfigureClient()
     {
-        this.scope = container.BeginLifetimeScope();
+        client = new VPEARClient(Constants.ServerBaseAddress, new HttpClient());
     }
 
     public void Dispose()
     {
-        this.scope?.Dispose();
+        client?.Dispose();
+        Log.CloseAndFlush();
         GC.SuppressFinalize(this);
     }
 }

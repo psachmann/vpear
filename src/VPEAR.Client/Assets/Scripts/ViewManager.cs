@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 public class ViewManager : AbstractBase
 {
@@ -10,7 +9,6 @@ public class ViewManager : AbstractBase
 
     private void Start()
     {
-        this.Current = this.GetComponent<View>();
         this.Initialize();
     }
 

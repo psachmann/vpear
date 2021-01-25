@@ -5,9 +5,8 @@ public class View : AbstractBase
     private Canvas view = null;
     private ViewManager viewManager;
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
         this.view = this.GetComponent<Canvas>();
     }
 
