@@ -1,12 +1,13 @@
 using UnityEngine;
 
-public class View : MonoBehaviour
+public class View : AbstractBase
 {
     private Canvas view = null;
     private ViewManager viewManager;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         this.view = this.GetComponent<Canvas>();
     }
 
@@ -24,5 +25,10 @@ public class View : MonoBehaviour
     public void Show()
     {
         this.view.enabled = true;
+    }
+
+    public string GetName()
+    {
+        return this.view.name;
     }
 }

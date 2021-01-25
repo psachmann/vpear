@@ -1,13 +1,13 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public class ViewManager : MonoBehaviour
+public class ViewManager : AbstractBase
 {
     private readonly Stack<View> history = new Stack<View>();
 
     public View Current = null;
 
-    // Start is called before the first frame update
     private void Start()
     {
         this.Current = this.GetComponent<View>();
@@ -23,8 +23,10 @@ public class ViewManager : MonoBehaviour
             view.Initialize(this);
         }
 
-        this.history.Push(this.Current);
-        this.Current.Show();
+        var startView = views.Where(view => string.Equals(view.GetName(), Constants.LoginViewName))
+            .First();
+
+        this.GoTo(startView);
     }
 
     public void GoBack()
