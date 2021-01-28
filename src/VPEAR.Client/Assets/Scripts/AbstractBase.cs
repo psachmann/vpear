@@ -7,8 +7,8 @@ using VPEAR.Core.Abstractions;
 
 public abstract class AbstractBase : MonoBehaviour, IDisposable
 {
-    protected static Serilog.ILogger logger = null;
-    protected static IVPEARClient client = null;
+    protected static Serilog.ILogger Logger = null;
+    protected static IVPEARClient Client = null;
 
     static AbstractBase()
     {
@@ -21,26 +21,25 @@ public abstract class AbstractBase : MonoBehaviour, IDisposable
         Log.Logger = new LoggerConfiguration()
             .Enrich.FromLogContext()
             .MinimumLevel.Debug()
-            .WriteTo.Console()
             .WriteTo.File(Constants.LogPath, rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
             .CreateLogger();
 
-        logger = Log.Logger;
+        Logger = Log.Logger;
     }
 
     private static void ConfigureClient()
     {
-        client = new VPEARClient(Constants.ServerBaseAddress, new HttpClient());
+        Client = new VPEARClient(Constants.ServerBaseAddress, new HttpClient());
     }
 
 
     public void Dispose()
     {
-        client?.Dispose();
+        Client?.Dispose();
         Log.CloseAndFlush();
         GC.SuppressFinalize(this);
 
-        logger = null;
-        client = null;
+        Logger = null;
+        Client = null;
     }
 }
