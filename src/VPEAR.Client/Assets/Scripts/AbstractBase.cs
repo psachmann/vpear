@@ -1,10 +1,15 @@
 using Serilog;
-using Serilog.Events;
 using System;
+using System.Net.Http;
 using UnityEngine;
+using VPEAR.Core;
+using VPEAR.Core.Abstractions;
 
 public abstract class AbstractBase : MonoBehaviour, IDisposable
 {
+    protected static Serilog.ILogger logger = null;
+    protected static IVPEARClient client = null;
+
     static AbstractBase()
     {
         ConfigureLogger();
@@ -19,17 +24,23 @@ public abstract class AbstractBase : MonoBehaviour, IDisposable
             .WriteTo.Console()
             .WriteTo.File(Constants.LogPath, rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
             .CreateLogger();
+
+        logger = Log.Logger;
     }
 
     private static void ConfigureClient()
     {
-        // throw new NotImplementedException();
+        client = new VPEARClient(Constants.ServerBaseAddress, new HttpClient());
     }
 
 
     public void Dispose()
     {
+        client?.Dispose();
         Log.CloseAndFlush();
         GC.SuppressFinalize(this);
+
+        logger = null;
+        client = null;
     }
 }
