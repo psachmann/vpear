@@ -31,6 +31,13 @@ public class ViewService : AbstractBase
         return this.viewHistory.Peek();
     }
 
+    public View GetViewByName(string viewName)
+    {
+        var views = this.GetComponentsInChildren<View>();
+
+        return views.FirstOrDefault(view => string.Equals(view.GetName(), viewName));
+    }
+
     public bool CanGoBack()
     {
         return this.viewHistory.Count > 0;

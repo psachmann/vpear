@@ -1,9 +1,9 @@
 using UnityEngine;
 
-public class View : AbstractBase
+public abstract class View : AbstractBase
 {
-    private Canvas canvas;
-    private ViewService viewService;
+    protected Canvas canvas;
+    protected ViewService viewService;
 
     private void Awake()
     {
@@ -13,6 +13,7 @@ public class View : AbstractBase
     public void Init(ViewService viewService)
     {
         this.viewService = viewService;
+        this.Hide();
     }
 
     public string GetName()
