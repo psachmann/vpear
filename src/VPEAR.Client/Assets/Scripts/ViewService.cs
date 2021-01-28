@@ -7,6 +7,7 @@ public class ViewService : AbstractBase
 
     private void Start()
     {
+        this.viewHistory.Push(null); // prevents stack empty exception
         this.Init();
     }
 
@@ -46,7 +47,7 @@ public class ViewService : AbstractBase
 
     public void GoTo(View nextView)
     {
-        this.viewHistory.Peek().Hide();
+        this.viewHistory.Peek()?.Hide();
         this.viewHistory.Push(nextView);
         this.viewHistory.Peek().Show();
     }
