@@ -1,3 +1,5 @@
+using Serilog;
+using Serilog.Events;
 using System;
 using UnityEngine;
 
@@ -11,7 +13,12 @@ public abstract class AbstractBase : MonoBehaviour, IDisposable
 
     private static void ConfigureLogger()
     {
-        // throw new NotImplementedException();
+        Log.Logger = new LoggerConfiguration()
+            .Enrich.FromLogContext()
+            .MinimumLevel.Debug()
+            .WriteTo.Console()
+            .WriteTo.File(Constants.LogPath, rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
+            .CreateLogger();
     }
 
     private static void ConfigureClient()
@@ -22,6 +29,7 @@ public abstract class AbstractBase : MonoBehaviour, IDisposable
 
     public void Dispose()
     {
+        Log.CloseAndFlush();
         GC.SuppressFinalize(this);
     }
 }
