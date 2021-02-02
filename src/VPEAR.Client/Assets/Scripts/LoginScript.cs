@@ -17,6 +17,8 @@ public class LoginScript : AbstractView
         this.GetComponentsInChildren(inputs);
         this.userNameInput = inputs.First(input => string.Equals(input.name, Constants.UserNameInputName));
         this.userPasswordInput = inputs.First(input => string.Equals(input.name, Constants.UserPasswordInputName));
+
+        Logger.Debug($"Initialized {this.GetType()}");
     }
 
     private void LoginUser()

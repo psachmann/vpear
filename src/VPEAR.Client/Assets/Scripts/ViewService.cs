@@ -9,6 +9,8 @@ public class ViewService : AbstractBase
     {
         this.viewHistory.Push(null); // prevents stack empty exception
         this.Init();
+
+        Logger.Debug($"Initialized {this.GetType()}");
     }
 
     private void Init()
