@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class View : AbstractBase
+public abstract class AbstractView : AbstractBase
 {
     protected Canvas canvas;
     protected ViewService viewService;

@@ -1,6 +1,6 @@
 using UnityEngine.UI;
 
-public class DeviceListViewScript : View
+public class DeviceListScript : AbstractView
 {
     private void Start()
     {

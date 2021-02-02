@@ -3,7 +3,7 @@ using System.Linq;
 
 public class ViewService : AbstractBase
 {
-    private readonly Stack<View> viewHistory = new Stack<View>();
+    private readonly Stack<AbstractView> viewHistory = new Stack<AbstractView>();
 
     private void Start()
     {
@@ -13,7 +13,7 @@ public class ViewService : AbstractBase
 
     private void Init()
     {
-        var views = this.GetComponentsInChildren<View>();
+        var views = this.GetComponentsInChildren<AbstractView>();
 
         foreach (var view in views)
         {
@@ -26,14 +26,14 @@ public class ViewService : AbstractBase
         this.GoTo(startView);
     }
 
-    public View GetCurrentView()
+    public AbstractView GetCurrentView()
     {
         return this.viewHistory.Peek();
     }
 
-    public View GetViewByName(string viewName)
+    public AbstractView GetViewByName(string viewName)
     {
-        var views = this.GetComponentsInChildren<View>();
+        var views = this.GetComponentsInChildren<AbstractView>();
 
         return views.FirstOrDefault(view => string.Equals(view.GetName(), viewName));
     }
@@ -52,7 +52,7 @@ public class ViewService : AbstractBase
         }
     }
 
-    public void GoTo(View nextView)
+    public void GoTo(AbstractView nextView)
     {
         this.viewHistory.Peek()?.Hide();
         this.viewHistory.Push(nextView);

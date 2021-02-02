@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using UnityEngine.UI;
 
-public class LoginViewScript : View
+public class LoginScript : AbstractView
 {
     private InputField userNameInput = null;
     private InputField userPasswordInput = null;
@@ -22,7 +23,7 @@ public class LoginViewScript : View
     {
         var view = this.viewService.GetViewByName(Constants.DeviceListViewName);
 
-        Logger.Information("Go to 'DeviceListView'");
+        Debug.Log("Go to 'DeviceListView'");
 
         // client.LoginAsync(this.userNameInput.text, this.userPasswordInput.text);
 
