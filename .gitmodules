@@ -1,3 +1,6 @@
 [submodule "./docs/vpear-docs"]
 	path = ./docs/vpear-docs
 	url = https://github.com/psachmann/vpear-docs.git
+[submodule "modules/com.ptc.vuforia.engine"]
+	path = modules/com.ptc.vuforia.engine
+	url = https://vuforia-engine@dev.azure.com/vuforia-engine/unity-extension/_git/com.ptc.vuforia.engine
