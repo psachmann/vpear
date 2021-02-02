@@ -23,8 +23,6 @@ public class LoginScript : AbstractView
     {
         var view = this.viewService.GetViewByName(Constants.DeviceListViewName);
 
-        Debug.Log("Go to 'DeviceListView'");
-
         // client.LoginAsync(this.userNameInput.text, this.userPasswordInput.text);
 
         this.viewService.GoTo(view);

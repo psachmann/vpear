@@ -21,6 +21,7 @@ public abstract class AbstractBase : MonoBehaviour, IDisposable
         Log.Logger = new LoggerConfiguration()
             .Enrich.FromLogContext()
             .MinimumLevel.Debug()
+            .WriteTo.Unity()
             .WriteTo.File(Constants.LogPath, rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
             .CreateLogger();
 

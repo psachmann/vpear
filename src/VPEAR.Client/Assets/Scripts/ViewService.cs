@@ -45,6 +45,8 @@ public class ViewService : AbstractBase
 
     public void GoBack()
     {
+        Logger.Debug("Go back");
+
         if (this.CanGoBack())
         {
             this.viewHistory.Pop().Hide();
@@ -54,6 +56,8 @@ public class ViewService : AbstractBase
 
     public void GoTo(AbstractView nextView)
     {
+        Logger.Debug($"Go to {nextView.GetName()}");
+
         this.viewHistory.Peek()?.Hide();
         this.viewHistory.Push(nextView);
         this.viewHistory.Peek().Show();
