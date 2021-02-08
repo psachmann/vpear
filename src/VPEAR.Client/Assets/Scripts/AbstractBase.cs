@@ -3,12 +3,11 @@ using System;
 using System.Net.Http;
 using UnityEngine;
 using VPEAR.Core;
-using VPEAR.Core.Abstractions;
 
 public abstract class AbstractBase : MonoBehaviour, IDisposable
 {
     protected static Serilog.ILogger Logger = null;
-    protected static IVPEARClient Client = null;
+    protected static VPEARClient Client = null;
 
     static AbstractBase()
     {

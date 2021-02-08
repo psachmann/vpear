@@ -21,12 +21,12 @@ public abstract class AbstractView : AbstractBase
         return this.canvas.name;
     }
 
-    public void Hide()
+    public virtual void Hide()
     {
         this.canvas.enabled = false;
     }
 
-    public void Show()
+    public virtual void Show()
     {
         this.canvas.enabled = true;
     }

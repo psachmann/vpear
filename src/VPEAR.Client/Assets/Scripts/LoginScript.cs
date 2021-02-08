@@ -1,32 +1,62 @@
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using UnityEngine.UI;
 
 public class LoginScript : AbstractView
 {
+    private Button loginButton = null;
     private InputField userNameInput = null;
     private InputField userPasswordInput = null;
 
     private void Start()
     {
-        var loginButton = this.GetComponentInChildren<Button>();
-        loginButton.onClick.AddListener(LoginUser);
+        this.loginButton = this.GetComponentInChildren<Button>();
+        this.loginButton.onClick.AddListener(LoginUser);
 
         var inputs = new List<InputField>();
         this.GetComponentsInChildren(inputs);
         this.userNameInput = inputs.First(input => string.Equals(input.name, Constants.UserNameInputName));
+        this.userNameInput.onValueChanged.AddListener(IsLoginEnabled);
         this.userPasswordInput = inputs.First(input => string.Equals(input.name, Constants.UserPasswordInputName));
+        this.userPasswordInput.onValueChanged.AddListener(IsLoginEnabled);
+        this.IsLoginEnabled();
 
         Logger.Debug($"Initialized {this.GetType()}");
     }
 
-    private void LoginUser()
+    private async void LoginUser()
     {
+        var popup = (PopupScript)this.viewService.GetViewByName(Constants.PopupViewName);
         var view = this.viewService.GetViewByName(Constants.DeviceListViewName);
 
-        // client.LoginAsync(this.userNameInput.text, this.userPasswordInput.text);
+        if (await Client.LoginAsync(this.userNameInput.text, this.userPasswordInput.text))
+        {
+            this.viewService.GoTo(view);
+        }
+        else
+        {
+            popup.Show(Constants.LoginFailedTitleText, Client.ErrorMessage, LoginFailureAction);
+        }
+    }
 
-        this.viewService.GoTo(view);
+    private void LoginFailureAction()
+    {
+        var popup = (PopupScript)this.viewService.GetViewByName(Constants.PopupViewName);
+
+        popup.Hide();
+        this.userNameInput.text = string.Empty;
+        this.userPasswordInput.text = string.Empty;
+    }
+
+    private void IsLoginEnabled(string _ = default)
+    {
+        if (string.IsNullOrEmpty(this.userNameInput.text) || string.IsNullOrEmpty(this.userPasswordInput.text))
+        {
+            this.loginButton.enabled = false;
+        }
+        else
+        {
+            this.loginButton.enabled = true;
+        }
     }
 }

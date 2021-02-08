@@ -20,6 +20,19 @@ public class PopupScript : AbstractView
         Logger.Debug($"Initialized {this.GetType()}");
     }
 
+    public void Clear()
+    {
+        this.actionButton.onClick.RemoveAllListeners();
+        this.titleText.text = string.Empty;
+        this.messageText.text = string.Empty;
+    }
+
+    public override void Hide()
+    {
+        base.Hide();
+        this.Clear();
+    }
+
     public void Show(string titleText, string messageText, UnityAction action)
     {
         this.actionButton.onClick.RemoveAllListeners();
