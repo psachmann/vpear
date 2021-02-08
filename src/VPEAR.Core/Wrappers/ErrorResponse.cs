@@ -17,6 +17,13 @@ namespace VPEAR.Core.Wrappers
         /// <summary>
         /// Initializes a new instance of the <see cref="ErrorResponse"/> class.
         /// </summary>
+        public ErrorResponse()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ErrorResponse"/> class.
+        /// </summary>
         /// <param name="statusCode">The http status code.</param>
         /// <param name="message">The error message.</param>
         public ErrorResponse(HttpStatusCode statusCode, string message)
