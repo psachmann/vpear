@@ -45,7 +45,7 @@ namespace VPEAR.Server.Controllers
         /// <param name="id">The device id.</param>
         /// <param name="start">The inclusive start frame (0 is the first recorded frame). If omitted, 0 will be assumed.</param>
         /// <param name="count">The count how many frames from start. If omitted, all frames from start till end will be assumed.</param>
-        /// <returns>The recorded data frames.</returns>
+        /// <returns>The recorded data frames with the newest one first.</returns>
         [HttpGet]
         [Route(Routes.FramesRoute)]
         [Produces(Defaults.DefaultResponseType)]

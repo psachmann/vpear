@@ -61,7 +61,7 @@ namespace VPEAR.Server.Services
 
             await this.devices.GetCollectionAsync(device, device => device.Frames);
 
-            var frames = device.Frames.OrderBy(frame => frame.CreatedAt);
+            var frames = device.Frames.OrderByDescending(frame => frame.CreatedAt);
 
             if (start == 0 && count == 0)
             {
