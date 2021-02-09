@@ -27,11 +27,11 @@ public class LoginScript : AbstractView
     private async void LoginUser()
     {
         var popup = (PopupScript)this.viewService.GetViewByName(Constants.PopupViewName);
-        var view = this.viewService.GetViewByName(Constants.DeviceListViewName);
 
         if (await Client.LoginAsync(this.userNameInput.text, this.userPasswordInput.text))
         {
-            this.viewService.GoTo(view);
+            // this.viewService.GoTo(Constants.DeviceListViewName);
+            this.viewService.GoTo(Constants.UserListViewName);
         }
         else
         {

@@ -8,6 +8,8 @@ public class DeviceListScript : AbstractView
 
     private void OnEnable()
     {
+        Logger.Debug("------- Enable DeviceList --------");
+
         var template = this.transform.GetChild(0).gameObject;
 
         foreach (var device in Enumerable.Range(0, 10))

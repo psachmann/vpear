@@ -56,6 +56,13 @@ public class ViewService : AbstractBase
         }
     }
 
+    public void GoTo(string nextViewName)
+    {
+        var views = this.GetComponentsInChildren<AbstractView>();
+
+        this.GoTo(views.First(view => string.Equals(view.GetName(), nextViewName)));
+    }
+
     public void GoTo(AbstractView nextView)
     {
         Logger.Debug($"Go to {nextView.GetName()}");
