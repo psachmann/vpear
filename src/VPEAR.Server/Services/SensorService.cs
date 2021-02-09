@@ -18,7 +18,7 @@ using static VPEAR.Server.Constants;
 namespace VPEAR.Server.Services
 {
     /// <summary>
-    /// Implements the <see cref="IDeviceService"/> interface.
+    /// Implements the <see cref="ISensorService"/> interface.
     /// </summary>
     public class SensorService : ISensorService
     {
