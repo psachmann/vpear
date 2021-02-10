@@ -12,4 +12,5 @@ internal static class Constants
     public const string PopupMessageTextName = "MessageText";
     public const string PopupActionButtonName = "ActionButton";
     public const string UserListViewName = "UserListView";
+    public const string UserListItemName = "UserListItem";
 }

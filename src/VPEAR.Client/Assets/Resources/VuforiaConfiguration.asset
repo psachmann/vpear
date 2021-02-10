@@ -9,12 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -2067402452, guid: bab6fa851cf5a1a4bba3cec5f191cb8e, type: 3}
+  m_Script: {fileID: -2067402452, guid: 4bc5fd733b147194692297d23f623541, type: 3}
   m_Name: VuforiaConfiguration
   m_EditorClassIdentifier: 
   vuforia:
     vuforiaLicenseKey: 
-    ufoLicenseKey: QVd6Mk1aYi8vLy8vQUFBQUtCR0dLUG9vU2s0TnF4ZlA3YXNRYVVrWmd2dnJQN1BKdjVHd1pRRnZKZGZib1JXTVZNWnlkY2duc21ZNnBkYm1vSkJLMkZyVTNSZyt5L2RvR001c3FwWjh2bmc1NXB5czhqZmtWRFV2RmU0Tk45ZC9rYlFoS2RwSXVxMGV6QlVKTFVSYmd2Qm9SeHUrUlUvaDZVUy9lT3lvWGg1QW9yTi9xOENZbzBuVTkyOWNPQkFFOFNBRlF2NXBxZGhnR3ZaMWZtclZTUzM0ejhUOWtQcXpRbzludVcvNTcrOVZlNGt1VkI3cUFoUjQxVVIzZjZsdHIySS90SUpvNklzaFArd3RMeDAzSzlSVDdOS0dzUkRXOHVyeVBTN1FEMTNBUmFCdHNwUTBWeVczYTZoMFpMK1M5NnhUNzUwVS9wL1BjYk5nUWtBRUs0UklxQXdWQnF3L3g3SzFuL3piN3RNcVdWeGtLcDh6K0xoeThPbzg=
+    ufoLicenseKey: QWJSdzdlbi8vLy8vQUFBQUtIZWdadmNvMlUya2p1czdTNVoxMXQwNHAybHl0T2c2b3hsOGJObW1XRjlPOEFrTkMvWEVkVzdETERmY0NtandVeXB2dDhIRzU3WEp0OG9iVWFKckxOSlg3NTgxb25QdVNjQWtzSEpCQTBRL3IwdzRMN0Q0Rmk5MmxobnMxRzBCcDJEU1l3SjkrcEdLVnBIeU44VGpyYzR3em5TMmw3dE9FZW11OFdmaTZrdHkyWGd6VGVKYWFXRUJKQ0hHdVQxN2pvbU5rZWNRYnhFNERteFFwczFsY2psKzFJQ3JLWEplV2dkN096cGJuMy9QSXdWK3g0NVE2S0ZFT09QV0Y0b1p4VEF6OGRlb1NHd3NvaU1INzNLOG9mNGtnQVVOUlBUSW9vUXpuNFN5UWhtL2tOK1gveXNjZDFjTm4vL093T29weFl5MHk1NTZYMEtUaWtCQndmZEFrWEZqYlFVd201SHA4SnNPck1rQ0p5eE8=
     delayedInitialization: 0
     cameraDeviceModeSetting: -1
     maxSimultaneousImageTargets: 1
@@ -28,7 +28,8 @@ MonoBehaviour:
     disableModelExtraction: 0
   videoBackground:
     numDivisions: 2
-    videoBackgroundShader: {fileID: 4800000, guid: f40623b353e2f1943b1b3ba42975db7a, type: 3}
+    videoBackgroundShader: {fileID: 4800000, guid: f40623b353e2f1943b1b3ba42975db7a,
+      type: 3}
     unlitShader: {fileID: 10752, guid: 0000000000000000f000000000000000, type: 0}
     videoBackgroundEnabled: 1
   deviceTracker:

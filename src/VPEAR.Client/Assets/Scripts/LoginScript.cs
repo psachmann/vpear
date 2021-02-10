@@ -35,6 +35,7 @@ public class LoginScript : AbstractView
         }
         else
         {
+            Logger.Debug("{@Error}", Client.Error);
             popup.Show(Constants.LoginFailedTitleText, Client.ErrorMessage, LoginFailureAction);
         }
     }

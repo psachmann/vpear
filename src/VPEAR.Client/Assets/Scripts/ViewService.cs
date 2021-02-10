@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 public class ViewService : AbstractBase
 {
@@ -13,7 +14,21 @@ public class ViewService : AbstractBase
         Logger.Debug($"Initialized {this.GetType()}");
     }
 
-    private void Init()
+    private void Update()
+    {
+        if (Application.platform == RuntimePlatform.Android
+            && Input.GetKeyDown(KeyCode.Escape)
+            && this.CanGoBack())
+        {
+            this.GoBack();
+        }
+        else
+        {
+            Application.Quit();
+        }
+    }
+
+    public void Init()
     {
         var views = this.GetComponentsInChildren<AbstractView>();
 
@@ -22,10 +37,7 @@ public class ViewService : AbstractBase
             view.Init(this);
         }
 
-        var startView = views.Where(view => string.Equals(view.GetName(), Constants.LoginViewName))
-            .First();
-
-        this.GoTo(startView);
+        this.GoTo(Constants.UserListViewName);
     }
 
     public AbstractView GetCurrentView()
@@ -47,10 +59,11 @@ public class ViewService : AbstractBase
 
     public void GoBack()
     {
-        Logger.Debug("Go back");
+        Logger.Debug("Try go back");
 
         if (this.CanGoBack())
         {
+            Logger.Debug("Go back");
             this.viewHistory.Pop().Hide();
             this.viewHistory.Peek().Show();
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine.UI;
 using VPEAR.Core.Wrappers;
 
 public class UserListScript : AbstractView
@@ -11,11 +12,15 @@ public class UserListScript : AbstractView
 
     private void OnEnable()
     {
-        var template = this.transform.GetChild(0).gameObject;
+        var buttons = new List<Button>();
+        this.GetComponentsInChildren(buttons);
+        var button = buttons.First(button => string.Equals(button.name, Constants.UserListItemName));
 
         foreach (var device in Enumerable.Range(0, 20))
         {
-            var gameObject = Instantiate(template, this.transform);
+            var gameObject = Instantiate(button, button.transform.parent);
         }
+
+        Destroy(button);
     }
 }
