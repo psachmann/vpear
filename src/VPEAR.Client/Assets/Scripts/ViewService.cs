@@ -1,32 +1,12 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
-public class ViewService : AbstractBase
+public partial class ViewService : AbstractBase
 {
     private readonly Stack<AbstractView> viewHistory = new Stack<AbstractView>();
 
-    private void Start()
-    {
-        this.viewHistory.Push(null); // prevents stack empty exception
-        this.Init();
-
-        Logger.Debug($"Initialized {this.GetType()}");
-    }
-
-    private void Update()
-    {
-        if (Application.platform == RuntimePlatform.Android
-            && Input.GetKeyDown(KeyCode.Escape)
-            && this.CanGoBack())
-        {
-            this.GoBack();
-        }
-        else
-        {
-            Application.Quit();
-        }
-    }
+    public event EventHandler NavigateEvent;
 
     public void Init()
     {
@@ -35,14 +15,10 @@ public class ViewService : AbstractBase
         foreach (var view in views)
         {
             view.Init(this);
+            this.NavigateEvent += view.NavigateEventHandler;
         }
 
         this.GoTo(Constants.UserListViewName);
-    }
-
-    public AbstractView GetCurrentView()
-    {
-        return this.viewHistory.Peek();
     }
 
     public AbstractView GetViewByName(string viewName)
@@ -59,29 +35,40 @@ public class ViewService : AbstractBase
 
     public void GoBack()
     {
-        Logger.Debug("Try go back");
+        this.viewHistory.Pop().Hide();
+        this.viewHistory.Peek().Show();
+        Logger.Debug("Go back");
+    }
 
-        if (this.CanGoBack())
+    public void GoTo(string viewName)
+    {
+        var views = this.GetComponentsInChildren<AbstractView>();
+
+        this.GoTo(views.First(view => string.Equals(view.GetName(), viewName)));
+    }
+
+    private void GoTo(AbstractView view)
+    {
+        Logger.Debug($"Go to {view.GetName()}");
+
+        var current = this.viewHistory.Peek();
+        if (current != null)
         {
-            Logger.Debug("Go back");
-            this.viewHistory.Pop().Hide();
+            this.OnNavigate(new NavigateEventArgs(current, view));
+            this.viewHistory.Peek().Hide();
+            this.viewHistory.Push(view);
+            this.viewHistory.Peek().Show();
+        }
+        else
+        {
+            this.OnNavigate(new NavigateEventArgs(current, view));
+            this.viewHistory.Push(view);
             this.viewHistory.Peek().Show();
         }
     }
 
-    public void GoTo(string nextViewName)
+    private void OnNavigate(EventArgs eventArgs)
     {
-        var views = this.GetComponentsInChildren<AbstractView>();
-
-        this.GoTo(views.First(view => string.Equals(view.GetName(), nextViewName)));
-    }
-
-    public void GoTo(AbstractView nextView)
-    {
-        Logger.Debug($"Go to {nextView.GetName()}");
-
-        this.viewHistory.Peek()?.Hide();
-        this.viewHistory.Push(nextView);
-        this.viewHistory.Peek().Show();
+        this.NavigateEvent?.Invoke(this, eventArgs);
     }
 }

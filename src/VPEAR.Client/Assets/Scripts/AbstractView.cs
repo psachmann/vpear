@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public abstract class AbstractView : AbstractBase
@@ -29,5 +30,9 @@ public abstract class AbstractView : AbstractBase
     public virtual void Show()
     {
         this.canvas.enabled = true;
+    }
+
+    public virtual void NavigateEventHandler(object sender, EventArgs eventArgs)
+    {
     }
 }

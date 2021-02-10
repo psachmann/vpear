@@ -23,4 +23,31 @@ public class UserListScript : AbstractView
 
         Destroy(button);
     }
+
+    public override void NavigateEventHandler(object sender, EventArgs eventArgs)
+    {
+        if (((NavigateEventArgs)eventArgs).To == this)
+        {
+            this.LoadUsersAsync();
+        }
+    }
+
+    private async void LoadUsersAsync()
+    {
+        Logger.Debug("Loading users");
+
+        var buttons = new List<Button>();
+        this.GetComponentsInChildren(buttons);
+        var button = buttons.First(button => string.Equals(button.name, Constants.UserListItemName));
+        var container = await Client.GetUsersAsync();
+        this.users = container.Items;
+
+        foreach (var user in this.users)
+        {
+            var temp = Instantiate(button, this.transform);
+            temp.GetComponent<Text>().text = user.Name;
+        }
+
+        Logger.Information("Loaded users");
+    }
 }
