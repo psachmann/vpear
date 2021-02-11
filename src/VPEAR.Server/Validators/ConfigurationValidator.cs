@@ -4,6 +4,7 @@
 // </copyright>
 
 using FluentValidation;
+using System;
 using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Validators
@@ -22,6 +23,11 @@ namespace VPEAR.Server.Validators
                 .NotNull()
                 .NotEmpty();
 
+            this.RuleFor(c => c.DbVersion)
+                .NotNull()
+                .NotEmpty()
+                .Must(dbVersion => Version.TryParse(dbVersion, out _));
+
             this.When(c => c.HttpPort != Defaults.DefaultHttpPort, () =>
             {
                 this.RuleFor(c => c.HttpPort)
@@ -35,6 +41,11 @@ namespace VPEAR.Server.Validators
                     .GreaterThanOrEqualTo(1024)
                     .LessThan(65536);
             });
+
+            this.RuleFor(c => c.Secret)
+                .NotNull()
+                .NotEmpty()
+                .MinimumLength(Limits.MinSecretLength);
         }
     }
 }

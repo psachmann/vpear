@@ -77,6 +77,7 @@ namespace VPEAR.Server
             public const int MinStringLength = 1;
             public const int MaxPasswordLength = 1024;
             public const int MinPasswordLength = 8;
+            public const int MinSecretLength = 128;
         }
 
         public static class Roles
