@@ -25,4 +25,4 @@ jobs:
     - name: Install Cake
       run: dotnet tool install Cake.Tool --tool-path ./tools
     - name: Build and Test
-      run: ./tools/dotnet-cake -target=test -config=debug
+      run: ./tools/dotnet-cake -target=test -config=Debug
