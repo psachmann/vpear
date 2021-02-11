@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -41,12 +42,13 @@ namespace VPEAR.Server
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class.
         /// </summary>
-        public Startup()
+        /// <param name="configuration">The application configuration.</param>
+        public Startup(IConfiguration configuration)
         {
-            Configuration.EnsureLoaded(Environment.GetCommandLineArgs());
+            Configuration = configuration;
         }
 
-        internal static Configuration? Config { get; set; }
+        internal static IConfiguration? Configuration { get; set; }
 
         /// <summary>
         /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -69,6 +71,7 @@ namespace VPEAR.Server
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "VPEAR.Server v1"));
 #else
             env.EnvironmentName = "Production";
+            app.UseHsts();
             app.UseHttpsRedirection();
 #endif
             app.UseRouting();
@@ -142,7 +145,7 @@ namespace VPEAR.Server
                     {
                         ValidateIssuer = false,
                         ValidateAudience = false,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Config!.Secret)),
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetValue<string>("Secret"))),
                     };
                 });
 
@@ -163,8 +166,8 @@ namespace VPEAR.Server
             services.AddDbContext<VPEARDbContext>(builder =>
             {
                 builder.UseMySql(
-                    Config!.DbConnection,
-                    new MySqlServerVersion(new Version(Config.DbVersion)),
+                    Configuration.GetValue<string>("MariaDb:Connection"),
+                    new MySqlServerVersion(new Version(Configuration.GetValue<string>("MariaDb:Version"))),
                     options =>
                     {
                         options.CharSetBehavior(CharSetBehavior.NeverAppend);

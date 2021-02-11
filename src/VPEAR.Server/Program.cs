@@ -5,12 +5,12 @@
 
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using System;
+using System.IO;
 using System.Runtime.CompilerServices;
-using VPEAR.Server.Data;
 using static VPEAR.Server.Constants;
 
 [assembly: InternalsVisibleTo("VPEAR.Server.Test")]
@@ -52,14 +52,14 @@ namespace VPEAR.Server
         /// <returns>The host to run the server.</returns>
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Is(Defaults.DefaultLogLevel)
-                .Enrich.FromLogContext()
-                .WriteTo.Console()
-                .WriteTo.File(Defaults.DefaultLogPath, rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
-                .CreateLogger();
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile(Defaults.DefaultConfigurationPath)
+                .Build();
 
-            Startup.Config = Configuration.Load(args);
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(configuration)
+                .CreateLogger();
 
             var builder = Host.CreateDefaultBuilder(args)
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
@@ -67,7 +67,6 @@ namespace VPEAR.Server
                 {
                     builder.UseSerilog();
                     builder.UseStartup<Startup>();
-                    builder.UseUrls(Startup.Config!.Urls.ToArray());
                 });
 
             return builder;

@@ -22,8 +22,6 @@ namespace VPEAR.Server.Test.Controllers
         public UserControllerTest(AutofacFixture fixture)
         {
             this.controller = fixture.Container.Resolve<UserController>();
-
-            Configuration.EnsureLoaded(Environment.GetCommandLineArgs());
         }
 
         [Fact]

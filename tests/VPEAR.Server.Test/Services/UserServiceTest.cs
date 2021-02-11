@@ -21,8 +21,6 @@ namespace VPEAR.Server.Test.Services
         public UserServiceTest(AutofacFixture fixture)
         {
             this.service = fixture.Container.Resolve<IUserService>();
-
-            Configuration.EnsureLoaded(Environment.GetCommandLineArgs());
         }
 
         [Fact]

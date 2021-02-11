@@ -5,8 +5,11 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using System;
+using System.IO;
+using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Data
 {
@@ -23,12 +26,14 @@ namespace VPEAR.Server.Data
         public VPEARDbContext CreateDbContext(string[] args)
         {
             var builder = new DbContextOptionsBuilder<VPEARDbContext>();
-
-            Server.Configuration.EnsureLoaded(args);
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile(Defaults.DefaultConfigurationPath)
+                .Build();
 
             builder.UseMySql(
-                Startup.Config!.DbConnection,
-                new MySqlServerVersion(new Version(Startup.Config.DbVersion)),
+                configuration.GetValue<string>("MariaDb:Connection"),
+                new MySqlServerVersion(new Version(configuration.GetValue<string>("MariaDb:Version"))),
                 options =>
                 {
                     options.CharSetBehavior(CharSetBehavior.NeverAppend);
