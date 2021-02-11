@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using VPEAR.Core.Extensions;
+using VPEAR.Core.Wrappers;
 
 namespace VPEAR.Core.Abstractions
 {
@@ -91,6 +92,30 @@ namespace VPEAR.Core.Abstractions
             protected set
             {
                 this.error = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets the error message.
+        /// </summary>
+        /// <value>The error message from the exception or http response.</value>
+        public string ErrorMessage
+        {
+            get
+            {
+                if (this.Error != null)
+                {
+                    return this.Error.Message;
+                }
+
+                if (!this.IsSuccessResponse())
+                {
+                    var errorResponse = this.Response.Content.ReadAsStringAsync().Result.FromJsonString<ErrorResponse>();
+
+                    return string.Join(" ", errorResponse.Messages);
+                }
+
+                return string.Empty;
             }
         }
 

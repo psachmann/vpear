@@ -50,9 +50,10 @@ namespace VPEAR.Server.Services
         public async Task<Result<Container<GetFrameResponse>>> GetFramesAsync(Guid id, int start, int count)
         {
             var device = await this.devices.GetAsync(id);
-            var payload = new Container<GetFrameResponse>();
-
-            payload.Start = start;
+            var payload = new Container<GetFrameResponse>
+            {
+                Start = start,
+            };
 
             if (device == null)
             {
