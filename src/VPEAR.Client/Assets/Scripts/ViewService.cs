@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
+using UnityEngine.UI;
 
 public partial class ViewService : AbstractBase
 {
     private readonly Stack<AbstractView> viewHistory = new Stack<AbstractView>();
-
+    
     public event EventHandler NavigateEvent;
 
     public void Init()
@@ -35,8 +37,14 @@ public partial class ViewService : AbstractBase
 
     public void GoBack()
     {
-        this.viewHistory.Pop().Hide();
-        this.viewHistory.Peek().Show();
+        var from = this.viewHistory.Pop();
+        var to = this.viewHistory.Peek();
+
+        this.OnNavigate(new NavigateEventArgs(from, to));
+
+        from.Hide();
+        to.Show();
+
         Logger.Debug("Go back");
     }
 
@@ -45,6 +53,18 @@ public partial class ViewService : AbstractBase
         var views = this.GetComponentsInChildren<AbstractView>();
 
         this.GoTo(views.First(view => string.Equals(view.GetName(), viewName)));
+    }
+
+    public void HideContent()
+    {
+        this.navigationPanel.alpha = 0;
+        this.navigationPanel.interactable = false;
+    }
+
+    public void ShowContent()
+    {
+        this.navigationPanel.interactable = true;
+        this.navigationPanel.alpha = 1;
     }
 
     private void GoTo(AbstractView view)

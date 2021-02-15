@@ -24,10 +24,13 @@ public class LoginScript : AbstractView
         Logger.Debug($"Initialized {this.GetType()}");
     }
 
-    private async void LoginUser()
+    private void LoginUser()
     {
         var popup = (PopupScript)this.viewService.GetViewByName(Constants.PopupViewName);
 
+        this.viewService.ShowContent();
+        this.viewService.GoTo(Constants.DeviceListViewName);
+/*
         if (await Client.LoginAsync(this.userNameInput.text, this.userPasswordInput.text))
         {
             this.viewService.GoTo(Constants.DeviceListViewName);
@@ -37,6 +40,7 @@ public class LoginScript : AbstractView
             Logger.Debug("{@Error}", Client.Error);
             popup.Show(Constants.LoginFailedTitleText, Client.ErrorMessage, LoginFailureAction);
         }
+*/
     }
 
     private void LoginFailureAction()

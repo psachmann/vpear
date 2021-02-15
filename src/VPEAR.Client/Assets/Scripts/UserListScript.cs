@@ -10,20 +10,6 @@ public class UserListScript : AbstractView
 {
     private IList<GetUserResponse> users = null;
 
-    private void OnEnable()
-    {
-        var buttons = new List<Button>();
-        this.GetComponentsInChildren(buttons);
-        var button = buttons.First(button => string.Equals(button.name, Constants.UserListItemName));
-
-        foreach (var device in Enumerable.Range(0, 20))
-        {
-            var gameObject = Instantiate(button, button.transform.parent);
-        }
-
-        Destroy(button);
-    }
-
     public override void NavigateEventHandler(object sender, EventArgs eventArgs)
     {
         if (((NavigateEventArgs)eventArgs).To == this)
