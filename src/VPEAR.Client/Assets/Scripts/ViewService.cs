@@ -51,17 +51,16 @@ public partial class ViewService : AbstractBase
     {
         Logger.Debug($"Go to {view.GetName()}");
 
-        var current = this.viewHistory.Peek();
-        if (current != null)
+        if (this.viewHistory.Count > 0)
         {
-            this.OnNavigate(new NavigateEventArgs(current, view));
+            this.OnNavigate(new NavigateEventArgs(this.viewHistory.Peek(), view));
             this.viewHistory.Peek().Hide();
             this.viewHistory.Push(view);
             this.viewHistory.Peek().Show();
         }
         else
         {
-            this.OnNavigate(new NavigateEventArgs(current, view));
+            this.OnNavigate(new NavigateEventArgs(null, view));
             this.viewHistory.Push(view);
             this.viewHistory.Peek().Show();
         }

@@ -8,7 +8,7 @@ public class NavigateEventArgs : EventArgs
         this.To = to;
     }
 
-    public AbstractView From { get; private set; }
+    public AbstractView From { get; }
 
-    public AbstractView To { get; private set; }
+    public AbstractView To { get; }
 }

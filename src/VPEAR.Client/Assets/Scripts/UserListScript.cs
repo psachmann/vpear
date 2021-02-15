@@ -28,13 +28,13 @@ public class UserListScript : AbstractView
     {
         if (((NavigateEventArgs)eventArgs).To == this)
         {
-            this.LoadUsersAsync();
+            // this.LoadUsersAsync();
         }
     }
 
     private async void LoadUsersAsync()
     {
-        Logger.Debug("Loading users");
+        Logger.Debug("Loading users...");
 
         var buttons = new List<Button>();
         this.GetComponentsInChildren(buttons);
@@ -48,6 +48,6 @@ public class UserListScript : AbstractView
             temp.GetComponent<Text>().text = user.Name;
         }
 
-        Logger.Information("Loaded users");
+        Logger.Information("Loaded users.");
     }
 }

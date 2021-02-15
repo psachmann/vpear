@@ -8,7 +8,7 @@ public partial class ViewService : AbstractBase
 
         Logger.Debug($"Initialized {this.GetType()}");
     }
-
+/*
     private void Update()
     {
         if (Application.platform == RuntimePlatform.Android
@@ -22,4 +22,5 @@ public partial class ViewService : AbstractBase
             Application.Quit();
         }
     }
+*/
 }
