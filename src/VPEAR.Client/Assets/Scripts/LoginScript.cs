@@ -30,8 +30,7 @@ public class LoginScript : AbstractView
 
         if (await Client.LoginAsync(this.userNameInput.text, this.userPasswordInput.text))
         {
-            // this.viewService.GoTo(Constants.DeviceListViewName);
-            this.viewService.GoTo(Constants.UserListViewName);
+            this.viewService.GoTo(Constants.DeviceListViewName);
         }
         else
         {

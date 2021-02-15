@@ -18,7 +18,7 @@ public partial class ViewService : AbstractBase
             this.NavigateEvent += view.NavigateEventHandler;
         }
 
-        this.GoTo(Constants.UserListViewName);
+        this.GoTo(Constants.LoginViewName);
     }
 
     public AbstractView GetViewByName(string viewName)
