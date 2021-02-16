@@ -1,20 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using UnityEngine;
 using UnityEngine.UI;
 using VPEAR.Core.Wrappers;
 
 public class UserListScript : AbstractView
 {
+    [SerializeField] private Button itemTemplate = null;
     private IList<GetUserResponse> users = null;
-    private Button itemTemplate = null;
 
     private void Start()
     {
-        var buttons = this.GetComponentsInChildren<Button>();
-        this.itemTemplate = buttons.First(button => string.Equals(button.name, Constants.UserListItemName));
         this.itemTemplate.onClick.AddListener(() => this.OnItemClick());
     }
 

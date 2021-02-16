@@ -4,25 +4,17 @@ using UnityEngine.UI;
 
 public partial class ViewService : AbstractBase
 {
-    private CanvasGroup navigationPanel = null;
-    private Button devices = null;
-    private Button users = null;
-    private Button settings = null;
+    [SerializeField] private CanvasGroup navigationPanel = null;
+    [SerializeField] private Button devices = null;
+    [SerializeField] private Button users = null;
+    [SerializeField] private Button settings = null;
 
     private void Start()
     {
-        var panels = this.GetComponentsInChildren<CanvasGroup>();
-        this.navigationPanel = panels.First(panel => string.Equals(panel.name, Constants.NavigationPanelName));
         this.HideContent();
-
-        var buttons = this.GetComponentsInChildren<Button>();
-        this.devices = buttons.First(button => string.Equals(button.name, Constants.DevicesButtonName));
         this.devices.onClick.AddListener(() => this.GoTo(Constants.DeviceListViewName));
-        this.users = buttons.First(button => string.Equals(button.name, Constants.UsersButtonName));
         this.users.onClick.AddListener(() => this.GoTo(Constants.UserListViewName));
-        this.settings = buttons.First(button => string.Equals(button.name, Constants.SettingsButtonName));
         this.settings.onClick.AddListener(() => this.GoTo(Constants.SettingsViewName));
-
         this.Init();
 
         Logger.Debug($"Initialized {this.GetType()}");
@@ -30,9 +22,7 @@ public partial class ViewService : AbstractBase
 
     private void Update()
     {
-        if (Application.platform == RuntimePlatform.Android
-            && Input.GetKeyDown(KeyCode.Escape)
-            && this.CanGoBack())
+        if (Input.GetKeyDown(KeyCode.Escape) && this.CanGoBack())
         {
             this.GoBack();
         }

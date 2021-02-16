@@ -1,31 +1,24 @@
-using System.Collections.Generic;
-using System.Linq;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class LoginScript : AbstractView
 {
-    private Button loginButton = null;
-    private InputField userNameInput = null;
-    private InputField userPasswordInput = null;
+    [SerializeField] private Button loginButton = null;
+    [SerializeField] private InputField userNameInput = null;
+    [SerializeField] private InputField userPasswordInput = null;
 
     private void Start()
     {
-        this.loginButton = this.GetComponentInChildren<Button>();
-        this.loginButton.onClick.AddListener(LoginUser);
-
-        var inputs = new List<InputField>();
-        this.GetComponentsInChildren(inputs);
-        this.userNameInput = inputs.First(input => string.Equals(input.name, Constants.UserNameInputName));
-        this.userNameInput.onValueChanged.AddListener(IsLoginEnabled);
-        this.userPasswordInput = inputs.First(input => string.Equals(input.name, Constants.UserPasswordInputName));
+        this.loginButton.onClick.AddListener(() => this.OnLoginClick());
+        this.userNameInput.onValueChanged.AddListener((_) => this.IsLoginEnabled());
         this.userPasswordInput.contentType = InputField.ContentType.Password;
-        this.userPasswordInput.onValueChanged.AddListener(IsLoginEnabled);
+        this.userPasswordInput.onValueChanged.AddListener((_) => this.IsLoginEnabled());
         this.IsLoginEnabled();
 
         Logger.Debug($"Initialized {this.GetType()}");
     }
 
-    private void LoginUser()
+    private void OnLoginClick()
     {
         var popup = (PopupScript)this.viewService.GetViewByName(Constants.PopupViewName);
 
