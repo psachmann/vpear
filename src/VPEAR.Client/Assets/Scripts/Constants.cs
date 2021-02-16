@@ -38,7 +38,7 @@ internal static class Constants
     public const string UserListItemName = "UserListItem";
 
     // UserDetailView
-    public const string UserDetailViewName = "UserDetailViewName";
+    public const string UserDetailViewName = "UserDetailView";
 
     // PopupView
     public const string PopupViewName = "PopupView";

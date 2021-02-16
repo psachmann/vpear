@@ -30,7 +30,7 @@ public partial class ViewService : AbstractBase
 
     private void Update()
     {
-        if ( /*Application.platform == RuntimePlatform.Android*/ true
+        if (Application.platform == RuntimePlatform.Android
             && Input.GetKeyDown(KeyCode.Escape)
             && this.CanGoBack())
         {

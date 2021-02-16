@@ -9,6 +9,19 @@ using VPEAR.Core.Wrappers;
 public class UserListScript : AbstractView
 {
     private IList<GetUserResponse> users = null;
+    private Button itemTemplate = null;
+
+    private void Start()
+    {
+        var buttons = this.GetComponentsInChildren<Button>();
+        this.itemTemplate = buttons.First(button => string.Equals(button.name, Constants.UserListItemName));
+        this.itemTemplate.onClick.AddListener(() => this.OnItemClick());
+    }
+
+    private void OnItemClick()
+    {
+        this.viewService.GoTo(Constants.UserDetailViewName);
+    }
 
     public override void NavigateEventHandler(object sender, EventArgs eventArgs)
     {

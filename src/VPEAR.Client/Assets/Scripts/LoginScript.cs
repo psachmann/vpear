@@ -18,6 +18,7 @@ public class LoginScript : AbstractView
         this.userNameInput = inputs.First(input => string.Equals(input.name, Constants.UserNameInputName));
         this.userNameInput.onValueChanged.AddListener(IsLoginEnabled);
         this.userPasswordInput = inputs.First(input => string.Equals(input.name, Constants.UserPasswordInputName));
+        this.userPasswordInput.contentType = InputField.ContentType.Password;
         this.userPasswordInput.onValueChanged.AddListener(IsLoginEnabled);
         this.IsLoginEnabled();
 
