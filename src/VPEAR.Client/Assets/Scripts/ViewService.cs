@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
-using UnityEngine.UI;
+using VPEAR.Core;
 
 public partial class ViewService : AbstractBase
 {
@@ -40,7 +39,7 @@ public partial class ViewService : AbstractBase
         var from = this.viewHistory.Pop();
         var to = this.viewHistory.Peek();
 
-        this.OnNavigate(new NavigateEventArgs(from, to));
+        // this.OnNavigate(new NavigateEventArgs<Null>(from, to));
 
         from.Hide();
         to.Show();
@@ -52,7 +51,14 @@ public partial class ViewService : AbstractBase
     {
         var views = this.GetComponentsInChildren<AbstractView>();
 
-        this.GoTo(views.First(view => string.Equals(view.GetName(), viewName)));
+        this.GoTo<Null>(views.First(view => string.Equals(view.GetName(), viewName)), default);
+    }
+
+    public void GoTo<TPayload>(string viewName, TPayload payload)
+    {
+        var views = this.GetComponentsInChildren<AbstractView>();
+
+        this.GoTo(views.First(view => string.Equals(view.GetName(), viewName)), payload);
     }
 
     public void HideContent()
@@ -67,20 +73,20 @@ public partial class ViewService : AbstractBase
         this.navigationPanel.alpha = 1;
     }
 
-    private void GoTo(AbstractView view)
+    private void GoTo<TPayload>(AbstractView view, TPayload payload)
     {
         Logger.Debug($"Go to {view.GetName()}");
 
         if (this.viewHistory.Count > 0)
         {
-            this.OnNavigate(new NavigateEventArgs(this.viewHistory.Peek(), view));
+            this.OnNavigate(new NavigateEventArgs<TPayload>(this.viewHistory.Peek(), view, payload));
             this.viewHistory.Peek().Hide();
             this.viewHistory.Push(view);
             this.viewHistory.Peek().Show();
         }
         else
         {
-            this.OnNavigate(new NavigateEventArgs(null, view));
+            this.OnNavigate(new NavigateEventArgs<TPayload>(null, view, payload));
             this.viewHistory.Push(view);
             this.viewHistory.Peek().Show();
         }

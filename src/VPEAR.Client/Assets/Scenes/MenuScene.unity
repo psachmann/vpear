@@ -570,6 +570,7 @@ MonoBehaviour:
   devices: {fileID: 448013291}
   users: {fileID: 1524328608}
   settings: {fileID: 1536277194}
+  popup: {fileID: 105643481}
 --- !u!1 &105643477
 GameObject:
   m_ObjectHideFlags: 0
@@ -1199,6 +1200,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce9c5b867bfbd874784c113dc70ca236, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  content: {fileID: 1782779583}
   addButton: {fileID: 845258740}
   itemTemplate: {fileID: 1128000267}
 --- !u!114 &176179336

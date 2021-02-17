@@ -3,45 +3,65 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using VPEAR.Core;
 using VPEAR.Core.Wrappers;
 
 public class UserListScript : AbstractView
 {
+    #region Unity
+
+    [SerializeField] private GameObject content = null;
     [SerializeField] private Button itemTemplate = null;
-    private IList<GetUserResponse> users = null;
 
     private void Start()
     {
-        this.itemTemplate.onClick.AddListener(() => this.OnItemClick());
+        this.itemTemplate.onClick.AddListener(() => this.OnItemClick(default));
+        // this.itemTemplate.gameObject.SetActive(false);
     }
 
-    private void OnItemClick()
-    {
-        this.viewService.GoTo(Constants.UserDetailViewName);
-    }
+    #endregion Unity
 
     public override void NavigateEventHandler(object sender, EventArgs eventArgs)
     {
-        if (((NavigateEventArgs)eventArgs).To == this)
+        var args = eventArgs as NavigateEventArgs<Null>;
+
+        if (args != null && args.To == this)
         {
-            // this.LoadUsersAsync();
+            // this.Load();
         }
     }
 
-    private async void LoadUsersAsync()
+    private void OnItemClick(GetUserResponse user)
+    {
+        this.viewService.GoTo(Constants.UserDetailViewName, user);
+    }
+
+    private async void Load()
     {
         Logger.Debug("Loading users...");
 
-        var buttons = new List<Button>();
-        this.GetComponentsInChildren(buttons);
-        var button = buttons.First(button => string.Equals(button.name, Constants.UserListItemName));
-        var container = await Client.GetUsersAsync();
-        this.users = container.Items;
-
-        foreach (var user in this.users)
+        foreach (var button in this.content.GetComponentsInChildren<Button>(false))
         {
-            var temp = Instantiate(button, this.transform);
-            temp.GetComponent<Text>().text = user.Name;
+            button.gameObject.SetActive(false);
+            Destroy(button);
+        }
+
+        var container = await Client.GetUsersAsync();
+
+        if (container != null)
+        {
+            foreach (var user in container.Items)
+            {
+                var temp = Instantiate(this.itemTemplate, this.itemTemplate.transform.parent);
+
+                temp.GetComponent<Text>().text = user.Name;
+                temp.onClick.AddListener(() => this.OnItemClick(user));
+                temp.gameObject.SetActive(true);
+            }
+        }
+        else
+        {
+            this.viewService.popup.Show("Loading failed.", Client.ErrorMessage, () => this.viewService.popup.Hide());
         }
 
         Logger.Information("Loaded users.");

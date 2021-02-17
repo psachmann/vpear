@@ -1,4 +1,3 @@
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +7,8 @@ public partial class ViewService : AbstractBase
     [SerializeField] private Button devices = null;
     [SerializeField] private Button users = null;
     [SerializeField] private Button settings = null;
+
+    public PopupScript popup = null;
 
     private void Start()
     {
