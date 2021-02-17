@@ -17,8 +17,6 @@ internal static class Constants
     public const string UsersButtonName = "UsersButton";
     public const string SettingsButtonName = "SettingsButton";
 
-    // SettingsView
-    public const string SettingsViewName = "SettingsView";
 
     // LoginView
     public const string LoginViewName = "LoginView";
@@ -33,12 +31,21 @@ internal static class Constants
     // DeviceDetailView
     public const string DeviceDetailViewName = "DeviceDetailView";
 
+    // DeviceSearchView
+    public const string DeviceSearchViewName = "DeviceSearchView";
+
     // UserListView
     public const string UserListViewName = "UserListView";
     public const string UserListItemName = "UserListItem";
 
     // UserDetailView
     public const string UserDetailViewName = "UserDetailView";
+
+    // SettingsView
+    public const string SettingsViewName = "SettingsView";
+
+    // ChangePasswordView
+    public const string ChangePasswordViewName = "ChangePasswordView";
 
     // PopupView
     public const string PopupViewName = "PopupView";
