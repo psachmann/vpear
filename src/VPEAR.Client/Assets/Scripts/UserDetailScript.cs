@@ -49,6 +49,8 @@ public class UserDetailScript : AbstractView
             && !await Client.PutUserAsync(this.userNameText.text, isVerified: this.userIsVerifiedToggle.isOn))
         {
             Helpers.ShowClientError(Client, this.viewService, () => this.OnSaveFailure());
+
+            return;
         }
 
         if (!string.IsNullOrEmpty(this.oldPasswordInput.text)
@@ -56,6 +58,8 @@ public class UserDetailScript : AbstractView
             && !await Client.PutUserAsync(this.userNameText.text, this.oldPasswordInput.text, this.newPasswordInput.text))
         {
             Helpers.ShowClientError(Client, this.viewService, () => this.OnSaveFailure());
+
+            return;
         }
     }
 
