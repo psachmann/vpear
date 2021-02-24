@@ -5,9 +5,7 @@ public class DeviceDetailScript : AbstractView
 {
     public override void NavigateEventHandler(object sender, EventArgs eventArgs)
     {
-        var args = eventArgs as NavigateEventArgs<GetDeviceResponse>;
-
-        if (args != null && args.To == this)
+        if (eventArgs is NavigateEventArgs<GetDeviceResponse> args && args.To == this)
         {
             this.Load(args.Payload);
         }

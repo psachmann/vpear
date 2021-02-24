@@ -23,11 +23,8 @@ public class UserListScript : AbstractView
 
     public override void NavigateEventHandler(object sender, EventArgs eventArgs)
     {
-        var args = eventArgs as NavigateEventArgs<Null>;
-
-        if (args != null && args.To == this)
+        if (eventArgs is NavigateEventArgs<Null> args && args.To == this)
         {
-            // this.Load();
         }
     }
 
