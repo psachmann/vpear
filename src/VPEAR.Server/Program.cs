@@ -62,6 +62,7 @@ namespace VPEAR.Server
                 .CreateLogger();
 
             var builder = Host.CreateDefaultBuilder(args)
+                .UseSystemd()
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureWebHostDefaults(builder =>
                 {
