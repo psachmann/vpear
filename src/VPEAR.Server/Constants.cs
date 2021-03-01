@@ -12,7 +12,11 @@ namespace VPEAR.Server
     {
         public static class Defaults
         {
+#if DEBUG
+            public const string DefaultConfigurationPath = "./appsettings.Development.json";
+#else
             public const string DefaultConfigurationPath = "./appsettings.json";
+#endif
             public const string DefaultResponseType = "application/json";
             public const string DefaultAdminName = "admin";
             public const string DefaultAdminPassword = "Passw0rd?";

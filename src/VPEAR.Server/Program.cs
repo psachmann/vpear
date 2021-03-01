@@ -45,6 +45,11 @@ namespace VPEAR.Server
             }
         }
 
+        /// <summary>
+        /// Creates and configures the host for the program.
+        /// </summary>
+        /// <param name="args">The command line arguments for the host.</param>
+        /// <returns>The host to run the server.</returns>
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
             var configuration = new ConfigurationBuilder()
@@ -58,6 +63,7 @@ namespace VPEAR.Server
 
             return Host.CreateDefaultBuilder(args)
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                .UseSystemd()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseSerilog();

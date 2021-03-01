@@ -59,11 +59,11 @@ namespace VPEAR.Server
         /// <param name="users">The user manager to seed users.</param>
         public void Configure(
             IApplicationBuilder app,
-            IWebHostEnvironment env)
-            // RoleManager<IdentityRole> roles,
-            // UserManager<IdentityUser> users)
+            IWebHostEnvironment env,
+            RoleManager<IdentityRole> roles,
+            UserManager<IdentityUser> users)
         {
-            // DataSeed.Seed(roles, users);
+            DataSeed.Seed(roles, users);
 #if DEBUG
             env.EnvironmentName = "Development";
             app.UseDeveloperExceptionPage();
