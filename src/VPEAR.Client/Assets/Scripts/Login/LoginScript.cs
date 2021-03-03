@@ -1,14 +1,20 @@
+using Fluxor;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class LoginScript : AbstractView
 {
+    private IState<LoginState> state;
+
+    #region Unity
+
     [SerializeField] private Button loginButton = null;
     [SerializeField] private InputField userNameInput = null;
     [SerializeField] private InputField userPasswordInput = null;
 
     private void Start()
     {
+        this.state = null;
         this.loginButton.onClick.AddListener(() => this.OnLoginClick());
         this.userNameInput.onValueChanged.AddListener((_) => this.IsLoginEnabled());
         this.userPasswordInput.contentType = InputField.ContentType.Password;
@@ -17,6 +23,8 @@ public class LoginScript : AbstractView
 
         Logger.Debug($"Initialized {this.GetType()}");
     }
+
+    #endregion Unity
 
     private void OnLoginClick()
     {

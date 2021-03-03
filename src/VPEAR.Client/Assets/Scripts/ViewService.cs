@@ -1,6 +1,9 @@
+using Fluxor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
+using UnityEngine.UI;
 using VPEAR.Core;
 
 public partial class ViewService : AbstractBase
@@ -8,6 +11,30 @@ public partial class ViewService : AbstractBase
     private readonly Stack<AbstractView> viewHistory = new Stack<AbstractView>();
     
     public event EventHandler NavigateEvent;
+
+    [SerializeField] private CanvasGroup navigationPanel = null;
+    [SerializeField] private Button devices = null;
+    [SerializeField] private Button users = null;
+    [SerializeField] private Button settings = null;
+
+    private void Start()
+    {
+        this.HideContent();
+        this.devices.onClick.AddListener(() => this.GoTo(Constants.DeviceListViewName));
+        this.users.onClick.AddListener(() => this.GoTo(Constants.UserListViewName));
+        this.settings.onClick.AddListener(() => this.GoTo(Constants.SettingsViewName));
+        this.Init();
+
+        Logger.Debug($"Initialized {this.GetType()}");
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            this.Store.Dispatch(new NavigateBackAction());
+        }
+    }
 
     public void Init()
     {
@@ -27,24 +54,6 @@ public partial class ViewService : AbstractBase
         var views = this.GetComponentsInChildren<AbstractView>();
 
         return views.FirstOrDefault(view => string.Equals(view.GetName(), viewName));
-    }
-
-    public bool CanGoBack()
-    {
-        return this.viewHistory.Count > 0;
-    }
-
-    public void GoBack()
-    {
-        var from = this.viewHistory.Pop();
-        var to = this.viewHistory.Peek();
-
-        // this.OnNavigate(new NavigateEventArgs<Null>(from, to));
-
-        from.Hide();
-        to.Show();
-
-        Logger.Debug("Go back");
     }
 
     public void GoTo(string viewName)

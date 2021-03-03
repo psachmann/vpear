@@ -6,8 +6,9 @@ public abstract class AbstractView : AbstractBase
     protected Canvas canvas;
     protected ViewService viewService;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         this.canvas = this.GetComponent<Canvas>();
     }
 

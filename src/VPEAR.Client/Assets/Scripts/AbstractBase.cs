@@ -1,45 +1,68 @@
+using Fluxor;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using System;
 using System.Net.Http;
 using UnityEngine;
 using VPEAR.Core;
+using VPEAR.Core.Abstractions;
 
 public abstract class AbstractBase : MonoBehaviour, IDisposable
 {
-    protected static Serilog.ILogger Logger = null;
-    protected static VPEARClient Client = null;
+    private readonly static IServiceProvider Provider;
+    protected static Serilog.ILogger Logger;
+    protected static VPEARClient Client;
+
+    private IServiceScope scope;
+    private IStore store;
 
     static AbstractBase()
     {
-        ConfigureLogger();
-        ConfigureClient();
-    }
-
-    private static void ConfigureLogger()
-    {
-        Log.Logger = new LoggerConfiguration()
+        // setting up logger
+        Logger = new LoggerConfiguration()
             .Enrich.FromLogContext()
             .MinimumLevel.Debug()
             .WriteTo.Unity()
             .WriteTo.File(Constants.LogPath, rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
             .CreateLogger();
 
-        Logger = Log.Logger;
-    }
-
-    private static void ConfigureClient()
-    {
+        // setting up http client
         Client = new VPEARClient(Constants.ServerBaseAddress, new HttpClient());
+
+        // setting up dependency injection
+        Provider = new ServiceCollection()
+            .AddSingleton(Logger)
+            .AddSingleton(Client)
+            .AddFluxor(builder => builder.ScanAssemblies(typeof(AbstractBase).Assembly))
+            .BuildServiceProvider();
+
     }
 
+    protected IServiceScope Scope
+    {
+        get
+        {
+            return this.scope;
+        }
+    }
+
+    protected IStore Store
+    {
+        get
+        {
+            return this.store;
+        }
+    }
+
+    protected virtual void Awake()
+    {
+        this.scope = Provider.CreateScope();
+        this.store = this.scope.ServiceProvider.GetRequiredService<IStore>();
+    }
 
     public void Dispose()
     {
-        Client?.Dispose();
-        Log.CloseAndFlush();
+        this.scope.Dispose();
         GC.SuppressFinalize(this);
-
-        Logger = null;
-        Client = null;
     }
 }
