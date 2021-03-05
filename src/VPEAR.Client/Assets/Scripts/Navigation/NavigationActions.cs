@@ -1,14 +1,11 @@
 public class NavigateToAction
 {
-    public NavigateToAction(AbstractView from, AbstractView to)
+    public NavigateToAction(string nextView)
     {
-        this.From = from;
-        this.To = to;
+        this.NextView = nextView;
     }
 
-    public AbstractView From { get; }
-
-    public AbstractView To { get; }
+    public string NextView { get; }
 }
 
 public class NavigateBackAction

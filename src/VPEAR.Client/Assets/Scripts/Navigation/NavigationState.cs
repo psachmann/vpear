@@ -2,13 +2,10 @@ using System.Collections.Generic;
 
 public class NavigationState
 {
-    public NavigationState(AbstractView current, Stack<AbstractView> history)
+    public NavigationState(string viewName)
     {
-        this.Current = current;
-        this.History = history;
+        this.ViewName = viewName;
     }
 
-    public AbstractView Current { get; }
-
-    public Stack<AbstractView> History { get; }
+    public string ViewName { get; }
 }

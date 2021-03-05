@@ -1,15 +1,12 @@
 public class LoginState
 {
-    public LoginState(string name, string password, bool isLoggedIn = default)
+    public LoginState(string name, bool isSignedIn = default)
     {
-        this.IsLoggedIn = isLoggedIn;
         this.Name = name;
-        this.Password = password;
+        this.IsSignedIn = isSignedIn;
     }
-
-    public bool IsLoggedIn { get; }
 
     public string Name { get; }
 
-    public string Password { get; }
+    public bool IsSignedIn { get; }
 }

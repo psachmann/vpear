@@ -5,11 +5,11 @@ public class NavigationFeature : Feature<NavigationState>
 {
     public override string GetName()
     {
-        return "Navigation";
+        return nameof(NavigationState);
     }
 
     protected override NavigationState GetInitialState()
     {
-        return new NavigationState(null, new Stack<AbstractView>());
+        return new NavigationState(Constants.LoginViewName);
     }
 }

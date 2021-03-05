@@ -4,11 +4,11 @@ public class LoginFeature : Feature<LoginState>
 {
     public override string GetName()
     {
-        return "Login";
+        return nameof(LoginState);
     }
 
     protected override LoginState GetInitialState()
     {
-        return new LoginState(string.Empty, string.Empty);
+        return new LoginState(string.Empty);
     }
 }

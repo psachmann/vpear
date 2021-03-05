@@ -1,25 +1,22 @@
 using Fluxor;
 
-public class LoginReducer : Reducer<LoginState, LoginAction>
+public static partial class Reducers
 {
-    public override LoginState Reduce(LoginState state, LoginAction action)
+    [ReducerMethod]
+    public static LoginState ReduceLoginAction(LoginState state, LoginAction action)
     {
-        throw new System.NotImplementedException();
+        return new LoginState(action.Name);
     }
-}
 
-public class LoginFailedReducer : Reducer<LoginState, LoginFailedAction>
-{
-    public override LoginState Reduce(LoginState state, LoginFailedAction action)
+    [ReducerMethod]
+    public static LoginState ReduceLoginErrorAction(LoginState state, LoginErrorAction action)
     {
-        throw new System.NotImplementedException();
+        return new LoginState(string.Empty);
     }
-}
 
-public class LoginSuccessReducer : Reducer<LoginState, LoginSuccessAction>
-{
-    public override LoginState Reduce(LoginState state, LoginSuccessAction action)
+    [ReducerMethod]
+    public static LoginState ReduceLoginSuccessAction(LoginState state, LoginSuccessAction action)
     {
-        throw new System.NotImplementedException();
+        return new LoginState(action.Name, true);
     }
 }

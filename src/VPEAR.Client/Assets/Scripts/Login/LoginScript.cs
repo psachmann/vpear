@@ -1,68 +1,43 @@
 using Fluxor;
+using Microsoft.Extensions.DependencyInjection;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class LoginScript : AbstractView
 {
-    private IState<LoginState> state;
+    [SerializeField] private Button _loginButton;
+    [SerializeField] private InputField _userNameInput;
+    [SerializeField] private InputField _userPasswordInput;
 
-    #region Unity
-
-    [SerializeField] private Button loginButton = null;
-    [SerializeField] private InputField userNameInput = null;
-    [SerializeField] private InputField userPasswordInput = null;
+    private IState<LoginState> _loginState;
 
     private void Start()
     {
-        this.state = null;
-        this.loginButton.onClick.AddListener(() => this.OnLoginClick());
-        this.userNameInput.onValueChanged.AddListener((_) => this.IsLoginEnabled());
-        this.userPasswordInput.contentType = InputField.ContentType.Password;
-        this.userPasswordInput.onValueChanged.AddListener((_) => this.IsLoginEnabled());
-        this.IsLoginEnabled();
-
-        Logger.Debug($"Initialized {this.GetType()}");
+        _loginState = s_provider.GetRequiredService<IState<LoginState>>();
+        _loginState.StateChanged += LoginStateChanged;
+        _loginButton.onClick.AddListener(() => _dispatcher.Dispatch(new LoginAction(_userNameInput.text, _userPasswordInput.text)));
+        _userNameInput.onValueChanged.AddListener((_) => IsLoginEnabled());
+        _userPasswordInput.contentType = InputField.ContentType.Password;
+        _userPasswordInput.onValueChanged.AddListener((_) => IsLoginEnabled());
+        IsLoginEnabled();
     }
 
-    #endregion Unity
-
-    private void OnLoginClick()
+    private void LoginStateChanged(object sender, LoginState state)
     {
-        var popup = (PopupScript)this.viewService.GetViewByName(Constants.PopupViewName);
-
-        this.viewService.ShowContent();
-        this.viewService.GoTo(Constants.DeviceListViewName);
-/*
-        if (await Client.LoginAsync(this.userNameInput.text, this.userPasswordInput.text))
-        {
-            this.viewService.GoTo(Constants.DeviceListViewName);
-        }
-        else
-        {
-            Logger.Debug("{@Error}", Client.Error);
-            popup.Show(Constants.LoginFailedTitleText, Client.ErrorMessage, LoginFailureAction);
-        }
-*/
-    }
-
-    private void LoginFailureAction()
-    {
-        var popup = (PopupScript)this.viewService.GetViewByName(Constants.PopupViewName);
-
-        popup.Hide();
-        this.userNameInput.text = string.Empty;
-        this.userPasswordInput.text = string.Empty;
+        _userNameInput.text = state.Name;
+        _userPasswordInput.text = string.Empty;
     }
 
     private void IsLoginEnabled(string _ = default)
     {
-        if (string.IsNullOrEmpty(this.userNameInput.text) || string.IsNullOrEmpty(this.userPasswordInput.text))
+        if (string.IsNullOrEmpty(_userNameInput.text)
+            || string.IsNullOrEmpty(_userPasswordInput.text))
         {
-            this.loginButton.enabled = false;
+            _loginButton.enabled = false;
         }
         else
         {
-            this.loginButton.enabled = true;
+            _loginButton.enabled = true;
         }
     }
 }

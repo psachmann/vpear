@@ -11,7 +11,7 @@ public class PopupScript : AbstractView
 
     private void Start()
     {
-        Logger.Debug($"Initialized {this.GetType()}");
+        this._logger.Debug($"Initialized {this.GetType()}");
     }
 
     public void Clear()
