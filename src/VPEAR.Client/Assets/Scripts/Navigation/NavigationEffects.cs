@@ -1,6 +1,4 @@
 using Fluxor;
-using Serilog;
-using System;
 using System.Threading.Tasks;
 
 public class NavigateBackEffect : Effect<NavigateBackAction>
@@ -15,7 +13,7 @@ public class NavigateBackEffect : Effect<NavigateBackAction>
     public override Task HandleAsync(NavigateBackAction action, IDispatcher dispatcher)
     {
         _navigationService.NavigateBack();
-        dispatcher.Dispatch(new NavigateToAction(_navigationService.CurrentViewName));
+        dispatcher.Dispatch(new NavigateToAction(_navigationService.LocationName));
 
         return Task.CompletedTask;
     }
