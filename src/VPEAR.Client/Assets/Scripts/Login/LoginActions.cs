@@ -1,6 +1,26 @@
 public class LoginAction
 {
-    public LoginAction(string name, string password)
+    public LoginAction(string name, string password, bool isSignedIn = default)
+    {
+        Name = name;
+        Password = password;
+        IsSignedIn = isSignedIn;
+    }
+
+    public bool IsSignedIn { get; }
+
+    public string Name { get; }
+
+    public string Password { get; }
+}
+
+public class LoginSucceededAction
+{
+}
+
+public class RegisterAction
+{
+    public RegisterAction(string name, string password)
     {
         Name = name;
         Password = password;
@@ -11,22 +31,6 @@ public class LoginAction
     public string Password { get; }
 }
 
-public class LoginErrorAction : ErrorAction
+public class LogoutAction
 {
-    public LoginErrorAction(string title, string message)
-    {
-        Title = title;
-        Message = message;
-        Action = default;
-    }
-}
-
-public class LoginSuccessAction
-{
-    public LoginSuccessAction(string name)
-    {
-        Name = name;
-    }
-
-    public string Name { get; }
 }

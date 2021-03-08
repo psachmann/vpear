@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 public class PopupScript : AbstractView
 {
-    [SerializeField] private Button _actionButton;
     [SerializeField] private Text _titleText;
     [SerializeField] private Text _messageText;
+    [SerializeField] private Button _actionButton;
 
     private IState<PopupState> _popupState;
 

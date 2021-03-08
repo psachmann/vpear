@@ -1,5 +1,7 @@
 using Fluxor;
 
+#pragma warning disable IDE0060
+
 public static partial class Reducers
 {
     [ReducerMethod]
@@ -9,14 +11,19 @@ public static partial class Reducers
     }
 
     [ReducerMethod]
-    public static LoginState ReduceLoginErrorAction(LoginState state, LoginErrorAction action)
+    public static LoginState ReduceLoginSucceededAction(LoginState state, LoginSucceededAction action)
+    {
+        return new LoginState(state.Name, true);
+    }
+
+    [ReducerMethod]
+    public static LoginState ReduceLogoutActin(LoginState state, LogoutAction action)
     {
         return new LoginState(string.Empty);
     }
 
-    [ReducerMethod]
-    public static LoginState ReduceLoginSuccessAction(LoginState state, LoginSuccessAction action)
+    public static LoginState ReduceRegisterAction(LoginState state, RegisterAction action)
     {
-        return new LoginState(action.Name, true);
+        return new LoginState(action.Name);
     }
 }
