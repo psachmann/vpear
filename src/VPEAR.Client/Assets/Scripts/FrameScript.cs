@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using UnityEngine;
 using UnityEngine.UI;
 
-public partial class FrameScript : AbstractBase
+public class FrameScript : AbstractBase
 {
     [SerializeField] private CanvasGroup _navigationPanel;
     [SerializeField] private Button _devices;

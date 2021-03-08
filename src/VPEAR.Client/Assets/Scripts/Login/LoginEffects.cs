@@ -13,7 +13,7 @@ public class LoginEffect : Effect<LoginAction>
 
     public override async Task HandleAsync(LoginAction action, IDispatcher dispatcher)
     {
-        if (true/*await _client.LoginAsync(action.Name, action.Password)*/)
+        if (await _client.LoginAsync(action.Name, action.Password))
         {
             dispatcher.Dispatch(new LoginSucceededAction());
             dispatcher.Dispatch(new NavigateToAction(Constants.DeviceListViewName));
@@ -21,7 +21,7 @@ public class LoginEffect : Effect<LoginAction>
         else
         {
             dispatcher.Dispatch(new LogoutAction());
-            dispatcher.Dispatch(new ShowPopupAction("Login Error", "Login Error Message",
+            dispatcher.Dispatch(new ShowPopupAction("Login Error", _client.ErrorMessage,
                 () => dispatcher.Dispatch(new ClosePopupAction())));
         }
     }
