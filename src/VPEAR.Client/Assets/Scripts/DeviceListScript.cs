@@ -8,12 +8,13 @@ using VPEAR.Core.Wrappers;
 
 public class DeviceListScript : AbstractView
 {
-    [SerializeField] private GameObject content;
-    [SerializeField] private Button addButton;
-    [SerializeField] private Button itemTemplate;
+    [SerializeField] private GameObject _content;
+    [SerializeField] private Button _addButton;
+    [SerializeField] private Button _itemTemplate;
 
     private void Start()
     {
+        _addButton.onClick.AddListener(() => _dispatcher.Dispatch(new NavigateToAction(Constants.DeviceSearchViewName)));
         // this.itemTemplate.gameObject.SetActive(false);
     }
 }

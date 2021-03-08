@@ -34,13 +34,13 @@ public class DecrementCounterAction
 public static partial class Reducers
 {
     [ReducerMethod]
-    public static CounterState ReduceIncrementCounterAction(CounterState state, IncrementCounterAction action)
+    public static CounterState ReduceIncrementCounterAction(CounterState state, IncrementCounterAction _)
     {
         return new CounterState(state.Counter + 1);
     }
 
     [ReducerMethod]
-    public static CounterState ReduceDecrementCounterAction(CounterState state, DecrementCounterAction action)
+    public static CounterState ReduceDecrementCounterAction(CounterState state, DecrementCounterAction _)
     {
         return new CounterState(state.Counter - 1);
     }

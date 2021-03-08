@@ -25,8 +25,6 @@ public abstract class AbstractBase : MonoBehaviour
             .WriteTo.File(Constants.LogPath, rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
             .CreateLogger();
 
-        Log.Logger = logger;
-
         // setting up http client
         var client = new VPEARClient(Constants.ServerBaseAddress, new HttpClient());
 
