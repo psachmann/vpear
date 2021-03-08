@@ -15,7 +15,6 @@ public class PopupScript : AbstractView
     {
         _popupState = s_provider.GetRequiredService<IState<PopupState>>();
         _popupState.StateChanged += PopupStateChanged;
-        _logger.Debug($"Initialized {this.GetType()}");
 
         PopupStateChanged(this, _popupState.Value);
     }
