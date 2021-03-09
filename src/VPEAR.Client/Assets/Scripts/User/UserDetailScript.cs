@@ -43,11 +43,11 @@ public class UserDetailScript : AbstractView
     {
         if (string.IsNullOrEmpty(_oldPasswordInput.text) || string.IsNullOrEmpty(_newPasswordInput.text))
         {
-            // _dispatcher.Dispatch(new UpdatingUserAction(_userIsVerifiedToggle.isOn));
+            _dispatcher.Dispatch(new UpdatingUserAction(_userDetailState.Value.User, _userIsVerifiedToggle.isOn));
         }
         else
         {
-            // _dispatcher.Dispatch(new UpdatingUserAction(_userIsVerifiedToggle.isOn, _oldPasswordInput.text, _newPasswordInput.text));
+            _dispatcher.Dispatch(new UpdatingUserAction(_userDetailState.Value.User, _userIsVerifiedToggle.isOn, _oldPasswordInput.text, _newPasswordInput.text));
         }
 
         _oldPasswordInput.text = string.Empty;

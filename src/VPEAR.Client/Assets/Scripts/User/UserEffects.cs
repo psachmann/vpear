@@ -57,6 +57,7 @@ public class UpdatingUserEffect : Effect<UpdatingUserAction>
         {
             _logger.Error(_client.ErrorMessage);
 
+            dispatcher.Dispatch(new UpdatedUserAction(action.User));
             dispatcher.Dispatch(new ShowPopupAction(Constants.ConnectionErrorTitleText, _client.ErrorMessage,
                 () => dispatcher.Dispatch(new ClosePopupAction())));
         }
