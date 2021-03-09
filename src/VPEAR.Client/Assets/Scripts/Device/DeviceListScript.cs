@@ -3,6 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using UnityEngine;
 using UnityEngine.UI;
 
+using System.Linq;
+
 public class DeviceListScript : AbstractView
 {
     [SerializeField] private GameObject _content;
@@ -30,10 +32,10 @@ public class DeviceListScript : AbstractView
 
         foreach (var device in state.Devices)
         {
-            var temp = Instantiate(_itemTemplate, _content.transform);
+            var temp = Instantiate(_itemTemplate, _itemTemplate.transform.parent);
 
             temp.gameObject.SetActive(true);
-            temp.GetComponent<Text>().text = $"Name: {device.DisplayName}\tAddress: {device.Address}";
+            temp.GetComponentInChildren<Text>().text = $"Name: {device.DisplayName}\tAddress: {device.Address}";
             temp.onClick.AddListener(() =>
             {
                 _dispatcher.Dispatch(new SelectDeviceAction(device));
@@ -41,12 +43,5 @@ public class DeviceListScript : AbstractView
                 _dispatcher.Dispatch(new NavigateToAction(Constants.DeviceDetailViewName));
             });
         }
-    }
-
-    public override void Show()
-    {
-        _dispatcher.Dispatch(new FetchingDevicesAction(_deviceListState.Value.Status));
-
-        base.Show();
     }
 }

@@ -11,3 +11,13 @@ public class NavigateToAction
 public class NavigateBackAction
 {
 }
+
+public class ChangeSceneAction
+{
+    public ChangeSceneAction(string sceneName)
+    {
+        SceneName = sceneName;
+    }
+
+    public string SceneName { get; }
+}

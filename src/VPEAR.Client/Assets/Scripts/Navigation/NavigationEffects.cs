@@ -35,3 +35,20 @@ public class NavigateToEffect : Effect<NavigateToAction>
         return Task.CompletedTask;
     }
 }
+
+public class ChangeSceneEffect : Effect<ChangeSceneAction>
+{
+    private readonly NavigationService _navigationService;
+
+    public ChangeSceneEffect(NavigationService navigationService)
+    {
+        _navigationService = navigationService;
+    }
+
+    public override Task HandleAsync(ChangeSceneAction action, IDispatcher dispatcher)
+    {
+        _navigationService.ChangeScene(action.SceneName);
+
+        return Task.CompletedTask;
+    }
+}

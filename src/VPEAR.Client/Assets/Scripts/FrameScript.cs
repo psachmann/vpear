@@ -16,9 +16,9 @@ public class FrameScript : AbstractBase
     {
         _navigationState = s_provider.GetRequiredService<IState<NavigationState>>();
         _navigationState.StateChanged += NavivigationStateChanged;
-        _devices.onClick.AddListener(() => _dispatcher.Dispatch(new NavigateToAction(Constants.DeviceListViewName)));
-        _users.onClick.AddListener(() => _dispatcher.Dispatch(new NavigateToAction(Constants.UserListViewName)));
-        _settings.onClick.AddListener(() => _dispatcher.Dispatch(new NavigateToAction(Constants.SettingsViewName)));
+        _devices.onClick.AddListener(OnDevicesClick);
+        _users.onClick.AddListener(OnUsersClick);
+        _settings.onClick.AddListener(OnSettingsClick);
         _dispatcher.Dispatch(new NavigateToAction(Constants.LoginViewName));
     }
 
@@ -40,6 +40,23 @@ public class FrameScript : AbstractBase
         {
             HideContent();
         }
+    }
+
+    private void OnDevicesClick()
+    {
+        _dispatcher.Dispatch(new FetchingDevicesAction(null));
+        _dispatcher.Dispatch(new NavigateToAction(Constants.DeviceListViewName));
+    }
+
+    private void OnUsersClick()
+    {
+        _dispatcher.Dispatch(new FetchingUsersAction(null));
+        _dispatcher.Dispatch(new NavigateToAction(Constants.UserListViewName));
+    }
+
+    private void OnSettingsClick()
+    {
+        _dispatcher.Dispatch(new NavigateToAction(Constants.SettingsViewName));
     }
 
     private void HideContent()

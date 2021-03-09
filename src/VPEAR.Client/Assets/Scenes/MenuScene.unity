@@ -391,16 +391,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ce3ef0ea02404a45927d0f5dcd7c010, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  idText: {fileID: 2035683650}
-  addressText: {fileID: 1679393545}
-  sensorsText: {fileID: 897280329}
-  spotFilterToggle: {fileID: 961966578}
-  smoothFilterToggle: {fileID: 782665067}
-  noiseFilterToggle: {fileID: 1147228576}
-  nameInput: {fileID: 507060723}
-  frequencyInput: {fileID: 2045206930}
-  statusDropdown: {fileID: 997652657}
-  saveButton: {fileID: 1313120363}
+  _idText: {fileID: 2035683650}
+  _addressText: {fileID: 1679393545}
+  _sensorsText: {fileID: 897280329}
+  _spotFilterToggle: {fileID: 961966578}
+  _smoothFilterToggle: {fileID: 782665067}
+  _noiseFilterToggle: {fileID: 1147228576}
+  _nameInput: {fileID: 507060723}
+  _frequencyInput: {fileID: 2045206930}
+  _statusDropdown: {fileID: 997652657}
+  _deleteButton: {fileID: 1597057484}
+  _saveButton: {fileID: 1313120363}
+  _arButton: {fileID: 1167747161}
 --- !u!114 &39736853
 MonoBehaviour:
   m_ObjectHideFlags: 0

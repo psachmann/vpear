@@ -39,11 +39,4 @@ public class UserListScript : AbstractView
             });
         }
     }
-
-    public override void Show()
-    {
-        _dispatcher.Dispatch(new FetchingUsersAction(_userListState.Value.Role));
-
-        base.Show();
-    }
 }

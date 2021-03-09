@@ -16,6 +16,7 @@ public class LoginEffect : Effect<LoginAction>
         if (await _client.LoginAsync(action.Name, action.Password))
         {
             dispatcher.Dispatch(new LoginSucceededAction());
+            dispatcher.Dispatch(new FetchingDevicesAction(null));
             dispatcher.Dispatch(new NavigateToAction(Constants.DeviceListViewName));
         }
         else
