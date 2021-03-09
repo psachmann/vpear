@@ -5,6 +5,8 @@ internal static class Constants
     public const string RegisterTitleText = "Registration Information";
     public const string RegisterSucceededMessageText = "Please contact an admin to verify the new user.";
     public const string ConnectionErrorTitleText = "Connection Error";
+    public const string ARSceneName = "ARScene";
+    public const string MenuSceneName = "MenuScene";
 
     // Colors
     public const string BackgroundColor = "E1E2E1";

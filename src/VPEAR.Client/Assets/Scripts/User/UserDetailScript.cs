@@ -1,9 +1,7 @@
 using Fluxor;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 using UnityEngine;
 using UnityEngine.UI;
-using VPEAR.Core.Wrappers;
 
 public class UserDetailScript : AbstractView
 {

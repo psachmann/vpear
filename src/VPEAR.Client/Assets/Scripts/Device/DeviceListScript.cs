@@ -36,8 +36,8 @@ public class DeviceListScript : AbstractView
             temp.GetComponent<Text>().text = $"Name: {device.DisplayName}\tAddress: {device.Address}";
             temp.onClick.AddListener(() =>
             {
-                // _dispatcher.Dispatch(new SelectDeviceAction(device));
-                // _dispatcher.Dispatch(new FetchingDeviceAction(device));
+                _dispatcher.Dispatch(new SelectDeviceAction(device));
+                _dispatcher.Dispatch(new FetchingDeviceAction(device));
                 _dispatcher.Dispatch(new NavigateToAction(Constants.DeviceDetailViewName));
             });
         }
