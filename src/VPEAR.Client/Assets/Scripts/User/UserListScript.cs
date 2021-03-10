@@ -21,8 +21,9 @@ public class UserListScript : AbstractView
 
     private void UserListStateChanged(object sender, UserListState state)
     {
-        foreach (var button in _content.GetComponentsInChildren<Button>())
+        foreach (var button in _content.GetComponentsInChildren<Button>(false))
         {
+            button.gameObject.SetActive(false);
             Destroy(button);
         }
 

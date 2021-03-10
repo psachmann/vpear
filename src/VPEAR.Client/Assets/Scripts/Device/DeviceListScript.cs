@@ -25,8 +25,9 @@ public class DeviceListScript : AbstractView
 
     private void DeviceListStateChanged(object sender, DeviceListState state)
     {
-        foreach (var button in _content.GetComponentsInChildren<Button>())
+        foreach (var button in _content.GetComponentsInChildren<Button>(false))
         {
+            button.gameObject.SetActive(false);
             Destroy(button);
         }
 

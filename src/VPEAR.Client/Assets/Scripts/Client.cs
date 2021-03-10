@@ -178,12 +178,15 @@ public class Client : IVPEARClient
             _password = password;
             _token = result.Token;
             _expiresAt = result.ExpiresAt;
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(c_scheme, result.Token);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(c_scheme, _token);
 
             return true;
         }
         else
         {
+            var error = await response.Content.ReadFromJsonAsync<ErrorResponse>();
+            _errorMessage = string.Join(" ", error.Messages);
+
             return false;
         }
     }

@@ -4,14 +4,13 @@ using Serilog;
 using System;
 using System.Net.Http;
 using UnityEngine;
-using VPEAR.Core;
 using VPEAR.Core.Abstractions;
 using ILogger = Serilog.ILogger;
 
 public abstract class AbstractBase : MonoBehaviour
 {
-    private static readonly IStore s_store;
     protected static readonly IServiceProvider s_provider;
+    protected static readonly IStore s_store;
     protected IDispatcher _dispatcher;
     protected ILogger _logger;
 

@@ -38,7 +38,10 @@ public class NavigationService
 
     public bool CanNavigateBack()
     {
-        return _history.Count > 1;
+        // it must be 2, because if its one, we can navigate back to the login view
+        // and we don't want this, if we logout the history will be cleared and we won't
+        // be able the access other user data
+        return _history.Count > 2;
     }
 
     public void NavigateBack()
