@@ -13,7 +13,7 @@ public static partial class Reducers
     [ReducerMethod]
     public static LoginState ReduceLoginSucceededAction(LoginState state, LoginSucceededAction action)
     {
-        return new LoginState(state.Name, true);
+        return new LoginState(state.Name, true, action.IsAdmin);
     }
 
     [ReducerMethod]

@@ -16,6 +16,12 @@ public class LoginAction
 
 public class LoginSucceededAction
 {
+    public LoginSucceededAction(bool isAdmin)
+    {
+        IsAdmin = isAdmin;
+    }
+
+    public bool IsAdmin { get; }
 }
 
 public class RegisterAction
