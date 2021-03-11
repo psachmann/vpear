@@ -25,7 +25,7 @@ namespace VPEAR.Core.Abstractions
         /// <summary>
         /// Gets the error message.
         /// </summary>
-        /// <value>The error message.</value>
+        /// <value>The error message from the exception or http response.</value>
         string ErrorMessage { get; }
 
         /// <summary>
