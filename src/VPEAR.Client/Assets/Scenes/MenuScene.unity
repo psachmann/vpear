@@ -3202,7 +3202,7 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 10
     m_MaxSize: 40
-    m_Alignment: 0
+    m_Alignment: 5
     m_AlignByGeometry: 0
     m_RichText: 0
     m_HorizontalOverflow: 1
@@ -9836,7 +9836,7 @@ Canvas:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1448743626}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_RenderMode: 2
   m_Camera: {fileID: 0}
@@ -11662,6 +11662,7 @@ MonoBehaviour:
   counterText: {fileID: 1772542146}
   incrementButton: {fileID: 1589500771}
   decrmenntButton: {fileID: 462301102}
+  _logoutButton: {fileID: 0}
 --- !u!114 &1760558478
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11686,7 +11687,7 @@ Canvas:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1760558475}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 2
   m_Camera: {fileID: 0}
