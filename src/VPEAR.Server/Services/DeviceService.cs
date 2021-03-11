@@ -69,7 +69,10 @@ namespace VPEAR.Server.Services
             }
             else
             {
-                var payload = new Container<GetDeviceResponse>();
+                var payload = new Container<GetDeviceResponse>()
+                {
+                    Count = devices.Count,
+                };
 
                 devices.ForEach(device =>
                 {

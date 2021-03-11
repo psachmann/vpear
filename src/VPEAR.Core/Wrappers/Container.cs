@@ -22,11 +22,11 @@ namespace VPEAR.Core.Wrappers
         public int Start { get; set; }
 
         /// <summary>
-        /// Gets the items count.
+        /// Gets or sets the count.
         /// </summary>
-        /// <value>Indicates how many items are sent.</value>
+        /// <value>Indicates how many items are on server.</value>
         [JsonPropertyName("count")]
-        public int Count => this.Items.Count;
+        public int Count { get; set; }
 
         /// <summary>
         /// Gets or sets the items.

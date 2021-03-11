@@ -29,7 +29,6 @@ using VPEAR.Core.Wrappers;
 using VPEAR.Server.Data;
 using VPEAR.Server.Filters;
 using VPEAR.Server.Modules;
-using VPEAR.Server.Services;
 using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server
@@ -71,9 +70,9 @@ namespace VPEAR.Server
             env.EnvironmentName = "Production";
             app.UseHsts();
             app.UseHttpsRedirection();
+#endif
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "VPEAR.Server v1"));
-#endif
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();

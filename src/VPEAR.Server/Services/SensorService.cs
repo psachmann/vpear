@@ -22,6 +22,7 @@ namespace VPEAR.Server.Services
     /// </summary>
     public class SensorService : ISensorService
     {
+        private const int MaxCount = 100;
         private readonly IRepository<Device, Guid> devices;
         private readonly IRepository<Frame, Guid> frames;
         private readonly DeviceClient.Factory factory;
@@ -50,10 +51,7 @@ namespace VPEAR.Server.Services
         public async Task<Result<Container<GetFrameResponse>>> GetFramesAsync(Guid id, int start, int count)
         {
             var device = await this.devices.GetAsync(id);
-            var payload = new Container<GetFrameResponse>
-            {
-                Start = start,
-            };
+            var payload = new Container<GetFrameResponse>();
 
             if (device == null)
             {
@@ -62,32 +60,25 @@ namespace VPEAR.Server.Services
 
             await this.devices.GetCollectionAsync(device, device => device.Frames);
 
-            var frames = device.Frames.OrderByDescending(frame => frame.CreatedAt);
+            var frames = device.Frames.OrderBy(frame => frame.CreatedAt)
+                .ToList();
 
-            if (start == 0 && count == 0)
+            // checking if start is to small or big and count to small
+            if (start < 0 || start >= frames.Count || count < 0)
             {
-                foreach (var frame in frames)
-                {
-                    await this.frames.GetReferenceAsync(frame, frame => frame.Filter);
-
-                    payload.Items.Add(new GetFrameResponse()
-                    {
-                        Readings = frame.Readings,
-                        Time = frame.CreatedAt,
-                        Filter = new GetFiltersResponse()
-                        {
-                            Noise = frame.Filter.Noise,
-                            Smooth = frame.Filter.Smooth,
-                            Spot = frame.Filter.Spot,
-                        },
-                    });
-                }
-
-                return new Result<Container<GetFrameResponse>>(HttpStatusCode.OK, payload);
+                return new Result<Container<GetFrameResponse>>(HttpStatusCode.BadRequest, ErrorMessages.BadRequest);
             }
 
-            if (start < count && count < device.Frames.Count)
+            if (count > MaxCount)
             {
+                count = MaxCount;
+            }
+
+            if (start + count <= frames.Count)
+            {
+                payload.Start = start;
+                payload.Count = frames.Count;
+
                 foreach (var frame in frames.ToList().GetRange(start, count))
                 {
                     await this.frames.GetReferenceAsync(frame, frame => frame.Filter);
@@ -107,9 +98,11 @@ namespace VPEAR.Server.Services
 
                 return new Result<Container<GetFrameResponse>>(HttpStatusCode.OK, payload);
             }
-
-            if (start < count && count >= device.Frames.Count)
+            else
             {
+                payload.Start = start;
+                payload.Count = frames.Count;
+
                 foreach (var frame in frames.ToList().GetRange(start, device.Frames.Count - start))
                 {
                     await this.frames.GetReferenceAsync(frame, frame => frame.Filter);
@@ -129,8 +122,6 @@ namespace VPEAR.Server.Services
 
                 return new Result<Container<GetFrameResponse>>(HttpStatusCode.PartialContent, payload);
             }
-
-            return new Result<Container<GetFrameResponse>>(HttpStatusCode.BadRequest, ErrorMessages.BadRequest);
         }
 
         /// <inheritdoc/>
@@ -158,7 +149,10 @@ namespace VPEAR.Server.Services
             if (await client.CanConnectAsync())
             {
                 var sensors = await client.GetSensorsAsync();
-                var payload = new Container<GetSensorResponse>();
+                var payload = new Container<GetSensorResponse>()
+                {
+                    Count = sensors.Count,
+                };
 
                 foreach (var sensor in sensors)
                 {

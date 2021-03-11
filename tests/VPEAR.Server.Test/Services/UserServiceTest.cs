@@ -30,13 +30,13 @@ namespace VPEAR.Server.Test.Services
 
             Assert.NotNull(result.Value);
             Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
-            Assert.InRange(result.Value!.Count, 1L, long.MaxValue);
+            Assert.InRange(result.Value!.Count, 0, int.MaxValue);
 
             result = await this.service.GetAsync(Roles.UserRole);
 
             Assert.NotNull(result.Value);
             Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
-            Assert.InRange(result.Value!.Count, 1L, long.MaxValue);
+            Assert.InRange(result.Value!.Count, 0, int.MaxValue);
         }
 
         [Theory]
