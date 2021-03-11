@@ -23,10 +23,10 @@ namespace VPEAR.Core.Abstractions
         Exception Error { get; }
 
         /// <summary>
-        /// Gets the http response message.
+        /// Gets the error message.
         /// </summary>
-        /// <value>The http response message from the http client.</value>
-        HttpResponseMessage Response { get; }
+        /// <value>The error message.</value>
+        string ErrorMessage { get; }
 
         /// <summary>
         /// Indicates if the device is reachable or not.

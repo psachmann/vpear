@@ -62,18 +62,14 @@ namespace VPEAR.Server.Test
 
         [Priority(100)]
         [SkipIfNoDbTheory]
-        [InlineData(HttpStatusCode.NotFound, "no_valid_user", "password")]
-        [InlineData(HttpStatusCode.Forbidden, "admin", "no_valid_password")]
-        public async Task LoginAsyncFailureTest(
-            HttpStatusCode expected,
-            string? name,
-            string? password)
+        [InlineData("no_valid_user", "password")]
+        [InlineData("admin", "no_valid_password")]
+        public async Task LoginAsyncFailureTest(string? name, string? password)
         {
             using var client = this.CreateClient();
             var result = await client.LoginAsync(name, password);
 
             Assert.False(result, "Login should NOT be successful.");
-            Assert.Equal(expected, client.Response.StatusCode);
 
             client.Logout();
         }
@@ -98,7 +94,6 @@ namespace VPEAR.Server.Test
             var result = await client.RegisterAsync(AdminName, AdminPassword);
 
             Assert.False(result, "Register should NOT be successful.");
-            Assert.Equal(HttpStatusCode.Conflict, client.Response.StatusCode);
         }
 
         [Priority(100)]
@@ -121,7 +116,6 @@ namespace VPEAR.Server.Test
             var result = await client.LoginAsync(AdminName, AdminPassword);
 
             Assert.True(result, "Login should be successful.");
-            Assert.Equal(HttpStatusCode.OK, client.Response.StatusCode);
         }
 
         [Priority(101)]
@@ -132,7 +126,6 @@ namespace VPEAR.Server.Test
             var result = await client.RegisterAsync(UserName, UserPassword);
 
             Assert.True(result, "Register should be successful.");
-            Assert.Equal(HttpStatusCode.NoContent, client.Response.StatusCode);
         }
 
         [Priority(102)]
@@ -143,7 +136,6 @@ namespace VPEAR.Server.Test
             var result = await client.LoginAsync(UserName, UserPassword);
 
             Assert.False(result, "Login should NOT be successful.");
-            Assert.Equal(HttpStatusCode.Forbidden, client.Response.StatusCode);
         }
 
         [Priority(103)]
@@ -154,12 +146,10 @@ namespace VPEAR.Server.Test
             var result = await client.LoginAsync(AdminName, AdminPassword);
 
             Assert.True(result, "Login should be successful.");
-            Assert.Equal(HttpStatusCode.OK, client.Response.StatusCode);
 
             result = await client.PutUserAsync(UserName, isVerified: true);
 
             Assert.True(result, "Verify should be successful.");
-            Assert.Equal(HttpStatusCode.NoContent, client.Response.StatusCode);
         }
 
         [Priority(104)]
@@ -170,12 +160,10 @@ namespace VPEAR.Server.Test
             var result = await client.LoginAsync(AdminName, AdminPassword);
 
             Assert.True(result, "Login should be successful.");
-            Assert.Equal(HttpStatusCode.OK, client.Response.StatusCode);
 
             result = await client.PutUserAsync(UserName, UserPassword, NewUserPassword);
 
             Assert.True(result, "Put user should be successful.");
-            Assert.Equal(HttpStatusCode.NoContent, client.Response.StatusCode);
         }
 
         [Priority(105)]
@@ -186,7 +174,6 @@ namespace VPEAR.Server.Test
             var result = await client.LoginAsync(AdminName, AdminPassword);
 
             Assert.True(result, "Login should be successful.");
-            Assert.Equal(HttpStatusCode.OK, client.Response.StatusCode);
 
             var container = await client.GetUsersAsync();
 
@@ -210,12 +197,10 @@ namespace VPEAR.Server.Test
             var result = await client.LoginAsync(AdminName, AdminPassword);
 
             Assert.True(result, "Login should be successful.");
-            Assert.Equal(HttpStatusCode.OK, client.Response.StatusCode);
 
             result = await client.DeleteUserAsync(UserName);
 
             Assert.True(result, "Delete user should be successful.");
-            Assert.Equal(HttpStatusCode.NoContent, client.Response.StatusCode);
         }
 
         [Priority(200)]
@@ -228,12 +213,10 @@ namespace VPEAR.Server.Test
             var result = await client.DeleteDeviceAsync(NotFoundId);
 
             Assert.False(result);
-            Assert.Equal(HttpStatusCode.NotFound, client.Response.StatusCode);
 
             result = await client.DeleteDeviceAsync(this.archivedDevices.First().Id.ToString());
 
             Assert.False(result);
-            Assert.Equal(HttpStatusCode.Conflict, client.Response.StatusCode);
         }
 
         [Priority(200)]
@@ -246,12 +229,10 @@ namespace VPEAR.Server.Test
             var result = await client.PutDeviceAsync(NotFoundId);
 
             Assert.False(result);
-            Assert.Equal(HttpStatusCode.NotFound, client.Response.StatusCode);
 
             result = await client.PutDeviceAsync(this.archivedDevices.First().Id.ToString());
 
             Assert.False(result);
-            Assert.Equal(HttpStatusCode.Gone, client.Response.StatusCode);
         }
 
         [Priority(201)]
@@ -261,13 +242,11 @@ namespace VPEAR.Server.Test
             using var client = this.CreateClient();
             var result = await client.LoginAsync(UserName, NewUserPassword);
 
-            Assert.Equal(HttpStatusCode.OK, client.Response.StatusCode);
             Assert.True(result, "Login should be successful.");
 
             var devices = await client.GetDevicesAsync();
 
             Assert.NotNull(devices);
-            Assert.Equal(HttpStatusCode.OK, client.Response.StatusCode);
         }
 
         [Priority(210)]
@@ -280,7 +259,6 @@ namespace VPEAR.Server.Test
             var result = await client.PutDeviceAsync(await GetDeviceIdAsync(client), "Test Device", 3600, 1);
 
             Assert.True(result);
-            Assert.Equal(HttpStatusCode.NoContent, client.Response.StatusCode);
         }
 
         [Priority(203)]
@@ -292,7 +270,6 @@ namespace VPEAR.Server.Test
 
             var result = await client.PostDevicesAsync("10.0.0.1", "255.255.255.0");
 
-            Assert.Equal(HttpStatusCode.Accepted, client.Response.StatusCode);
             Assert.True(result);
         }
 
@@ -306,7 +283,6 @@ namespace VPEAR.Server.Test
             var result = await client.DeleteDeviceAsync(await GetDeviceIdAsync(client));
 
             Assert.True(result);
-            Assert.Equal(HttpStatusCode.NoContent, client.Response.StatusCode);
         }
 
         [Priority(300)]
@@ -319,7 +295,6 @@ namespace VPEAR.Server.Test
             var result = await client.GetFiltersAsync(NotFoundId);
 
             Assert.Null(result);
-            Assert.Equal(HttpStatusCode.NotFound, client.Response.StatusCode);
         }
 
         [Priority(300)]
@@ -331,17 +306,14 @@ namespace VPEAR.Server.Test
             var result = await client.PutFiltersAsync(NotFoundId, true, true, true);
 
             Assert.False(result);
-            Assert.Equal(HttpStatusCode.NotFound, client.Response.StatusCode);
 
             result = await client.PutFiltersAsync(this.archivedDevices.First().Id.ToString(), true, true, true);
 
             Assert.False(result);
-            Assert.Equal(HttpStatusCode.Gone, client.Response.StatusCode);
 
             result = await client.PutFiltersAsync(this.notReachableDevices.First().Id.ToString(), true, true, true);
 
             Assert.False(result);
-            Assert.Equal(HttpStatusCode.FailedDependency, client.Response.StatusCode);
         }
 
         [Priority(301)]
@@ -353,7 +325,6 @@ namespace VPEAR.Server.Test
 
             var result = await client.GetFiltersAsync(this.stoppedDevices.First().Id.ToString());
 
-            Assert.Equal(HttpStatusCode.OK, client.Response.StatusCode);
             Assert.NotNull(result);
         }
 
@@ -366,7 +337,6 @@ namespace VPEAR.Server.Test
 
             var result = await client.PutFiltersAsync(await GetDeviceIdAsync(client), true, true, true);
 
-            Assert.Equal(HttpStatusCode.NoContent, client.Response.StatusCode);
             Assert.True(result);
         }
 
@@ -380,17 +350,14 @@ namespace VPEAR.Server.Test
             var result = await client.GetFirmwareAsync(NotFoundId);
 
             Assert.Null(result);
-            Assert.Equal(HttpStatusCode.NotFound, client.Response.StatusCode);
 
             result = await client.GetFirmwareAsync(this.archivedDevices.First().Id.ToString());
 
             Assert.Null(result);
-            Assert.Equal(HttpStatusCode.Gone, client.Response.StatusCode);
 
             result = await client.GetFirmwareAsync(this.notReachableDevices.First().Id.ToString());
 
             Assert.Null(result);
-            Assert.Equal(HttpStatusCode.FailedDependency, client.Response.StatusCode);
         }
 
         [Priority(400)]
@@ -403,17 +370,14 @@ namespace VPEAR.Server.Test
             var result = await client.PutFirmwareAsync(NotFoundId, null, null);
 
             Assert.False(result);
-            Assert.Equal(HttpStatusCode.NotFound, client.Response.StatusCode);
 
             result = await client.PutFirmwareAsync(this.archivedDevices.First().Id.ToString(), null, null);
 
             Assert.False(result);
-            Assert.Equal(HttpStatusCode.Gone, client.Response.StatusCode);
 
             result = await client.PutFirmwareAsync(this.notReachableDevices.First().Id.ToString(), null, null);
 
             Assert.False(result);
-            Assert.Equal(HttpStatusCode.FailedDependency, client.Response.StatusCode);
         }
 
         [Priority(701)]
@@ -426,7 +390,6 @@ namespace VPEAR.Server.Test
             var result = client.GetFirmwareAsync(await GetDeviceIdAsync(client));
 
             Assert.NotNull(result);
-            Assert.Equal(HttpStatusCode.OK, client.Response.StatusCode);
         }
 
 /*
@@ -454,7 +417,6 @@ namespace VPEAR.Server.Test
             var result = await client.GetFramesAsync(NotFoundId, null, null);
 
             Assert.Null(result);
-            Assert.Equal(HttpStatusCode.NotFound, client.Response.StatusCode);
         }
 
         [Priority(500)]
@@ -467,17 +429,14 @@ namespace VPEAR.Server.Test
             var result = await client.GetSensorsAsync(NotFoundId);
 
             Assert.Null(result);
-            Assert.Equal(HttpStatusCode.NotFound, client.Response.StatusCode);
 
             result = await client.GetSensorsAsync(this.archivedDevices.First().Id.ToString());
 
             Assert.Null(result);
-            Assert.Equal(HttpStatusCode.Gone, client.Response.StatusCode);
 
             result = await client.GetSensorsAsync(this.notReachableDevices.First().Id.ToString());
 
             Assert.Null(result);
-            Assert.Equal(HttpStatusCode.FailedDependency, client.Response.StatusCode);
         }
 
         [Priority(501)]
@@ -490,7 +449,6 @@ namespace VPEAR.Server.Test
             var result = await client.GetFramesAsync(await GetDeviceIdAsync(client), null, null);
 
             Assert.NotNull(result);
-            Assert.Equal(HttpStatusCode.OK, client.Response.StatusCode);
         }
 
         [Priority(502)]
@@ -503,7 +461,6 @@ namespace VPEAR.Server.Test
             var result = await client.GetSensorsAsync(await GetDeviceIdAsync(client));
 
             Assert.NotNull(result);
-            Assert.Equal(HttpStatusCode.OK, client.Response.StatusCode);
         }
 
         [Priority(600)]
@@ -516,17 +473,13 @@ namespace VPEAR.Server.Test
             var result = await client.GetPowerAsync(NotFoundId);
 
             Assert.Null(result);
-            Assert.Equal(HttpStatusCode.NotFound, client.Response.StatusCode);
 
             result = await client.GetPowerAsync(this.archivedDevices.First().Id.ToString());
 
             Assert.Null(result);
-            Assert.Equal(HttpStatusCode.Gone, client.Response.StatusCode);
-
             result = await client.GetPowerAsync(this.notReachableDevices.First().Id.ToString());
 
             Assert.Null(result);
-            Assert.Equal(HttpStatusCode.FailedDependency, client.Response.StatusCode);
         }
 
         [Priority(601)]
@@ -539,7 +492,6 @@ namespace VPEAR.Server.Test
             var result = client.GetPowerAsync(await GetDeviceIdAsync(client));
 
             Assert.NotNull(result);
-            Assert.Equal(HttpStatusCode.OK, client.Response.StatusCode);
         }
 
         [Priority(700)]
@@ -552,17 +504,14 @@ namespace VPEAR.Server.Test
             var result = await client.GetWifiAsync(NotFoundId);
 
             Assert.Null(result);
-            Assert.Equal(HttpStatusCode.NotFound, client.Response.StatusCode);
 
             result = await client.GetWifiAsync(this.archivedDevices.First().Id.ToString());
 
             Assert.Null(result);
-            Assert.Equal(HttpStatusCode.Gone, client.Response.StatusCode);
 
             result = await client.GetWifiAsync(this.notReachableDevices.First().Id.ToString());
 
             Assert.Null(result);
-            Assert.Equal(HttpStatusCode.FailedDependency, client.Response.StatusCode);
         }
 
         [Priority(700)]
@@ -575,17 +524,14 @@ namespace VPEAR.Server.Test
             var result = await client.PutWifiAsync(NotFoundId, "ssid", "password");
 
             Assert.False(result);
-            Assert.Equal(HttpStatusCode.NotFound, client.Response.StatusCode);
 
             result = await client.PutWifiAsync(this.archivedDevices.First().Id.ToString(), "ssid", "password");
 
             Assert.False(result);
-            Assert.Equal(HttpStatusCode.Gone, client.Response.StatusCode);
 
             result = await client.PutWifiAsync(this.notReachableDevices.First().Id.ToString(), "ssid", "password");
 
             Assert.False(result);
-            Assert.Equal(HttpStatusCode.FailedDependency, client.Response.StatusCode);
         }
 
         [Priority(701)]
@@ -598,7 +544,6 @@ namespace VPEAR.Server.Test
             var result = client.GetWifiAsync(await GetDeviceIdAsync(client));
 
             Assert.NotNull(result);
-            Assert.Equal(HttpStatusCode.OK, client.Response.StatusCode);
         }
 
         [Priority(702)]
@@ -611,7 +556,6 @@ namespace VPEAR.Server.Test
             var result = await client.PutWifiAsync(await GetDeviceIdAsync(client), null, null, "direct");
 
             Assert.True(result, "Put wifi should be successful.");
-            Assert.Equal(HttpStatusCode.NoContent, client.Response.StatusCode);
         }
 
         private static async Task<string> GetDeviceIdAsync(IVPEARClient client)
