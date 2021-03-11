@@ -67,12 +67,12 @@ namespace VPEAR.Server
 #if DEBUG
             env.EnvironmentName = "Development";
             app.UseDeveloperExceptionPage();
-            app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "VPEAR.Server v1"));
 #else
             env.EnvironmentName = "Production";
             app.UseHsts();
             app.UseHttpsRedirection();
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "VPEAR.Server v1"));
 #endif
             app.UseRouting();
             app.UseAuthentication();
