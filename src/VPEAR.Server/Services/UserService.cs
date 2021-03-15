@@ -83,29 +83,27 @@ namespace VPEAR.Server.Services
         {
             if (role == null)
             {
-                var admins = await this.users.GetUsersInRoleAsync(Roles.AdminRole);
-                var users = await this.users.GetUsersInRoleAsync(Roles.UserRole);
+                var users = new Dictionary<string, IdentityUser>();
                 var payload = new Container<GetUserResponse>();
 
-                foreach (var admin in admins)
+                foreach (var admin in await this.users.GetUsersInRoleAsync(Roles.AdminRole))
                 {
-                    payload.Items.Add(new GetUserResponse()
-                    {
-                        Name = admin.UserName,
-                        Id = admin.Id,
-                        IsVerified = admin.EmailConfirmed,
-                        Roles = Roles.AllRoles,
-                    });
+                    users.TryAdd(admin.UserName, admin);
+                }
+
+                foreach (var user in await this.users.GetUsersInRoleAsync(Roles.UserRole))
+                {
+                    users.TryAdd(user.UserName, user);
                 }
 
                 foreach (var user in users)
                 {
                     payload.Items.Add(new GetUserResponse()
                     {
-                        Name = user.UserName,
-                        Id = user.Id,
-                        IsVerified = user.EmailConfirmed,
-                        Roles = new List<string>() { Roles.UserRole, },
+                        Name = user.Value.UserName,
+                        Id = user.Value.Id,
+                        IsVerified = user.Value.EmailConfirmed,
+                        Roles = await this.users.GetRolesAsync(user.Value),
                     });
                 }
 

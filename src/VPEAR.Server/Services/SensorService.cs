@@ -60,7 +60,8 @@ namespace VPEAR.Server.Services
 
             await this.devices.GetCollectionAsync(device, device => device.Frames);
 
-            var frames = device.Frames.OrderBy(frame => frame.CreatedAt)
+            var frames = device.Frames.Distinct()
+                .OrderBy(frame => frame.CreatedAt)
                 .ToList();
 
             // checking if start is to small or big and count to small
