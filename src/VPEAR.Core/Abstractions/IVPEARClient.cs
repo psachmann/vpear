@@ -29,12 +29,6 @@ namespace VPEAR.Core.Abstractions
         string ErrorMessage { get; }
 
         /// <summary>
-        /// Gets the http response message.
-        /// </summary>
-        /// <value>The http response message from the http client.</value>
-        HttpResponseMessage Response { get; }
-
-        /// <summary>
         /// Indicates if the device is reachable or not.
         /// </summary>
         /// <returns>A boolean, which indicates the success of the operation.</returns>

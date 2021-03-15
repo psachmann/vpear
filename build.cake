@@ -1,9 +1,8 @@
 // Tools/Addins
-#tool nuget:?package=ReportGenerator&version=4.8.0
-#addin nuget:?package=Cake.Codecov&version=0.9.1
+#tool nuget:?package=ReportGenerator&version=4.8.6
 #addin nuget:?package=Cake.DocFx&version=0.13.1
 #addin nuget:?package=Cake.DotNetCoreEf&version=0.10.0
-#addin nuget:?package=Cake.Figlet&version=1.3.1
+#addin nuget:?package=Cake.Figlet&version=2.0.0
 
 // Arguments
 var target = Argument("target", "Test");
@@ -94,7 +93,7 @@ Task("Docs")
             Verbosity = ReportGeneratorVerbosity.Error,
         };
 
-        ReportGenerator(reportFiles, Directory(reportDir), settings);
+        ReportGenerator(new GlobPattern(reportFiles), Directory(reportDir), settings);
         DocFxMetadata(File(docfxSettings));
         DocFxBuild(File(docfxSettings));
     });

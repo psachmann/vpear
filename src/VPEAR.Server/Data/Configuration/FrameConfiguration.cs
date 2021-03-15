@@ -4,9 +4,11 @@
 // </copyright>
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using VPEAR.Core.Entities;
 using VPEAR.Core.Extensions;
 using static VPEAR.Server.Constants;
@@ -32,7 +34,11 @@ namespace VPEAR.Server.Data.Configuration
             builder.Property(frame => frame.Readings)
                 .HasConversion(
                     value => value.ToJsonString(),
-                    value => value.FromJsonString<IList<IList<int>>>());
+                    value => value.FromJsonString<IList<IList<int>>>(),
+                    new ValueComparer<IList<IList<int>>>(
+                        (c1, c2) => c1.SequenceEqual(c2),
+                        c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                        c => c.ToList()));
 
             builder.Property(frame => frame.Time)
                 .HasMaxLength(Limits.MaxStringLength)

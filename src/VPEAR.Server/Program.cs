@@ -61,15 +61,14 @@ namespace VPEAR.Server
                 .ReadFrom.Configuration(configuration)
                 .CreateLogger();
 
-            var builder = Host.CreateDefaultBuilder(args)
+            return Host.CreateDefaultBuilder(args)
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
-                .ConfigureWebHostDefaults(builder =>
+                .UseSystemd()
+                .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    builder.UseSerilog();
-                    builder.UseStartup<Startup>();
+                    webBuilder.UseSerilog();
+                    webBuilder.UseStartup<Startup>();
                 });
-
-            return builder;
         }
     }
 }

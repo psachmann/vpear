@@ -6,7 +6,6 @@
 using Autofac;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Threading.Tasks;
 using VPEAR.Core.Wrappers;
 using VPEAR.Server.Controllers;
