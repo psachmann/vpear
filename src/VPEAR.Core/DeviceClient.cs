@@ -7,10 +7,10 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Entities;
-using VPEAR.Core.Extensions;
 using VPEAR.Core.Wrappers;
 
 namespace VPEAR.Core
@@ -20,10 +20,14 @@ namespace VPEAR.Core
     /// This client gives access to a sensor device.
     /// NOTE: This class is only for the vpear server to connect to devices.
     /// </summary>
-    public class DeviceClient : AbstractClient, IDeviceClient
+    public class DeviceClient : IDeviceClient, IDisposable
     {
         private const string ApiPrefix = "/api";
         private const string TimeFormat = "yyyy-MM-dd hh:mm:ss.fff";
+        private readonly string baseAddress;
+        private Exception error;
+        private string errorMessage;
+        private HttpClient client;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceClient"/> class.
@@ -31,8 +35,18 @@ namespace VPEAR.Core
         /// <param name="baseAddress">The base address to connect to.</param>
         /// <param name="factory">The http client factory.</param>
         public DeviceClient(string baseAddress, IHttpClientFactory factory)
-            : base(baseAddress, factory)
         {
+            this.baseAddress = baseAddress ?? throw new ArgumentNullException(nameof(baseAddress));
+            this.client = factory?.CreateClient("default") ?? throw new ArgumentNullException(nameof(factory));
+
+            if (Uri.TryCreate(baseAddress, UriKind.Absolute, out var uri))
+            {
+                this.client.BaseAddress = uri;
+            }
+            else
+            {
+                throw new ArgumentException("Is not a valid Uri.", nameof(baseAddress));
+            }
         }
 
         /// <summary>
@@ -41,8 +55,18 @@ namespace VPEAR.Core
         /// <param name="baseAddress">The base address to connect to.</param>
         /// <param name="client">The http client.</param>
         internal DeviceClient(string baseAddress, HttpClient client)
-            : base(baseAddress, client)
         {
+            this.baseAddress = baseAddress ?? throw new ArgumentNullException(nameof(baseAddress));
+            this.client = client ?? throw new ArgumentNullException(nameof(client));
+
+            if (Uri.TryCreate(baseAddress, UriKind.Absolute, out var uri))
+            {
+                this.client.BaseAddress = uri;
+            }
+            else
+            {
+                throw new ArgumentException("Is not a valid Uri.", nameof(baseAddress));
+            }
         }
 
         /// <summary>
@@ -55,11 +79,30 @@ namespace VPEAR.Core
         public delegate IDeviceClient Factory(string baseAddress);
 
         /// <inheritdoc/>
-        public override async Task<bool> CanConnectAsync()
+        public Exception Error
+        {
+            get { return this.error; }
+        }
+
+        /// <inheritdoc/>
+        public string ErrorMessage
+        {
+            get { return this.errorMessage; }
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            this.client.Dispose();
+            GC.SuppressFinalize(this);
+        }
+
+        /// <inheritdoc/>
+        public async Task<bool> CanConnectAsync()
         {
             var uri = $"{ApiPrefix}/device";
 
-            return await this.GetAsync(uri) && this.IsSuccessResponse();
+            return await this.GetAsync<DeviceResponse>(uri) != null;
         }
 
         /// <inheritdoc/>
@@ -67,16 +110,7 @@ namespace VPEAR.Core
         {
             var uri = $"{ApiPrefix}";
 
-            if (await this.GetAsync(uri) && this.IsSuccessResponse())
-            {
-                var json = await this.Response.Content.ReadAsStringAsync();
-
-                return json?.FromJsonString<ApiResponse>();
-            }
-            else
-            {
-                return null;
-            }
+            return await this.GetAsync<ApiResponse>(uri);
         }
 
         /// <inheritdoc/>
@@ -84,16 +118,7 @@ namespace VPEAR.Core
         {
             var uri = $"{ApiPrefix}/device";
 
-            if (await this.GetAsync(uri) && this.IsSuccessResponse())
-            {
-                var json = await this.Response.Content.ReadAsStringAsync();
-
-                return json?.FromJsonString<DeviceResponse>();
-            }
-            else
-            {
-                return null;
-            }
+            return await this.GetAsync<DeviceResponse>(uri);
         }
 
         /// <inheritdoc/>
@@ -101,16 +126,7 @@ namespace VPEAR.Core
         {
             var uri = $"{ApiPrefix}/sensors";
 
-            if (await this.GetAsync(uri) && this.IsSuccessResponse())
-            {
-                var json = await this.Response.Content.ReadAsStringAsync();
-
-                return json?.FromJsonString<IList<SensorResponse>>();
-            }
-            else
-            {
-                return null;
-            }
+            return await this.GetAsync<IList<SensorResponse>>(uri);
         }
 
         /// <inheritdoc/>
@@ -123,16 +139,7 @@ namespace VPEAR.Core
                 uri += $"?after={after.Value}";
             }
 
-            if (await this.GetAsync(uri) && this.IsSuccessResponse())
-            {
-                var json = await this.Response.Content.ReadAsStringAsync();
-
-                return json?.FromJsonString<IList<FrameResponse>>();
-            }
-            else
-            {
-                return null;
-            }
+            return await this.GetAsync<IList<FrameResponse>>(uri);
         }
 
         /// <inheritdoc/>
@@ -140,16 +147,7 @@ namespace VPEAR.Core
         {
             var uri = $"{ApiPrefix}/frequency";
 
-            if (await this.GetAsync(uri) && this.IsSuccessResponse())
-            {
-                var json = await this.Response.Content.ReadAsStringAsync();
-
-                return json?.FromJsonString<int>();
-            }
-            else
-            {
-                return null;
-            }
+            return await this.GetAsync<int?>(uri);
         }
 
         /// <inheritdoc/>
@@ -162,7 +160,7 @@ namespace VPEAR.Core
                 return true;
             }
 
-            return await this.PutAsync(uri, frequency) && this.IsSuccessResponse();
+            return await this.PutAsync(uri, frequency);
         }
 
         /// <inheritdoc/>
@@ -170,16 +168,7 @@ namespace VPEAR.Core
         {
             var uri = $"{ApiPrefix}/sensorsRequired";
 
-            if (await this.GetAsync(uri) && this.IsSuccessResponse())
-            {
-                var json = await this.Response.Content.ReadAsStringAsync();
-
-                return json?.FromJsonString<int>();
-            }
-            else
-            {
-                return null;
-            }
+            return await this.GetAsync<int?>(uri);
         }
 
         /// <inheritdoc/>
@@ -192,7 +181,7 @@ namespace VPEAR.Core
                 return true;
             }
 
-            return await this.PutAsync(uri, requiredSensors) && this.IsSuccessResponse();
+            return await this.PutAsync(uri, requiredSensors);
         }
 
         /// <inheritdoc/>
@@ -200,16 +189,7 @@ namespace VPEAR.Core
         {
             var uri = $"{ApiPrefix}/filters";
 
-            if (await this.GetAsync(uri) && this.IsSuccessResponse())
-            {
-                var json = await this.Response.Content.ReadAsStringAsync();
-
-                return json?.FromJsonString<FiltersResponse>();
-            }
-            else
-            {
-                return null;
-            }
+            return await this.GetAsync<FiltersResponse>(uri);
         }
 
         /// <inheritdoc/>
@@ -219,17 +199,17 @@ namespace VPEAR.Core
             var smoothUri = $"{ApiPrefix}/filters/smooth";
             var noiseUri = $"{ApiPrefix}/filters/noise";
 
-            if (spot != null && !(await this.PutAsync(spotUri, spot) && this.IsSuccessResponse()))
+            if (spot != null && !(await this.PutAsync(spotUri, spot)))
             {
                 return false;
             }
 
-            if (smooth != null && !(await this.PutAsync(smoothUri, smooth) && this.IsSuccessResponse()))
+            if (smooth != null && !(await this.PutAsync(smoothUri, smooth)))
             {
                 return false;
             }
 
-            if (noise != null && !(await this.PutAsync(noiseUri, noise) && this.IsSuccessResponse()))
+            if (noise != null && !(await this.PutAsync(noiseUri, noise)))
             {
                 return false;
             }
@@ -242,28 +222,18 @@ namespace VPEAR.Core
         {
             var uri = $"{ApiPrefix}/power";
 
-            if (await this.GetAsync(uri) && this.IsSuccessResponse())
-            {
-                var json = await this.Response.Content.ReadAsStringAsync();
-
-                return json?.FromJsonString<PowerResponse>();
-            }
-            else
-            {
-                return null;
-            }
+            return await this.GetAsync<PowerResponse>(uri);
         }
 
         /// <inheritdoc/>
         public async Task<DateTimeOffset?> GetTimeAsync()
         {
             var uri = $"{ApiPrefix}/time";
+            var result = await this.GetAsync<string>(uri);
 
-            if (await this.GetAsync(uri) && this.IsSuccessResponse())
+            if (result != null)
             {
-                var json = await this.Response.Content.ReadAsStringAsync();
-
-                return DateTime.ParseExact(this.CleanJsonTimeString(json), TimeFormat, CultureInfo.InvariantCulture.DateTimeFormat);
+                return DateTime.ParseExact(this.CleanJsonTimeString(result), TimeFormat, CultureInfo.InvariantCulture.DateTimeFormat);
             }
             else
             {
@@ -284,16 +254,7 @@ namespace VPEAR.Core
         {
             var uri = $"{ApiPrefix}/wifi";
 
-            if (await this.GetAsync(uri) && this.IsSuccessResponse())
-            {
-                var json = await this.Response.Content.ReadAsStringAsync();
-
-                return json?.FromJsonString<WifiResponse>();
-            }
-            else
-            {
-                return null;
-            }
+            return await this.GetAsync<WifiResponse>(uri);
         }
 
         /// <inheritdoc/>
@@ -308,17 +269,17 @@ namespace VPEAR.Core
                 Password = password,
             };
 
-            if (ssid != null && password == null && !(await this.PutAsync(ssidUri, ssid) && this.IsSuccessResponse()))
+            if (ssid != null && password == null && !(await this.PutAsync(ssidUri, ssid)))
             {
                 return false;
             }
 
-            if (ssid != null && password != null && !(await this.PutAsync(uri, payload) && this.IsSuccessResponse()))
+            if (ssid != null && password != null && !(await this.PutAsync(uri, payload)))
             {
                 return false;
             }
 
-            if (mode != null && !(await this.PutAsync(modeUri, mode) && this.IsSuccessResponse()))
+            if (mode != null && !(await this.PutAsync(modeUri, mode)))
             {
                 return false;
             }
@@ -331,16 +292,7 @@ namespace VPEAR.Core
         {
             var uri = $"{ApiPrefix}/firmware";
 
-            if (await this.GetAsync(uri) && this.IsSuccessResponse())
-            {
-                var json = await this.Response.Content.ReadAsStringAsync();
-
-                return json?.FromJsonString<FirmwareResponse>();
-            }
-            else
-            {
-                return null;
-            }
+            return await this.GetAsync<FirmwareResponse>(uri);
         }
 
         /// <inheritdoc/>
@@ -350,17 +302,17 @@ namespace VPEAR.Core
             var upgradeUri = $"{ApiPrefix}/firmware/upgrade";
             var packageUri = $"{ApiPrefix}/firmware/package";
 
-            if (source != null && !(await this.PutAsync(sourceUri, source) && this.IsSuccessResponse()))
+            if (source != null && !(await this.PutAsync(sourceUri, source)))
             {
                 return false;
             }
 
-            if (upgrade != null && !(await this.PutAsync(upgradeUri, upgrade) && this.IsSuccessResponse()))
+            if (upgrade != null && !(await this.PutAsync(upgradeUri, upgrade)))
             {
                 return false;
             }
 
-            if (package && !(await this.PutAsync<Null>(packageUri, null) && this.IsSuccessResponse()))
+            if (package && !(await this.PutAsync<Null>(packageUri, null)))
             {
                 return false;
             }
@@ -394,6 +346,118 @@ namespace VPEAR.Core
             }
 
             return true;
+        }
+
+        private async Task<TResult> GetAsync<TResult>(string uri)
+        {
+            try
+            {
+                using (var response = await this.client.GetAsync(uri))
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return await response.Content.ReadFromJsonAsync<TResult>();
+                    }
+                    else
+                    {
+                        var error = await response.Content.ReadFromJsonAsync<ErrorResponse>();
+                        this.errorMessage = string.Join(" ", error.Messages);
+
+                        return default;
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                this.error = exception;
+                this.errorMessage = exception.Message;
+
+                return default;
+            }
+        }
+
+        private async Task<bool> DeleteAsync(string uri)
+        {
+            try
+            {
+                using (var response = await this.client.DeleteAsync(uri))
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        var error = await response.Content.ReadFromJsonAsync<ErrorResponse>();
+                        this.errorMessage = string.Join(" ", error.Messages);
+
+                        return default;
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                this.error = exception;
+                this.errorMessage = exception.Message;
+
+                return default;
+            }
+        }
+
+        private async Task<bool> PostAsync<TPayload>(string uri, TPayload payload)
+        {
+            try
+            {
+                using (var response = await this.client.PostAsJsonAsync(uri, payload))
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        var error = await response.Content.ReadFromJsonAsync<ErrorResponse>();
+                        this.errorMessage = string.Join(" ", error.Messages);
+
+                        return default;
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                this.error = exception;
+                this.errorMessage = exception.Message;
+
+                return default;
+            }
+        }
+
+        private async Task<bool> PutAsync<TPayload>(string uri, TPayload payload)
+        {
+            try
+            {
+                using (var response = await this.client.PutAsJsonAsync(uri, payload))
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        var error = await response.Content.ReadFromJsonAsync<ErrorResponse>();
+                        this.errorMessage = string.Join(" ", error.Messages);
+
+                        return default;
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                this.error = exception;
+                this.errorMessage = exception.Message;
+
+                return default;
+            }
         }
 
         private string CleanJsonTimeString(string json)

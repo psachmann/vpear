@@ -139,7 +139,7 @@ namespace VPEAR.Server.Services
             if (address.IsIPv4() && subnetMask.IsIPv4() && subnetMask.IsIPv4SubnetMask())
             {
                 var job = JobBuilder.Create<SearcheDeviceJob>()
-                    .WithIdentity(new JobKey(Defaults.DefaultSearchDeviceJobId))
+                    .WithIdentity(new JobKey(Helpers.GetRandomString(32)))
                     .WithDescription(request.ToJsonString())
                     .Build();
 
