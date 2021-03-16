@@ -9,6 +9,7 @@ public class GridMesh
     private readonly Vector3 _origin;
     private readonly int _minValue;
     private readonly int _maxValue;
+    private ColorScale _colorScale;
     private int[,] _gridValues;
     private TextMesh[,] _textMeshes;
 
@@ -20,6 +21,7 @@ public class GridMesh
         _origin = origin;
         _minValue = minValue;
         _maxValue = maxValue;
+        _colorScale = ColorScale.RedToGreen;
         _gridValues = new int[width, height];
         _textMeshes = new TextMesh[width, height];
 
@@ -34,6 +36,16 @@ public class GridMesh
         }
         Debug.DrawLine(GetWorldPosition(0, _height), GetWorldPosition(_width, _height), Color.white, 100f);
         Debug.DrawLine(GetWorldPosition(_width, 0), GetWorldPosition(_width, _height), Color.white, 100f);
+    }
+
+    public float CellSize
+    {
+        get => _cellSize;
+    }
+
+    public ColorScale Scale
+    {
+        get => _colorScale;
     }
 
     public int Width
@@ -109,7 +121,7 @@ public class GridMesh
         y = Mathf.FloorToInt((position - _origin).y / _cellSize);
     }
 
-    private Vector3 GetWorldPosition(int x, int y)
+    public Vector3 GetWorldPosition(int x, int y)
     {
         return new Vector3(x, y) * _cellSize + _origin;
     }

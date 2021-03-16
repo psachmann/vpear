@@ -6,58 +6,41 @@ using UnityEngine.UI;
 public class ARScript : AbstractBase
 {
     [SerializeField] private Button _backButton;
-    [SerializeField ]private MeshRenderer _meshRenderer;
+    [SerializeField] private MeshFilter _meshFilter;
 
+    private Mesh _mesh;
     private IState<ARState> _arState;
-    private IState<SettingsState> _settingsState;
-    private GridMesh _grid;
 
     private void Start()
     {
         _arState = s_provider.GetRequiredService<IState<ARState>>();
         _arState.StateChanged += ARStateChanged;
-        // _backButton.onClick.AddListener(OnBackClick);
-        _grid = new GridMesh(4, 4, 0, 100, 2f, new Vector3(0, 0));
+        _mesh = new Mesh();
+        _meshFilter.mesh = _mesh;
 
         ARStateChanged(this, _arState.Value);
     }
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            var position = GetMouseWorldPosition();
-            Debug.Log($"left click: x={position.x} y={position.y}");
-            Debug.Log($"left click raw: x={Input.mousePosition.x} y={Input.mousePosition.y}");
-            _grid[position] += 10;
-        }
-
-        if (Input.GetMouseButtonDown(1))
-        {
-            var position = GetMouseWorldPosition();
-            Debug.Log($"right click: x={position.x} y={position.y}");
-            _grid[position] -= 10;
-        }
-    }
-
-    private static Vector3 GetMouseWorldPosition()
-    {
-        var vector = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-        return vector;
     }
 
     private void ARStateChanged(object sender, ARState state)
     {
-    }
+        MeshHelpers.CreateEmptyMeshArrays(state.GridMesh.Width * state.GridMesh.Height, out var vertices, out var uv, out var triangles);
+        var grid = new GridMesh(5, 5, 0, 100, 1f, Vector3.zero);
 
-    private void OnBackClick()
-    {
-        _dispatcher.Dispatch(new ChangeSceneAction(Constants.MenuSceneName));
-    }
+        for (var x = 0; x < grid.Width; x++)
+        {
+            for (var y = 0; y < grid.Height; y++)
+            {
+                var index = x * grid.Height + y;
+                var squadSize = new Vector3(1, 1) * grid.CellSize;
 
-    private void Initialize()
-    {
+                _logger.Information($"index: {index}");
 
+                // MeshHelpers.AddToMeshArrays(vertices, uv, triangles, index, grid.GetWorldPosition(x, y), 0f, squadSize, Vector2.zero, Vector2.zero);
+            }
+        }
     }
 }

@@ -1,5 +1,6 @@
 internal static class Constants
 {
+    public const int MaxSendFrames = 100;
     public const string LogPath = "../../logs/log_.txt";
     public const string ServerBaseAddress = "http://localhost:5000";
     public const string RegisterTitleText = "Registration Information";
