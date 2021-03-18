@@ -6,7 +6,7 @@ public static partial class Reducers
     [ReducerMethod]
     public static ARState ReduceFetchingFramesAction(ARState state, FetchingFramesAction action)
     {
-        return new ARState(true, state.Current, state.History, state.DeltaMinutes, state.GridMesh, state.ColorScale);
+        return new ARState(true, state.Current, state.History, state.Delta, state.Heatmap, state.ColorScale);
     }
 
     [ReducerMethod]
@@ -16,6 +16,6 @@ public static partial class Reducers
             .DefaultIfEmpty(state.Current)
             .LastOrDefault();
 
-        return new ARState(false, current, action.FetchedFrames, state.DeltaMinutes, state.GridMesh, state.ColorScale);
+        return new ARState(false, current, action.FetchedFrames, state.Delta, state.Heatmap, state.ColorScale);
     }
 }

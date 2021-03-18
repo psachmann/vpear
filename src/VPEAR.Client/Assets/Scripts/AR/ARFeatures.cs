@@ -16,8 +16,8 @@ public class ARFeature : Feature<ARState>
         var current = new GetFrameResponse();
         var history = new List<GetFrameResponse>();
         var deltaMinutes = TimeSpan.FromMinutes(60f);
-        var gridMesh = new GridMesh(0, 0, 0, 0, 0f, Vector3.zero);
+        var heatmap = new Heatmap(0, 0, TimeSpan.Zero, new List<GetFrameResponse>());
 
-        return new ARState(false, current, history, deltaMinutes, gridMesh);
+        return new ARState(false, current, history, deltaMinutes, heatmap);
     }
 }

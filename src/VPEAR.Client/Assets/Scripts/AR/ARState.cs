@@ -8,15 +8,15 @@ public class ARState
         bool isLoading,
         GetFrameResponse current,
         IEnumerable<GetFrameResponse> history,
-        TimeSpan deltaMinutes,
-        GridMesh gridMesh,
+        TimeSpan delta,
+        Heatmap heatmap,
         ColorScale colorScale = default)
     {
         IsLoading = isLoading;
         Current = current;
         History = history;
-        DeltaMinutes = deltaMinutes;
-        GridMesh = gridMesh;
+        Delta = delta;
+        Heatmap = heatmap;
         ColorScale = colorScale;
     }
 
@@ -26,9 +26,9 @@ public class ARState
 
     public IEnumerable<GetFrameResponse> History { get; }
 
-    public TimeSpan DeltaMinutes { get; }
+    public TimeSpan Delta { get; }
 
-    public GridMesh GridMesh { get; }
+    public Heatmap Heatmap { get; }
 
     public ColorScale ColorScale { get; }
 }
