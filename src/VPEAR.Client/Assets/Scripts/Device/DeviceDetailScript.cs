@@ -68,6 +68,6 @@ public class DeviceDetailScript : AbstractView
 
     private void OnARClick()
     {
-        _dispatcher.Dispatch(new ChangeSceneAction(Constants.ARSceneName));
+        _dispatcher.Dispatch(new ChangeSceneAction(Constants.ARSceneId));
     }
 }

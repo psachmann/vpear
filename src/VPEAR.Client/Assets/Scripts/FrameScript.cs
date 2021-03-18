@@ -1,5 +1,6 @@
 using Fluxor;
 using Microsoft.Extensions.DependencyInjection;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,9 +10,17 @@ public class FrameScript : AbstractBase
     [SerializeField] private Button _devices;
     [SerializeField] private Button _users;
     [SerializeField] private Button _settings;
-
     private IState<NavigationState> _navigationState;
     private IState<LoginState> _loginState;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        _navigationPanel = GetComponentsInChildren<CanvasGroup>()
+            .First(componnet => string.Equals(componnet.name, "Navigation"));
+
+        _logger.Information($"Awake: {nameof(FrameScript)}");
+    }
 
     private void Start()
     {

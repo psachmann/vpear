@@ -17,8 +17,8 @@ public class SettingsScript : AbstractView
         counterState = s_provider.GetRequiredService<IState<CounterState>>();
         counterState.StateChanged += this.CounterStateChanged;
         incrementButton.onClick.AddListener(() => _dispatcher.Dispatch(new IncrementCounterAction()));
-        decrmenntButton.onClick.AddListener(() => _dispatcher.Dispatch(new DecrementCounterAction()));
-        _logoutButton.onClick.AddListener(() => _dispatcher.Dispatch(new LogoutAction()));
+        decrmenntButton.onClick.AddListener(() => _dispatcher.Dispatch(new ChangeSceneAction(Constants.ARSceneId)));
+        // _logoutButton.onClick.AddListener(() => _dispatcher.Dispatch(new LogoutAction()));
 
         CounterStateChanged(this, counterState.Value);
     }

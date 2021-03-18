@@ -14,10 +14,10 @@ public class NavigateBackAction
 
 public class ChangeSceneAction
 {
-    public ChangeSceneAction(string sceneName)
+    public ChangeSceneAction(int sceneId)
     {
-        SceneName = sceneName;
+        SceneId = sceneId;
     }
 
-    public string SceneName { get; }
+    public int SceneId { get; }
 }

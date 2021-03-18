@@ -1,3 +1,4 @@
+using Fluxor;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -90,21 +91,8 @@ public class NavigationService
         _history.Clear();
     }
 
-    public void ChangeScene(string sceneName)
+    public void ChangeScene(int sceneId)
     {
-        var scene = SceneManager.GetSceneByName(sceneName);
-
-        if (scene.IsValid())
-        {
-            _logger.Information($"GoToScene: {scene.name}");
-
-            SceneManager.LoadScene(scene.name);
-        }
-        else
-        {
-            _logger.Error($"SceneNotFound: {scene.name}");
-
-            throw new ArgumentOutOfRangeException(nameof(sceneName));
-        }
+        SceneManager.LoadScene(sceneId);
     }
 }

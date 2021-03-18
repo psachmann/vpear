@@ -47,7 +47,8 @@ public class LoginScript : AbstractView
     {
         if (_registerToggle.isOn)
         {
-            _dispatcher.Dispatch(new RegisterAction(_userNameInput.text, _userPasswordInput.text));
+            _dispatcher.Dispatch(new NavigateToAction(Constants.SettingsViewName));
+            //_dispatcher.Dispatch(new RegisterAction(_userNameInput.text, _userPasswordInput.text));
         }
         else
         {

@@ -47,7 +47,7 @@ public class ChangeSceneEffect : Effect<ChangeSceneAction>
 
     public override Task HandleAsync(ChangeSceneAction action, IDispatcher dispatcher)
     {
-        _navigationService.ChangeScene(action.SceneName);
+        _navigationService.ChangeScene(action.SceneId);
 
         return Task.CompletedTask;
     }
