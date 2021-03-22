@@ -9,6 +9,6 @@ public class SettingsFeature : Feature<SettingsState>
 
     protected override SettingsState GetInitialState()
     {
-        return new SettingsState();
+        return new SettingsState(60f, ColorScale.RedToGreen);
     }
 }

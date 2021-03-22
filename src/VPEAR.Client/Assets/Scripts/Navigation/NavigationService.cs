@@ -71,7 +71,7 @@ public class NavigationService
 
             _history.Push(view);
             view.Show();
-            _logger.Warning($"NavigateTo: {viewName}");
+            _logger.Information($"NavigateTo: {viewName}");
         }
         else
         {

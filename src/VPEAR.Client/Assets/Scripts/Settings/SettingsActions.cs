@@ -1,6 +1,6 @@
-public class SettingsState
+public class ApplySettingsAction
 {
-    public SettingsState(float deltaMinutes, ColorScale colorScale)
+    public ApplySettingsAction(float deltaMinutes, ColorScale colorScale)
     {
         DeltaMinutes = deltaMinutes;
         ColorScale = colorScale;

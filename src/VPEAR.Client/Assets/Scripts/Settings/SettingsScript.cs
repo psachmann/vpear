@@ -5,31 +5,42 @@ using UnityEngine.UI;
 
 public class SettingsScript : AbstractView
 {
-    [SerializeField] private Text counterText;
-    [SerializeField] private Button incrementButton;
-    [SerializeField] private Button decrmenntButton;
+    [SerializeField] private InputField _deltaMinutesInput;
+    [SerializeField] private Dropdown _colorScelDropDown;
+    [SerializeField] private Button _applyButton;
     [SerializeField] private Button _logoutButton;
 
-    private IState<CounterState> counterState;
+    private IState<SettingsState> _settingsState;
 
     private void Start()
     {
-        counterState = s_provider.GetRequiredService<IState<CounterState>>();
-        counterState.StateChanged += this.CounterStateChanged;
-        incrementButton.onClick.AddListener(() => _dispatcher.Dispatch(new IncrementCounterAction()));
-        decrmenntButton.onClick.AddListener(() => _dispatcher.Dispatch(new ChangeSceneAction(Constants.ARSceneId)));
-        // _logoutButton.onClick.AddListener(() => _dispatcher.Dispatch(new LogoutAction()));
+        _settingsState = s_provider.GetRequiredService<IState<SettingsState>>();
+        _settingsState.StateChanged += SettingsStateChanged;
+        _deltaMinutesInput.contentType = InputField.ContentType.DecimalNumber;
+        _applyButton.onClick.AddListener(OnApplyClick);
+        _logoutButton.onClick.AddListener(OnLogoutAction);
 
-        CounterStateChanged(this, counterState.Value);
+        SettingsStateChanged(this, _settingsState.Value);
     }
 
     private void OnDestroy()
     {
-        counterState.StateChanged -= CounterStateChanged;
+        _settingsState.StateChanged -= SettingsStateChanged;
     }
 
-    private void CounterStateChanged(object sender, CounterState state)
+    private void SettingsStateChanged(object sender, SettingsState state)
     {
-        this.counterText.text = $"Counter: {state.Counter}";
+        _deltaMinutesInput.text = state.DeltaMinutes.ToString();
+        _colorScelDropDown.value = (int)state.ColorScale;
+    }
+
+    private void OnApplyClick()
+    {
+        _dispatcher.Dispatch(new ApplySettingsAction(float.Parse(_deltaMinutesInput.text), (ColorScale)_colorScelDropDown.value));
+    }
+
+    private void OnLogoutAction()
+    {
+        _dispatcher.Dispatch(new LogoutAction());
     }
 }
