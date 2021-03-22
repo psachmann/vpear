@@ -25,6 +25,11 @@ public class LoginScript : AbstractView
         IsLoginEnabled();
     }
 
+    private void OnDestroy()
+    {
+        _loginState.StateChanged -= LoginStateChanged;
+    }
+
     private void LoginStateChanged(object sender, LoginState state)
     {
         _userNameInput.text = state.Name;

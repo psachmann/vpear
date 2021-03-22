@@ -23,6 +23,11 @@ public class DeviceListScript : AbstractView
         DeviceListStateChanged(this, _deviceListState.Value);
     }
 
+    private void OnDestroy()
+    {
+        _deviceListState.StateChanged -= DeviceListStateChanged;
+    }
+
     private void DeviceListStateChanged(object sender, DeviceListState state)
     {
         foreach (var button in _content.GetComponentsInChildren<Button>(false))

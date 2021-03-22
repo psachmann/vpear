@@ -10,17 +10,9 @@ public class FrameScript : AbstractBase
     [SerializeField] private Button _devices;
     [SerializeField] private Button _users;
     [SerializeField] private Button _settings;
+
     private IState<NavigationState> _navigationState;
     private IState<LoginState> _loginState;
-
-    protected override void Awake()
-    {
-        base.Awake();
-        _navigationPanel = GetComponentsInChildren<CanvasGroup>()
-            .First(componnet => string.Equals(componnet.name, "Navigation"));
-
-        _logger.Information($"Awake: {nameof(FrameScript)}");
-    }
 
     private void Start()
     {
@@ -31,10 +23,19 @@ public class FrameScript : AbstractBase
         _devices.onClick.AddListener(OnDevicesClick);
         _users.onClick.AddListener(OnUsersClick);
         _settings.onClick.AddListener(OnSettingsClick);
-        _dispatcher.Dispatch(new NavigateToAction(Constants.LoginViewName));
 
         NavivigationStateChanged(this, _navigationState.Value);
         LoginStateChanged(this, _loginState.Value);
+
+        // we come from the ar scene and navigate to device detail view
+        if (_loginState.Value.IsSignedIn)
+        {
+            _dispatcher.Dispatch(new NavigateToAction(Constants.DeviceDetailViewName));
+        }
+        else
+        {
+            _dispatcher.Dispatch(new NavigateToAction(Constants.LoginViewName));
+        }
     }
 
     private void Update()
@@ -43,6 +44,12 @@ public class FrameScript : AbstractBase
         {
             _dispatcher.Dispatch(new NavigateBackAction());
         }
+    }
+
+    private void OnDestroy()
+    {
+        _navigationState.StateChanged -= NavivigationStateChanged;
+        _loginState.StateChanged -= LoginStateChanged;
     }
 
     private void NavivigationStateChanged(object sender, NavigationState state)

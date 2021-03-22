@@ -19,6 +19,11 @@ public class UserListScript : AbstractView
         UserListStateChanged(this, _userListState.Value);
     }
 
+    private void OnDestroy()
+    {
+        _userListState.StateChanged -= UserListStateChanged;
+    }
+
     private void UserListStateChanged(object sender, UserListState state)
     {
         foreach (var button in _content.GetComponentsInChildren<Button>(false))

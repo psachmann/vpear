@@ -35,6 +35,11 @@ public class DeviceDetailScript : AbstractView
         DeviceDetailStateChanged(this, _deviceDetailState.Value);
     }
 
+    private void OnDestroy()
+    {
+        _deviceDetailState.StateChanged -= DeviceDetailStateChanged;
+    }
+
     private void DeviceDetailStateChanged(object sender, DeviceDetailState state)
     {
         _idText.text = state.Device.Id;

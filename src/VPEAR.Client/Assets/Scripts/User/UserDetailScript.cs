@@ -28,6 +28,11 @@ public class UserDetailScript : AbstractView
         UserDetailStateChanged(this, _userDetailState.Value);
     }
 
+    private void OnDestroy()
+    {
+        _userDetailState.StateChanged -= UserDetailStateChanged;
+    }
+
     private void UserDetailStateChanged(object sender, UserDetailState state)
     {
         _userIdText.text = state.User.Id;

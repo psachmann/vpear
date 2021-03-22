@@ -62,11 +62,6 @@ public class NavigationService
 
     public void NavigateTo(string viewName)
     {
-        if (LocationName == viewName)
-        {
-            return;
-        }
-
         if (s_views.TryGetValue(viewName, out var view))
         {
             if (Location != null)
@@ -76,7 +71,7 @@ public class NavigationService
 
             _history.Push(view);
             view.Show();
-            _logger.Information($"NavigateTo: {viewName}");
+            _logger.Warning($"NavigateTo: {viewName}");
         }
         else
         {

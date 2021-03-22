@@ -7,7 +7,7 @@ public abstract class AbstractView : AbstractBase
     protected override void Awake()
     {
         base.Awake();
-        _canvas = this.GetComponent<Canvas>();
+        _canvas = GetComponent<Canvas>();
         Hide();
         NavigationService.RegisterView(this);
     }

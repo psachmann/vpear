@@ -23,6 +23,11 @@ public class SettingsScript : AbstractView
         CounterStateChanged(this, counterState.Value);
     }
 
+    private void OnDestroy()
+    {
+        counterState.StateChanged -= CounterStateChanged;
+    }
+
     private void CounterStateChanged(object sender, CounterState state)
     {
         this.counterText.text = $"Counter: {state.Counter}";
