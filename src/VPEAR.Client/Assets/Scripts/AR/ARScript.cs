@@ -12,6 +12,9 @@ public class ARScript : AbstractBase
 
     private IState<ARState> _arState;
     private IState<SettingsState> _settingsState;
+    private int _stepSize;
+    private float _deltaMinutes;
+    private ColorScale _colorScale;
 
     private void Start()
     {
@@ -19,6 +22,8 @@ public class ARScript : AbstractBase
         _arState.StateChanged += ARStateChanged;
         _settingsState = s_provider.GetRequiredService<IState<SettingsState>>();
         _settingsState.StateChanged += SettingsStateChanges;
+        _forwardButton.onClick.AddListener(OnForwardClick);
+        _backwardButton.onClick.AddListener(OnBackwardClick);
 
         Initialize();
 
@@ -46,6 +51,19 @@ public class ARScript : AbstractBase
 
     private void SettingsStateChanges(object sender, SettingsState state)
     {
+        _stepSize = state.StepSize;
+        _deltaMinutes = state.DeltaMinutes;
+        _colorScale = state.ColorScale;
+    }
+
+    private void OnBackwardClick()
+    {
+        _dispatcher.Dispatch(new MoveBackwardAction(_stepSize));
+    }
+
+    private void OnForwardClick()
+    {
+        _dispatcher.Dispatch(new MoveForwardAction(_stepSize));
     }
 
     private void Initialize()
@@ -70,14 +88,5 @@ public class ARScript : AbstractBase
 
         _heatmapRenderer.sprite = Sprite.Create(texture, new Rect(0f, 0f, width, height), Vector2.zero, 1f);
         _heatmapRenderer.transform.position = new Vector3(1 - width, 1.5f, 1f);
-    }
-
-    private static Vector3 GetHeatmapPosition(float x, float y, float width, float height)
-    {
-        var newX = x - width / 2;
-        var newY = y + 1.5f;
-        var newZ = height / 2;
-
-        return new Vector3(newX, newY, newZ);
     }
 }

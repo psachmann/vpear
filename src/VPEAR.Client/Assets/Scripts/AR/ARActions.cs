@@ -20,3 +20,23 @@ public class FetchedFramesAction
 
     public IEnumerable<GetFrameResponse> FetchedFrames { get; }
 }
+
+public class MoveBackwardAction
+{
+    public MoveBackwardAction(int count)
+    {
+        Count = count;
+    }
+
+    public int Count { get; }
+}
+
+public class MoveForwardAction
+{
+    public MoveForwardAction(int count)
+    {
+        Count = count;
+    }
+
+    public int Count { get; }
+}

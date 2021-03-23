@@ -1,10 +1,13 @@
 public class SettingsState
 {
-    public SettingsState(float deltaMinutes, ColorScale colorScale)
+    public SettingsState(int stepSize, float deltaMinutes, ColorScale colorScale)
     {
+        StepSize = stepSize;
         DeltaMinutes = deltaMinutes;
         ColorScale = colorScale;
     }
+
+    public int StepSize { get; }
 
     public float DeltaMinutes { get; }
 
