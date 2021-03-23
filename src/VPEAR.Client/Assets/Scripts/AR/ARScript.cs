@@ -69,8 +69,7 @@ public class ARScript : AbstractBase
         texture.filterMode = FilterMode.Point;
 
         _heatmapRenderer.sprite = Sprite.Create(texture, new Rect(0f, 0f, width, height), Vector2.zero, 1f);
-        _heatmapRenderer.transform.localScale = GetHeatmapPosition(0f, 0f, width, height);
-        _heatmapRenderer.transform.Rotate(90, 0, 0);
+        _heatmapRenderer.transform.position = new Vector3(1 - width, 1.5f, 1f);
     }
 
     private static Vector3 GetHeatmapPosition(float x, float y, float width, float height)
