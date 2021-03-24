@@ -6,29 +6,37 @@ public class ARState
 {
     public ARState(
         bool isLoading,
+        int stepSize,
+        float threshold,
+        TimeSpan deltaMinutes,
+        ColorScale colorScale,
         GetFrameResponse current,
-        IEnumerable<GetFrameResponse> history,
-        TimeSpan delta,
-        Heatmap heatmap,
-        ColorScale colorScale = default)
+        IList<GetFrameResponse> history,
+        IList<GetSensorResponse> sensors)
     {
         IsLoading = isLoading;
+        StepSize = stepSize;
+        Threshold = threshold;
+        DeltaMinutes = deltaMinutes;
+        ColorScale = colorScale;
         Current = current;
         History = history;
-        Delta = delta;
-        Heatmap = heatmap;
-        ColorScale = colorScale;
+        Sensors = sensors;
     }
 
     public bool IsLoading { get; }
 
-    public GetFrameResponse Current { get; }
+    public int StepSize { get; }
 
-    public IEnumerable<GetFrameResponse> History { get; }
+    public float Threshold { get; }
 
-    public TimeSpan Delta { get; }
-
-    public Heatmap Heatmap { get; }
+    public TimeSpan DeltaMinutes { get; }
 
     public ColorScale ColorScale { get; }
+
+    public GetFrameResponse Current { get; }
+
+    public IList<GetFrameResponse> History { get; }
+
+    public IList<GetSensorResponse> Sensors { get; }
 }

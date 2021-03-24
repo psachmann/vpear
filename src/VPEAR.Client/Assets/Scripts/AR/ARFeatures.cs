@@ -15,9 +15,11 @@ public class ARFeature : Feature<ARState>
     {
         var current = new GetFrameResponse();
         var history = new List<GetFrameResponse>();
+        var sensors = new List<GetSensorResponse>();
         var deltaMinutes = TimeSpan.FromMinutes(60f);
-        var heatmap = new Heatmap(0, 0, TimeSpan.Zero, new List<GetFrameResponse>());
+        var stepSize = 10;
+        var treshold = 80f;
 
-        return new ARState(false, current, history, deltaMinutes, heatmap);
+        return new ARState(false, stepSize, treshold, deltaMinutes, ColorScale.RedToGreen, current, history, sensors);
     }
 }

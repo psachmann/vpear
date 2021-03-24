@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class SettingsScript : AbstractView
 {
     [SerializeField] private InputField _stepSizeInput;
+    [SerializeField] private InputField _thresholdInput;
     [SerializeField] private InputField _deltaMinutesInput;
     [SerializeField] private Dropdown _colorScelDropDown;
     [SerializeField] private Button _applyButton;
@@ -18,6 +19,7 @@ public class SettingsScript : AbstractView
         _arState = s_provider.GetRequiredService<IState<ARState>>();
         _arState.StateChanged += ARStateChanged;
         _stepSizeInput.contentType = InputField.ContentType.IntegerNumber;
+        _thresholdInput.contentType = InputField.ContentType.DecimalNumber;
         _deltaMinutesInput.contentType = InputField.ContentType.DecimalNumber;
         _applyButton.onClick.AddListener(OnApplyClick);
         _logoutButton.onClick.AddListener(OnLogoutAction);
@@ -33,13 +35,18 @@ public class SettingsScript : AbstractView
     private void ARStateChanged(object sender, ARState state)
     {
         _stepSizeInput.text = state.StepSize.ToString();
+        _thresholdInput.text = state.Threshold.ToString();
         _deltaMinutesInput.text = state.DeltaMinutes.ToString();
         _colorScelDropDown.value = (int)state.ColorScale;
     }
 
     private void OnApplyClick()
     {
-        _dispatcher.Dispatch(new ApplySettingsAction(int.Parse(_stepSizeInput.text),float.Parse(_deltaMinutesInput.text), (ColorScale)_colorScelDropDown.value));
+        _dispatcher.Dispatch(new ApplySettingsAction(
+            int.Parse(_stepSizeInput.text),
+            float.Parse(_thresholdInput.text),
+            float.Parse(_deltaMinutesInput.text),
+            (ColorScale)_colorScelDropDown.value));
     }
 
     private void OnLogoutAction()

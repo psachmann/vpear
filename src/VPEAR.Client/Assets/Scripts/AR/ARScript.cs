@@ -1,7 +1,10 @@
 using Fluxor;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using VPEAR.Core.Wrappers;
 
 public class ARScript : AbstractBase
 {
@@ -11,24 +14,19 @@ public class ARScript : AbstractBase
     [SerializeField] private SpriteRenderer _heatmapRenderer;
 
     private IState<ARState> _arState;
-    private IState<SettingsState> _settingsState;
-    private int _stepSize;
-    private float _deltaMinutes;
-    private ColorScale _colorScale;
+    private ARState _arStateValue;
 
     private void Start()
     {
         _arState = s_provider.GetRequiredService<IState<ARState>>();
         _arState.StateChanged += ARStateChanged;
-        _settingsState = s_provider.GetRequiredService<IState<SettingsState>>();
-        _settingsState.StateChanged += SettingsStateChanges;
+        _arStateValue = _arState.Value;
         _forwardButton.onClick.AddListener(OnForwardClick);
         _backwardButton.onClick.AddListener(OnBackwardClick);
 
         Initialize();
 
-        ARStateChanged(this, _arState.Value);
-        SettingsStateChanges(this, _settingsState.Value);
+        // ARStateChanged(this, _arStateValue);
     }
 
     private void Update()
@@ -42,51 +40,59 @@ public class ARScript : AbstractBase
     private void OnDestroy()
     {
         _arState.StateChanged -= ARStateChanged;
-        _settingsState.StateChanged -= SettingsStateChanges;
     }
 
     private void ARStateChanged(object sender, ARState state)
     {
-    }
-
-    private void SettingsStateChanges(object sender, SettingsState state)
-    {
-        _stepSize = state.StepSize;
-        _deltaMinutes = state.DeltaMinutes;
-        _colorScale = state.ColorScale;
+        _arStateValue = state;
+        _frameDateText.text = state.Current.ToString();
+        // UpdateSprite();
     }
 
     private void OnBackwardClick()
     {
-        _dispatcher.Dispatch(new MoveBackwardAction(_stepSize));
+        _dispatcher.Dispatch(new MoveBackwardAction(_arStateValue.StepSize));
     }
 
     private void OnForwardClick()
     {
-        _dispatcher.Dispatch(new MoveForwardAction(_stepSize));
+        _dispatcher.Dispatch(new MoveForwardAction(_arStateValue.StepSize));
+    }
+
+    private void UpdateSprite()
+    {
+        var values = Heatmap.CreateHeatmapValues(
+            (int)_arStateValue.Sensors.FirstOrDefault()?.Width,
+            (int)_arStateValue.Sensors.FirstOrDefault()?.Height,
+            _arStateValue.DeltaMinutes,
+            _arStateValue.Current,
+            _arStateValue.History);
+
+        var sprite = Heatmap.CreateHeatmapSprite(
+            (float)_arStateValue.Sensors.FirstOrDefault()?.Minimum,
+            (float)_arStateValue.Sensors.FirstOrDefault()?.Maximum,
+            _arStateValue.Threshold,
+            values,
+            _arStateValue.ColorScale);
+
+        _heatmapRenderer.sprite = sprite;
     }
 
     private void Initialize()
     {
-        var width = 20;
+        var width = 10;
         var height = 10;
-        var texture = new Texture2D(width, height);
-        var colors = new Color32[width * height];
+        var values = new float[width, height];
 
         for (var x = 0; x < width; x++)
         {
             for (var y = 0; y < height; y++)
             {
-                colors[x + y * width] = Color.Lerp(Color.black, Color.white, (float)y / width);
+                values[x, y] = (float)y * width + 9;
             }
         }
 
-        texture.SetPixels32(colors);
-        texture.Apply();
-        texture.wrapMode = TextureWrapMode.Clamp;
-        texture.filterMode = FilterMode.Point;
-
-        _heatmapRenderer.sprite = Sprite.Create(texture, new Rect(0f, 0f, width, height), Vector2.zero, 1f);
+        _heatmapRenderer.sprite = Heatmap.CreateHeatmapSprite(0f, 100f, 80f, values, ColorScale.RedToGreen);
         _heatmapRenderer.transform.position = new Vector3(1 - width, 1.5f, 1f);
     }
 }

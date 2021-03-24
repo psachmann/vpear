@@ -13,12 +13,15 @@ public class FetchingFramesAction
 
 public class FetchedFramesAction
 {
-    public FetchedFramesAction(IEnumerable<GetFrameResponse> fetchedFrames)
+    public FetchedFramesAction(IList<GetFrameResponse> fetchedFrames, IList<GetSensorResponse> fetchedSensors)
     {
         FetchedFrames = fetchedFrames;
+        FetchesSensors = fetchedSensors;
     }
 
-    public IEnumerable<GetFrameResponse> FetchedFrames { get; }
+    public IList<GetFrameResponse> FetchedFrames { get; }
+
+    public IList<GetSensorResponse> FetchesSensors { get; }
 }
 
 public class MoveBackwardAction
