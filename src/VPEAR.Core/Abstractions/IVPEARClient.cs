@@ -4,7 +4,6 @@
 // </copyright>
 
 using System;
-using System.Net.Http;
 using System.Threading.Tasks;
 using VPEAR.Core.Wrappers;
 
@@ -139,14 +138,21 @@ namespace VPEAR.Core.Abstractions
         Task<Container<GetUserResponse>> GetUsersAsync(string role = null);
 
         /// <summary>
-        /// Updates the user information. Can only be used by an admin.
+        /// The admin can verify a user.
         /// </summary>
         /// <param name="name">The user name.</param>
-        /// <param name="oldPassword">The old user password.</param>
-        /// <param name="newPassword">The new user password.</param>
-        /// <param name="isVerified">Indicates if the user is verified or not.</param>
+        /// <param name="isVerified">Indicates, if the user should be verified.</param>
         /// <returns>A boolean, which indicates the success of the operation.</returns>
-        Task<bool> PutUserAsync(string name, string oldPassword = default, string newPassword = default, bool isVerified = false);
+        Task<bool> PutVerifyAsync(string name, bool isVerified);
+
+        /// <summary>
+        /// The user can change his own password.
+        /// </summary>
+        /// <param name="name">The user name.</param>
+        /// <param name="oldPassword">The old password.</param>
+        /// <param name="newPassword">The new password.</param>
+        /// <returns>A boolean, which indicates the success of the operation.</returns>
+        Task<bool> PutPasswordAsync(string name, string oldPassword, string newPassword);
 
         /// <summary>
         /// Logs the user in and acquires an access token.

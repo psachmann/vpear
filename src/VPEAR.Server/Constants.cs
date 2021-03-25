@@ -86,6 +86,8 @@ namespace VPEAR.Server
             public const string WifiRoute = BaseRoute + "device/wifi";
             public const string FirmwareRoute = BaseRoute + "device/firmware";
             public const string UsersRoute = BaseRoute + "user";
+            public const string VerifyRoute = BaseRoute + "user/verify";
+            public const string PasswordRoute = BaseRoute + "user/password";
             public const string RegisterRoute = BaseRoute + "user/register";
             public const string LoginRoute = BaseRoute + "user/login";
         }

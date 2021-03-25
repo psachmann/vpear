@@ -10,6 +10,7 @@ using VPEAR.Core.Entities;
 using VPEAR.Server.Data;
 using Xunit;
 
+/*
 namespace VPEAR.Server.Test
 {
     [Collection("DatabaseTest")]
@@ -68,3 +69,4 @@ namespace VPEAR.Server.Test
         }
     }
 }
+*/

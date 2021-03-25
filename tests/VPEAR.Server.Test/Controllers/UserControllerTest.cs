@@ -42,22 +42,15 @@ namespace VPEAR.Server.Test.Controllers
         }
 
         [Theory]
-        [InlineData(false, null, null)]
-        [InlineData(true, null, null)]
-        [InlineData(false, "newPassword", "oldPassword")]
-        [InlineData(true, "newPassword", "oldPassword")]
-        public async Task OnPutAsync204NoContentTest(
-            bool isVerified,
-            string? newPassword,
-            string? oldPassword)
+        [InlineData(false)]
+        [InlineData(true)]
+        public async Task OnPutAsync204NoContentTest(bool isVerified)
         {
-            var request = new PutUserRequest()
+            var request = new PutVerifyRequest()
             {
                 IsVerified = isVerified,
-                NewPassword = newPassword,
-                OldPassword = oldPassword,
             };
-            var result = await this.controller.OnPutAsync(Mocks.User.Name, request);
+            var result = await this.controller.OnPutVerifyAsync(Mocks.User.Name, request);
             var objectResult = Assert.IsType<ObjectResult>(result);
 
             Assert.Null(objectResult.Value);
@@ -66,7 +59,7 @@ namespace VPEAR.Server.Test.Controllers
         [Fact]
         public async Task OnPutAsync404NotFoundTest()
         {
-            var result = await this.controller.OnPutAsync(Mocks.NotExisting.Id.ToString(), new PutUserRequest());
+            var result = await this.controller.OnPutVerifyAsync(Mocks.NotExisting.Id.ToString(), new PutVerifyRequest());
             var objectResult = Assert.IsType<ObjectResult>(result);
             var response = Assert.IsAssignableFrom<ErrorResponse>(objectResult.Value);
 

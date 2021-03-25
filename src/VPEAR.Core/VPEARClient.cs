@@ -244,19 +244,46 @@ namespace VPEAR.Core
         }
 
         /// <inheritdoc/>
-        public async Task<bool> PutUserAsync(string name, string oldPassword = default, string newPassword = default, bool isVerified = false)
+        public async Task<bool> PutVerifyAsync(string name, bool isVerified)
         {
             if (string.IsNullOrEmpty(name))
             {
                 throw new ArgumentException("Is null or empty.", nameof(name));
             }
 
-            var uri = $"{ApiPrefix}/user?name={name}";
-            var payload = new PutUserRequest()
+            var uri = $"{ApiPrefix}/user/verify?name={name}";
+            var payload = new PutVerifyRequest()
             {
                 IsVerified = isVerified,
+            };
+
+            return await this.PutAsync(uri, payload);
+        }
+
+        /// <inheritdoc/>
+        public async Task<bool> PutPasswordAsync(string name, string oldPassword, string newPassword)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException("Is null or empty.", nameof(name));
+            }
+
+            if (string.IsNullOrEmpty(oldPassword))
+            {
+                throw new ArgumentException("Is null or empty.", nameof(oldPassword));
+            }
+
+            if (string.IsNullOrEmpty(newPassword))
+            {
+                throw new ArgumentException("Is null or empty.", nameof(newPassword));
+            }
+
+            var uri = $"{ApiPrefix}/user/password?name={name}";
+            var payload = new PutPasswordRequest()
+            {
                 NewPassword = newPassword,
                 OldPassword = oldPassword,
+                Token = this.token,
             };
 
             return await this.PutAsync(uri, payload);
@@ -389,8 +416,7 @@ namespace VPEAR.Core
                     }
                     else
                     {
-                        var error = await response.Content.ReadFromJsonAsync<ErrorResponse>();
-                        this.errorMessage = string.Join(" ", error.Messages);
+                        this.errorMessage = await response.Content.ReadAsStringAsync();
 
                         return default;
                     }
@@ -419,8 +445,7 @@ namespace VPEAR.Core
                     }
                     else
                     {
-                        var error = await response.Content.ReadFromJsonAsync<ErrorResponse>();
-                        this.errorMessage = string.Join(" ", error.Messages);
+                        this.errorMessage = await response.Content.ReadAsStringAsync();
 
                         return default;
                     }
@@ -449,8 +474,7 @@ namespace VPEAR.Core
                     }
                     else
                     {
-                        var error = await response.Content.ReadFromJsonAsync<ErrorResponse>();
-                        this.errorMessage = string.Join(" ", error.Messages);
+                        this.errorMessage = await response.Content.ReadAsStringAsync();
 
                         return default;
                     }
@@ -479,8 +503,7 @@ namespace VPEAR.Core
                     }
                     else
                     {
-                        var error = await response.Content.ReadFromJsonAsync<ErrorResponse>();
-                        this.errorMessage = string.Join(" ", error.Messages);
+                        this.errorMessage = await response.Content.ReadAsStringAsync();
 
                         return default;
                     }

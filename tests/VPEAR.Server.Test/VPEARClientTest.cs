@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using VPEAR.Core;
 using VPEAR.Core.Abstractions;
@@ -145,11 +144,11 @@ namespace VPEAR.Server.Test
             using var client = this.CreateClient();
             var result = await client.LoginAsync(AdminName, AdminPassword);
 
-            Assert.True(result, "Login should be successful.");
+            Assert.True(result, client.ErrorMessage);
 
-            result = await client.PutUserAsync(UserName, isVerified: true);
+            result = await client.PutVerifyAsync(UserName, true);
 
-            Assert.True(result, "Verify should be successful.");
+            Assert.True(result, client.ErrorMessage);
         }
 
         [Priority(104)]
@@ -157,11 +156,11 @@ namespace VPEAR.Server.Test
         public async Task UpdatePasswordAsyncTest()
         {
             using var client = this.CreateClient();
-            var result = await client.LoginAsync(AdminName, AdminPassword);
+            var result = await client.LoginAsync(UserName, UserPassword);
 
             Assert.True(result, "Login should be successful.");
 
-            result = await client.PutUserAsync(UserName, UserPassword, NewUserPassword);
+            result = await client.PutPasswordAsync(UserName, UserPassword, NewUserPassword);
 
             Assert.True(result, "Put user should be successful.");
         }

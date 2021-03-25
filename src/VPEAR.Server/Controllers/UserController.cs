@@ -61,23 +61,47 @@ namespace VPEAR.Server.Controllers
         }
 
         /// <summary>
-        /// The admin can update a user.
+        /// The admin can verify a user.
         /// </summary>
         /// <param name="name">The user name.</param>
         /// <param name="request">The request data.</param>
         /// <returns>Http status code, which indicates the operation result.</returns>
         [HttpPut]
         [Authorize(Roles = Roles.AdminRole)]
+        [Route(Routes.VerifyRoute)]
         [Produces(Defaults.DefaultResponseType)]
         [SwaggerResponse(StatusCodes.Status204NoContent, "User was updated and saved to db.", typeof(Null))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(ErrorResponse))]
         [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is not authorized.", typeof(Null))]
         [SwaggerResponse(StatusCodes.Status404NotFound, "No user found.", typeof(ErrorResponse))]
-        public async Task<IActionResult> OnPutAsync([FromQuery, Required] string name, [FromBody, Required] PutUserRequest request)
+        public async Task<IActionResult> OnPutVerifyAsync([FromQuery, Required] string name, [FromBody, Required] PutVerifyRequest request)
         {
             this.logger.LogDebug("{@User}: {@Request}", name, request);
 
-            var result = await this.service.PutAsync(name, request);
+            var result = await this.service.PutVerifyAsync(name, request);
+
+            return result.IsSuccess ? this.StatusCode(result.StatusCode, result.Value) : this.StatusCode(result.StatusCode, result.Error);
+        }
+
+        /// <summary>
+        /// The user can change his own password.
+        /// </summary>
+        /// <param name="name">The user name.</param>
+        /// <param name="request">The request data.</param>
+        /// <returns>Http status code, which indicates the operation result.</returns>
+        [HttpPut]
+        [Authorize]
+        [Route(Routes.PasswordRoute)]
+        [Produces(Defaults.DefaultResponseType)]
+        [SwaggerResponse(StatusCodes.Status204NoContent, "The user password was changed.", typeof(Null))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(ErrorResponse))]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is not authorized.", typeof(Null))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "No user found.", typeof(ErrorResponse))]
+        public async Task<IActionResult> OnPutPassword([FromQuery, Required] string name, [FromBody, Required] PutPasswordRequest request)
+        {
+            this.logger.LogDebug("Change password {@User}", name);
+
+            var result = await this.service.PutPasswordAsync(name, request);
 
             return result.IsSuccess ? this.StatusCode(result.StatusCode, result.Value) : this.StatusCode(result.StatusCode, result.Error);
         }
@@ -94,7 +118,7 @@ namespace VPEAR.Server.Controllers
         [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is not authorized.", typeof(Null))]
         [SwaggerResponse(StatusCodes.Status403Forbidden, "Last admin will not be deleted.", typeof(ErrorResponse))]
         [SwaggerResponse(StatusCodes.Status404NotFound, "No user found.", typeof(ErrorResponse))]
-        public async Task<IActionResult> OnDeleteAsync([FromQuery, Required] string name = "")
+        public async Task<IActionResult> OnDeleteAsync([FromQuery, Required] string name)
         {
             this.logger.LogDebug("{@User}", name);
 
