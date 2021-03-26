@@ -19,9 +19,4 @@ public static partial class Reducers
     {
         return new LoginState(string.Empty);
     }
-
-    public static LoginState ReduceRegisterAction(LoginState state, RegisterAction action)
-    {
-        return new LoginState(action.Name);
-    }
 }

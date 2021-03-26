@@ -56,29 +56,3 @@ public class LogoutEffect : Effect<LogoutAction>
         return Task.CompletedTask;
     }
 }
-
-public class RegisterEffect : Effect<RegisterAction>
-{
-    private readonly IVPEARClient _client;
-
-    public RegisterEffect(IVPEARClient client)
-    {
-        _client = client;
-    }
-
-    public override async Task HandleAsync(RegisterAction action, IDispatcher dispatcher)
-    {
-        if (await _client.RegisterAsync(action.Name, action.Password))
-        {
-            dispatcher.Dispatch(new LogoutAction());
-            dispatcher.Dispatch(new ShowPopupAction(Constants.RegisterTitleText, Constants.RegisterSucceededMessageText,
-                () => dispatcher.Dispatch(new ClosePopupAction())));
-        }
-        else
-        {
-            dispatcher.Dispatch(new LogoutAction());
-            dispatcher.Dispatch(new ShowPopupAction(Constants.RegisterTitleText, _client.ErrorMessage,
-                () => dispatcher.Dispatch(new ClosePopupAction())));
-        }
-    }
-}

@@ -66,6 +66,45 @@ public static class Heatmap
         return Sprite.Create(texture, new Rect(0f, 0f, width, height), Vector2.zero, pixelsPerUnit);
     }
 
+    public static Color32[] CreateHeatmapColors(
+        float minValue,
+        float maxValue,
+        float threshold,
+        float[,] values,
+        ColorScale colorScale)
+    {
+        var width = values.GetLength(0);
+        var height = values.GetLength(1);
+        var colorArray = new Color32[width * height];
+
+        for (var x = 0; x < width; x++)
+        {
+            for (var y = 0; y < height; y++)
+            {
+                colorArray[x + y * width] = GetColor(minValue, maxValue, threshold, values[x, y], GetColorScale(colorScale));
+            }
+        };
+
+        return colorArray;
+    }
+
+    public static Texture2D CreateHeatmapTexture(
+        int width,
+        int height,
+        Color32[] colors,
+        FilterMode filterMode = FilterMode.Point,
+        TextureWrapMode wrapMode = TextureWrapMode.Clamp)
+    {
+        var texture = new Texture2D(width, height);
+
+        texture.SetPixels32(colors);
+        texture.Apply();
+        texture.filterMode = filterMode;
+        texture.wrapMode = wrapMode;
+
+        return texture;
+    }
+
     public static float[,] CreateHeatmapValues(
         int width,
         int height,

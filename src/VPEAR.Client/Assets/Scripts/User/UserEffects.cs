@@ -48,7 +48,9 @@ public class UpdatingUserEffect : Effect<UpdatingUserAction>
 
     public override async Task HandleAsync(UpdatingUserAction action, IDispatcher dispatcher)
     {
-        if (await _client.PutUserAsync(action.User.Name, action.OldPassword, action.NewPassword, action.IsVerfied))
+        throw new System.NotImplementedException();
+
+        if (await _client.PutVerifyAsync(action.User.Name, action.IsVerfied))
         {
             action.User.IsVerified = action.IsVerfied;
             dispatcher.Dispatch(new UpdatedUserAction(action.User));

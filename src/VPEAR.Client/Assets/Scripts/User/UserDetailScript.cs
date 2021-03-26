@@ -9,8 +9,6 @@ public class UserDetailScript : AbstractView
     [SerializeField] private Text _userNameText;
     [SerializeField] private Text _userRolesText;
     [SerializeField] private Toggle _userIsVerifiedToggle;
-    [SerializeField] private InputField _oldPasswordInput;
-    [SerializeField] private InputField _newPasswordInput;
     [SerializeField] private Button _saveButton;
     [SerializeField] private Button _deleteButton;
 
@@ -20,8 +18,6 @@ public class UserDetailScript : AbstractView
     {
         _userDetailState = s_provider.GetRequiredService<IState<UserDetailState>>();
         _userDetailState.StateChanged += UserDetailStateChanged;
-        _oldPasswordInput.contentType = InputField.ContentType.Password;
-        _newPasswordInput.contentType = InputField.ContentType.Password;
         _saveButton.onClick.AddListener(OnSaveClick);
         _deleteButton.onClick.AddListener(OnDeleteClick);
 
@@ -44,17 +40,7 @@ public class UserDetailScript : AbstractView
 
     private void OnSaveClick()
     {
-        if (string.IsNullOrEmpty(_oldPasswordInput.text) || string.IsNullOrEmpty(_newPasswordInput.text))
-        {
-            _dispatcher.Dispatch(new UpdatingUserAction(_userDetailState.Value.User, _userIsVerifiedToggle.isOn));
-        }
-        else
-        {
-            _dispatcher.Dispatch(new UpdatingUserAction(_userDetailState.Value.User, _userIsVerifiedToggle.isOn, _oldPasswordInput.text, _newPasswordInput.text));
-        }
-
-        _oldPasswordInput.text = string.Empty;
-        _newPasswordInput.text = string.Empty;
+        _dispatcher.Dispatch(new UpdatingUserAction(_userDetailState.Value.User, _userIsVerifiedToggle.isOn));
     }
 
     private void OnDeleteClick()

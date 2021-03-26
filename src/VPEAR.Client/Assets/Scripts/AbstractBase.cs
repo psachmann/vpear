@@ -4,6 +4,7 @@ using Serilog;
 using System;
 using System.Net.Http;
 using UnityEngine;
+using VPEAR.Core;
 using VPEAR.Core.Abstractions;
 using ILogger = Serilog.ILogger;
 
@@ -25,7 +26,7 @@ public abstract class AbstractBase : MonoBehaviour
             .CreateLogger();
 
         // setting up http client
-        var client = new Client(Constants.ServerBaseAddress, new HttpClient());
+        var client = new VPEARClient(Constants.ServerBaseAddress, new HttpClient());
 
         // setting up dependency injection
         var services = new ServiceCollection()

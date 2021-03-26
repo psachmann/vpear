@@ -84,6 +84,11 @@ public class NavigationService
     public void ClearHistory()
     {
         _history.Clear();
+
+        foreach (var view in s_views)
+        {
+            view.Value.Hide();
+        }
     }
 
     public void ChangeScene(int sceneId)

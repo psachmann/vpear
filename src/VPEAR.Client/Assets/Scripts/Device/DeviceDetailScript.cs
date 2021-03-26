@@ -10,7 +10,6 @@ public class DeviceDetailScript : AbstractView
 {
     [SerializeField] private Text _idText;
     [SerializeField] private Text _addressText;
-    [SerializeField] private Text _sensorsText;
     [SerializeField] private Toggle _spotFilterToggle;
     [SerializeField] private Toggle _smoothFilterToggle;
     [SerializeField] private Toggle _noiseFilterToggle;
@@ -44,7 +43,6 @@ public class DeviceDetailScript : AbstractView
     {
         _idText.text = state.Device.Id;
         _addressText.text = state.Device.Address;
-        _sensorsText.text = state.Device.RequiredSensors.ToString();
         _spotFilterToggle.isOn = state.Filters.Spot;
         _smoothFilterToggle.isOn = state.Filters.Smooth;
         _noiseFilterToggle.isOn = state.Filters.Noise;
