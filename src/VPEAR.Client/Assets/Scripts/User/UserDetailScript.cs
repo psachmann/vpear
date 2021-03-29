@@ -35,6 +35,15 @@ public class UserDetailScript : AbstractView
         _userNameText.text = state.User.Name;
         _userRolesText.text = string.Join(", ", state.User.Roles);
         _userIsVerifiedToggle.isOn = state.User.IsVerified;
+
+        if (state.User.IsVerified)
+        {
+            _userIsVerifiedToggle.enabled = false;
+        }
+        else
+        {
+            _userIsVerifiedToggle.enabled = true;
+        }
     }
 
 

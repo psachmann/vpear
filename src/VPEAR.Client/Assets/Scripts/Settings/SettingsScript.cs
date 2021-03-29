@@ -66,11 +66,9 @@ public class SettingsScript : AbstractView
             float.Parse(_deltaMinutesInput.text),
             (ColorScale)_colorScelDropDown.value));
 
-        if (string.IsNullOrEmpty(_oldPasswordInput.text) || string.IsNullOrEmpty(_newPasswordInput.text))
-        {
-            throw new System.NotImplementedException();
-
-            // _dispatcher.Dispatch(new UpdatingUserAction(_loginStateValue.Name, _loginStateValue.IsSignedIn, _oldPasswordInput.text, _newPasswordInput.text));
+        if (!string.IsNullOrEmpty(_oldPasswordInput.text) || !string.IsNullOrEmpty(_newPasswordInput.text))
+        {   
+            _dispatcher.Dispatch(new ChangePasswordAction(_loginStateValue.Name, _oldPasswordInput.text, _newPasswordInput.text));
         }
 
         _oldPasswordInput.text = string.Empty;

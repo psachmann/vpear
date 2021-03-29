@@ -51,7 +51,8 @@ public class LogoutEffect : Effect<LogoutAction>
     {
         _client.Logout();
         _navigationService.ClearHistory();
-        _navigationService.NavigateTo(Constants.LoginViewName);
+
+        dispatcher.Dispatch(new NavigateToAction(Constants.LoginViewName));
 
         return Task.CompletedTask;
     }

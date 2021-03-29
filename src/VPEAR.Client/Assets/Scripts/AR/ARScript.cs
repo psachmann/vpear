@@ -32,6 +32,7 @@ public class ARScript : AbstractBase
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             _dispatcher.Dispatch(new ChangeSceneAction(Constants.MenuSceneId));
+            _dispatcher.Dispatch(new NavigateToAction(Constants.DeviceListViewName));
         }
     }
 

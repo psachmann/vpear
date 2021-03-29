@@ -18,3 +18,19 @@ public class ApplySettingsAction
 
     public ColorScale ColorScale { get; }
 }
+
+public class ChangePasswordAction
+{
+    public ChangePasswordAction(string userName, string oldPassword, string newPassword)
+    {
+        UserName = userName;
+        OldPassword = oldPassword;
+        NewPassword = newPassword;
+    }
+
+    public string UserName { get; }
+
+    public string OldPassword { get; }
+
+    public string NewPassword { get; }
+}
