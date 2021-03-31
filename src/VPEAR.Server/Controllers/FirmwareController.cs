@@ -68,7 +68,7 @@ namespace VPEAR.Server.Controllers
         /// Updates the device firmware information.
         /// </summary>
         /// <remarks>
-        /// TODO: describe the update process more.
+        /// Look into the BodiTrak 2 Pro api documentation for more information.
         /// </remarks>
         /// <param name="id">The device id as 32 digit hex string.</param>
         /// <param name="request">The request data.</param>

@@ -65,9 +65,6 @@ namespace VPEAR.Server.Controllers
         /// <summary>
         /// Updates the device information.
         /// </summary>
-        /// <remarks>
-        /// TODO: Describe the request data.
-        /// </remarks>
         /// <param name="id">The device id as 32 digit hex string.</param>
         /// <param name="request">The request data.</param>
         /// <returns>Http status code, which indicates the operation result.</returns>
@@ -90,9 +87,6 @@ namespace VPEAR.Server.Controllers
         /// <summary>
         /// Searches for devices.
         /// </summary>
-        /// <remarks>
-        /// TODO: Describe the request data.
-        /// </remarks>
         /// <param name="request">The request data.</param>
         /// <returns>Http status code, which indicates the operation result.</returns>
         [HttpPost]
