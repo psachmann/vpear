@@ -3,14 +3,17 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using VPEAR.Core;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Entities;
+using VPEAR.Core.Extensions;
 using VPEAR.Core.Wrappers;
 using VPEAR.Server.Controllers;
 using static VPEAR.Server.Constants;
@@ -51,78 +54,55 @@ namespace VPEAR.Server.Services
         public async Task<Result<Container<GetFrameResponse>>> GetFramesAsync(Guid id, int start, int count)
         {
             var device = await this.devices.GetAsync(id);
-            var payload = new Container<GetFrameResponse>();
 
             if (device == null)
             {
                 return new Result<Container<GetFrameResponse>>(HttpStatusCode.NotFound, ErrorMessages.DeviceNotFound);
             }
 
-            await this.devices.GetCollectionAsync(device, device => device.Frames);
-
-            var frames = device.Frames.Distinct()
-                .OrderBy(frame => frame.CreatedAt)
-                .ToList();
-
-            // checking if start is to small or big and count to small
-            if (start < 0 || start >= frames.Count || count < 0)
+            // checking for invalid values
+            if (start < 0 || start >= device.Frames.Count || count < 0)
             {
                 return new Result<Container<GetFrameResponse>>(HttpStatusCode.BadRequest, ErrorMessages.BadRequest);
             }
 
-            if (count > MaxCount)
+            var statusCode = HttpStatusCode.BadRequest;
+
+            // prevent out of range exceptions
+            if (start + count <= device.Frames.Count)
             {
-                count = MaxCount;
-            }
-
-            if (start + count <= frames.Count)
-            {
-                payload.Start = start;
-                payload.Count = frames.Count;
-
-                foreach (var frame in frames.ToList().GetRange(start, count))
-                {
-                    await this.frames.GetReferenceAsync(frame, frame => frame.Filter);
-
-                    payload.Items.Add(new GetFrameResponse()
-                    {
-                        Readings = frame.Readings,
-                        Time = frame.CreatedAt,
-                        Filter = new GetFiltersResponse()
-                        {
-                            Noise = frame.Filter.Noise,
-                            Smooth = frame.Filter.Smooth,
-                            Spot = frame.Filter.Spot,
-                        },
-                    });
-                }
-
-                return new Result<Container<GetFrameResponse>>(HttpStatusCode.OK, payload);
+                statusCode = HttpStatusCode.OK;
             }
             else
             {
-                payload.Start = start;
-                payload.Count = frames.Count;
-
-                foreach (var frame in frames.ToList().GetRange(start, device.Frames.Count - start))
-                {
-                    await this.frames.GetReferenceAsync(frame, frame => frame.Filter);
-
-                    payload.Items.Add(new GetFrameResponse()
-                    {
-                        Readings = frame.Readings,
-                        Time = frame.CreatedAt,
-                        Filter = new GetFiltersResponse()
-                        {
-                            Noise = frame.Filter.Noise,
-                            Smooth = frame.Filter.Smooth,
-                            Spot = frame.Filter.Spot,
-                        },
-                    });
-                }
-
-                return new Result<Container<GetFrameResponse>>(HttpStatusCode.PartialContent, payload);
+                statusCode = HttpStatusCode.PartialContent;
+                count = device.Frames.Count - start;
             }
+
+            var frames = device.Frames
+                .Distinct()
+                .OrderBy(frame => frame.CreatedAt)
+                .ToList();
+            var items = new List<GetFrameResponse>();
+
+            foreach (var frame in frames.GetRange(start, count))
+            {
+                var response = new GetFrameResponse()
+                {
+                    Filter = new GetFiltersResponse()
+                    {
+                        Noise = frame.Filter.Noise,
+                        Smooth = frame.Filter.Smooth,
+                        Spot = frame.Filter.Spot,
+                    },
+                    Readings = frame.Readings.FromJsonString<IList<IList<int>>>(),
+                    Time = frame.CreatedAt,
+                };
+
+                items.Add(response);
+            }
+
+            return new Result<Container<GetFrameResponse>>(statusCode, new Container<GetFrameResponse>(start, device.Frames.Count, items));
         }
 
         /// <inheritdoc/>
@@ -150,14 +130,11 @@ namespace VPEAR.Server.Services
             if (await client.CanConnectAsync())
             {
                 var sensors = await client.GetSensorsAsync();
-                var payload = new Container<GetSensorResponse>()
-                {
-                    Count = sensors.Count,
-                };
+                var items = new List<GetSensorResponse>();
 
                 foreach (var sensor in sensors)
                 {
-                    payload.Items.Add(new GetSensorResponse()
+                    items.Add(new GetSensorResponse()
                     {
                         Columns = sensor.Columns,
                         Height = sensor.Height,
@@ -170,7 +147,7 @@ namespace VPEAR.Server.Services
                     });
                 }
 
-                return new Result<Container<GetSensorResponse>>(HttpStatusCode.OK, payload);
+                return new Result<Container<GetSensorResponse>>(HttpStatusCode.OK, new Container<GetSensorResponse>(0, items));
             }
             else
             {

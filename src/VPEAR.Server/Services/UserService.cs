@@ -84,7 +84,7 @@ namespace VPEAR.Server.Services
             if (role == null)
             {
                 var users = new Dictionary<string, IdentityUser>();
-                var payload = new Container<GetUserResponse>();
+                var items = new List<GetUserResponse>();
 
                 foreach (var admin in await this.users.GetUsersInRoleAsync(Roles.AdminRole))
                 {
@@ -98,7 +98,7 @@ namespace VPEAR.Server.Services
 
                 foreach (var user in users)
                 {
-                    payload.Items.Add(new GetUserResponse()
+                    items.Add(new GetUserResponse()
                     {
                         Name = user.Value.UserName,
                         Id = user.Value.Id,
@@ -107,16 +107,16 @@ namespace VPEAR.Server.Services
                     });
                 }
 
-                return new Result<Container<GetUserResponse>>(HttpStatusCode.OK, payload);
+                return new Result<Container<GetUserResponse>>(HttpStatusCode.OK, new Container<GetUserResponse>(0, items));
             }
             else
             {
                 var users = await this.users.GetUsersInRoleAsync(role);
-                var payload = new Container<GetUserResponse>();
+                var items = new List<GetUserResponse>();
 
                 foreach (var user in users)
                 {
-                    payload.Items.Add(new GetUserResponse()
+                    items.Add(new GetUserResponse()
                     {
                         Name = user.UserName,
                         Id = user.Id,
@@ -125,7 +125,7 @@ namespace VPEAR.Server.Services
                     });
                 }
 
-                return new Result<Container<GetUserResponse>>(HttpStatusCode.OK, payload);
+                return new Result<Container<GetUserResponse>>(HttpStatusCode.OK, new Container<GetUserResponse>(0, items));
             }
         }
 

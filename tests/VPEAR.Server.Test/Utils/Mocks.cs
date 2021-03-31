@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using VPEAR.Core;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Entities;
+using VPEAR.Core.Extensions;
 using VPEAR.Core.Wrappers;
 using static VPEAR.Server.Constants;
 
@@ -384,7 +385,7 @@ namespace VPEAR.Server.Test
                     Filter = filter,
                     Id = id,
                     Index = 1,
-                    Readings = new List<IList<int>>(),
+                    Readings = new List<IList<int>>().ToJsonString(),
                     Time = "time",
                 };
 

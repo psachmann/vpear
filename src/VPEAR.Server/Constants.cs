@@ -15,7 +15,7 @@ namespace VPEAR.Server
             public const string DefaultResponseType = "application/json";
             public const string DefaultAdminName = "admin";
             public const string DefaultAdminPassword = "Passw0rd?";
-            public const double DefaultHttpTimeout = 10000.0;
+            public const double DefaultHttpTimeout = 1000.0;
         }
 
         public static class WifiModes

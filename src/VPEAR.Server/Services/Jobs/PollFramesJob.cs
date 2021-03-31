@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using VPEAR.Core;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Entities;
+using VPEAR.Core.Extensions;
 using VPEAR.Core.Wrappers;
 
 namespace VPEAR.Server.Services.Jobs
@@ -77,7 +78,7 @@ namespace VPEAR.Server.Services.Jobs
                             Device = device,
                             Filter = device.Filter,
                             Index = frame.Id,
-                            Readings = frame.Readings,
+                            Readings = frame.Readings.ToJsonString(),
                             Time = frame.Time,
                         });
                     }

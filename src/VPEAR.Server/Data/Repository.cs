@@ -81,7 +81,7 @@ namespace VPEAR.Server.Data
         /// <inheritdoc/>
         public IQueryable<TEntity> Get()
         {
-            return this.context.Set<TEntity>().AsNoTracking();
+            return this.context.Set<TEntity>();
         }
 
         /// <inheritdoc/>

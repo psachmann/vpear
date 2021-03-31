@@ -438,15 +438,17 @@ namespace VPEAR.Server.Test
         }
 
         [Priority(501)]
-        [SkipIfNoDbOrDeviceFact(DeviceBaseAddress)]
+        [SkipIfNoDbFact]
         public async Task GetFramesAsyncTest()
         {
             using var client = this.CreateClient();
             await client.LoginAsync(UserName, NewUserPassword);
 
-            var result = await client.GetFramesAsync(await GetDeviceIdAsync(client), null, null);
+            var result = await client.GetFramesAsync(this.archivedDevices[0].Id.ToString(), 0, 1);
 
             Assert.NotNull(result);
+            Assert.InRange(result.Items.Count, 1, int.MaxValue);
+            Assert.InRange(result.Items[0].Readings.Count, 1, int.MaxValue);
         }
 
         [Priority(502)]

@@ -69,14 +69,11 @@ namespace VPEAR.Server.Services
             }
             else
             {
-                var payload = new Container<GetDeviceResponse>()
-                {
-                    Count = devices.Count,
-                };
+                var items = new List<GetDeviceResponse>();
 
                 devices.ForEach(device =>
                 {
-                    payload.Items.Add(new GetDeviceResponse()
+                    items.Add(new GetDeviceResponse()
                     {
                         Address = device.Address,
                         DisplayName = device.DisplayName,
@@ -87,7 +84,7 @@ namespace VPEAR.Server.Services
                     });
                 });
 
-                return new Result<Container<GetDeviceResponse>>(HttpStatusCode.OK, payload);
+                return new Result<Container<GetDeviceResponse>>(HttpStatusCode.OK, new Container<GetDeviceResponse>(0, items));
             }
         }
 

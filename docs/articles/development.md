@@ -25,7 +25,6 @@ The project uses the Cake build tool for the server, if you want to build the cl
 | build | --config=<Debug,Release> | Builds the project with the given config. Default config is Debug. |
 | test | --config=<Debug,Release> | Runs the unit tests with the given config. Default config is Debug. |
 | run | --config=<Debug,Release> | Runs the server with the given config. Default config is Debug. |
-| publish | --output=<OutputDir,> | Creates a deployment ready package in the output dir |
 | docs | --config=<Debug,Release> | Creates the projects documentation. Default config is Debug. |
 | migration-add | --config=<Debug,Release>, --name=<Name,> | Creates the migrations with the given name for the db. Default config is Debug. Only the Debug configuration has db seed data. The default name is Init. |
 | database-update | --config=<Debug,Release>, --name=<Name,> | Applies migrations with the given name to the db. Default config is Debug. Only the Debug configuration has db seed data. The default name is Init. |

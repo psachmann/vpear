@@ -30,7 +30,7 @@ namespace VPEAR.Core.Entities
         /// Gets or sets the readings.
         /// </summary>
         /// <value>The frame sensor values.</value>
-        public virtual IList<IList<int>> Readings { get; set; } = new List<IList<int>>();
+        public string Readings { get; set; }
 
         /// <summary>
         /// Gets or sets the foreign key.
