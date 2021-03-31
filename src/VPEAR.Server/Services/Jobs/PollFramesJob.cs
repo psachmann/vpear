@@ -62,8 +62,6 @@ namespace VPEAR.Server.Services.Jobs
                 var frames = new List<FrameResponse>();
                 var respone = await client.GetFramesAsync();
 
-                await this.devices.GetReferenceAsync(device, device => device.Filter);
-
                 if (respone != null && respone.Count != 0)
                 {
                     frames.AddRange(respone);

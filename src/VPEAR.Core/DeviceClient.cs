@@ -323,8 +323,6 @@ namespace VPEAR.Core
         /// <inheritdoc/>
         public async Task<bool> SyncAsync(Device device, IRepository<Device, Guid> devices)
         {
-            await devices.GetReferenceAsync(device, temp => temp.Filter);
-
             if (!await this.PutFiltersAsync(device.Filter.Spot, device.Filter.Smooth, device.Filter.Noise))
             {
                 return false;

@@ -164,13 +164,15 @@ namespace VPEAR.Server
         {
             services.AddDbContext<VPEARDbContext>(builder =>
             {
-                builder.UseMySql(
-                    Configuration.GetValue<string>("MariaDb:Connection"),
-                    new MySqlServerVersion(new Version(Configuration.GetValue<string>("MariaDb:Version"))),
-                    options =>
-                    {
-                        options.CharSetBehavior(CharSetBehavior.NeverAppend);
-                    });
+                builder
+                    .UseLazyLoadingProxies()
+                    .UseMySql(
+                        Configuration.GetValue<string>("MariaDb:Connection"),
+                        new MySqlServerVersion(new Version(Configuration.GetValue<string>("MariaDb:Version"))),
+                        options =>
+                        {
+                            options.CharSetBehavior(CharSetBehavior.NeverAppend);
+                        });
             });
         }
 

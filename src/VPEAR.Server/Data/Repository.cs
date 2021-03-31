@@ -85,42 +85,6 @@ namespace VPEAR.Server.Data
         }
 
         /// <inheritdoc/>
-        public void GetReference<TProperty>(TEntity entity, Expression<Func<TEntity, TProperty>> expression)
-            where TProperty : class
-        {
-            this.context.Entry(entity)
-                .Reference(expression)
-                .Load();
-        }
-
-        /// <inheritdoc/>
-        public async Task GetReferenceAsync<TProperty>(TEntity entity, Expression<Func<TEntity, TProperty>> expression)
-            where TProperty : class
-        {
-            await this.context.Entry(entity)
-                .Reference(expression)
-                .LoadAsync();
-        }
-
-        /// <inheritdoc/>
-        public void GetCollection<TProperty>(TEntity entity, Expression<Func<TEntity, IEnumerable<TProperty>>> expression)
-            where TProperty : class
-        {
-            this.context.Entry(entity)
-                .Collection(expression)
-                .Load();
-        }
-
-        /// <inheritdoc/>
-        public async Task GetCollectionAsync<TProperty>(TEntity entity, Expression<Func<TEntity, IEnumerable<TProperty>>> expression)
-            where TProperty : class
-        {
-            await this.context.Entry(entity)
-                .Collection(expression)
-                .LoadAsync();
-        }
-
-        /// <inheritdoc/>
         public async Task<TEntity> GetAsync(TKey id)
         {
             try

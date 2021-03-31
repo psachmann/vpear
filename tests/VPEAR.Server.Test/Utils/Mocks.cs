@@ -61,16 +61,6 @@ namespace VPEAR.Server.Test
                     .ReturnsAsync(device);
             }
 
-            mock.Setup(mock => mock.GetReference(It.IsAny<Device>(), It.IsAny<Expression<Func<Device, It.IsAnyType>>>()));
-
-            mock.Setup(mock => mock.GetReferenceAsync(It.IsAny<Device>(), It.IsAny<Expression<Func<Device, It.IsAnyType>>>()))
-                .Returns(Task.CompletedTask);
-
-            mock.Setup(mock => mock.GetCollection(It.IsAny<Device>(), It.IsAny<Expression<Func<Device, IEnumerable<It.IsAnyType>>>>()));
-
-            mock.Setup(mock => mock.GetCollectionAsync(It.IsAny<Device>(), It.IsAny<Expression<Func<Device, IEnumerable<It.IsAnyType>>>>()))
-                .Returns(Task.CompletedTask);
-
             mock.Setup(mock => mock.UpdateAsync(It.IsAny<Device>()))
                 .ReturnsAsync(It.IsAny<Device>());
 
@@ -97,16 +87,6 @@ namespace VPEAR.Server.Test
                 mock.Setup(mock => mock.GetAsync(device.Id))
                     .ReturnsAsync(device.Frames[0]);
             }
-
-            mock.Setup(mock => mock.GetReference(It.IsAny<Frame>(), It.IsAny<Expression<Func<Frame, It.IsAnyType>>>()));
-
-            mock.Setup(mock => mock.GetReferenceAsync(It.IsAny<Frame>(), It.IsAny<Expression<Func<Frame, It.IsAnyType>>>()))
-                .Returns(Task.CompletedTask);
-
-            mock.Setup(mock => mock.GetCollection(It.IsAny<Frame>(), It.IsAny<Expression<Func<Frame, IEnumerable<It.IsAnyType>>>>()));
-
-            mock.Setup(mock => mock.GetCollectionAsync(It.IsAny<Frame>(), It.IsAny<Expression<Func<Frame, IEnumerable<It.IsAnyType>>>>()))
-                .Returns(Task.CompletedTask);
 
             mock.Setup(mock => mock.UpdateAsync(It.IsAny<Frame>()))
                 .ReturnsAsync(It.IsAny<Frame>());
