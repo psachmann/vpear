@@ -6,12 +6,15 @@ Some things have to be installed beforehand:
 * Dotnet SDK
   * Install the dotnet sdk in version 5.0 from [here](https://dotnet.microsoft.com/download/dotnet/5.0)
   * `choco install dotnetsdk`
+* Dotnet EF Core
+  * Install the ef core command line tools
+  * `dotnet tool install dotnet-ef -g`
 * MariaDB
   * Install a local MariaDb Server in version 10.3 or newer
   * `choco install mariadb`
 * Cake
   * You can install Cake as an global dotnet tool
-  * `dotnet tool install --global Cake.Tool --version 1.1.0`
+  * `dotnet tool install --global Cake.Tool`
 * Unity
   * If you want also build the Unity client, Unity 2020.3 LTS must als be installed
   * Use the [Unity Hub](https://unity3d.com/de/get-unity/download) to download the right version
@@ -43,7 +46,7 @@ The server and client have to started in different ways.
 ### VPEAR.Server
 The steps to run the server:
 
-* Make sure the prerequisites are fulfilled (Dotnet SDK, MariaDB, Cake)
+* Make sure the prerequisites are fulfilled (Dotnet SDK, Dotnet EF Core, MariaDB, Cake)
 * Make sure the you have the right configuration in your *appsettings.json*
 * Create a migration `dotnet cake --target=migration-add`
 * Apply the migration `dotnet cake --target=database-update`
