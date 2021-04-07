@@ -2,7 +2,6 @@ using Fluxor;
 using Microsoft.Extensions.DependencyInjection;
 using UnityEngine;
 using UnityEngine.UI;
-using VPEAR.Core.Wrappers;
 
 public class SettingsScript : AbstractView
 {
@@ -12,8 +11,8 @@ public class SettingsScript : AbstractView
     [SerializeField] private InputField _oldPasswordInput;
     [SerializeField] private InputField _newPasswordInput;
     [SerializeField] private Dropdown _colorScelDropDown;
-    [SerializeField] private Button _applyButton;
     [SerializeField] private Button _logoutButton;
+    [SerializeField] private Button _saveButton;
 
     private IState<ARState> _arState;
     private ARState _arStateValue;
@@ -31,7 +30,7 @@ public class SettingsScript : AbstractView
         _deltaMinutesInput.contentType = InputField.ContentType.DecimalNumber;
         _oldPasswordInput.contentType = InputField.ContentType.Password;
         _newPasswordInput.contentType = InputField.ContentType.Password;
-        _applyButton.onClick.AddListener(OnApplyClick);
+        _saveButton.onClick.AddListener(OnSaveClick);
         _logoutButton.onClick.AddListener(OnLogoutClick);
 
         ARStateChanged(this, _arState.Value);
@@ -49,7 +48,7 @@ public class SettingsScript : AbstractView
         _arStateValue = state;
         _stepSizeInput.text = state.StepSize.ToString();
         _thresholdInput.text = state.Threshold.ToString();
-        _deltaMinutesInput.text = state.DeltaMinutes.ToString();
+        _deltaMinutesInput.text = state.DeltaMinutes.TotalMinutes.ToString();
         _colorScelDropDown.value = (int)state.ColorScale;
     }
 
@@ -58,7 +57,7 @@ public class SettingsScript : AbstractView
         _loginStateValue = state;
     }
 
-    private void OnApplyClick()
+    private void OnSaveClick()
     {
         _dispatcher.Dispatch(new ApplySettingsAction(
             int.Parse(_stepSizeInput.text),

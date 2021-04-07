@@ -1,9 +1,12 @@
 public class NavigateToAction
 {
-    public NavigateToAction(string nextView)
+    public NavigateToAction(string nextView, bool executeNavigation = true)
     {
-        this.NextView = nextView;
+        ExecuteNavigation = executeNavigation;
+        NextView = nextView;
     }
+
+    public bool ExecuteNavigation { get; }
 
     public string NextView { get; }
 }

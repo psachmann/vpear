@@ -1,7 +1,9 @@
 using Fluxor;
 using Microsoft.Extensions.DependencyInjection;
+using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
+using VPEAR.Core.Extensions;
 
 public class ARScript : AbstractBase
 {
@@ -22,9 +24,7 @@ public class ARScript : AbstractBase
         _forwardButton.onClick.AddListener(OnForwardClick);
         _backwardButton.onClick.AddListener(OnBackwardClick);
 
-        Initialize();
-
-        // ARStateChanged(this, _arStateValue);
+        ARStateChanged(this, _arStateValue);
     }
 
     private void Update()
@@ -32,7 +32,6 @@ public class ARScript : AbstractBase
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             _dispatcher.Dispatch(new ChangeSceneAction(Constants.MenuSceneId));
-            _dispatcher.Dispatch(new NavigateToAction(Constants.DeviceListViewName));
         }
     }
 
@@ -44,8 +43,8 @@ public class ARScript : AbstractBase
     private void ARStateChanged(object sender, ARState state)
     {
         _arStateValue = state;
-        _frameDateText.text = state.Current.ToString();
-        // UpdateSprite();
+        _frameDateText.text = state.Current.Time.ToString();
+        UpdateSprite();
     }
 
     private void OnBackwardClick()
@@ -60,15 +59,18 @@ public class ARScript : AbstractBase
 
     private void UpdateSprite()
     {
-        var width = (int)_arStateValue.Sensors[0].Width;
-        var height = (int)_arStateValue.Sensors[0].Height;
-        var min = (float)_arStateValue.Sensors[0].Minimum;
-        var max = (float)_arStateValue.Sensors[0].Maximum;
-        var threshold = (float)_arStateValue.Threshold;
+        _logger.Warning("Hard coded values for width, height, min and max!");
+
+        var width = 64;
+        var height = 27;
+        var min = 0f;
+        var max = 80f;
         var values = Heatmap.CreateHeatmapValues(width, height, _arStateValue.DeltaMinutes, _arStateValue.Current, _arStateValue.History);
-        var colors = Heatmap.CreateHeatmapColors(min, max, threshold, values, ColorScale.RedToGreen);
+        var colors = Heatmap.CreateHeatmapColors(min, max, values, _arStateValue.ColorScale);
         var texture = Heatmap.CreateHeatmapTexture(width, height, colors);
         var sprite = Sprite.Create(texture, new Rect(0f, 0f, width, height), Vector2.one * 0.5f);
+
+        LogValues(values);
 
         _heatmapVisual.sprite = sprite;
 
@@ -78,29 +80,20 @@ public class ARScript : AbstractBase
         _heatmapVisual.transform.localScale = new Vector3(scaleX, scaleY);
     }
 
-    private void Initialize()
+    private void LogValues(float[,] values)
     {
-        var width = 64;
-        var height = 27;
-        var values = new float[width, height];
+        var builder = new StringBuilder();
 
-        for (var x = 0; x < width; x++)
+        for (var x = 0; x < values.GetLength(0); x++)
         {
-            for (var y = 0; y < height; y++)
+            builder.Append($"{x}: ");
+            for (var y = 0; y < values.GetLength(1); y++)
             {
-                values[x, y] = Random.Range(0f, 100f);
+                builder.Append(string.Format("{0:0.##} ", values[x, y]));
             }
+            builder.Append("\n");
         }
 
-        var colors = Heatmap.CreateHeatmapColors(0f, 100f, 80f, values, ColorScale.RedToGreen);
-        var texture = Heatmap.CreateHeatmapTexture(width, height, colors, FilterMode.Bilinear);
-        var sprite = Sprite.Create(texture, new Rect(0f, 0f, width, height), Vector2.one * 0.5f);
-
-        _heatmapVisual.sprite = sprite;
-
-        var scaleX = _heatmap.rect.width / _heatmapVisual.size.x;
-        var scaleY = _heatmap.rect.height / _heatmapVisual.size.y;
-
-        _heatmapVisual.transform.localScale = new Vector3(scaleX, scaleY);
+        _logger.Warning(builder.ToString());
     }
 }

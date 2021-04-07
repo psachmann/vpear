@@ -1,7 +1,5 @@
 using Fluxor;
 
-#pragma warning disable IDE0060
-
 public static partial class Reducers
 {
     [ReducerMethod]
@@ -23,13 +21,13 @@ public static partial class Reducers
     }
 
     [ReducerMethod]
-    public static UserDetailState ReduceUpdatingUserAction(UserDetailState state, UpdatingUserAction action)
+    public static UserDetailState ReduceVerfingUserAction(UserDetailState state, VerifingUserAction action)
     {
         return new UserDetailState(true, state.User);
     }
 
     [ReducerMethod]
-    public static UserDetailState ReduceUpdatedUserAction(UserDetailState state, UpdatedUserAction action)
+    public static UserDetailState ReduceVerfiedUserAction(UserDetailState state, VerifiedUserAction action)
     {
         return new UserDetailState(false, action.User);
     }

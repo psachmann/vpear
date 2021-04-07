@@ -1,4 +1,3 @@
-using Fluxor;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -39,10 +38,7 @@ public class NavigationService
 
     public bool CanNavigateBack()
     {
-        // it must be 2, because if its one, we can navigate back to the login view
-        // and we don't want this, if we logout the history will be cleared and we won't
-        // be able the access other user data
-        return _history.Count > 2;
+        return _history.Count > 1;
     }
 
     public void NavigateBack()
@@ -52,7 +48,7 @@ public class NavigationService
             Location.Hide();
             _history.Pop();
             Location.Show();
-            _logger.Information($"NavigateBack: {LocationName}");
+            _logger.Debug($"NavigateBack: {LocationName}");
         }
         else
         {

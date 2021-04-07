@@ -25,13 +25,17 @@ public class FrameScript : AbstractBase
         _users.onClick.AddListener(OnUsersClick);
         _settings.onClick.AddListener(OnSettingsClick);
 
+        NavivigationStateChanged(this, _navigationState.Value);
+        LoginStateChanged(this, _loginState.Value);
+
         if (!_loginState.Value.IsSignedIn)
         {
             _dispatcher.Dispatch(new NavigateToAction(Constants.LoginViewName));
         }
-
-        NavivigationStateChanged(this, _navigationState.Value);
-        LoginStateChanged(this, _loginState.Value);
+        else
+        {
+            _dispatcher.Dispatch(new NavigateToAction(Constants.DeviceDetailViewName));
+        }
     }
 
     private void Update()

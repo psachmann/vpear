@@ -15,7 +15,7 @@ public static class Heatmap
         var newHeight = (int)(height * scaleY);
         var result = new float[newWidth, newHeight];
 
-        Parallel.For(0, newWidth, x =>
+        for (var x = 0; x < newWidth; x++)
         {
             for (var y = 0; y < newHeight; y++)
             {
@@ -30,7 +30,7 @@ public static class Heatmap
 
                 result[x, y] = Blerp(v00, v10, v01, v11, gx - gxi, gy - gyi);
             }
-        });
+        };
 
         return result;
     }
@@ -38,7 +38,6 @@ public static class Heatmap
     public static Sprite CreateHeatmapSprite(
         float minValue,
         float maxValue,
-        float threshold,
         float[,] values,
         ColorScale colorScale,
         FilterMode filterMode = FilterMode.Point,
@@ -54,7 +53,7 @@ public static class Heatmap
         {
             for (var y = 0; y < height; y++)
             {
-                colorArray[x + y * width] = GetColor(minValue, maxValue, threshold, values[x, y], GetColorScale(colorScale));
+                colorArray[x + y * width] = GetColor(minValue, maxValue, values[x, y], GetColorScale(colorScale));
             }
         };
 
@@ -69,19 +68,19 @@ public static class Heatmap
     public static Color32[] CreateHeatmapColors(
         float minValue,
         float maxValue,
-        float threshold,
         float[,] values,
         ColorScale colorScale)
     {
         var width = values.GetLength(0);
         var height = values.GetLength(1);
         var colorArray = new Color32[width * height];
+        var colors = GetColorScale(colorScale);
 
         for (var x = 0; x < width; x++)
         {
             for (var y = 0; y < height; y++)
             {
-                colorArray[x + y * width] = GetColor(minValue, maxValue, threshold, values[x, y], GetColorScale(colorScale));
+                colorArray[x + y * width] = GetColor(minValue, maxValue, values[x, y], colors);
             }
         };
 
@@ -119,7 +118,9 @@ public static class Heatmap
         {
             for (var y = 0; y < height; y++)
             {
-                values[x, y] = (float)slice.Select(frame => frame.Readings[x][y]).Average();
+                values[x, y] = (float)slice
+                    .Select(frame => frame.Readings[x][y])
+                    .Average();
             }
         };
 
@@ -136,7 +137,10 @@ public static class Heatmap
         return Lerp(Lerp(v00, v10, tx), Lerp(v01, v11, tx), ty);
     }
 
-    private static IOrderedEnumerable<GetFrameResponse> GetSortedSlice(TimeSpan delta, GetFrameResponse current, IEnumerable<GetFrameResponse> history)
+    private static IOrderedEnumerable<GetFrameResponse> GetSortedSlice(
+        TimeSpan delta,
+        GetFrameResponse current,
+        IEnumerable<GetFrameResponse> history)
     {
         var minDate = current.Time - delta;
         var maxDate = current.Time;
@@ -145,7 +149,7 @@ public static class Heatmap
             .OrderBy(frame => frame.Time);
     }
 
-    private static Color32 GetColor(float min, float max, float threshold, float value, IList<Color32> colors)
+    private static Color32 GetColor(float min, float max, float value, Texture2D colors)
     {
         // if value is smaller min, set value to min
         if (value < min)
@@ -154,41 +158,41 @@ public static class Heatmap
         }
 
         // if value is greater thresh, set value to max
-        if (value > threshold)
+        if (value > max)
         {
             value = max;
         }
 
-        var index = (int)(colors.Count / max * value);
+        var x = (int)(colors.width / max * value);
+        var y = 0;
+        var color = colors.GetPixel(x, y);
 
-        return colors[index >= colors.Count ? colors.Count - 1 : index];
+        if (value == min)
+        {
+            color.a = 0.1f;
+        }
+
+        return color;
     }
 
-    private static IList<Color32> GetColorScale(ColorScale colorScale)
+    private static Texture2D GetColorScale(ColorScale colorScale)
     {
         switch (colorScale)
         {
-            case ColorScale.RedToGreen:
-                return GetGreenToRedScale();
+            case ColorScale.Jet:
+                return JetTexture;
+            case ColorScale.Plasma:
+                return PlasmaTexture;
+            case ColorScale.Viridis:
+                return ViridisTexture;
             default:
                 throw new ArgumentOutOfRangeException(nameof(colorScale));
         }
     }
 
-    private static IList<Color32> GetGreenToRedScale()
-    {
-        return new List<Color32>()
-        {
-            new Color32(211, 211, 211, 255), // light gray
-            new Color32(0, 100, 0, 255), // dark green
-            new Color32(0, 255, 0, 255), // green
-            new Color32(144, 238, 144, 255), // light green
-            new Color32(154, 205, 50, 255), // yellow green
-            new Color32(255, 255, 0, 255), // yellow
-            new Color32(255, 165, 0, 255), // orange
-            new Color32(255, 140, 0, 255), // dark orange
-            new Color32(255, 69, 0, 255), // orange red
-            new Color32(255 ,0 ,0 , 255), // red
-        };
-    }
+    private static Texture2D JetTexture => Resources.Load("Images/Jet") as Texture2D;
+
+    private static Texture2D PlasmaTexture => Resources.Load("Images/Plasma") as Texture2D;
+
+    private static Texture2D ViridisTexture => Resources.Load("Images/Viridis") as Texture2D;
 }

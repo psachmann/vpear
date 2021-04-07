@@ -1,8 +1,6 @@
 using Fluxor;
 using System;
-using System.Collections.Generic;
-using UnityEngine;
-using VPEAR.Core.Wrappers;
+using System.Linq;
 
 public class ARFeature : Feature<ARState>
 {
@@ -13,13 +11,12 @@ public class ARFeature : Feature<ARState>
 
     protected override ARState GetInitialState()
     {
-        var current = new GetFrameResponse();
-        var history = new List<GetFrameResponse>();
-        var sensors = new List<GetSensorResponse>();
+        var history = Data.CreateHistory(64, 27);
+        var sensors = Data.CreateSensors();
         var deltaMinutes = TimeSpan.FromMinutes(60f);
         var stepSize = 10;
         var treshold = 80f;
 
-        return new ARState(false, stepSize, treshold, deltaMinutes, ColorScale.RedToGreen, current, history, sensors);
+        return new ARState(false, stepSize, treshold, deltaMinutes, ColorScale.Plasma, history.Last(), history, sensors);
     }
 }

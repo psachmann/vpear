@@ -13,11 +13,13 @@ public class UserDetailScript : AbstractView
     [SerializeField] private Button _deleteButton;
 
     private IState<UserDetailState> _userDetailState;
+    private UserDetailState _userDetailStateValue;
 
     private void Start()
     {
         _userDetailState = s_provider.GetRequiredService<IState<UserDetailState>>();
         _userDetailState.StateChanged += UserDetailStateChanged;
+        _userDetailStateValue = _userDetailState.Value;
         _saveButton.onClick.AddListener(OnSaveClick);
         _deleteButton.onClick.AddListener(OnDeleteClick);
 
@@ -31,6 +33,7 @@ public class UserDetailScript : AbstractView
 
     private void UserDetailStateChanged(object sender, UserDetailState state)
     {
+        _userDetailStateValue = state;
         _userIdText.text = state.User.Id;
         _userNameText.text = state.User.Name;
         _userRolesText.text = string.Join(", ", state.User.Roles);
@@ -49,7 +52,7 @@ public class UserDetailScript : AbstractView
 
     private void OnSaveClick()
     {
-        _dispatcher.Dispatch(new UpdatingUserAction(_userDetailState.Value.User, _userIsVerifiedToggle.isOn));
+        _dispatcher.Dispatch(new VerifingUserAction(_userDetailStateValue.User));
     }
 
     private void OnDeleteClick()

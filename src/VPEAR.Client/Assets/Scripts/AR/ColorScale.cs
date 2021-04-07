@@ -1,4 +1,6 @@
 public enum ColorScale : byte
 {
-    RedToGreen = 0,
+    Jet = 0,
+    Plasma,
+    Viridis,
 }

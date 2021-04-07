@@ -3023,7 +3023,7 @@ GameObject:
   - component: {fileID: 399009306}
   - component: {fileID: 399009305}
   m_Layer: 5
-  m_Name: ApplyButton
+  m_Name: SaveButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3036,13 +3036,13 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 399009303}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 765884057}
   m_Father: {fileID: 1760558476}
-  m_RootOrder: 13
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -3836,7 +3836,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'New password:'
+  m_Text: 'New Password:'
 --- !u!222 &480501985
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3956,7 +3956,7 @@ RectTransform:
   m_Children:
   - {fileID: 1089243952}
   m_Father: {fileID: 1760558476}
-  m_RootOrder: 14
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -5546,7 +5546,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Apply
+  m_Text: Save
 --- !u!222 &765884059
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -13248,8 +13248,8 @@ RectTransform:
   - {fileID: 1279703527}
   - {fileID: 480501983}
   - {fileID: 1001738499}
-  - {fileID: 399009304}
   - {fileID: 488970309}
+  - {fileID: 399009304}
   m_Father: {fileID: 803811075}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -13276,8 +13276,8 @@ MonoBehaviour:
   _oldPasswordInput: {fileID: 1279703528}
   _newPasswordInput: {fileID: 1001738500}
   _colorScelDropDown: {fileID: 2066633568}
-  _applyButton: {fileID: 399009305}
   _logoutButton: {fileID: 488970310}
+  _saveButton: {fileID: 399009305}
 --- !u!114 &1760558478
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14085,7 +14085,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: RedToGreen
+  m_Text: Jet
 --- !u!222 &1857414242
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -14401,7 +14401,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Old password:'
+  m_Text: 'Old Password:'
 --- !u!222 &1985361761
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -15219,8 +15219,12 @@ MonoBehaviour:
   m_Value: 0
   m_Options:
     m_Options:
-    - m_Text: RedToGreen
+    - m_Text: Jet
       m_Image: {fileID: 0}
+    - m_Text: Plasma
+      m_Image: {fileID: 0}
+    - m_Text: Viridis
+      m_Image: {fileID: 21300000, guid: 0df133522c0c9ad4cbeba30eee972741, type: 3}
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
