@@ -1,13 +1,15 @@
 using Fluxor;
 using Microsoft.Extensions.DependencyInjection;
+using System.Linq;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
-using VPEAR.Core.Extensions;
 
 public class ARScript : AbstractBase
 {
     [SerializeField] private Text _frameDateText;
+    [SerializeField] private Text _fistDateText;
+    [SerializeField] private Text _lastDateText;
     [SerializeField] private Button _forwardButton;
     [SerializeField] private Button _backwardButton;
     [SerializeField] private RectTransform _heatmap;
@@ -43,7 +45,10 @@ public class ARScript : AbstractBase
     private void ARStateChanged(object sender, ARState state)
     {
         _arStateValue = state;
-        _frameDateText.text = state.Current.Time.ToString();
+        _frameDateText.text = state.Current.Time.ToLocalTime().ToString();
+        _fistDateText.text = state.History.First().Time.ToLocalTime().ToString();
+        _lastDateText.text = state.History.Last().Time.ToLocalTime().ToString();
+
         UpdateSprite();
     }
 
@@ -64,11 +69,12 @@ public class ARScript : AbstractBase
         var width = 64;
         var height = 27;
         var min = 0f;
-        var max = 80f;
+        var max = 100f;
         var values = Heatmap.CreateHeatmapValues(width, height, _arStateValue.DeltaMinutes, _arStateValue.Current, _arStateValue.History);
+        values = Heatmap.Scale(4, values, Heatmap.InterpolationMehtod.Bicubic);
         var colors = Heatmap.CreateHeatmapColors(min, max, values, _arStateValue.ColorScale);
-        var texture = Heatmap.CreateHeatmapTexture(width, height, colors);
-        var sprite = Sprite.Create(texture, new Rect(0f, 0f, width, height), Vector2.one * 0.5f);
+        var texture = Heatmap.CreateHeatmapTexture(values.GetLength(0), values.GetLength(1), colors);
+        var sprite = Sprite.Create(texture, new Rect(0f, 0f, values.GetLength(0), values.GetLength(1)), Vector2.one * 0.5f);
 
         LogValues(values);
 
@@ -80,7 +86,7 @@ public class ARScript : AbstractBase
         _heatmapVisual.transform.localScale = new Vector3(scaleX, scaleY);
     }
 
-    private void LogValues(float[,] values)
+    private void LogValues(double[,] values)
     {
         var builder = new StringBuilder();
 

@@ -62,11 +62,20 @@ public static class Data
     public static IList<IList<int>> CreateReadings(int width, int height)
     {
         var result = new List<IList<int>>(width);
-        var random = new Random();
+        var counter = 0;
 
         foreach (var x in Enumerable.Range(0, width))
         {
-            result.Add(new List<int>(Enumerable.Range(0, height).Select(y => random.Next(0, 100))));
+            if (x < (width / 2))
+            {
+                counter += 3;
+            }
+            else
+            {
+                counter -= 3;
+            }
+
+            result.Add(Enumerable.Repeat(counter, height).ToList());
         }
 
         return result;

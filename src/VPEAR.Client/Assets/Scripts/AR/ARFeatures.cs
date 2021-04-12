@@ -15,7 +15,7 @@ public class ARFeature : Feature<ARState>
         var sensors = Data.CreateSensors();
         var deltaMinutes = TimeSpan.FromMinutes(60f);
         var stepSize = 10;
-        var treshold = 80f;
+        var treshold = 100f;
 
         return new ARState(false, stepSize, treshold, deltaMinutes, ColorScale.Plasma, history.Last(), history, sensors);
     }
