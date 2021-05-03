@@ -38,36 +38,6 @@ public static class Heatmap
         return result;
     }
 
-    public static Sprite CreateHeatmapSprite(
-        float minValue,
-        float maxValue,
-        float[,] values,
-        ColorScale colorScale,
-        FilterMode filterMode = FilterMode.Point,
-        TextureWrapMode wrapMode = TextureWrapMode.Clamp,
-        float pixelsPerUnit = 1f)
-    {
-        var width = values.GetLength(0);
-        var height = values.GetLength(1);
-        var texture = new Texture2D(width, height);
-        var colorArray = new Color32[width * height];
-
-        for (var x = 0; x < width; x++)
-        {
-            for (var y = 0; y < height; y++)
-            {
-                colorArray[x + y * width] = GetColor(minValue, maxValue, values[x, y], GetColorScale(colorScale));
-            }
-        };
-
-        texture.SetPixels32(colorArray);
-        texture.Apply();
-        texture.filterMode = filterMode;
-        texture.wrapMode = wrapMode;
-
-        return Sprite.Create(texture, new Rect(0f, 0f, width, height), Vector2.zero, pixelsPerUnit);
-    }
-
     public static Color32[] CreateHeatmapColors(
         double minValue,
         double maxValue,
@@ -225,15 +195,20 @@ public static class Heatmap
             value = min;
         }
 
-        // if value is greater thresh, set value to max
+        // if value is greater max, set value to max
         if (value > max)
         {
             value = max;
         }
 
-        var x = (int)(colors.width / max * value);
-        var y = 0;
-        var color = colors.GetPixel(x, y);
+        var x = (int)Map(value, min, max, 0, colors.width);
+
+        if (x >= colors.width)
+        {
+            x = colors.width - 1;
+        }
+
+        var color = colors.GetPixel(x, 0);
 
         if (value <= min)
         {
@@ -241,6 +216,11 @@ public static class Heatmap
         }
 
         return color;
+    }
+
+    private static double Map(double value, double fromSource, double toSource, double fromTarget, double toTarget)
+    {
+        return (value - fromSource) / (toSource - fromSource) * (toTarget - fromTarget) + fromTarget;
     }
 
     public static Texture2D GetColorScale(ColorScale colorScale)

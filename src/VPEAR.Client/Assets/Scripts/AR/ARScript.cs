@@ -10,8 +10,10 @@ public class ARScript : AbstractBase
     [SerializeField] private Text _frameDateText;
     [SerializeField] private Text _fistDateText;
     [SerializeField] private Text _lastDateText;
+    [SerializeField] private Text _maxHeatmapValueText;
     [SerializeField] private Button _forwardButton;
     [SerializeField] private Button _backwardButton;
+    [SerializeField] private Image _heatmapLegendVisual;
     [SerializeField] private RectTransform _heatmap;
     [SerializeField] private SpriteRenderer _heatmapVisual;
 
@@ -45,11 +47,31 @@ public class ARScript : AbstractBase
     private void ARStateChanged(object sender, ARState state)
     {
         _arStateValue = state;
-        _frameDateText.text = state.Current.Time.ToLocalTime().ToString();
-        _fistDateText.text = state.History.First().Time.ToLocalTime().ToString();
-        _lastDateText.text = state.History.Last().Time.ToLocalTime().ToString();
+        _frameDateText.text = state.Current.Time
+            .ToLocalTime()
+            .ToString("T");
+        _fistDateText.text = state.History.First()
+            .Time
+            .ToLocalTime()
+            .ToString("T");
+        _lastDateText.text = state.History.Last()
+            .Time
+            .ToLocalTime()
+            .ToString("T");
+        _maxHeatmapValueText.text = $"- {state.Threshold} mmHg";
 
-        UpdateSprite();
+        if (state.Current == state.History.First())
+        {
+            _fistDateText.text = string.Empty;
+        }
+
+        if (state.Current == state.History.Last())
+        {
+            _lastDateText.text = string.Empty;
+        }
+
+        UpdateHeatmapSprite();
+        UpdateHeatmapLegendVisual();
     }
 
     private void OnBackwardClick()
@@ -62,7 +84,7 @@ public class ARScript : AbstractBase
         _dispatcher.Dispatch(new MoveForwardAction(_arStateValue.StepSize));
     }
 
-    private void UpdateSprite()
+    private void UpdateHeatmapSprite()
     {
         _logger.Warning("Hard coded values for width, height, min and max!");
 
@@ -71,12 +93,12 @@ public class ARScript : AbstractBase
         var min = 0f;
         var max = 100f;
         var values = Heatmap.CreateHeatmapValues(width, height, _arStateValue.DeltaMinutes, _arStateValue.Current, _arStateValue.History);
-        values = Heatmap.Scale(4, values, Heatmap.InterpolationMehtod.Bicubic);
+        values = Heatmap.Scale(4, values, Heatmap.InterpolationMehtod.Bicosine);
         var colors = Heatmap.CreateHeatmapColors(min, max, values, _arStateValue.ColorScale);
         var texture = Heatmap.CreateHeatmapTexture(values.GetLength(0), values.GetLength(1), colors);
         var sprite = Sprite.Create(texture, new Rect(0f, 0f, values.GetLength(0), values.GetLength(1)), Vector2.one * 0.5f);
 
-        LogValues(values);
+        // LogValues(values);
 
         _heatmapVisual.sprite = sprite;
 
@@ -84,6 +106,16 @@ public class ARScript : AbstractBase
         var scaleY = _heatmap.rect.height / _heatmapVisual.size.y;
 
         _heatmapVisual.transform.localScale = new Vector3(scaleX, scaleY);
+    }
+
+    private void UpdateHeatmapLegendVisual()
+    {
+        var texture = Heatmap.GetColorScale(_arStateValue.ColorScale);
+        var sprite = Sprite.Create(
+            texture,
+            new Rect(0f, 0f, texture.width, texture.height),
+            Vector2.one * 0.5f);
+        _heatmapLegendVisual.sprite = sprite;
     }
 
     private void LogValues(double[,] values)

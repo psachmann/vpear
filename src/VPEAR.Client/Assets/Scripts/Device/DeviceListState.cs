@@ -8,7 +8,7 @@ public class DeviceListState
     public DeviceListState(bool isLoading, IEnumerable<GetDeviceResponse> devices, DeviceStatus? status)
     {
         IsLoading = isLoading;
-        Devices = devices ?? throw new ArgumentNullException(nameof(devices));
+        Devices = devices;
         Status = status;
     }
 
