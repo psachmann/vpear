@@ -3,6 +3,8 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace VPEAR.Core.Wrappers
@@ -16,6 +18,8 @@ namespace VPEAR.Core.Wrappers
         /// Gets or sets a value indicating whether the user is verified or not.
         /// </summary>
         /// <value>Indicates whether the user is verified or not.</value>
+        [Required]
+        [DefaultValue(false)]
         [JsonPropertyName("is_verified")]
         public bool IsVerified { get; set; }
     }

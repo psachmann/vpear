@@ -60,8 +60,10 @@ namespace VPEAR.Server.Services
                 return new Result<Container<GetFrameResponse>>(HttpStatusCode.NotFound, ErrorMessages.DeviceNotFound);
             }
 
+            this.logger.LogWarning("Frames.Count " + device.Frames.Count);
+
             // checking for invalid values
-            if (start < 0 || start >= device.Frames.Count || count < 0)
+            if (start < 0 || count < 0)
             {
                 return new Result<Container<GetFrameResponse>>(HttpStatusCode.BadRequest, ErrorMessages.BadRequest);
             }

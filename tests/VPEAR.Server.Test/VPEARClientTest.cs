@@ -321,7 +321,7 @@ namespace VPEAR.Server.Test
             using var client = this.CreateClient();
             await client.LoginAsync(AdminName, AdminPassword);
 
-            var result = await client.GetFiltersAsync(this.stoppedDevices.First().Id.ToString());
+            var result = await client.GetFiltersAsync(this.archivedDevices.First().Id.ToString());
 
             Assert.NotNull(result);
         }

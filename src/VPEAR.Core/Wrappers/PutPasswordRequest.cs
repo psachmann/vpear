@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace VPEAR.Core.Wrappers
@@ -16,6 +17,7 @@ namespace VPEAR.Core.Wrappers
         /// Gets or sets the old password.
         /// </summary>
         /// <value>The old user password.</value>
+        [Required]
         [JsonPropertyName("old_password")]
         public string OldPassword { get; set; }
 
@@ -23,6 +25,7 @@ namespace VPEAR.Core.Wrappers
         /// Gets or sets the new password.
         /// </summary>
         /// <value>The new user password.</value>
+        [Required]
         [JsonPropertyName("new_password")]
         public string NewPassword { get; set; }
 
@@ -30,6 +33,7 @@ namespace VPEAR.Core.Wrappers
         /// Gets or sets the token.
         /// </summary>
         /// <value>The user token for authentication.</value>
+        [Required]
         [JsonPropertyName("token")]
         public string Token { get; set; }
     }

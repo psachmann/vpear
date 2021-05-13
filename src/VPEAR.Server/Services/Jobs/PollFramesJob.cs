@@ -69,8 +69,6 @@ namespace VPEAR.Server.Services.Jobs
                     respone = await client.GetFramesAsync(respone[0].Id);
                     frames.AddRange(respone);
 
-                    frames = frames.Distinct().ToList();
-
                     foreach (var frame in frames)
                     {
                         await this.frames.CreateAsync(new Frame()
