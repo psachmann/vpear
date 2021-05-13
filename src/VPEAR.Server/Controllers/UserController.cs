@@ -61,7 +61,8 @@ namespace VPEAR.Server.Controllers
         }
 
         /// <summary>
-        /// The admin can verify a user.
+        /// An admin can verify a user. A newly registered user will not get an access token
+        /// from the login endpoint until an admin verifies the new user.
         /// </summary>
         /// <param name="name">The user name.</param>
         /// <param name="request">The request data.</param>
@@ -107,7 +108,7 @@ namespace VPEAR.Server.Controllers
         }
 
         /// <summary>
-        /// The admin can delete a user.
+        /// An admin can delete a user or admin.
         /// </summary>
         /// <param name="name">The user name.</param>
         /// <returns>Http status code, which indicates the operation result.</returns>
@@ -149,7 +150,8 @@ namespace VPEAR.Server.Controllers
         }
 
         /// <summary>
-        /// Generates token to access the endpoints, which requires authorization.
+        /// Generates token to access the endpoints, which requires authorization. The user or admin
+        /// has to be verified before an access token will be issued.
         /// </summary>
         /// <param name="request">The request data.</param>
         /// <returns>The authorization token and the date, when the token expires.</returns>
