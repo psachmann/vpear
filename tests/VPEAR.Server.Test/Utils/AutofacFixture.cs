@@ -211,8 +211,8 @@ namespace VPEAR.Server.Test
                 .As<IValidator<PutLoginRequest>>()
                 .InstancePerDependency();
 
-            builder.RegisterType<PutUserValidator>()
-                .As<IValidator<PutUserRequest>>()
+            builder.RegisterType<PutPasswordValidator>()
+                .As<IValidator<PutPasswordRequest>>()
                 .InstancePerDependency();
 
             builder.RegisterType<PutWifiValidator>()

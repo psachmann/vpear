@@ -68,7 +68,8 @@ namespace VPEAR.Server.Controllers
         /// Updates the device firmware information.
         /// </summary>
         /// <remarks>
-        /// TODO: describe the update process more.
+        /// The update process is rather complicated and it's recommended to use the software
+        /// provided by the manufacturer.
         /// </remarks>
         /// <param name="id">The device id as 32 digit hex string.</param>
         /// <param name="request">The request data.</param>

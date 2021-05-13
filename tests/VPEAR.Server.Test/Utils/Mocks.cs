@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using VPEAR.Core;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Entities;
+using VPEAR.Core.Extensions;
 using VPEAR.Core.Wrappers;
 using static VPEAR.Server.Constants;
 
@@ -61,16 +62,6 @@ namespace VPEAR.Server.Test
                     .ReturnsAsync(device);
             }
 
-            mock.Setup(mock => mock.GetReference(It.IsAny<Device>(), It.IsAny<Expression<Func<Device, It.IsAnyType>>>()));
-
-            mock.Setup(mock => mock.GetReferenceAsync(It.IsAny<Device>(), It.IsAny<Expression<Func<Device, It.IsAnyType>>>()))
-                .Returns(Task.CompletedTask);
-
-            mock.Setup(mock => mock.GetCollection(It.IsAny<Device>(), It.IsAny<Expression<Func<Device, IEnumerable<It.IsAnyType>>>>()));
-
-            mock.Setup(mock => mock.GetCollectionAsync(It.IsAny<Device>(), It.IsAny<Expression<Func<Device, IEnumerable<It.IsAnyType>>>>()))
-                .Returns(Task.CompletedTask);
-
             mock.Setup(mock => mock.UpdateAsync(It.IsAny<Device>()))
                 .ReturnsAsync(It.IsAny<Device>());
 
@@ -97,16 +88,6 @@ namespace VPEAR.Server.Test
                 mock.Setup(mock => mock.GetAsync(device.Id))
                     .ReturnsAsync(device.Frames[0]);
             }
-
-            mock.Setup(mock => mock.GetReference(It.IsAny<Frame>(), It.IsAny<Expression<Func<Frame, It.IsAnyType>>>()));
-
-            mock.Setup(mock => mock.GetReferenceAsync(It.IsAny<Frame>(), It.IsAny<Expression<Func<Frame, It.IsAnyType>>>()))
-                .Returns(Task.CompletedTask);
-
-            mock.Setup(mock => mock.GetCollection(It.IsAny<Frame>(), It.IsAny<Expression<Func<Frame, IEnumerable<It.IsAnyType>>>>()));
-
-            mock.Setup(mock => mock.GetCollectionAsync(It.IsAny<Frame>(), It.IsAny<Expression<Func<Frame, IEnumerable<It.IsAnyType>>>>()))
-                .Returns(Task.CompletedTask);
 
             mock.Setup(mock => mock.UpdateAsync(It.IsAny<Frame>()))
                 .ReturnsAsync(It.IsAny<Frame>());
@@ -404,7 +385,7 @@ namespace VPEAR.Server.Test
                     Filter = filter,
                     Id = id,
                     Index = 1,
-                    Readings = new List<IList<int>>(),
+                    Readings = new List<IList<int>>().ToJsonString(),
                     Time = "time",
                 };
 

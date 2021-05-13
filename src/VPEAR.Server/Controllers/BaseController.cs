@@ -18,6 +18,7 @@ namespace VPEAR.Server.Controllers
     {
         /// <summary>
         /// Returns Http Status 200, if the server is available.
+        /// Use this endpoint to look if the server is alive.
         /// </summary>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]

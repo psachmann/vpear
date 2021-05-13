@@ -69,11 +69,11 @@ namespace VPEAR.Server.Services
             }
             else
             {
-                var payload = new Container<GetDeviceResponse>();
+                var items = new List<GetDeviceResponse>();
 
                 devices.ForEach(device =>
                 {
-                    payload.Items.Add(new GetDeviceResponse()
+                    items.Add(new GetDeviceResponse()
                     {
                         Address = device.Address,
                         DisplayName = device.DisplayName,
@@ -84,7 +84,7 @@ namespace VPEAR.Server.Services
                     });
                 });
 
-                return new Result<Container<GetDeviceResponse>>(HttpStatusCode.OK, payload);
+                return new Result<Container<GetDeviceResponse>>(HttpStatusCode.OK, new Container<GetDeviceResponse>(0, items));
             }
         }
 
@@ -136,7 +136,7 @@ namespace VPEAR.Server.Services
             if (address.IsIPv4() && subnetMask.IsIPv4() && subnetMask.IsIPv4SubnetMask())
             {
                 var job = JobBuilder.Create<SearcheDeviceJob>()
-                    .WithIdentity(new JobKey(Defaults.DefaultSearchDeviceJobId))
+                    .WithIdentity(new JobKey(Helpers.GetRandomString(32)))
                     .WithDescription(request.ToJsonString())
                     .Build();
 

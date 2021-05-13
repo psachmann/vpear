@@ -45,6 +45,7 @@ namespace VPEAR.Server.Controllers
 
         /// <summary>
         /// Gets the device information.
+        /// A GET request without any query parameters returns all devices.
         /// </summary>
         /// <param name="status">The device status.</param>
         /// <returns>List of devices.</returns>
@@ -65,9 +66,6 @@ namespace VPEAR.Server.Controllers
         /// <summary>
         /// Updates the device information.
         /// </summary>
-        /// <remarks>
-        /// TODO: Describe the request data.
-        /// </remarks>
         /// <param name="id">The device id as 32 digit hex string.</param>
         /// <param name="request">The request data.</param>
         /// <returns>Http status code, which indicates the operation result.</returns>
@@ -91,7 +89,10 @@ namespace VPEAR.Server.Controllers
         /// Searches for devices.
         /// </summary>
         /// <remarks>
-        /// TODO: Describe the request data.
+        /// The address and mask are IPv4 addresses and look like 10.0.0.1.
+        /// The mask is used to calculate the search range. The supported masks are 255.0.0.0 ... 255.255.255.0.
+        /// For example the request address: 10.0.0.0 with mask: 255.255.255.0 will search all address
+        /// from 10.0.0.1 to 10.0.0.254 (network address and broadcast address will be excluded).
         /// </remarks>
         /// <param name="request">The request data.</param>
         /// <returns>Http status code, which indicates the operation result.</returns>

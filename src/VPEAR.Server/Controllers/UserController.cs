@@ -61,29 +61,54 @@ namespace VPEAR.Server.Controllers
         }
 
         /// <summary>
-        /// The admin can update a user.
+        /// An admin can verify a user. A newly registered user will not get an access token
+        /// from the login endpoint until an admin verifies the new user.
         /// </summary>
         /// <param name="name">The user name.</param>
         /// <param name="request">The request data.</param>
         /// <returns>Http status code, which indicates the operation result.</returns>
         [HttpPut]
         [Authorize(Roles = Roles.AdminRole)]
+        [Route(Routes.VerifyRoute)]
         [Produces(Defaults.DefaultResponseType)]
         [SwaggerResponse(StatusCodes.Status204NoContent, "User was updated and saved to db.", typeof(Null))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(ErrorResponse))]
         [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is not authorized.", typeof(Null))]
         [SwaggerResponse(StatusCodes.Status404NotFound, "No user found.", typeof(ErrorResponse))]
-        public async Task<IActionResult> OnPutAsync([FromQuery, Required] string name, [FromBody, Required] PutUserRequest request)
+        public async Task<IActionResult> OnPutVerifyAsync([FromQuery, Required] string name, [FromBody, Required] PutVerifyRequest request)
         {
             this.logger.LogDebug("{@User}: {@Request}", name, request);
 
-            var result = await this.service.PutAsync(name, request);
+            var result = await this.service.PutVerifyAsync(name, request);
 
             return result.IsSuccess ? this.StatusCode(result.StatusCode, result.Value) : this.StatusCode(result.StatusCode, result.Error);
         }
 
         /// <summary>
-        /// The admin can delete a user.
+        /// An admin or user can change his own password.
+        /// </summary>
+        /// <param name="name">The user name.</param>
+        /// <param name="request">The request data.</param>
+        /// <returns>Http status code, which indicates the operation result.</returns>
+        [HttpPut]
+        [Authorize]
+        [Route(Routes.PasswordRoute)]
+        [Produces(Defaults.DefaultResponseType)]
+        [SwaggerResponse(StatusCodes.Status204NoContent, "The user password was changed.", typeof(Null))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(ErrorResponse))]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is not authorized.", typeof(Null))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "No user found.", typeof(ErrorResponse))]
+        public async Task<IActionResult> OnPutPassword([FromQuery, Required] string name, [FromBody, Required] PutPasswordRequest request)
+        {
+            this.logger.LogDebug("Change password {@User}", name);
+
+            var result = await this.service.PutPasswordAsync(name, request);
+
+            return result.IsSuccess ? this.StatusCode(result.StatusCode, result.Value) : this.StatusCode(result.StatusCode, result.Error);
+        }
+
+        /// <summary>
+        /// An admin can delete a user or admin.
         /// </summary>
         /// <param name="name">The user name.</param>
         /// <returns>Http status code, which indicates the operation result.</returns>
@@ -94,7 +119,7 @@ namespace VPEAR.Server.Controllers
         [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is not authorized.", typeof(Null))]
         [SwaggerResponse(StatusCodes.Status403Forbidden, "Last admin will not be deleted.", typeof(ErrorResponse))]
         [SwaggerResponse(StatusCodes.Status404NotFound, "No user found.", typeof(ErrorResponse))]
-        public async Task<IActionResult> OnDeleteAsync([FromQuery, Required] string name = "")
+        public async Task<IActionResult> OnDeleteAsync([FromQuery, Required] string name)
         {
             this.logger.LogDebug("{@User}", name);
 
@@ -125,7 +150,8 @@ namespace VPEAR.Server.Controllers
         }
 
         /// <summary>
-        /// Generates token to access the endpoints, which requires authorization.
+        /// Generates token to access the endpoints, which requires authorization. The user or admin
+        /// has to be verified before an access token will be issued.
         /// </summary>
         /// <param name="request">The request data.</param>
         /// <returns>The authorization token and the date, when the token expires.</returns>

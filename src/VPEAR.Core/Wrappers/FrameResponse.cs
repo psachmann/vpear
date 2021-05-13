@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -11,7 +12,7 @@ namespace VPEAR.Core.Wrappers
     /// <summary>
     /// A json wrapper class with json naming conventions.
     /// </summary>
-    public class FrameResponse
+    public class FrameResponse : IEquatable<FrameResponse>
     {
         /// <summary>
         /// Gets or sets the id.
@@ -34,38 +35,26 @@ namespace VPEAR.Core.Wrappers
         [JsonPropertyName("readings")]
         public IList<IList<int>> Readings { get; set; } = new List<IList<int>>();
 
-        /// <summary>
-        /// Compares to the given object.
-        /// </summary>
-        /// <param name="other">The object to compare to.</param>
-        /// <returns>Returns true if objects are equal, false if not.</returns>
-        public override bool Equals(object other)
+        /// <inheritdoc/>
+        public bool Equals(FrameResponse other)
         {
-            if (other == null || !(other is FrameResponse))
+            if (object.ReferenceEquals(this, null))
             {
                 return false;
             }
 
-            var frameResponse = (FrameResponse)other;
-
-            if (this.Id == frameResponse.Id
-                && this.Time == frameResponse.Time)
+            if (object.ReferenceEquals(this, other))
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return this.Id.Equals(other.Id) && this.Time.Equals(other.Time);
         }
 
-        /// <summary>
-        /// Gets the hash code for the object.
-        /// </summary>
-        /// <returns>Returns the objects hash code.</returns>
+        /// <inheritdoc/>
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            return this.Id.GetHashCode() ^ this.Time.GetHashCode();
         }
     }
 }

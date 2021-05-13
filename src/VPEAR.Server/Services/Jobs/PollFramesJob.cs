@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using VPEAR.Core;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Entities;
+using VPEAR.Core.Extensions;
 using VPEAR.Core.Wrappers;
 
 namespace VPEAR.Server.Services.Jobs
@@ -62,15 +63,11 @@ namespace VPEAR.Server.Services.Jobs
                 var frames = new List<FrameResponse>();
                 var respone = await client.GetFramesAsync();
 
-                await this.devices.GetReferenceAsync(device, device => device.Filter);
-
                 if (respone != null && respone.Count != 0)
                 {
                     frames.AddRange(respone);
                     respone = await client.GetFramesAsync(respone[0].Id);
                     frames.AddRange(respone);
-
-                    frames = frames.Distinct().ToList();
 
                     foreach (var frame in frames)
                     {
@@ -79,7 +76,7 @@ namespace VPEAR.Server.Services.Jobs
                             Device = device,
                             Filter = device.Filter,
                             Index = frame.Id,
-                            Readings = frame.Readings,
+                            Readings = frame.Readings.ToJsonString(),
                             Time = frame.Time,
                         });
                     }

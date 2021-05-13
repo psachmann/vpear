@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+/*
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using VPEAR.Core.Entities;
 using VPEAR.Server.Data;
 using Xunit;
 
+/*
 namespace VPEAR.Server.Test
 {
     [Collection("DatabaseTest")]
@@ -109,3 +111,4 @@ namespace VPEAR.Server.Test
         }
     }
 }
+*/
