@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<coverage version="1.0" date="2021-03-31_14-43-23" tag="">
+  <assembly name="VPEAR.Core">
+    <class name="VPEAR.Core.Abstractions.AbstractEntity&lt;T&gt;" coveredlines="4" coverablelines="4" totallines="46" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Core.DeviceClient" coveredlines="156" coverablelines="244" totallines="473" coveredbranches="52" totalbranches="82" />
+    <class name="VPEAR.Core.Entities.Device" coveredlines="23" coverablelines="23" totallines="102" coveredbranches="8" totalbranches="8" />
+    <class name="VPEAR.Core.Entities.Filter" coveredlines="6" coverablelines="6" totallines="53" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Core.Entities.Frame" coveredlines="10" coverablelines="19" totallines="81" coveredbranches="0" totalbranches="6" />
+    <class name="VPEAR.Core.Events.DeviceFrequencyChangedEvent" coveredlines="5" coverablelines="5" totallines="31" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Core.Events.DeviceStatusChangedEvent" coveredlines="5" coverablelines="5" totallines="31" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Core.Extensions.IPAddressExtensions" coveredlines="57" coverablelines="57" totallines="121" coveredbranches="12" totalbranches="12" />
+    <class name="VPEAR.Core.Extensions.StringExtensions" coveredlines="3" coverablelines="3" totallines="26" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Core.Extensions.TypeExtensions" coveredlines="7" coverablelines="7" totallines="39" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Core.Null" coveredlines="3" coverablelines="3" totallines="28" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Core.Result&lt;T&gt;" coveredlines="22" coverablelines="28" totallines="89" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Core.VPEARClient" coveredlines="229" coverablelines="301" totallines="529" coveredbranches="33" totalbranches="46" />
+    <class name="VPEAR.Core.Wrappers.ApiResponse" coveredlines="9" coverablelines="9" totallines="79" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Core.Wrappers.Container&lt;T&gt;" coveredlines="19" coverablelines="19" totallines="77" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Core.Wrappers.DeviceResponse" coveredlines="3" coverablelines="3" totallines="36" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Core.Wrappers.ErrorResponse" coveredlines="10" coverablelines="15" totallines="60" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Core.Wrappers.FiltersResponse" coveredlines="3" coverablelines="3" totallines="36" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Core.Wrappers.FirmwareResponse" coveredlines="3" coverablelines="3" totallines="36" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Core.Wrappers.FrameResponse" coveredlines="13" coverablelines="15" totallines="60" coveredbranches="4" totalbranches="6" />
+    <class name="VPEAR.Core.Wrappers.GetDeviceResponse" coveredlines="6" coverablelines="6" totallines="58" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Core.Wrappers.GetFiltersResponse" coveredlines="3" coverablelines="3" totallines="36" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Core.Wrappers.GetFirmwareResponse" coveredlines="3" coverablelines="3" totallines="36" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Core.Wrappers.GetFrameResponse" coveredlines="3" coverablelines="3" totallines="38" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Core.Wrappers.GetPowerResponse" coveredlines="2" coverablelines="2" totallines="29" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Core.Wrappers.GetSensorResponse" coveredlines="0" coverablelines="8" totallines="71" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Core.Wrappers.GetUserResponse" coveredlines="4" coverablelines="4" totallines="44" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Core.Wrappers.GetWifiResponse" coveredlines="3" coverablelines="3" totallines="37" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Core.Wrappers.PostDeviceRequest" coveredlines="2" coverablelines="2" totallines="29" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Core.Wrappers.PostRegisterRequest" coveredlines="3" coverablelines="3" totallines="36" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Core.Wrappers.PowerResponse" coveredlines="2" coverablelines="2" totallines="29" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Core.Wrappers.PutDeviceRequest" coveredlines="4" coverablelines="4" totallines="44" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Core.Wrappers.PutFilterRequest" coveredlines="3" coverablelines="3" totallines="36" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Core.Wrappers.PutFirmwareRequest" coveredlines="3" coverablelines="3" totallines="36" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Core.Wrappers.PutLoginRequest" coveredlines="2" coverablelines="2" totallines="29" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Core.Wrappers.PutLoginResponse" coveredlines="2" coverablelines="2" totallines="30" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Core.Wrappers.PutPasswordRequest" coveredlines="3" coverablelines="3" totallines="36" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Core.Wrappers.PutVerifyRequest" coveredlines="1" coverablelines="1" totallines="22" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Core.Wrappers.PutWifiRequest" coveredlines="3" coverablelines="3" totallines="36" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Core.Wrappers.SensorResponse" coveredlines="8" coverablelines="8" totallines="71" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Core.Wrappers.WifiResponse" coveredlines="3" coverablelines="3" totallines="37" coveredbranches="0" totalbranches="0" />
+  </assembly>
+  <assembly name="VPEAR.Server">
+    <class name="VPEAR.Server.Constants" coveredlines="10" coverablelines="10" totallines="95" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Server.Controllers.BaseController" coveredlines="2" coverablelines="2" totallines="28" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Server.Controllers.DeviceController" coveredlines="26" coverablelines="26" totallines="129" coveredbranches="8" totalbranches="8" />
+    <class name="VPEAR.Server.Controllers.FilterController" coveredlines="15" coverablelines="15" totallines="86" coveredbranches="4" totalbranches="4" />
+    <class name="VPEAR.Server.Controllers.FirmwareController" coveredlines="17" coverablelines="17" totallines="94" coveredbranches="4" totalbranches="4" />
+    <class name="VPEAR.Server.Controllers.PowerController" coveredlines="10" coverablelines="10" totallines="65" coveredbranches="2" totalbranches="2" />
+    <class name="VPEAR.Server.Controllers.SensorController" coveredlines="15" coverablelines="15" totallines="91" coveredbranches="4" totalbranches="4" />
+    <class name="VPEAR.Server.Controllers.UserController" coveredlines="37" coverablelines="37" totallines="172" coveredbranches="9" totalbranches="10" />
+    <class name="VPEAR.Server.Controllers.WifiController" coveredlines="17" coverablelines="17" totallines="90" coveredbranches="4" totalbranches="4" />
+    <class name="VPEAR.Server.Data.Configuration.AbstractEntityConfiguration&lt;T1, T2&gt;" coveredlines="15" coverablelines="15" totallines="48" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Server.Data.Configuration.DeviceConfiguration" coveredlines="24" coverablelines="24" totallines="55" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Server.Data.Configuration.FilterConfiguration" coveredlines="10" coverablelines="10" totallines="37" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Server.Data.Configuration.FrameConfiguration" coveredlines="18" coverablelines="18" totallines="51" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Server.Data.DataSeed" coveredlines="66" coverablelines="82" totallines="141" coveredbranches="8" totalbranches="12" />
+    <class name="VPEAR.Server.Data.DesignTimeVPEARDbContextFactory" coveredlines="15" coverablelines="15" totallines="45" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Server.Data.Repository&lt;T1, T2, T3&gt;" coveredlines="14" coverablelines="58" totallines="135" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Server.Data.VPEARDbContext" coveredlines="22" coverablelines="40" totallines="117" coveredbranches="2" totalbranches="6" />
+    <class name="VPEAR.Server.Filters.GlobalExceptionFilter" coveredlines="0" coverablelines="14" totallines="62" coveredbranches="0" totalbranches="2" />
+    <class name="VPEAR.Server.Handlers.DeviceFrequencyChangedHandler" coveredlines="48" coverablelines="50" totallines="107" coveredbranches="7" totalbranches="8" />
+    <class name="VPEAR.Server.Handlers.DeviceStatusChangedHandler" coveredlines="48" coverablelines="50" totallines="107" coveredbranches="7" totalbranches="8" />
+    <class name="VPEAR.Server.Helpers" coveredlines="6" coverablelines="6" totallines="23" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Server.Modules.ClientModule" coveredlines="7" coverablelines="7" totallines="31" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Server.Modules.HandlerModule" coveredlines="13" coverablelines="13" totallines="45" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Server.Modules.JobModule" coveredlines="16" coverablelines="16" totallines="45" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Server.Modules.RepositoryModule" coveredlines="18" coverablelines="18" totallines="47" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Server.Modules.ServiceModule" coveredlines="47" coverablelines="47" totallines="85" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Server.Modules.ValidatorModule" coveredlines="27" coverablelines="27" totallines="59" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Server.Program" coveredlines="17" coverablelines="32" totallines="74" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Server.Services.DeviceService" coveredlines="91" coverablelines="95" totallines="183" coveredbranches="26" totalbranches="28" />
+    <class name="VPEAR.Server.Services.FilterService" coveredlines="47" coverablelines="51" totallines="112" coveredbranches="12" totalbranches="16" />
+    <class name="VPEAR.Server.Services.FirmwareService" coveredlines="49" coverablelines="57" totallines="126" coveredbranches="14" totalbranches="16" />
+    <class name="VPEAR.Server.Services.Jobs.PollFramesJob" coveredlines="44" coverablelines="44" totallines="97" coveredbranches="7" totalbranches="8" />
+    <class name="VPEAR.Server.Services.Jobs.SearcheDeviceJob" coveredlines="0" coverablelines="84" totallines="156" coveredbranches="0" totalbranches="14" />
+    <class name="VPEAR.Server.Services.PowerService" coveredlines="31" coverablelines="35" totallines="87" coveredbranches="7" totalbranches="8" />
+    <class name="VPEAR.Server.Services.SensorService" coveredlines="69" coverablelines="86" totallines="162" coveredbranches="20" totalbranches="22" />
+    <class name="VPEAR.Server.Services.UserService" coveredlines="154" coverablelines="161" totallines="273" coveredbranches="38" totalbranches="42" />
+    <class name="VPEAR.Server.Services.WifiService" coveredlines="49" coverablelines="57" totallines="126" coveredbranches="14" totalbranches="16" />
+    <class name="VPEAR.Server.Startup" coveredlines="141" coverablelines="163" totallines="259" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Server.Validators.PostDeviceValidator" coveredlines="15" coverablelines="15" totallines="37" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Server.Validators.PostRegisterValidator" coveredlines="14" coverablelines="14" totallines="36" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Server.Validators.PutDeviceValidator" coveredlines="25" coverablelines="25" totallines="48" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Server.Validators.PutFilterValidator" coveredlines="3" coverablelines="3" totallines="26" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Server.Validators.PutFirmwareValidator" coveredlines="38" coverablelines="38" totallines="61" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Server.Validators.PutLoginValidator" coveredlines="14" coverablelines="14" totallines="36" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Server.Validators.PutPasswordValidator" coveredlines="22" coverablelines="22" totallines="46" coveredbranches="0" totalbranches="0" />
+    <class name="VPEAR.Server.Validators.PutWifiValidator" coveredlines="23" coverablelines="23" totallines="45" coveredbranches="2" totalbranches="2" />
+  </assembly>
+</coverage>
