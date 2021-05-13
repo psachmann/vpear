@@ -12,24 +12,25 @@ namespace VPEAR.Server.Test.Validators
 {
     public class PutUserValidatorTest : IClassFixture<AutofacFixture>
     {
-        private readonly IValidator<PutUserRequest> validator;
+        private readonly IValidator<PutPasswordRequest> validator;
 
         public PutUserValidatorTest(AutofacFixture fixture)
         {
-            this.validator = fixture.Container.Resolve<IValidator<PutUserRequest>>();
+            this.validator = fixture.Container.Resolve<IValidator<PutPasswordRequest>>();
         }
 
         [Theory]
-        [InlineData(null, null)]
-        [InlineData("old_password", "new_password")]
+        [InlineData("old_password", "new_password", "token")]
         public void ValidateSuccessTest(
-            string? newPassword,
-            string? oldPassword)
+            string newPassword,
+            string oldPassword,
+            string token)
         {
-            var request = new PutUserRequest()
+            var request = new PutPasswordRequest()
             {
                 NewPassword = newPassword,
                 OldPassword = oldPassword,
+                Token = token,
             };
             var result = this.validator.Validate(request);
 
@@ -37,22 +38,25 @@ namespace VPEAR.Server.Test.Validators
         }
 
         [Theory]
-        [InlineData("", "")]
-        [InlineData("password", "")]
-        [InlineData("", "password")]
-        [InlineData(null, "password")]
-        [InlineData("password", null)]
-        [InlineData("password", "password")]
-        [InlineData("short", "long_enough")]
-        [InlineData("long_enough", "short")]
+        [InlineData("", "", "")]
+        [InlineData("password", "", "")]
+        [InlineData("", "password", "")]
+        [InlineData("", "", "token")]
+        [InlineData(null, "password", null)]
+        [InlineData("password", null, null)]
+        [InlineData("password", "password", "token")]
+        [InlineData("short", "long_enough", "token")]
+        [InlineData("long_enough", "short", "token")]
         public void ValidateFailureTest(
             string? newPassword,
-            string? oldPassword)
+            string? oldPassword,
+            string? token)
         {
-            var request = new PutUserRequest()
+            var request = new PutPasswordRequest()
             {
                 NewPassword = newPassword,
                 OldPassword = oldPassword,
+                Token = token,
             };
             var result = this.validator.Validate(request);
 

@@ -26,8 +26,6 @@ namespace VPEAR.Server.Test.Services
             var job = new PollFramesJob(devices.Object, frames.Object, factory.Object, logger.Object);
 
             await job.Execute(context.Object);
-
-            devices.Verify(mock => mock.GetReferenceAsync(It.IsAny<Device>(), It.IsAny<Expression<Func<Device, It.IsAnyType>>>()));
         }
 
         [Fact]

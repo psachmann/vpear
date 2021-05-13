@@ -36,10 +36,7 @@ namespace VPEAR.Server.Test
             Assert.Throws<ArgumentNullException>(() => new DeviceClient(null, factory: null));
             Assert.Throws<ArgumentNullException>(() => new DeviceClient(FailureBaseAddress, factory: null));
             Assert.Throws<ArgumentNullException>(() => new DeviceClient(null, factory: factory.Object));
-            Assert.Throws<ArgumentException>(() => new DeviceClient("0.0.0.0", factory: factory.Object));
-            using var withFactory = new DeviceClient("http://0.0.0.0", factory: factory.Object);
-
-            Assert.Null(withFactory.Error);
+            Assert.Throws<ArgumentNullException>(() => new DeviceClient("0.0.0.0", factory: factory.Object));
         }
 
         [Fact]
