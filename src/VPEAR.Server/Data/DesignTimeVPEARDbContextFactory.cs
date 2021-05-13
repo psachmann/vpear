@@ -34,9 +34,7 @@ namespace VPEAR.Server.Data
 
             builder
                 .UseLazyLoadingProxies()
-                .UseMySql(connection, version)
-                .EnableSensitiveDataLogging()
-                .EnableDetailedErrors();
+                .UseMySql(connection, version);
 
             return new VPEARDbContext(builder.Options, null);
         }

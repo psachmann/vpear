@@ -3,6 +3,8 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace VPEAR.Core.Wrappers
@@ -16,6 +18,7 @@ namespace VPEAR.Core.Wrappers
         /// Gets or sets the name.
         /// </summary>
         /// <value>The desired user name.</value>
+        [Required]
         [JsonPropertyName("name")]
         public string Name { get; set; }
 
@@ -23,6 +26,7 @@ namespace VPEAR.Core.Wrappers
         /// Gets or sets the password.
         /// </summary>
         /// <value>The desired user password.</value>
+        [Required]
         [JsonPropertyName("password")]
         public string Password { get; set; }
 
@@ -30,6 +34,7 @@ namespace VPEAR.Core.Wrappers
         /// Gets or sets a value indicating whether the user is an admin or not.
         /// </summary>
         /// <value>Indicates whether the user is an admin or not.</value>
+        [DefaultValue(false)]
         [JsonPropertyName("is_admin")]
         public bool IsAdmin { get; set; }
     }

@@ -169,9 +169,7 @@ namespace VPEAR.Server
             {
                 builder
                     .UseLazyLoadingProxies()
-                    .UseMySql(connection, version)
-                    .EnableSensitiveDataLogging()
-                    .EnableDetailedErrors();
+                    .UseMySql(connection, version);
             });
         }
 
