@@ -1,5 +1,5 @@
 // Tools/Addins
-#tool nuget:?package=ReportGenerator&version=4.8.6
+#tool nuget:?package=ReportGenerator&version=4.8.8
 #addin nuget:?package=Cake.DocFx&version=1.0.0
 #addin nuget:?package=Cake.DotNetCoreEf&version=0.10.0
 #addin nuget:?package=Cake.Figlet&version=2.0.0
@@ -90,7 +90,7 @@ Task("Docs")
             AssemblyFilters = new[] { "+VPEAR.*" },
             HistoryDirectory = Directory(historyDir),
             ReportTypes = new[] { ReportGeneratorReportType.Html, ReportGeneratorReportType.Badges },
-            Verbosity = ReportGeneratorVerbosity.Error,
+            Verbosity = ReportGeneratorVerbosity.Info,
         };
 
         ReportGenerator(new GlobPattern(reportFiles), Directory(reportDir), settings);
