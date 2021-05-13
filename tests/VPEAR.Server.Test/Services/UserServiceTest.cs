@@ -30,32 +30,25 @@ namespace VPEAR.Server.Test.Services
 
             Assert.NotNull(result.Value);
             Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
-            Assert.InRange(result.Value!.Count, 1L, long.MaxValue);
+            Assert.InRange(result.Value!.Count, 0, int.MaxValue);
 
             result = await this.service.GetAsync(Roles.UserRole);
 
             Assert.NotNull(result.Value);
             Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
-            Assert.InRange(result.Value!.Count, 1L, long.MaxValue);
+            Assert.InRange(result.Value!.Count, 0, int.MaxValue);
         }
 
         [Theory]
-        [InlineData(false, null, null)]
-        [InlineData(true, null, null)]
-        [InlineData(false, "newPassword", "oldPassword")]
-        [InlineData(true, "newPassword", "oldPassword")]
-        public async Task PutAsync200OKTest(
-            bool isVerified,
-            string? newPassword,
-            string? oldPassword)
+        [InlineData(false)]
+        [InlineData(true)]
+        public async Task PutAsync200OKTest(bool isVerified)
         {
-            var request = new PutUserRequest()
+            var request = new PutVerifyRequest()
             {
                 IsVerified = isVerified,
-                NewPassword = newPassword,
-                OldPassword = oldPassword,
             };
-            var result = await this.service.PutAsync(Mocks.User.Name, request);
+            var result = await this.service.PutVerifyAsync(Mocks.User.Name, request);
 
             Assert.Null(result.Value);
             Assert.Equal(StatusCodes.Status204NoContent, result.StatusCode);
@@ -64,7 +57,7 @@ namespace VPEAR.Server.Test.Services
         [Fact]
         public async Task PutAsync404NotFoundTest()
         {
-            var result = await this.service.PutAsync(Mocks.NotExisting.Id.ToString(), new PutUserRequest());
+            var result = await this.service.PutVerifyAsync(Mocks.NotExisting.Id.ToString(), new PutVerifyRequest());
 
             Assert.NotNull(result.Error);
             Assert.Equal(StatusCodes.Status404NotFound, result.StatusCode);

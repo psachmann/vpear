@@ -52,8 +52,6 @@ namespace VPEAR.Server.Services
             }
             else
             {
-                await this.devices.GetReferenceAsync(device, device => device.Filter);
-
                 return new Result<GetFiltersResponse>(HttpStatusCode.OK, new GetFiltersResponse()
                 {
                     Noise = device.Filter.Noise,
@@ -87,8 +85,6 @@ namespace VPEAR.Server.Services
 
             if (await client.PutFiltersAsync(request.Spot, request.Smooth, request.Noise))
             {
-                await this.devices.GetReferenceAsync(device, device => device.Filter);
-
                 var filter = new Filter()
                 {
                     Noise = request.Noise ?? device.Filter.Noise,

@@ -3,7 +3,6 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
-using Serilog.Events;
 using System.Collections.Generic;
 
 namespace VPEAR.Server
@@ -12,33 +11,11 @@ namespace VPEAR.Server
     {
         public static class Defaults
         {
-#if DEBUG
-            public const string DefaultConfigurationPath = "./appsettings.Development.json";
-#else
             public const string DefaultConfigurationPath = "./appsettings.json";
-#endif
             public const string DefaultResponseType = "application/json";
             public const string DefaultAdminName = "admin";
             public const string DefaultAdminPassword = "Passw0rd?";
-            public const string DefaultLogPath = "../../logs/log_.txt";
-            public const string DefaultSearchDeviceJobId = "Search-Device-Job";
-            public const int DefaultHttpPort = 80;
-            public const int DefaultHttpsPort = 443;
             public const double DefaultHttpTimeout = 10000.0;
-#if DEBUG
-            public const LogEventLevel DefaultLogLevel = LogEventLevel.Debug;
-            public static readonly List<string> DefaultUrls = new List<string>()
-            {
-                $"http://localhost:{DefaultHttpPort}/",
-            };
-#else
-            public const LogEventLevel DefaultLogLevel = LogEventLevel.Information;
-            public static readonly List<string> DefaultUrls = new List<string>()
-            {
-                $"http://localhost:{DefaultHttpPort}/",
-                $"https://localhost:{DefaultHttpsPort}/",
-            };
-#endif
         }
 
         public static class WifiModes
@@ -109,6 +86,8 @@ namespace VPEAR.Server
             public const string WifiRoute = BaseRoute + "device/wifi";
             public const string FirmwareRoute = BaseRoute + "device/firmware";
             public const string UsersRoute = BaseRoute + "user";
+            public const string VerifyRoute = BaseRoute + "user/verify";
+            public const string PasswordRoute = BaseRoute + "user/password";
             public const string RegisterRoute = BaseRoute + "user/register";
             public const string LoginRoute = BaseRoute + "user/login";
         }

@@ -3,14 +3,17 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using VPEAR.Core;
 using VPEAR.Core.Abstractions;
 using VPEAR.Core.Entities;
+using VPEAR.Core.Extensions;
 using VPEAR.Core.Wrappers;
 using VPEAR.Server.Controllers;
 using static VPEAR.Server.Constants;
@@ -22,6 +25,7 @@ namespace VPEAR.Server.Services
     /// </summary>
     public class SensorService : ISensorService
     {
+        private const int MaxCount = 100;
         private readonly IRepository<Device, Guid> devices;
         private readonly IRepository<Frame, Guid> frames;
         private readonly DeviceClient.Factory factory;
@@ -50,87 +54,55 @@ namespace VPEAR.Server.Services
         public async Task<Result<Container<GetFrameResponse>>> GetFramesAsync(Guid id, int start, int count)
         {
             var device = await this.devices.GetAsync(id);
-            var payload = new Container<GetFrameResponse>
-            {
-                Start = start,
-            };
 
             if (device == null)
             {
                 return new Result<Container<GetFrameResponse>>(HttpStatusCode.NotFound, ErrorMessages.DeviceNotFound);
             }
 
-            await this.devices.GetCollectionAsync(device, device => device.Frames);
-
-            var frames = device.Frames.OrderByDescending(frame => frame.CreatedAt);
-
-            if (start == 0 && count == 0)
+            // checking for invalid values
+            if (start < 0 || start >= device.Frames.Count || count < 0)
             {
-                foreach (var frame in frames)
-                {
-                    await this.frames.GetReferenceAsync(frame, frame => frame.Filter);
-
-                    payload.Items.Add(new GetFrameResponse()
-                    {
-                        Readings = frame.Readings,
-                        Time = frame.CreatedAt,
-                        Filter = new GetFiltersResponse()
-                        {
-                            Noise = frame.Filter.Noise,
-                            Smooth = frame.Filter.Smooth,
-                            Spot = frame.Filter.Spot,
-                        },
-                    });
-                }
-
-                return new Result<Container<GetFrameResponse>>(HttpStatusCode.OK, payload);
+                return new Result<Container<GetFrameResponse>>(HttpStatusCode.BadRequest, ErrorMessages.BadRequest);
             }
 
-            if (start < count && count < device.Frames.Count)
+            var statusCode = HttpStatusCode.BadRequest;
+
+            // prevent out of range exceptions
+            if (start + count <= device.Frames.Count)
             {
-                foreach (var frame in frames.ToList().GetRange(start, count))
-                {
-                    await this.frames.GetReferenceAsync(frame, frame => frame.Filter);
-
-                    payload.Items.Add(new GetFrameResponse()
-                    {
-                        Readings = frame.Readings,
-                        Time = frame.CreatedAt,
-                        Filter = new GetFiltersResponse()
-                        {
-                            Noise = frame.Filter.Noise,
-                            Smooth = frame.Filter.Smooth,
-                            Spot = frame.Filter.Spot,
-                        },
-                    });
-                }
-
-                return new Result<Container<GetFrameResponse>>(HttpStatusCode.OK, payload);
+                statusCode = HttpStatusCode.OK;
+            }
+            else
+            {
+                statusCode = HttpStatusCode.PartialContent;
+                count = device.Frames.Count - start;
             }
 
-            if (start < count && count >= device.Frames.Count)
+            var frames = device.Frames
+                .Distinct()
+                .OrderBy(frame => frame.CreatedAt)
+                .ToList();
+            var items = new List<GetFrameResponse>();
+
+            foreach (var frame in frames.GetRange(start, count))
             {
-                foreach (var frame in frames.ToList().GetRange(start, device.Frames.Count - start))
+                var response = new GetFrameResponse()
                 {
-                    await this.frames.GetReferenceAsync(frame, frame => frame.Filter);
-
-                    payload.Items.Add(new GetFrameResponse()
+                    Filter = new GetFiltersResponse()
                     {
-                        Readings = frame.Readings,
-                        Time = frame.CreatedAt,
-                        Filter = new GetFiltersResponse()
-                        {
-                            Noise = frame.Filter.Noise,
-                            Smooth = frame.Filter.Smooth,
-                            Spot = frame.Filter.Spot,
-                        },
-                    });
-                }
+                        Noise = frame.Filter.Noise,
+                        Smooth = frame.Filter.Smooth,
+                        Spot = frame.Filter.Spot,
+                    },
+                    Readings = frame.Readings.FromJsonString<IList<IList<int>>>(),
+                    Time = frame.CreatedAt,
+                };
 
-                return new Result<Container<GetFrameResponse>>(HttpStatusCode.PartialContent, payload);
+                items.Add(response);
             }
 
-            return new Result<Container<GetFrameResponse>>(HttpStatusCode.BadRequest, ErrorMessages.BadRequest);
+            return new Result<Container<GetFrameResponse>>(statusCode, new Container<GetFrameResponse>(start, device.Frames.Count, items));
         }
 
         /// <inheritdoc/>
@@ -158,11 +130,11 @@ namespace VPEAR.Server.Services
             if (await client.CanConnectAsync())
             {
                 var sensors = await client.GetSensorsAsync();
-                var payload = new Container<GetSensorResponse>();
+                var items = new List<GetSensorResponse>();
 
                 foreach (var sensor in sensors)
                 {
-                    payload.Items.Add(new GetSensorResponse()
+                    items.Add(new GetSensorResponse()
                     {
                         Columns = sensor.Columns,
                         Height = sensor.Height,
@@ -175,7 +147,7 @@ namespace VPEAR.Server.Services
                     });
                 }
 
-                return new Result<Container<GetSensorResponse>>(HttpStatusCode.OK, payload);
+                return new Result<Container<GetSensorResponse>>(HttpStatusCode.OK, new Container<GetSensorResponse>(0, items));
             }
             else
             {

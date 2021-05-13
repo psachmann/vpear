@@ -18,6 +18,18 @@ namespace VPEAR.Core.Abstractions
     public interface IDeviceClient : IDisposable
     {
         /// <summary>
+        /// Gets the error.
+        /// </summary>
+        /// <value>The error the occurred.</value>
+        Exception Error { get; }
+
+        /// <summary>
+        /// Gets the error message.
+        /// </summary>
+        /// <value>The error message from the exception or http response.</value>
+        string ErrorMessage { get; }
+
+        /// <summary>
         /// Indicates if the device is reachable or not.
         /// </summary>
         /// <returns>A boolean, which indicates the success of the operation.</returns>

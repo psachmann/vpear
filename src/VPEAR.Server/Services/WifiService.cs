@@ -3,10 +3,8 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using VPEAR.Core;

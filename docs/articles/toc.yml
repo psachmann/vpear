@@ -1,2 +1,6 @@
-- name: Introduction
-  href: intro.md
+- name: Development
+  href: development.md
+- name: Configuration
+  href: configuration.md
+- name: Raspberry Pie
+  href: raspberry_pie.md

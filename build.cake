@@ -7,7 +7,7 @@
 // Arguments
 var target = Argument("target", "Test");
 var config = Argument("config", "Debug");
-var name = Argument("name", "Name");
+var name = Argument("name", "Init");
 
 
 // Paths

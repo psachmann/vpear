@@ -3,36 +3,23 @@ using UnityEngine;
 
 public abstract class AbstractView : AbstractBase
 {
-    protected Canvas canvas;
-    protected ViewService viewService;
+    protected Canvas _canvas;
 
-    private void Awake()
+    protected override void Awake()
     {
-        this.canvas = this.GetComponent<Canvas>();
-    }
-
-    public void Init(ViewService viewService)
-    {
-        this.viewService = viewService;
-        this.Hide();
-    }
-
-    public string GetName()
-    {
-        return this.canvas.name;
+        base.Awake();
+        _canvas = this.GetComponent<Canvas>();
+        Hide();
+        NavigationService.RegisterView(this);
     }
 
     public virtual void Hide()
     {
-        this.canvas.enabled = false;
+        _canvas.enabled = false;
     }
 
     public virtual void Show()
     {
-        this.canvas.enabled = true;
-    }
-
-    public virtual void NavigateEventHandler(object sender, EventArgs eventArgs)
-    {
+        _canvas.enabled = true;
     }
 }
