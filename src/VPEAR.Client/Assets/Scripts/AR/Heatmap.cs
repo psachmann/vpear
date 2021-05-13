@@ -64,7 +64,7 @@ public static class Heatmap
         int width,
         int height,
         Color32[] colors,
-        FilterMode filterMode = FilterMode.Point,
+        FilterMode filterMode = FilterMode.Trilinear,
         TextureWrapMode wrapMode = TextureWrapMode.Clamp)
     {
         var texture = new Texture2D(width, height);
@@ -137,8 +137,8 @@ public static class Heatmap
 
     private static double InterpolateCosine(double a, double b, double x)
     {
-        double ft = x * Math.PI;
-        double f = (1 - Math.Cos(ft)) * 0.5;
+        var ft = x * Math.PI;
+        var f = (1 - Math.Cos(ft)) * 0.5;
 
         return a * (1 - f) + b * f;
     }
@@ -210,7 +210,7 @@ public static class Heatmap
 
         var color = colors.GetPixel(x, 0);
 
-        if (value <= min)
+        if (value < (max * 0.01))
         {
             color.a = 0.1f;
         }

@@ -23,6 +23,8 @@ public class FetchingFramesEffect : Effect<FetchingFramesAction>
         var frames = await _client.GetFramesAsync(action.Device.Id, 0, 1);
         var sensor = await _client.GetSensorsAsync(action.Device.Id);
 
+        _logger.Error("A frame contains it values not as N x M, but instead as list in list with N * M");
+
         if (frames != null)
         {
             // fetching all frames from the server with FetchAllFramesAsync

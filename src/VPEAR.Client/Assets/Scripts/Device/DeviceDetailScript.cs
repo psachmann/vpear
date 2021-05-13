@@ -1,10 +1,8 @@
 using Fluxor;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 using VPEAR.Core;
-using VPEAR.Core.Wrappers;
 
 public class DeviceDetailScript : AbstractView
 {
@@ -21,6 +19,7 @@ public class DeviceDetailScript : AbstractView
     [SerializeField] private Button _arButton;
 
     private IState<DeviceDetailState> _deviceDetailState;
+    private DeviceDetailState _deviceDetailStateValue;
 
     private void Start()
     {
@@ -41,6 +40,7 @@ public class DeviceDetailScript : AbstractView
 
     private void DeviceDetailStateChanged(object sender, DeviceDetailState state)
     {
+        _deviceDetailStateValue = state;
         _idText.text = state.Device.Id;
         _addressText.text = state.Device.Address;
         _spotFilterToggle.isOn = state.Filters.Spot;
@@ -71,6 +71,8 @@ public class DeviceDetailScript : AbstractView
 
     private void OnARClick()
     {
+        _logger.Warning("Currently there will be no frames fetched from the server. The frame data is provided from the initial state.");
+        //_dispatcher.Dispatch(new FetchingFramesAction(_deviceDetailStateValue.Device));
         _dispatcher.Dispatch(new ChangeSceneAction(Constants.ARSceneId));
     }
 }

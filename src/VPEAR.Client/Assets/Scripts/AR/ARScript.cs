@@ -93,9 +93,9 @@ public class ARScript : AbstractBase
         var min = 0f;
         var max = 100f;
         var values = Heatmap.CreateHeatmapValues(width, height, _arStateValue.DeltaMinutes, _arStateValue.Current, _arStateValue.History);
-        values = Heatmap.Scale(4, values, Heatmap.InterpolationMehtod.Bicosine);
+        values = Heatmap.Scale(4, values, Heatmap.InterpolationMehtod.Bicubic);
         var colors = Heatmap.CreateHeatmapColors(min, max, values, _arStateValue.ColorScale);
-        var texture = Heatmap.CreateHeatmapTexture(values.GetLength(0), values.GetLength(1), colors);
+        var texture = Heatmap.CreateHeatmapTexture(values.GetLength(0), values.GetLength(1), colors, FilterMode.Trilinear);
         var sprite = Sprite.Create(texture, new Rect(0f, 0f, values.GetLength(0), values.GetLength(1)), Vector2.one * 0.5f);
 
         // LogValues(values);
