@@ -66,6 +66,15 @@ namespace VPEAR.Server.Controllers
         /// <summary>
         /// Updates the device information.
         /// </summary>
+        /// <remarks>
+        /// Note: the frequency describes how often the server will polling readings from the device.
+        /// For example a frequency of 360 means, the server will poll data from the device every 10 seconds.
+        /// Import: don't go higher then 360, because the device is slow and has a large delay.
+        /// Note: with the device status you can start and stop recording. For example, if the current status
+        /// is stopped and the request update it to recording, the server will start polling with the current frequency.
+        /// If the device is not reachable, you can put the status to stopped or recording and the server will try to
+        /// reconnect with the device. An archived device is readonly and can't be changed.
+        /// </remarks>
         /// <param name="id">The device id as 32 digit hex string.</param>
         /// <param name="request">The request data.</param>
         /// <returns>Http status code, which indicates the operation result.</returns>
