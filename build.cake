@@ -1,6 +1,6 @@
 // Tools/Addins
 #tool nuget:?package=ReportGenerator&version=4.8.6
-#addin nuget:?package=Cake.DocFx&version=0.13.1
+#addin nuget:?package=Cake.DocFx&version=1.0.0
 #addin nuget:?package=Cake.DotNetCoreEf&version=0.10.0
 #addin nuget:?package=Cake.Figlet&version=2.0.0
 
