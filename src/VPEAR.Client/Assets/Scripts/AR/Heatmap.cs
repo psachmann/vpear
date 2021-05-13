@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 using VPEAR.Core.Wrappers;
 
@@ -21,7 +22,7 @@ public static class Heatmap
         var newHeight = (int)(height * scale);
         var result = new double[newWidth, newHeight];
 
-        for (var x = 0; x < newWidth; x++)
+        Parallel.For(0, newWidth, x =>
         {
             for (var y = 0; y < newHeight; y++)
             {
@@ -33,7 +34,7 @@ public static class Heatmap
                     _ => throw new ArgumentOutOfRangeException(nameof(mehtod)),
                 };
             }
-        };
+        });
 
         return result;
     }

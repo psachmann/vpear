@@ -37,7 +37,7 @@ public class UserListScript : AbstractView
             var temp = Instantiate(_itemTemplate, _content.transform);
 
             temp.gameObject.SetActive(true);
-            temp.GetComponentInChildren<Text>().text = $"Name: {user.Name}\tRoles: {string.Join(", ", user.Roles)}";
+            temp.GetComponentInChildren<Text>().text = $"Name: {user.Name}";
             temp.onClick.AddListener(() =>
             {
                 _dispatcher.Dispatch(new SelectUserAction(user));

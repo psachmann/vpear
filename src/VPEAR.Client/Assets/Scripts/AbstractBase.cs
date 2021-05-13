@@ -10,27 +10,11 @@ using ILogger = Serilog.ILogger;
 
 public abstract class AbstractBase : MonoBehaviour
 {
-    private static readonly object s_syncRoot = new object();
-    private static bool s_isInitialized = false;
-    protected static IServiceProvider s_provider;
+    protected static readonly IServiceProvider s_provider;
     protected IDispatcher _dispatcher;
     protected ILogger _logger;
 
-    protected virtual void Awake()
-    {
-        lock (s_syncRoot)
-        {
-            if (!s_isInitialized)
-            {
-                Initialize();
-            }
-        }
-
-        _dispatcher = s_provider.GetRequiredService<IDispatcher>();
-        _logger = s_provider.GetRequiredService<ILogger>();
-    }
-
-    private void Initialize()
+    static AbstractBase()
     {
         // setting up logger
         var logger = new LoggerConfiguration()
@@ -39,6 +23,8 @@ public abstract class AbstractBase : MonoBehaviour
             .WriteTo.Unity()
             .WriteTo.File(Constants.LogPath, rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
             .CreateLogger();
+
+        logger.Information("Configure application...");
 
         // setting up http client
         var client = new VPEARClient(Constants.ServerBaseAddress, new HttpClient());
@@ -57,6 +43,13 @@ public abstract class AbstractBase : MonoBehaviour
             .InitializeAsync()
             .GetAwaiter()
             .GetResult();
-        s_isInitialized = true;
+
+        logger.Information("Finished application configuration...");
+    }
+
+    protected virtual void Awake()
+    {
+        _dispatcher = s_provider.GetRequiredService<IDispatcher>();
+        _logger = s_provider.GetRequiredService<ILogger>();
     }
 }
