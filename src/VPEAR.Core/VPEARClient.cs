@@ -15,7 +15,7 @@ namespace VPEAR.Core
 {
     /// <summary>
     /// This class implements <see cref="IVPEARClient"/> interface and should
-    /// provide and sdk like experience for communication with the vpear server.
+    /// provide and SDK like experience for communication with the vpear server.
     /// You can use via dependency injection with the interface or directly
     /// instantiate a vpear client.
     /// NOTE: If you use it with dependency injection register the client as singleton.

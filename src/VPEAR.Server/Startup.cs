@@ -162,17 +162,16 @@ namespace VPEAR.Server
 
         private static void ConfigureDatabase(IServiceCollection services)
         {
+            var connection = Configuration.GetValue<string>("MariaDb:Connection");
+            var version = new MySqlServerVersion(new Version(Configuration.GetValue<string>("MariaDb:Version")));
+
             services.AddDbContext<VPEARDbContext>(builder =>
             {
                 builder
                     .UseLazyLoadingProxies()
-                    .UseMySql(
-                        Configuration.GetValue<string>("MariaDb:Connection"),
-                        new MySqlServerVersion(new Version(Configuration.GetValue<string>("MariaDb:Version"))),
-                        options =>
-                        {
-                            options.CharSetBehavior(CharSetBehavior.NeverAppend);
-                        });
+                    .UseMySql(connection, version)
+                    .EnableSensitiveDataLogging()
+                    .EnableDetailedErrors();
             });
         }
 
