@@ -10,12 +10,27 @@ using ILogger = Serilog.ILogger;
 
 public abstract class AbstractBase : MonoBehaviour
 {
-    protected static readonly IServiceProvider s_provider;
-    protected static readonly IStore s_store;
+    private static readonly object s_syncRoot = new object();
+    private static bool s_isInitialized = false;
+    protected static IServiceProvider s_provider;
     protected IDispatcher _dispatcher;
     protected ILogger _logger;
 
-    static AbstractBase()
+    protected virtual void Awake()
+    {
+        lock (s_syncRoot)
+        {
+            if (!s_isInitialized)
+            {
+                Initialize();
+            }
+        }
+
+        _dispatcher = s_provider.GetRequiredService<IDispatcher>();
+        _logger = s_provider.GetRequiredService<ILogger>();
+    }
+
+    private void Initialize()
     {
         // setting up logger
         var logger = new LoggerConfiguration()
@@ -38,13 +53,10 @@ public abstract class AbstractBase : MonoBehaviour
             .AddMiddleware<SerilogMiddelware>());
 
         s_provider = services.BuildServiceProvider();
-        s_store = s_provider.GetRequiredService<IStore>();
-        s_store.InitializeAsync().Wait();
-    }
-
-    protected virtual void Awake()
-    {
-        _dispatcher = s_provider.GetRequiredService<IDispatcher>();
-        _logger = s_provider.GetRequiredService<ILogger>();
+        s_provider.GetRequiredService<IStore>()
+            .InitializeAsync()
+            .GetAwaiter()
+            .GetResult();
+        s_isInitialized = true;
     }
 }

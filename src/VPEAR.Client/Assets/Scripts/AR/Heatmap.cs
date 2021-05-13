@@ -53,7 +53,10 @@ public static class Heatmap
         {
             for (var y = 0; y < height; y++)
             {
-                colorArray[x + y * width] = GetColor(minValue, maxValue, values[x, y], colors);
+                // low pass filter to eliminate noise
+                var value = values[x, y] >= (maxValue * 0.01) ? values[x, y] : minValue;
+
+                colorArray[x + y * width] = GetColor(minValue, maxValue, value, colors);
             }
         };
 
@@ -212,7 +215,7 @@ public static class Heatmap
 
         if (value < (max * 0.01))
         {
-            color.a = 0.1f;
+            color.a = 0.2f;
         }
 
         return color;

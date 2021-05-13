@@ -11,9 +11,9 @@ public class ARFeature : Feature<ARState>
 
     protected override ARState GetInitialState()
     {
-        var history = Data.CreateHistory(64, 27);
+        var history = Data.CreateHistory();
         var sensors = Data.CreateSensors();
-        var deltaMinutes = TimeSpan.FromMinutes(60f);
+        var deltaMinutes = TimeSpan.FromMinutes(120f);
         var stepSize = 10;
         var treshold = 100f;
 

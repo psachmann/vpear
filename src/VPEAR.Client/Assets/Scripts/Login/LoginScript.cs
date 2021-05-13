@@ -48,6 +48,7 @@ public class LoginScript : AbstractView
 
     private void OnLoginClick()
     {
-        _dispatcher.Dispatch(new LoginAction(_userNameInput.text, _userPasswordInput.text));
+        _dispatcher.Dispatch(new NavigateToAction(Constants.DeviceListViewName));
+        // _dispatcher.Dispatch(new LoginAction(_userNameInput.text, _userPasswordInput.text));
     }
 }

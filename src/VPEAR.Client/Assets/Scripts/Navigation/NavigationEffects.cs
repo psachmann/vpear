@@ -14,7 +14,7 @@ public class NavigateBackEffect : Effect<NavigateBackAction>
     {
         _navigationService.NavigateBack();
 
-        dispatcher.Dispatch(new NavigateToAction(_navigationService.LocationName, false));
+        dispatcher.Dispatch(new NavigateToAction(_navigationService.Location, false));
 
         return Task.CompletedTask;
     }

@@ -24,11 +24,10 @@ public class ARScript : AbstractBase
     {
         _arState = s_provider.GetRequiredService<IState<ARState>>();
         _arState.StateChanged += ARStateChanged;
-        _arStateValue = _arState.Value;
         _forwardButton.onClick.AddListener(OnForwardClick);
         _backwardButton.onClick.AddListener(OnBackwardClick);
 
-        ARStateChanged(this, _arStateValue);
+        ARStateChanged(this, _arState.Value);
     }
 
     private void Update()
@@ -70,8 +69,8 @@ public class ARScript : AbstractBase
             _lastDateText.text = string.Empty;
         }
 
-        UpdateHeatmapSprite();
-        UpdateHeatmapLegendVisual();
+        UpdateHeatmapSprite(state);
+        UpdateHeatmapLegendVisual(state);
     }
 
     private void OnBackwardClick()
@@ -84,7 +83,7 @@ public class ARScript : AbstractBase
         _dispatcher.Dispatch(new MoveForwardAction(_arStateValue.StepSize));
     }
 
-    private void UpdateHeatmapSprite()
+    private void UpdateHeatmapSprite(ARState state)
     {
         _logger.Warning("Hard coded values for width, height, min and max!");
 
@@ -92,13 +91,11 @@ public class ARScript : AbstractBase
         var height = 27;
         var min = 0f;
         var max = 100f;
-        var values = Heatmap.CreateHeatmapValues(width, height, _arStateValue.DeltaMinutes, _arStateValue.Current, _arStateValue.History);
-        values = Heatmap.Scale(4, values, Heatmap.InterpolationMehtod.Bicubic);
-        var colors = Heatmap.CreateHeatmapColors(min, max, values, _arStateValue.ColorScale);
+        var values = Heatmap.CreateHeatmapValues(width, height, state.DeltaMinutes, state.Current, state.History);
+        values = Heatmap.Scale(8, values, Heatmap.InterpolationMehtod.Bicosine);
+        var colors = Heatmap.CreateHeatmapColors(min, max, values, state.ColorScale);
         var texture = Heatmap.CreateHeatmapTexture(values.GetLength(0), values.GetLength(1), colors, FilterMode.Trilinear);
         var sprite = Sprite.Create(texture, new Rect(0f, 0f, values.GetLength(0), values.GetLength(1)), Vector2.one * 0.5f);
-
-        // LogValues(values);
 
         _heatmapVisual.sprite = sprite;
 
@@ -108,30 +105,13 @@ public class ARScript : AbstractBase
         _heatmapVisual.transform.localScale = new Vector3(scaleX, scaleY);
     }
 
-    private void UpdateHeatmapLegendVisual()
+    private void UpdateHeatmapLegendVisual(ARState state)
     {
-        var texture = Heatmap.GetColorScale(_arStateValue.ColorScale);
+        var texture = Heatmap.GetColorScale(state.ColorScale);
         var sprite = Sprite.Create(
             texture,
             new Rect(0f, 0f, texture.width, texture.height),
             Vector2.one * 0.5f);
         _heatmapLegendVisual.sprite = sprite;
-    }
-
-    private void LogValues(double[,] values)
-    {
-        var builder = new StringBuilder();
-
-        for (var x = 0; x < values.GetLength(0); x++)
-        {
-            builder.Append($"{x}: ");
-            for (var y = 0; y < values.GetLength(1); y++)
-            {
-                builder.Append(string.Format("{0:0.##} ", values[x, y]));
-            }
-            builder.Append("\n");
-        }
-
-        _logger.Warning(builder.ToString());
     }
 }

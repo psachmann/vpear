@@ -2,19 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using UnityEngine;
 using VPEAR.Core.Extensions;
 using VPEAR.Core.Wrappers;
 
 public static class Data
 {
-    public static IList<GetFrameResponse> CreateHistory(int width, int height)
+    public static IList<GetFrameResponse> CreateHistory()
     {
         GetReadings();
 
         var seed = DateTimeOffset.Now;
         var frequency = TimeSpan.FromSeconds(10f);
-        var count = 10;
+        var count = 1000;
         var timestamps = CreateTimestamps(seed, frequency, count);
 
         return timestamps.Select(timestamp => new GetFrameResponse()
@@ -62,33 +61,18 @@ public static class Data
         return result;
     }
 
-    public static IList<IList<int>> CreateReadings(int width, int height)
-    {
-        var result = new List<IList<int>>(width);
-        var counter = 0;
-
-        foreach (var x in Enumerable.Range(0, width))
-        {
-            if (x < (width / 2))
-            {
-                counter += 3;
-            }
-            else
-            {
-                counter -= 3;
-            }
-
-            result.Add(Enumerable.Repeat(counter, height).ToList());
-        }
-
-        return result;
-    }
+    private static string ReadingsCache = null;
 
     public static IList<IList<int>> GetReadings()
     {
-        var path = Path.GetFullPath("./Assets/Json/sample_1.json");
-        var text = File.ReadAllText(path);
-        var values = text.FromJsonString<IList<int>>();
+        if (ReadingsCache == null)
+        {
+            var path = Path.GetFullPath("./Assets/Json/sample_1.json");
+
+            ReadingsCache = File.ReadAllText(path);
+        }
+
+        var values = ReadingsCache.FromJsonString<IList<int>>();
         var readings = new List<IList<int>>();
 
         for (var i = 0; i < values.Count; i += 27)

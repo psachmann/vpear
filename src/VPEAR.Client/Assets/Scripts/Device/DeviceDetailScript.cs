@@ -19,18 +19,21 @@ public class DeviceDetailScript : AbstractView
     [SerializeField] private Button _arButton;
 
     private IState<DeviceDetailState> _deviceDetailState;
-    private DeviceDetailState _deviceDetailStateValue;
+    private IState<LoginState> _loginState;
 
     private void Start()
     {
         _deviceDetailState = s_provider.GetRequiredService<IState<DeviceDetailState>>();
+        _loginState = s_provider.GetRequiredService<IState<LoginState>>();
         _deviceDetailState.StateChanged += DeviceDetailStateChanged;
+        _loginState.StateChanged += LoginStateCahnged;
         _frequencyInput.contentType = InputField.ContentType.IntegerNumber;
         _deleteButton.onClick.AddListener(OnDeleteClick);
         _saveButton.onClick.AddListener(OnSaveClick);
         _arButton.onClick.AddListener(OnARClick);
 
         DeviceDetailStateChanged(this, _deviceDetailState.Value);
+        LoginStateCahnged(this, _loginState.Value);
     }
 
     private void OnDestroy()
@@ -40,7 +43,6 @@ public class DeviceDetailScript : AbstractView
 
     private void DeviceDetailStateChanged(object sender, DeviceDetailState state)
     {
-        _deviceDetailStateValue = state;
         _idText.text = state.Device.Id;
         _addressText.text = state.Device.Address;
         _spotFilterToggle.isOn = state.Filters.Spot;
@@ -49,6 +51,11 @@ public class DeviceDetailScript : AbstractView
         _nameInput.text = state.Device.DisplayName;
         _frequencyInput.text = state.Device.Frequency.ToString();
         _statusDropdown.value = (int)state.Device.Status;
+    }
+
+    private void LoginStateCahnged(object sender, LoginState state)
+    {
+        _deleteButton.gameObject.SetActive(state.IsAdmin);
     }
 
     private void OnDeleteClick()

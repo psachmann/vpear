@@ -6,28 +6,19 @@ using UnityEngine.SceneManagement;
 public class NavigationService
 {
     private static readonly Dictionary<string, AbstractView> s_views = new Dictionary<string, AbstractView>();
-    private readonly Stack<AbstractView> _history;
+    private readonly Stack<string> _history = new Stack<string>();
     private readonly ILogger _logger;
 
     public NavigationService(ILogger logger)
     {
-        _history = new Stack<AbstractView>();
         _logger = logger;
     }
 
-    public AbstractView Location 
+    public string Location
     {
         get
         {
             return _history.Count > 0 ? _history.Peek() : null;
-        }
-    }
-
-    public string LocationName
-    {
-        get
-        {
-            return _history.Count > 0 ? _history.Peek().name : null;
         }
     }
 
@@ -38,17 +29,17 @@ public class NavigationService
 
     public bool CanNavigateBack()
     {
-        return _history.Count > 1;
+        return _history.Count > 2;
     }
 
     public void NavigateBack()
     {
         if (CanNavigateBack())
         {
-            Location.Hide();
+            s_views[Location].Hide();
             _history.Pop();
-            Location.Show();
-            _logger.Debug($"NavigateBack: {LocationName}");
+            s_views[Location].Show();
+            _logger.Debug($"NavigateBack: {Location}");
         }
         else
         {
@@ -62,11 +53,11 @@ public class NavigationService
         {
             if (Location != null)
             {
-                Location.Hide();
+                s_views[Location].Hide();
             }
 
-            _history.Push(view);
-            view.Show();
+            _history.Push(view.name);
+            s_views[Location].Show();
             _logger.Information($"NavigateTo: {viewName}");
         }
         else
