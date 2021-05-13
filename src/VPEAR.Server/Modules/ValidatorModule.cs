@@ -47,8 +47,8 @@ namespace VPEAR.Server.Modules
                 .As<IValidator<PutLoginRequest>>()
                 .InstancePerLifetimeScope();
 
-            builder.Register(context => new PutUserValidator())
-                .As<IValidator<PutUserRequest>>()
+            builder.Register(context => new PutPasswordValidator())
+                .As<IValidator<PutPasswordRequest>>()
                 .InstancePerLifetimeScope();
 
             builder.Register(context => new PutWifiValidator())

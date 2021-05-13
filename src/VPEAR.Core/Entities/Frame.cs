@@ -12,7 +12,7 @@ namespace VPEAR.Core.Entities
     /// <summary>
     /// Db data model for entity framework.
     /// </summary>
-    public class Frame : AbstractEntity<Guid>
+    public class Frame : AbstractEntity<Guid>, IEquatable<Frame>
     {
         /// <summary>
         /// Gets or sets the index.
@@ -30,7 +30,7 @@ namespace VPEAR.Core.Entities
         /// Gets or sets the readings.
         /// </summary>
         /// <value>The frame sensor values.</value>
-        public virtual IList<IList<int>> Readings { get; set; } = new List<IList<int>>();
+        public string Readings { get; set; }
 
         /// <summary>
         /// Gets or sets the foreign key.
@@ -55,5 +55,27 @@ namespace VPEAR.Core.Entities
         /// </summary>
         /// <value>The filter navigation property.</value>
         public virtual Filter Filter { get; set; }
+
+        /// <inheritdoc/>
+        public bool Equals(Frame other)
+        {
+            if (object.ReferenceEquals(this, null))
+            {
+                return false;
+            }
+
+            if (object.ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            return this.Index.Equals(other.Index) && this.Time.Equals(other.Time);
+        }
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            return this.Index.GetHashCode() ^ this.Time.GetHashCode();
+        }
     }
 }

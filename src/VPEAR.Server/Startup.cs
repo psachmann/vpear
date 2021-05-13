@@ -29,7 +29,6 @@ using VPEAR.Core.Wrappers;
 using VPEAR.Server.Data;
 using VPEAR.Server.Filters;
 using VPEAR.Server.Modules;
-using VPEAR.Server.Services;
 using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server
@@ -67,13 +66,13 @@ namespace VPEAR.Server
 #if DEBUG
             env.EnvironmentName = "Development";
             app.UseDeveloperExceptionPage();
-            app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "VPEAR.Server v1"));
 #else
             env.EnvironmentName = "Production";
             app.UseHsts();
             app.UseHttpsRedirection();
 #endif
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "VPEAR.Server v1"));
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
@@ -165,13 +164,15 @@ namespace VPEAR.Server
         {
             services.AddDbContext<VPEARDbContext>(builder =>
             {
-                builder.UseMySql(
-                    Configuration.GetValue<string>("MariaDb:Connection"),
-                    new MySqlServerVersion(new Version(Configuration.GetValue<string>("MariaDb:Version"))),
-                    options =>
-                    {
-                        options.CharSetBehavior(CharSetBehavior.NeverAppend);
-                    });
+                builder
+                    .UseLazyLoadingProxies()
+                    .UseMySql(
+                        Configuration.GetValue<string>("MariaDb:Connection"),
+                        new MySqlServerVersion(new Version(Configuration.GetValue<string>("MariaDb:Version"))),
+                        options =>
+                        {
+                            options.CharSetBehavior(CharSetBehavior.NeverAppend);
+                        });
             });
         }
 

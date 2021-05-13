@@ -27,7 +27,15 @@ namespace VPEAR.Core.Abstractions
         /// <param name="name">The user name.</param>
         /// <param name="request">The request data.</param>
         /// <returns>The result, which indicates the success of the operation.</returns>
-        Task<Result<Null>> PutAsync(string name, PutUserRequest request);
+        Task<Result<Null>> PutVerifyAsync(string name, PutVerifyRequest request);
+
+        /// <summary>
+        /// Updates the user password.
+        /// </summary>
+        /// <param name="name">The user name.</param>
+        /// <param name="request">The request data.</param>
+        /// <returns>The result, which indicates the success of the operation.</returns>
+        Task<Result<Null>> PutPasswordAsync(string name, PutPasswordRequest request);
 
         /// <summary>
         /// Deletes the given user.

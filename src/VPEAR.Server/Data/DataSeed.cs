@@ -4,13 +4,12 @@
 // </copyright>
 
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using VPEAR.Core;
-using VPEAR.Core.Abstractions;
 using VPEAR.Core.Entities;
+using VPEAR.Core.Extensions;
 using static VPEAR.Server.Constants;
 
 namespace VPEAR.Server.Data
@@ -65,7 +64,7 @@ namespace VPEAR.Server.Data
                         new List<int> { 0, 0, 0, 0, 0 },
                         new List<int> { 0, 0, 0, 0, 0 },
                         new List<int> { 0, 0, 0, 0, 0 },
-                    },
+                    }.ToJsonString(),
                     Time = DateTimeOffset.UtcNow.ToString("yyyy-MM-dd hh:mm:ss.fff"),
                 };
 

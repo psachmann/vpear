@@ -46,7 +46,7 @@ namespace VPEAR.Server.Services.Jobs
         }
 
         /// <summary>
-        /// Executes the device searche.
+        /// Executes the device search.
         /// </summary>
         /// <param name="context">The job context.</param>
         /// <returns>Returns an asynchronous task.</returns>

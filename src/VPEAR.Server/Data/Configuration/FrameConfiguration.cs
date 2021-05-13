@@ -32,13 +32,8 @@ namespace VPEAR.Server.Data.Configuration
                 .HasForeignKey(frame => frame.DeviceForeignKey);
 
             builder.Property(frame => frame.Readings)
-                .HasConversion(
-                    value => value.ToJsonString(),
-                    value => value.FromJsonString<IList<IList<int>>>(),
-                    new ValueComparer<IList<IList<int>>>(
-                        (c1, c2) => c1.SequenceEqual(c2),
-                        c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
-                        c => c.ToList()));
+                .IsRequired()
+                .IsUnicode();
 
             builder.Property(frame => frame.Time)
                 .HasMaxLength(Limits.MaxStringLength)

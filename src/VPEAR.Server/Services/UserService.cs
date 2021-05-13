@@ -83,42 +83,40 @@ namespace VPEAR.Server.Services
         {
             if (role == null)
             {
-                var admins = await this.users.GetUsersInRoleAsync(Roles.AdminRole);
-                var users = await this.users.GetUsersInRoleAsync(Roles.UserRole);
-                var payload = new Container<GetUserResponse>();
+                var users = new Dictionary<string, IdentityUser>();
+                var items = new List<GetUserResponse>();
 
-                foreach (var admin in admins)
+                foreach (var admin in await this.users.GetUsersInRoleAsync(Roles.AdminRole))
                 {
-                    payload.Items.Add(new GetUserResponse()
-                    {
-                        Name = admin.UserName,
-                        Id = admin.Id,
-                        IsVerified = admin.EmailConfirmed,
-                        Roles = Roles.AllRoles,
-                    });
+                    users.TryAdd(admin.UserName, admin);
+                }
+
+                foreach (var user in await this.users.GetUsersInRoleAsync(Roles.UserRole))
+                {
+                    users.TryAdd(user.UserName, user);
                 }
 
                 foreach (var user in users)
                 {
-                    payload.Items.Add(new GetUserResponse()
+                    items.Add(new GetUserResponse()
                     {
-                        Name = user.UserName,
-                        Id = user.Id,
-                        IsVerified = user.EmailConfirmed,
-                        Roles = new List<string>() { Roles.UserRole, },
+                        Name = user.Value.UserName,
+                        Id = user.Value.Id,
+                        IsVerified = user.Value.EmailConfirmed,
+                        Roles = await this.users.GetRolesAsync(user.Value),
                     });
                 }
 
-                return new Result<Container<GetUserResponse>>(HttpStatusCode.OK, payload);
+                return new Result<Container<GetUserResponse>>(HttpStatusCode.OK, new Container<GetUserResponse>(0, items));
             }
             else
             {
                 var users = await this.users.GetUsersInRoleAsync(role);
-                var payload = new Container<GetUserResponse>();
+                var items = new List<GetUserResponse>();
 
                 foreach (var user in users)
                 {
-                    payload.Items.Add(new GetUserResponse()
+                    items.Add(new GetUserResponse()
                     {
                         Name = user.UserName,
                         Id = user.Id,
@@ -127,7 +125,7 @@ namespace VPEAR.Server.Services
                     });
                 }
 
-                return new Result<Container<GetUserResponse>>(HttpStatusCode.OK, payload);
+                return new Result<Container<GetUserResponse>>(HttpStatusCode.OK, new Container<GetUserResponse>(0, items));
             }
         }
 
@@ -169,7 +167,7 @@ namespace VPEAR.Server.Services
         }
 
         /// <inheritdoc/>
-        public async Task<Result<Null>> PutAsync(string name, PutUserRequest request)
+        public async Task<Result<Null>> PutVerifyAsync(string name, PutVerifyRequest request)
         {
             var user = await this.users.FindByNameAsync(name);
 
@@ -178,13 +176,7 @@ namespace VPEAR.Server.Services
                 return new Result<Null>(HttpStatusCode.NotFound, ErrorMessages.UserNotFound);
             }
 
-            if (request.NewPassword != null && request.OldPassword != null
-                && !(await this.users.ChangePasswordAsync(user, request.OldPassword, request.NewPassword)).Succeeded)
-            {
-                return new Result<Null>(HttpStatusCode.InternalServerError, ErrorMessages.InternalServerError);
-            }
-
-            if (request.IsVerified != null && request.IsVerified.Value)
+            if (request.IsVerified)
             {
                 await this.users.SetEmailAsync(user, "email@domain.tld");
 
@@ -193,6 +185,35 @@ namespace VPEAR.Server.Services
             }
 
             return new Result<Null>(HttpStatusCode.NoContent);
+        }
+
+        /// <inheritdoc/>
+        public async Task<Result<Null>> PutPasswordAsync(string name, PutPasswordRequest request)
+        {
+            var user = await this.users.FindByNameAsync(name);
+
+            if (user == null || await this.users.GetAuthenticationTokenAsync(user, JwtBearerDefaults.AuthenticationScheme, string.Empty) != request.Token)
+            {
+                return new Result<Null>(HttpStatusCode.NotFound, ErrorMessages.UserNotFound);
+            }
+
+            if (await this.users.CheckPasswordAsync(user, request.OldPassword))
+            {
+                var result = await this.users.ChangePasswordAsync(user, request.OldPassword, request.NewPassword);
+
+                if (result.Succeeded)
+                {
+                    return new Result<Null>(HttpStatusCode.NoContent);
+                }
+                else
+                {
+                    return new Result<Null>(HttpStatusCode.BadRequest, result.Errors.Select(error => error.Description));
+                }
+            }
+            else
+            {
+                return new Result<Null>(HttpStatusCode.BadRequest, ErrorMessages.InvalidPassword);
+            }
         }
 
         /// <inheritdoc/>
@@ -214,7 +235,7 @@ namespace VPEAR.Server.Services
             {
                 var userRoles = await this.users.GetRolesAsync(user);
 
-                var authClaims = new List<Claim>
+                var authClaims = new List<Claim>()
                 {
                     new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
