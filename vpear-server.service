@@ -1,0 +1,12 @@
+[Unit]
+Description=The vpear server
+
+[Service]
+Type=notify
+WorkingDirectory=/home/sachmann/app/server
+ExecStart=/home/sachmann/app/server/VPEAR.Server
+SyslogIdentifier=VPEARServer
+User=root
+
+[Install]
+WantedBy=multi-user.target
