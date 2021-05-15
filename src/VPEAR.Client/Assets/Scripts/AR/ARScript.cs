@@ -1,7 +1,6 @@
 using Fluxor;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
-using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -69,8 +68,8 @@ public class ARScript : AbstractBase
             _lastDateText.text = string.Empty;
         }
 
-        UpdateHeatmapSprite(state);
         UpdateHeatmapLegendVisual(state);
+        UpdateHeatmapSprite(state);
     }
 
     private void OnBackwardClick()
@@ -92,7 +91,7 @@ public class ARScript : AbstractBase
         var min = 0f;
         var max = 100f;
         var values = Heatmap.CreateHeatmapValues(width, height, state.DeltaMinutes, state.Current, state.History);
-        values = Heatmap.Scale(8, values, Heatmap.InterpolationMehtod.Bicosine);
+        values = Heatmap.Scale(8, values, Heatmap.InterpolationMehtod.Bicubic);
         var colors = Heatmap.CreateHeatmapColors(min, max, values, state.ColorScale);
         var texture = Heatmap.CreateHeatmapTexture(values.GetLength(0), values.GetLength(1), colors, FilterMode.Trilinear);
         var sprite = Sprite.Create(texture, new Rect(0f, 0f, values.GetLength(0), values.GetLength(1)), Vector2.one * 0.5f);
