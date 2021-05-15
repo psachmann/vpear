@@ -19,6 +19,11 @@ public class PopupScript : AbstractView
         PopupStateChanged(this, _popupState.Value);
     }
 
+    private void OnDestroy()
+    {
+        _popupState.StateChanged -= PopupStateChanged;
+    }
+
     private void PopupStateChanged(object sender, PopupState state)
     {
         if (state.IsVisible)

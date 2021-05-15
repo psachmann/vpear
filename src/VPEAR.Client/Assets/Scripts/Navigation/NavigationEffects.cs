@@ -13,7 +13,8 @@ public class NavigateBackEffect : Effect<NavigateBackAction>
     public override Task HandleAsync(NavigateBackAction action, IDispatcher dispatcher)
     {
         _navigationService.NavigateBack();
-        dispatcher.Dispatch(new NavigateToAction(_navigationService.LocationName));
+
+        dispatcher.Dispatch(new NavigateToAction(_navigationService.Location, false));
 
         return Task.CompletedTask;
     }
@@ -30,8 +31,11 @@ public class NavigateToEffect : Effect<NavigateToAction>
 
     public override Task HandleAsync(NavigateToAction action, IDispatcher dispatcher)
     {
-        _navigationService.NavigateTo(action.NextView);
-
+        if (action.ExecuteNavigation)
+        {
+            _navigationService.NavigateTo(action.NextView);
+        }
+        
         return Task.CompletedTask;
     }
 }
@@ -47,7 +51,7 @@ public class ChangeSceneEffect : Effect<ChangeSceneAction>
 
     public override Task HandleAsync(ChangeSceneAction action, IDispatcher dispatcher)
     {
-        _navigationService.ChangeScene(action.SceneName);
+        _navigationService.ChangeScene(action.SceneId);
 
         return Task.CompletedTask;
     }

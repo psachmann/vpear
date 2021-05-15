@@ -35,35 +35,6 @@ public class FetchingUsersEffect : Effect<FetchingUsersAction>
     }
 }
 
-public class UpdatingUserEffect : Effect<UpdatingUserAction>
-{
-    private readonly IVPEARClient _client;
-    private readonly ILogger _logger;
-
-    public UpdatingUserEffect(IVPEARClient client, ILogger logger)
-    {
-        _client = client;
-        _logger = logger;
-    }
-
-    public override async Task HandleAsync(UpdatingUserAction action, IDispatcher dispatcher)
-    {
-        if (await _client.PutUserAsync(action.User.Name, action.OldPassword, action.NewPassword, action.IsVerfied))
-        {
-            action.User.IsVerified = action.IsVerfied;
-            dispatcher.Dispatch(new UpdatedUserAction(action.User));
-        }
-        else
-        {
-            _logger.Error(_client.ErrorMessage);
-
-            dispatcher.Dispatch(new UpdatedUserAction(action.User));
-            dispatcher.Dispatch(new ShowPopupAction(Constants.ConnectionErrorTitleText, _client.ErrorMessage,
-                () => dispatcher.Dispatch(new ClosePopupAction())));
-        }
-    }
-}
-
 public class DeleteUserEffect : Effect<DeleteUserAction>
 {
     private readonly IVPEARClient _client;
@@ -86,6 +57,36 @@ public class DeleteUserEffect : Effect<DeleteUserAction>
             _logger.Error(_client.ErrorMessage);
 
             dispatcher.Dispatch(new ShowPopupAction(Constants.ConnectionErrorTitleText, _client.ErrorMessage,
+                () => dispatcher.Dispatch(new ClosePopupAction())));
+        }
+    }
+}
+
+public class VerifingUserEffect : Effect<VerifingUserAction>
+{
+    private readonly IVPEARClient _client;
+    private readonly ILogger _logger;
+
+    public VerifingUserEffect(IVPEARClient client, ILogger logger)
+    {
+        _client = client;
+        _logger = logger;
+    }
+
+    public override async Task HandleAsync(VerifingUserAction action, IDispatcher dispatcher)
+    {
+        if (await _client.PutVerifyAsync(action.User.Name, true))
+        {
+            action.User.IsVerified = true;
+            dispatcher.Dispatch(new VerifiedUserAction(action.User));
+        }
+        else
+        {
+            _logger.Error(_client.ErrorMessage);
+
+            action.User.IsVerified = false;
+            dispatcher.Dispatch(new VerifiedUserAction(action.User));
+            dispatcher.Dispatch(new ShowPopupAction("Error", _client.ErrorMessage,
                 () => dispatcher.Dispatch(new ClosePopupAction())));
         }
     }

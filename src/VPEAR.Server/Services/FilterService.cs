@@ -85,14 +85,9 @@ namespace VPEAR.Server.Services
 
             if (await client.PutFiltersAsync(request.Spot, request.Smooth, request.Noise))
             {
-                var filter = new Filter()
-                {
-                    Noise = request.Noise ?? device.Filter.Noise,
-                    Smooth = request.Smooth ?? device.Filter.Smooth,
-                    Spot = request.Spot ?? device.Filter.Spot,
-                };
-
-                device.Filter = filter;
+                device.Filter.Noise = request.Noise ?? device.Filter.Noise;
+                device.Filter.Smooth = request.Smooth ?? device.Filter.Smooth;
+                device.Filter.Spot = request.Spot ?? device.Filter.Spot;
 
                 await this.devices.UpdateAsync(device);
                 await client.SyncAsync(device, this.devices);

@@ -4,13 +4,13 @@ using Serilog;
 using System;
 using System.Net.Http;
 using UnityEngine;
+using VPEAR.Core;
 using VPEAR.Core.Abstractions;
 using ILogger = Serilog.ILogger;
 
 public abstract class AbstractBase : MonoBehaviour
 {
     protected static readonly IServiceProvider s_provider;
-    protected static readonly IStore s_store;
     protected IDispatcher _dispatcher;
     protected ILogger _logger;
 
@@ -24,8 +24,10 @@ public abstract class AbstractBase : MonoBehaviour
             .WriteTo.File(Constants.LogPath, rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
             .CreateLogger();
 
+        logger.Information("Configure application...");
+
         // setting up http client
-        var client = new Client(Constants.ServerBaseAddress, new HttpClient());
+        var client = new VPEARClient(Constants.ServerBaseAddress, new HttpClient());
 
         // setting up dependency injection
         var services = new ServiceCollection()
@@ -37,8 +39,12 @@ public abstract class AbstractBase : MonoBehaviour
             .AddMiddleware<SerilogMiddelware>());
 
         s_provider = services.BuildServiceProvider();
-        s_store = s_provider.GetRequiredService<IStore>();
-        s_store.InitializeAsync().Wait();
+        s_provider.GetRequiredService<IStore>()
+            .InitializeAsync()
+            .GetAwaiter()
+            .GetResult();
+
+        logger.Information("Finished application configuration...");
     }
 
     protected virtual void Awake()

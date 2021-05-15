@@ -42,6 +42,11 @@ namespace VPEAR.Server.Controllers
         /// <summary>
         /// Gets the recorded data.
         /// </summary>
+        /// <remarks>
+        /// The total count field indicates how many frames are saved in the database. Due
+        /// performance reasons, the server will send 100 frames at maximum per request. If
+        /// you need all frames you have to make multiple requests with different start indices.
+        /// </remarks>
         /// <param name="id">The device id.</param>
         /// <param name="start">The inclusive start frame (0 is the first recorded frame). If omitted, 0 will be assumed.</param>
         /// <param name="count">The count how many frames from start. If omitted, 0 will be assumed.</param>

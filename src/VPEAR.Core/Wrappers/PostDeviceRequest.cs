@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace VPEAR.Core.Wrappers
@@ -16,6 +17,7 @@ namespace VPEAR.Core.Wrappers
         /// Gets or sets the address.
         /// </summary>
         /// <value>A IP address from the subnet to search.</value>
+        [Required]
         [JsonPropertyName("address")]
         public string Address { get; set; }
 
@@ -23,6 +25,7 @@ namespace VPEAR.Core.Wrappers
         /// Gets or sets the subnet mask.
         /// </summary>
         /// <value>The subnet mask form the subnet to search.</value>
+        [Required]
         [JsonPropertyName("subnet_mask")]
         public string SubnetMask { get; set; }
     }

@@ -1,7 +1,4 @@
 using Fluxor;
-using Serilog;
-
-#pragma warning disable IDE0060
 
 public static partial class Reducers
 {

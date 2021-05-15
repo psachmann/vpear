@@ -6,7 +6,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using System;
 using System.IO;
 using static VPEAR.Server.Constants;
@@ -21,7 +20,7 @@ namespace VPEAR.Server.Data
         /// <summary>
         /// Creates a <see cref="VPEARDbContext"/> instance during design time.
         /// </summary>
-        /// <param name="args">The command line args.</param>
+        /// <param name="args">The command line arguments.</param>
         /// <returns>A <see cref="VPEARDbContext"/> instance.</returns>
         public VPEARDbContext CreateDbContext(string[] args)
         {
@@ -30,14 +29,12 @@ namespace VPEAR.Server.Data
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile(Defaults.DefaultConfigurationPath)
                 .Build();
+            var connection = configuration.GetValue<string>("MariaDb:Connection");
+            var version = new MySqlServerVersion(new Version(configuration.GetValue<string>("MariaDb:Version")));
 
-            builder.UseMySql(
-                configuration.GetValue<string>("MariaDb:Connection"),
-                new MySqlServerVersion(new Version(configuration.GetValue<string>("MariaDb:Version"))),
-                options =>
-                {
-                    options.CharSetBehavior(CharSetBehavior.NeverAppend);
-                });
+            builder
+                .UseLazyLoadingProxies()
+                .UseMySql(connection, version);
 
             return new VPEARDbContext(builder.Options, null);
         }

@@ -43,6 +43,7 @@ namespace VPEAR.Server.Controllers
         /// <summary>
         /// The admin can search for user based on id or role.
         /// A GET request without any query parameters returns all users.
+        /// NOTE: Only for admin.
         /// </summary>
         /// <param name="role">The user role. Should be 'admin' or 'user'.</param>
         /// <returns>A list of found users.</returns>
@@ -61,7 +62,9 @@ namespace VPEAR.Server.Controllers
         }
 
         /// <summary>
-        /// The admin can verify a user.
+        /// An admin can verify a user. A newly registered user will not get an access token
+        /// from the login endpoint until an admin verifies the new user.
+        /// NOTE: Only for admin.
         /// </summary>
         /// <param name="name">The user name.</param>
         /// <param name="request">The request data.</param>
@@ -84,7 +87,7 @@ namespace VPEAR.Server.Controllers
         }
 
         /// <summary>
-        /// The user can change his own password.
+        /// An admin or user can change his own password.
         /// </summary>
         /// <param name="name">The user name.</param>
         /// <param name="request">The request data.</param>
@@ -107,7 +110,8 @@ namespace VPEAR.Server.Controllers
         }
 
         /// <summary>
-        /// The admin can delete a user.
+        /// An admin can delete a user or admin.
+        /// NOTE: Only for admin.
         /// </summary>
         /// <param name="name">The user name.</param>
         /// <returns>Http status code, which indicates the operation result.</returns>
@@ -149,7 +153,8 @@ namespace VPEAR.Server.Controllers
         }
 
         /// <summary>
-        /// Generates token to access the endpoints, which requires authorization.
+        /// Generates token to access the endpoints, which requires authorization. The user or admin
+        /// has to be verified before an access token will be issued.
         /// </summary>
         /// <param name="request">The request data.</param>
         /// <returns>The authorization token and the date, when the token expires.</returns>
