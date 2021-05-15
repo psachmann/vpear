@@ -12,6 +12,7 @@ public class FrameScript : AbstractBase
 
     private IState<NavigationState> _navigationState;
     private IState<LoginState> _loginState;
+    private LoginState _loginStateValue;
 
     private void Start()
     {
@@ -19,13 +20,22 @@ public class FrameScript : AbstractBase
         _navigationState.StateChanged += NavivigationStateChanged;
         _loginState = s_provider.GetRequiredService<IState<LoginState>>();
         _loginState.StateChanged += LoginStateChanged;
+        _loginStateValue = _loginState.Value;
         _devices.onClick.AddListener(OnDevicesClick);
         _users.onClick.AddListener(OnUsersClick);
         _settings.onClick.AddListener(OnSettingsClick);
-        _dispatcher.Dispatch(new NavigateToAction(Constants.LoginViewName));
 
         NavivigationStateChanged(this, _navigationState.Value);
         LoginStateChanged(this, _loginState.Value);
+
+        if (!_loginState.Value.IsSignedIn)
+        {
+            _dispatcher.Dispatch(new NavigateToAction(Constants.LoginViewName));
+        }
+        else
+        {
+            _dispatcher.Dispatch(new NavigateToAction(Constants.DeviceDetailViewName));
+        }
     }
 
     private void Update()
@@ -36,28 +46,27 @@ public class FrameScript : AbstractBase
         }
     }
 
+    private void OnDestroy()
+    {
+        _navigationState.StateChanged -= NavivigationStateChanged;
+        _loginState.StateChanged -= LoginStateChanged;
+    }
+
     private void NavivigationStateChanged(object sender, NavigationState state)
     {
-        if (state.ViewName != Constants.LoginViewName)
+        if (string.Equals(state.ViewName, Constants.LoginViewName))
         {
-            ShowContent();
+            HideContent();
         }
         else
         {
-            HideContent();
+            ShowContent();
         }
     }
 
     private void LoginStateChanged(object sender, LoginState state)
     {
-        if (state.IsAdmin)
-        {
-            _users.gameObject.SetActive(true);
-        }
-        else
-        {
-            _users.gameObject.SetActive(false);
-        }
+        _loginStateValue = state;
     }
 
     private void OnDevicesClick()
@@ -79,13 +88,16 @@ public class FrameScript : AbstractBase
 
     private void HideContent()
     {
-        _navigationPanel.alpha = 0;
-        _navigationPanel.interactable = false;
+        _navigationPanel.gameObject.SetActive(false);
     }
 
     private void ShowContent()
     {
-        _navigationPanel.interactable = true;
-        _navigationPanel.alpha = 1;
+        _navigationPanel.gameObject.SetActive(true);
+
+        if (!_loginStateValue.IsAdmin)
+        {
+            _users.gameObject.SetActive(false);
+        }
     }
 }

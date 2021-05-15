@@ -34,38 +34,29 @@ public class SelectUserAction
     public GetUserResponse User { get; }
 }
 
-public class UpdatingUserAction
-{
-    public UpdatingUserAction(GetUserResponse user, bool isVerified, string oldPassword = default, string newPassword = default)
-    {
-        User = user;
-        IsVerfied = isVerified;
-        OldPassword = oldPassword;
-        NewPassword = newPassword;
-    }
-
-    public GetUserResponse User { get; }
-
-    public bool IsVerfied { get; }
-
-    public string OldPassword { get; }
-
-    public string NewPassword { get; }
-}
-
-public class UpdatedUserAction
-{
-    public UpdatedUserAction(GetUserResponse user)
-    {
-        User = user;
-    }
-
-    public GetUserResponse User { get; }
-}
-
 public class DeleteUserAction
 {
     public DeleteUserAction(GetUserResponse user)
+    {
+        User = user;
+    }
+
+    public GetUserResponse User { get; }
+}
+
+public class VerifingUserAction
+{
+    public VerifingUserAction(GetUserResponse user)
+    {
+        User = user;
+    }
+
+    public GetUserResponse User { get; }
+}
+
+public class VerifiedUserAction
+{
+    public VerifiedUserAction(GetUserResponse user)
     {
         User = user;
     }

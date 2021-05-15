@@ -6,28 +6,19 @@ using UnityEngine.SceneManagement;
 public class NavigationService
 {
     private static readonly Dictionary<string, AbstractView> s_views = new Dictionary<string, AbstractView>();
-    private readonly Stack<AbstractView> _history;
+    private readonly Stack<string> _history = new Stack<string>();
     private readonly ILogger _logger;
 
     public NavigationService(ILogger logger)
     {
-        _history = new Stack<AbstractView>();
         _logger = logger;
     }
 
-    public AbstractView Location 
+    public string Location
     {
         get
         {
             return _history.Count > 0 ? _history.Peek() : null;
-        }
-    }
-
-    public string LocationName
-    {
-        get
-        {
-            return _history.Count > 0 ? _history.Peek().name : null;
         }
     }
 
@@ -38,9 +29,6 @@ public class NavigationService
 
     public bool CanNavigateBack()
     {
-        // it must be 2, because if its one, we can navigate back to the login view
-        // and we don't want this, if we logout the history will be cleared and we won't
-        // be able the access other user data
         return _history.Count > 2;
     }
 
@@ -48,10 +36,10 @@ public class NavigationService
     {
         if (CanNavigateBack())
         {
-            Location.Hide();
+            s_views[Location].Hide();
             _history.Pop();
-            Location.Show();
-            _logger.Information($"NavigateBack: {LocationName}");
+            s_views[Location].Show();
+            _logger.Debug($"NavigateBack: {Location}");
         }
         else
         {
@@ -61,20 +49,15 @@ public class NavigationService
 
     public void NavigateTo(string viewName)
     {
-        if (LocationName == viewName)
-        {
-            return;
-        }
-
         if (s_views.TryGetValue(viewName, out var view))
         {
             if (Location != null)
             {
-                Location.Hide();
+                s_views[Location].Hide();
             }
 
-            _history.Push(view);
-            view.Show();
+            _history.Push(view.name);
+            s_views[Location].Show();
             _logger.Information($"NavigateTo: {viewName}");
         }
         else
@@ -88,23 +71,15 @@ public class NavigationService
     public void ClearHistory()
     {
         _history.Clear();
+
+        foreach (var view in s_views)
+        {
+            view.Value.Hide();
+        }
     }
 
-    public void ChangeScene(string sceneName)
+    public void ChangeScene(int sceneId)
     {
-        var scene = SceneManager.GetSceneByName(sceneName);
-
-        if (scene.IsValid())
-        {
-            _logger.Information($"GoToScene: {scene.name}");
-
-            SceneManager.LoadScene(scene.name);
-        }
-        else
-        {
-            _logger.Error($"SceneNotFound: {scene.name}");
-
-            throw new ArgumentOutOfRangeException(nameof(sceneName));
-        }
+        SceneManager.LoadScene(sceneId);
     }
 }

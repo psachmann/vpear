@@ -1,9 +1,12 @@
 public class NavigateToAction
 {
-    public NavigateToAction(string nextView)
+    public NavigateToAction(string nextView, bool executeNavigation = true)
     {
-        this.NextView = nextView;
+        ExecuteNavigation = executeNavigation;
+        NextView = nextView;
     }
+
+    public bool ExecuteNavigation { get; }
 
     public string NextView { get; }
 }
@@ -14,10 +17,10 @@ public class NavigateBackAction
 
 public class ChangeSceneAction
 {
-    public ChangeSceneAction(string sceneName)
+    public ChangeSceneAction(int sceneId)
     {
-        SceneName = sceneName;
+        SceneId = sceneId;
     }
 
-    public string SceneName { get; }
+    public int SceneId { get; }
 }

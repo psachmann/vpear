@@ -24,19 +24,6 @@ public class LoginSucceededAction
     public bool IsAdmin { get; }
 }
 
-public class RegisterAction
-{
-    public RegisterAction(string name, string password)
-    {
-        Name = name;
-        Password = password;
-    }
-
-    public string Name { get; }
-
-    public string Password { get; }
-}
-
 public class LogoutAction
 {
 }

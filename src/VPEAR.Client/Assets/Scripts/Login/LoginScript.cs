@@ -8,7 +8,6 @@ public class LoginScript : AbstractView
     [SerializeField] private Button _loginButton;
     [SerializeField] private InputField _userNameInput;
     [SerializeField] private InputField _userPasswordInput;
-    [SerializeField] private Toggle _registerToggle;
 
     private IState<LoginState> _loginState;
 
@@ -20,9 +19,13 @@ public class LoginScript : AbstractView
         _userNameInput.onValueChanged.AddListener(IsLoginEnabled);
         _userPasswordInput.contentType = InputField.ContentType.Password;
         _userPasswordInput.onValueChanged.AddListener(IsLoginEnabled);
-        _registerToggle.isOn = false;
 
         IsLoginEnabled();
+    }
+
+    private void OnDestroy()
+    {
+        _loginState.StateChanged -= LoginStateChanged;
     }
 
     private void LoginStateChanged(object sender, LoginState state)
@@ -45,13 +48,6 @@ public class LoginScript : AbstractView
 
     private void OnLoginClick()
     {
-        if (_registerToggle.isOn)
-        {
-            _dispatcher.Dispatch(new RegisterAction(_userNameInput.text, _userPasswordInput.text));
-        }
-        else
-        {
-            _dispatcher.Dispatch(new LoginAction(_userNameInput.text, _userPasswordInput.text));
-        }
+        _dispatcher.Dispatch(new LoginAction(_userNameInput.text, _userPasswordInput.text));
     }
 }
