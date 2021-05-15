@@ -43,6 +43,7 @@ namespace VPEAR.Server.Controllers
         /// <summary>
         /// The admin can search for user based on id or role.
         /// A GET request without any query parameters returns all users.
+        /// NOTE: Only for admin.
         /// </summary>
         /// <param name="role">The user role. Should be 'admin' or 'user'.</param>
         /// <returns>A list of found users.</returns>
@@ -63,6 +64,7 @@ namespace VPEAR.Server.Controllers
         /// <summary>
         /// An admin can verify a user. A newly registered user will not get an access token
         /// from the login endpoint until an admin verifies the new user.
+        /// NOTE: Only for admin.
         /// </summary>
         /// <param name="name">The user name.</param>
         /// <param name="request">The request data.</param>
@@ -109,6 +111,7 @@ namespace VPEAR.Server.Controllers
 
         /// <summary>
         /// An admin can delete a user or admin.
+        /// NOTE: Only for admin.
         /// </summary>
         /// <param name="name">The user name.</param>
         /// <returns>Http status code, which indicates the operation result.</returns>

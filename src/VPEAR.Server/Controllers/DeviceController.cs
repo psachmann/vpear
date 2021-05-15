@@ -21,7 +21,6 @@ namespace VPEAR.Server.Controllers
     /// <summary>
     /// Basic device management and information.
     /// </summary>
-    [Authorize]
     [Route(Routes.DeviceRoute)]
     [Produces(Defaults.DefaultResponseType)]
     [ApiController]
@@ -50,6 +49,7 @@ namespace VPEAR.Server.Controllers
         /// <param name="status">The device status.</param>
         /// <returns>List of devices.</returns>
         [HttpGet]
+        [Authorize]
         [SwaggerResponse(StatusCodes.Status200OK, "Current device information.", typeof(Container<GetDeviceResponse>))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(ErrorResponse))]
         [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", typeof(Null))]
@@ -73,12 +73,13 @@ namespace VPEAR.Server.Controllers
         /// Note: with the device status you can start and stop recording. For example, if the current status
         /// is stopped and the request update it to recording, the server will start polling with the current frequency.
         /// If the device is not reachable, you can put the status to stopped or recording and the server will try to
-        /// reconnect with the device. An archived device is readonly and can't be changed.
+        /// reconnect with the device. An archived device is read only and can't be changed.
         /// </remarks>
         /// <param name="id">The device id as 32 digit hex string.</param>
         /// <param name="request">The request data.</param>
         /// <returns>Http status code, which indicates the operation result.</returns>
         [HttpPut]
+        [Authorize]
         [SwaggerResponse(StatusCodes.Status204NoContent, "Changes were saved to db and device.", typeof(Null))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(ErrorResponse))]
         [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", typeof(Null))]
@@ -106,6 +107,7 @@ namespace VPEAR.Server.Controllers
         /// <param name="request">The request data.</param>
         /// <returns>Http status code, which indicates the operation result.</returns>
         [HttpPost]
+        [Authorize(Roles = Roles.AdminRole)]
         [SwaggerResponse(StatusCodes.Status202Accepted, "Searching for devices.", typeof(Null))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, "The address or subnet mask are not IPv4 addresses.", typeof(ErrorResponse))]
         [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", typeof(Null))]
@@ -118,10 +120,12 @@ namespace VPEAR.Server.Controllers
 
         /// <summary>
         /// Deletes the given device.
+        /// NOTE: Only for admin.
         /// </summary>
         /// <param name="id">The device id as 32 digit hex string.</param>
         /// <returns>Http status code, which indicates the operation result.</returns>
         [HttpDelete]
+        [Authorize(Roles = Roles.AdminRole)]
         [SwaggerResponse(StatusCodes.Status204NoContent, "Device was deleted.", typeof(Null))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(ErrorResponse))]
         [SwaggerResponse(StatusCodes.Status401Unauthorized, "Request is unauthorized.", typeof(Null))]

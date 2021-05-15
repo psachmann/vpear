@@ -22,7 +22,7 @@ namespace VPEAR.Server.Controllers
     /// Device wifi management and information.
     /// </summary>
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = Roles.AdminRole)]
     [Route(Routes.WifiRoute)]
     public class WifiController : Controller
     {
@@ -44,6 +44,7 @@ namespace VPEAR.Server.Controllers
 
         /// <summary>
         /// Gets the device wifi information.
+        /// NOTE: Only for admin.
         /// </summary>
         /// <param name="id">The device id as 32 digit hex string.</param>
         /// <returns>The current device wifi information.</returns>
@@ -66,6 +67,7 @@ namespace VPEAR.Server.Controllers
 
         /// <summary>
         /// Updates the device wifi information.
+        /// NOTE: Only for admin.
         /// </summary>
         /// <param name="id">The device id as 32 digit hex string.</param>
         /// <param name="request">The request data.</param>

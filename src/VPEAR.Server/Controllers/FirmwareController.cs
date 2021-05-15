@@ -22,6 +22,7 @@ namespace VPEAR.Server.Controllers
     /// Device firmware management and information.
     /// </summary>
     [ApiController]
+    [Authorize(Roles = Roles.AdminRole)]
     [Route(Routes.FirmwareRoute)]
     public class FirmwareController : Controller
     {
@@ -43,11 +44,11 @@ namespace VPEAR.Server.Controllers
 
         /// <summary>
         /// Gets the device firmware information.
+        /// NOTE: Only for admin.
         /// </summary>
         /// <param name="id">The device id as 32 digit hex string.</param>
         /// <returns>The device firmware information.</returns>
         [HttpGet]
-        [Authorize]
         [Produces(Defaults.DefaultResponseType)]
         [SwaggerResponse(StatusCodes.Status200OK, "Current device firmware information.", typeof(GetFirmwareResponse))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(ErrorResponse))]
@@ -66,6 +67,7 @@ namespace VPEAR.Server.Controllers
 
         /// <summary>
         /// Updates the device firmware information.
+        /// NOTE: Only for admin.
         /// </summary>
         /// <remarks>
         /// The update process is rather complicated and it's recommended to use the software
@@ -75,7 +77,6 @@ namespace VPEAR.Server.Controllers
         /// <param name="request">The request data.</param>
         /// <returns>Http status code, which indicates the operation result.</returns>
         [HttpPut]
-        [Authorize(Roles = Roles.AdminRole)]
         [Produces(Defaults.DefaultResponseType)]
         [SwaggerResponse(StatusCodes.Status204NoContent, "Firmware information were saved to device and db.", typeof(Null))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, "Wrong request format.", typeof(ErrorResponse))]
