@@ -90,7 +90,7 @@ Task("Docs")
             AssemblyFilters = new[] { "+VPEAR.*" },
             HistoryDirectory = Directory(historyDir),
             ReportTypes = new[] { ReportGeneratorReportType.Html, ReportGeneratorReportType.Badges },
-            Verbosity = ReportGeneratorVerbosity.Info,
+            Verbosity = ReportGeneratorVerbosity.Error,
         };
 
         ReportGenerator(new GlobPattern(reportFiles), Directory(reportDir), settings);
