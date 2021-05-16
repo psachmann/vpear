@@ -1,6 +1,7 @@
 using Fluxor;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -82,7 +83,7 @@ public class ARScript : AbstractBase
         _dispatcher.Dispatch(new MoveForwardAction(_arStateValue.StepSize));
     }
 
-    private void UpdateHeatmapSprite(ARState state)
+    private async void UpdateHeatmapSprite(ARState state)
     {
         _logger.Warning("Hard coded values for width, height, min and max!");
 
@@ -90,8 +91,9 @@ public class ARScript : AbstractBase
         var height = 27;
         var min = 0f;
         var max = 100f;
-        var values = Heatmap.CreateHeatmapValues(width, height, state.DeltaMinutes, state.Current, state.History);
-        values = Heatmap.Scale(8, values, Heatmap.InterpolationMehtod.Bicubic);
+        // this allows to run the interpolation in another thread and won't freeze the UI
+        var values = await Task.Run(() => Heatmap.CreateHeatmapValues(width, height, state.DeltaMinutes, state.Current, state.History));
+        values = await Task.Run(() =>  Heatmap.Scale(8, values, Heatmap.InterpolationMehtod.Bicubic));
         var colors = Heatmap.CreateHeatmapColors(min, max, values, state.ColorScale);
         var texture = Heatmap.CreateHeatmapTexture(values.GetLength(0), values.GetLength(1), colors, FilterMode.Trilinear);
         var sprite = Sprite.Create(texture, new Rect(0f, 0f, values.GetLength(0), values.GetLength(1)), Vector2.one * 0.5f);
